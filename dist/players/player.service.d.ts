@@ -1,0 +1,30 @@
+import { PrismaService } from "src/prisma.service";
+import { CategoriesService } from "src/categories/categories.service";
+export declare class PlayerService {
+    private readonly prismaService;
+    private readonly categoriesService;
+    constructor(prismaService: PrismaService, categoriesService: CategoriesService);
+    createPlayer(): Promise<any>;
+    getAllPlayers(): Promise<{
+        id: string;
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
+        categories: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        }[];
+    }[]>;
+    getPlayersByCategory(categoryId: string): Promise<{
+        id: string;
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
+        categories: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        }[];
+    }[]>;
+}

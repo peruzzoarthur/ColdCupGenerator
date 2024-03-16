@@ -1,0 +1,131 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["metrics"]
+}
+
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id         String     @id @default(uuid())
+  name       String
+  categories Category[]
+  isActive   Boolean    @default(false)
+  players    Player[]
+  doubles    Double[]
+  matches    Match[]
+  places     Place[]
+}
+
+model Category {
+  id      String   @id @default(uuid())
+  level   Int
+  players Player[]
+  doubles Double[]
+  type    CatType
+  events  Event[]
+  matches Match[]
+
+  @@unique([level, type], name: "CategoryId")
+}
+
+model Match {
+  id         String    @id @default(uuid())
+  players    Player[]
+  isFinished Boolean   @default(false)
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+  winner     Double?   @relation("MatchWinnerDouble", fields: [doubleId], references: [id])
+  doubleId   String?
+  result     String?
+  doubles    Double[]
+  event      Event?    @relation(fields: [eventId], references: [id])
+  eventId    String?
+  date       DateTime?
+}
+
+model Set {
+  id       String   @id @default(uuid())
+  type     SetType  @default(NORMAL)
+  games    Game[]
+  players  Player[]
+  doubles  Double[]
+  winner   Double?  @relation("SetWinnerDouble", fields: [winnerId], references: [id])
+  winnerId String?
+  result   String?
+}
+
+model Game {
+  id       String  @id @default(uuid())
+  set      Set     @relation(fields: [setId], references: [id])
+  setId    String
+  Player   Player? @relation(fields: [playerId], references: [id])
+  playerId String?
+  Double   Double? @relation(fields: [doubleId], references: [id])
+  doubleId String?
+  winner   Double? @relation("GameWinnerDouble", fields: [winnerId], references: [id])
+  winnerId String?
+}
+
+model Player {
+  id         String          @id @default(uuid())
+  email      String?
+  firstName  String?
+  lastName   String?
+  role       Role            @default(USER)
+  categories Category[]
+  position   PlayerPosition?
+  matches    Match[]
+  doubles    Double[]
+  events     Event[]
+  sets       Set[]
+  games      Game[]
+}
+
+model Double {
+  id          String   @id @default(uuid())
+  players     Player[]
+  matchs      Match[]
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  events      Event[]
+  games       Game[]
+  sets        Set[]
+  matchesWins Match[]  @relation("MatchWinnerDouble")
+  setsWins    Set[]    @relation("SetWinnerDouble")
+  gamesWins   Game[]   @relation("GameWinnerDouble")
+}
+
+model Place {
+  id      String  @id @default(uuid())
+  name    String?
+  address String? @unique
+  events  Event[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum CatType {
+  ALL
+  F
+  M
+}
+
+enum PlayerPosition {
+  REVES
+  DRIVE
+}
+
+enum SetType {
+  NORMAL
+  SUPER
+}
