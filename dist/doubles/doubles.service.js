@@ -17,17 +17,28 @@ let DoublesService = class DoublesService {
         this.prismaService = prismaService;
     }
     async createDouble(createDoubleDto) {
+        const playerOne = await this.prismaService.player.findUnique({
+            where: {
+                id: createDoubleDto.playerOneId,
+            },
+        });
+        const playerTwo = await this.prismaService.player.findUnique({
+            where: {
+                id: createDoubleDto.playerTwoId,
+            },
+            select: {
+                id: true,
+                categories: true,
+            },
+        });
         const double = await this.prismaService.double.create({
             data: {
                 players: {
-                    connect: [
-                        { id: createDoubleDto.playerOneId },
-                        { id: createDoubleDto.playerTwoId },
-                    ],
+                    connect: [{ id: playerOne.id }, { id: playerTwo.id }],
                 },
                 category: {
                     connect: {
-                        id: createDoubleDto.categoryId,
+                        id: playerTwo.categories[0].id,
                     },
                 },
             },

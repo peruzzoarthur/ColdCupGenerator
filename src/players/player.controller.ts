@@ -32,11 +32,9 @@ export class PlayerController {
     return await this.playerService.getAllPlayers();
   }
 
-  // @Body() createPlayerDto: CreatePlayerDto
-
   @Post("/create-player/")
-  async createPost() {
-    return await this.playerService.createPlayer();
+  async createPost(@Body() createPlayerDto: CreatePlayerDto) {
+    return await this.playerService.createPlayer(createPlayerDto);
   }
 
   @Put("/update/:id")

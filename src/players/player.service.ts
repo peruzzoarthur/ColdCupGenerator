@@ -17,13 +17,13 @@ export class PlayerService {
     private readonly categoriesService: CategoriesService
   ) {}
 
-  async createPlayer() {
+  async createPlayer(createPlayerDto: CreatePlayerDto) {
     try {
-      const firstName: string = uniqueNamesGenerator({
+      createPlayerDto.firstName = uniqueNamesGenerator({
         dictionaries: [names],
       });
 
-      const lastName: string = uniqueNamesGenerator({
+      createPlayerDto.lastName = uniqueNamesGenerator({
         dictionaries: [adjectives],
         style: "capital",
       });
@@ -34,10 +34,10 @@ export class PlayerService {
 
       const newPlayer = await this.prismaService.player.create({
         data: {
-          position: "DRIVE",
-          email: `${firstName}${lastName}@proton.me`,
-          firstName: firstName,
-          lastName: lastName,
+          position: createPlayerDto.position,
+          email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
+          firstName: createPlayerDto.firstName,
+          lastName: createPlayerDto.lastName,
           categories: {
             connect: {
               id: category.id,

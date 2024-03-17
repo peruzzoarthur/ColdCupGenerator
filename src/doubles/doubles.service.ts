@@ -7,17 +7,30 @@ import { PrismaService } from "src/prisma.service";
 export class DoublesService {
   constructor(private readonly prismaService: PrismaService) {}
   async createDouble(createDoubleDto: CreateDoubleDto) {
+    const playerOne = await this.prismaService.player.findUnique({
+      where: {
+        id: createDoubleDto.playerOneId,
+      },
+    });
+
+    const playerTwo = await this.prismaService.player.findUnique({
+      where: {
+        id: createDoubleDto.playerTwoId,
+      },
+      select: {
+        id: true,
+        categories: true,
+      },
+    });
+
     const double = await this.prismaService.double.create({
       data: {
         players: {
-          connect: [
-            { id: createDoubleDto.playerOneId },
-            { id: createDoubleDto.playerTwoId },
-          ],
+          connect: [{ id: playerOne.id }, { id: playerTwo.id }],
         },
         category: {
           connect: {
-            id: createDoubleDto.categoryId,
+            id: playerTwo.categories[0].id,
           },
         },
       },

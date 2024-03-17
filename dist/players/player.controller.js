@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlayerController = void 0;
 const common_1 = require("@nestjs/common");
 const player_service_1 = require("./player.service");
+const create_player_dto_1 = require("./dto/create-player.dto");
 const update_player_dto_1 = require("./dto/update-player.dto");
 let PlayerController = class PlayerController {
     constructor(playerService) {
@@ -26,8 +27,8 @@ let PlayerController = class PlayerController {
     async getAllPlayers() {
         return await this.playerService.getAllPlayers();
     }
-    async createPost() {
-        return await this.playerService.createPlayer();
+    async createPost(createPlayerDto) {
+        return await this.playerService.createPlayer(createPlayerDto);
     }
     async publishPlayer({ id }, updatePlayerDto) {
         console.log("a");
@@ -54,8 +55,9 @@ __decorate([
 ], PlayerController.prototype, "getAllPlayers", null);
 __decorate([
     (0, common_1.Post)("/create-player/"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [create_player_dto_1.CreatePlayerDto]),
     __metadata("design:returntype", Promise)
 ], PlayerController.prototype, "createPost", null);
 __decorate([

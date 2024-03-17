@@ -13,12 +13,15 @@ export class EventsService {
   ) {}
   async createEvent(createEventDto: CreateEventDto) {
     const placesToConnect = createEventDto.placesIds.map((id) => ({ id }));
+    const categoriesToConnect = createEventDto.categoriesIds.map((id) => ({
+      id,
+    }));
 
     const event = await this.prismaService.event.create({
       data: {
         name: createEventDto.name,
         categories: {
-          connect: { id: createEventDto.categoryId },
+          connect: categoriesToConnect,
         },
         places: {
           connect: placesToConnect,
@@ -35,17 +38,28 @@ export class EventsService {
         id: true,
         name: true,
         places: true,
+        eventDoubles: {
+          select: {
+            double: {
+              select: {
+                players: true,
+              },
+            },
+            category: {
+              select: {
+                id: true,
+                type: true,
+                level: true,
+                doubles: true,
+              },
+            },
+          },
+        },
         categories: {
           select: {
             id: true,
             type: true,
             level: true,
-            doubles: {
-              select: {
-                id: true,
-                players: true,
-              },
-            },
           },
         },
       },
@@ -55,23 +69,17 @@ export class EventsService {
   async registerDoublesInEvent(
     registerDoublesInEventDto: RegisterDoublesInEventDto
   ) {
-    const registered = await this.prismaService.event.update({
-      where: { id: registerDoublesInEventDto.eventId },
+    const doublesToRegister = await this.prismaService.double.findUnique({
+      where: { id: registerDoublesInEventDto.doublesId },
+    });
+    const createdEventDouble = await this.prismaService.eventDouble.create({
       data: {
-        categories: {
-          connect: {
-            id: registerDoublesInEventDto.categoryId,
-            doubles: {
-              some: {
-                id: registerDoublesInEventDto.doublesId,
-              },
-            },
-          },
-        },
+        eventId: registerDoublesInEventDto.eventId,
+        doubleId: doublesToRegister.id,
+        categoryId: doublesToRegister.categoryId,
       },
     });
-
-    return registered;
+    return createdEventDouble;
   }
   findOne(id: number) {
     return `This action returns a #${id} event`;

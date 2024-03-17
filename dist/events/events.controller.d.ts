@@ -11,18 +11,25 @@ export declare class EventsController {
         isActive: boolean;
     }>;
     registerDoublesInEvent(registerDoublesInEventDto: RegisterDoublesInEventDto): Promise<{
-        id: string;
-        name: string;
-        isActive: boolean;
+        eventId: string;
+        doubleId: string;
+        categoryId: string;
     }>;
     findAllEvents(): Promise<{
         id: string;
+        name: string;
         categories: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
-            doubles: {
-                id: string;
+        }[];
+        places: {
+            id: string;
+            name: string;
+            address: string;
+        }[];
+        eventDoubles: {
+            double: {
                 players: {
                     id: string;
                     email: string;
@@ -31,13 +38,16 @@ export declare class EventsController {
                     role: import(".prisma/client").$Enums.Role;
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
-            }[];
-        }[];
-        name: string;
-        places: {
-            id: string;
-            name: string;
-            address: string;
+            };
+            category: {
+                id: string;
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+                doubles: {
+                    id: string;
+                    categoryId: string;
+                }[];
+            };
         }[];
     }[]>;
     findOne(id: string): string;

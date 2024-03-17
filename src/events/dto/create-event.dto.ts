@@ -1,5 +1,5 @@
 export class CreateEventDto {
   name: string;
-  categoryId: string;
+  categoriesIds: string[];
   placesIds: string[];
 }

@@ -13,24 +13,36 @@ datasource db {
 }
 
 model Event {
-  id         String     @id @default(uuid())
-  name       String
-  categories Category[]
-  isActive   Boolean    @default(false)
-  players    Player[]
-  doubles    Double[]
-  matches    Match[]
-  places     Place[]
+  id           String        @id @default(uuid())
+  name         String
+  categories   Category[]
+  isActive     Boolean       @default(false)
+  players      Player[]
+  matches      Match[]
+  places       Place[]
+  eventDoubles EventDouble[] // Relation to link doubles specifically to an event
+}
+
+model EventDouble {
+  event      Event    @relation(fields: [eventId], references: [id])
+  eventId    String
+  double     Double   @relation(fields: [doubleId], references: [id])
+  doubleId   String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  @@id([eventId, doubleId, categoryId])
 }
 
 model Category {
-  id      String   @id @default(uuid())
-  level   Int
-  players Player[]
-  doubles Double[]
-  type    CatType
-  events  Event[]
-  matches Match[]
+  id           String        @id @default(uuid())
+  level        Int
+  players      Player[]
+  doubles      Double[]
+  type         CatType
+  events       Event[]
+  matches      Match[]
+  eventDoubles EventDouble[]
 
   @@unique([level, type], name: "CategoryId")
 }
@@ -89,17 +101,17 @@ model Player {
 }
 
 model Double {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   players     Player[]
   matchs      Match[]
-  category    Category @relation(fields: [categoryId], references: [id])
+  category    Category      @relation(fields: [categoryId], references: [id])
   categoryId  String
-  events      Event[]
   games       Game[]
   sets        Set[]
-  matchesWins Match[]  @relation("MatchWinnerDouble")
-  setsWins    Set[]    @relation("SetWinnerDouble")
-  gamesWins   Game[]   @relation("GameWinnerDouble")
+  matchesWins Match[]       @relation("MatchWinnerDouble")
+  setsWins    Set[]         @relation("SetWinnerDouble")
+  gamesWins   Game[]        @relation("GameWinnerDouble")
+  eventDouble EventDouble[]
 }
 
 model Place {

@@ -1,4 +1,5 @@
 import { PlayerService } from "./player.service";
+import { CreatePlayerDto } from "./dto/create-player.dto";
 import { UpdatePlayerDto } from "./dto/update-player.dto";
 export declare class PlayerController {
     private readonly playerService;
@@ -27,7 +28,7 @@ export declare class PlayerController {
             type: import(".prisma/client").$Enums.CatType;
         }[];
     }[]>;
-    createPost(): Promise<any>;
+    createPost(createPlayerDto: CreatePlayerDto): Promise<any>;
     publishPlayer({ id }: {
         id: string;
     }, updatePlayerDto: UpdatePlayerDto): Promise<any>;
