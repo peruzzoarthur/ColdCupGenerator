@@ -13,17 +13,10 @@ export declare class EventsService {
         isActive: boolean;
     }>;
     findAllEvents(): Promise<{
-        places: {
-            id: string;
-            name: string;
-            address: string;
-        }[];
         id: string;
         name: string;
         categories: {
             id: string;
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
             eventDoubles: {
                 double: {
                     players: {
@@ -36,6 +29,13 @@ export declare class EventsService {
                     }[];
                 };
             }[];
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        }[];
+        places: {
+            id: string;
+            name: string;
+            address: string;
         }[];
     }[]>;
     registerDoublesInEvent(registerDoublesInEventDto: RegisterDoublesInEventDto): Promise<{

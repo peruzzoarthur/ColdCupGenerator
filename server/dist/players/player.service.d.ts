@@ -8,24 +8,24 @@ export declare class PlayerService {
     createPlayer(createPlayerDto: CreatePlayerDto): Promise<any>;
     getAllPlayers(): Promise<{
         id: string;
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
         categories: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         }[];
-        firstName: string;
-        lastName: string;
-        position: import(".prisma/client").$Enums.PlayerPosition;
     }[]>;
     getPlayersByCategory(categoryId: string): Promise<{
         id: string;
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
         categories: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         }[];
-        firstName: string;
-        lastName: string;
-        position: import(".prisma/client").$Enums.PlayerPosition;
     }[]>;
 }
