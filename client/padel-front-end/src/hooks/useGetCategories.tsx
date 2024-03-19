@@ -7,7 +7,7 @@ enum CatType {
     M = 'M',
 }
 
-type Category = {
+export type Category = {
     id: string
     level: number
     type: CatType

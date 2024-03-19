@@ -16,10 +16,28 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const PlayersLazyImport = createFileRoute('/players')()
+const EventsLazyImport = createFileRoute('/events')()
+const DoublesLazyImport = createFileRoute('/doubles')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const PlayersLazyRoute = PlayersLazyImport.update({
+  path: '/players',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/players.lazy').then((d) => d.Route))
+
+const EventsLazyRoute = EventsLazyImport.update({
+  path: '/events',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/events.lazy').then((d) => d.Route))
+
+const DoublesLazyRoute = DoublesLazyImport.update({
+  path: '/doubles',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/doubles.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
@@ -43,11 +61,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
+    '/doubles': {
+      preLoaderRoute: typeof DoublesLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/events': {
+      preLoaderRoute: typeof EventsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/players': {
+      preLoaderRoute: typeof PlayersLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexLazyRoute, AboutLazyRoute])
+export const routeTree = rootRoute.addChildren([
+  IndexLazyRoute,
+  AboutLazyRoute,
+  DoublesLazyRoute,
+  EventsLazyRoute,
+  PlayersLazyRoute,
+])
 
 /* prettier-ignore-end */
