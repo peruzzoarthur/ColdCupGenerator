@@ -17,6 +17,12 @@ let DoublesService = class DoublesService {
         this.prismaService = prismaService;
     }
     async createDouble(createDoubleDto) {
+        if (createDoubleDto.playerOneId === createDoubleDto.playerTwoId) {
+            throw new common_1.HttpException("Sorry, can't have same player doubles...", common_1.HttpStatus.BAD_REQUEST);
+        }
+        if (!createDoubleDto.playerOneId || !createDoubleDto.playerTwoId) {
+            throw new common_1.HttpException("Only one player set to doubles", common_1.HttpStatus.BAD_REQUEST);
+        }
         const playerOne = await this.prismaService.player.findUnique({
             where: {
                 id: createDoubleDto.playerOneId,

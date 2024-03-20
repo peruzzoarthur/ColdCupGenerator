@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateDoubleDto } from "./dto/create-double.dto";
 import { UpdateDoubleDto } from "./dto/update-double.dto";
 import { PrismaService } from "src/prisma.service";
@@ -7,6 +7,19 @@ import { PrismaService } from "src/prisma.service";
 export class DoublesService {
   constructor(private readonly prismaService: PrismaService) {}
   async createDouble(createDoubleDto: CreateDoubleDto) {
+    if (createDoubleDto.playerOneId === createDoubleDto.playerTwoId) {
+      throw new HttpException(
+        "Sorry, can't have same player doubles...",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
+    if (!createDoubleDto.playerOneId || !createDoubleDto.playerTwoId) {
+      throw new HttpException(
+        "Only one player set to doubles",
+        HttpStatus.BAD_REQUEST
+      );
+    }
     const playerOne = await this.prismaService.player.findUnique({
       where: {
         id: createDoubleDto.playerOneId,

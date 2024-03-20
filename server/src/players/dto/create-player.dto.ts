@@ -1,12 +1,4 @@
-export class CreatePlayerDto {
-  firstName: string;
-  lastName: string;
-  email: string;
-  categoryLevel?: number;
-  categoryType?: CatType;
-  categoryId: string;
-  position: Position;
-}
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 enum CatType {
   ALL = "ALL",
@@ -17,4 +9,26 @@ enum CatType {
 enum Position {
   REVES = "REVES",
   DRIVE = "DRIVE",
+}
+
+export class CreatePlayerDto {
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  categoryLevel?: number;
+  categoryType?: CatType;
+
+  @IsString()
+  @IsNotEmpty({ message: "select a category" })
+  categoryId: string;
+
+  @IsEnum(Position)
+  position: Position;
 }

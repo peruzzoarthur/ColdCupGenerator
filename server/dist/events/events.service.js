@@ -52,6 +52,7 @@ let EventsService = class EventsService {
                                 double: {
                                     select: {
                                         players: true,
+                                        id: true,
                                     },
                                 },
                             },
