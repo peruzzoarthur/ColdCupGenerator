@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useGetCategories } from '@/hooks/useGetCategories'
 import EventForm from '@/components/custom/eventForm'
 import { useState } from 'react'
@@ -10,11 +10,20 @@ import { Button } from '@/components/ui/button'
 import ball from '../styles/png/ball.png'
 import { PadelEvent } from '@/types/padel.types'
 import { ExtendedEventCard } from '@/components/custom/expandedEventCard'
+import { ErrorAlert } from '@/components/custom/errorAlert'
+import RegisterDoublesForm, {
+    registerDoublesFormObject,
+} from '@/components/custom/registerDoublesForm'
+import { useGetDoubles } from '@/hooks/useGetDoubles'
 
-type formObject = {
+type createEventFormObject = {
     eventName: string
     categoriesIds: string
     placesIds: string
+}
+
+export type ErrorResponse = {
+    message: string[]
 }
 
 export const Route = createLazyFileRoute('/events')({
@@ -22,6 +31,8 @@ export const Route = createLazyFileRoute('/events')({
 })
 
 function Events() {
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const [showAllEvents, setShowAllEvents] = useState<boolean>(false)
     const [selectedEvent, setSelectedEvent] = useState<PadelEvent | undefined>()
     const [toggleEvent, setToggleEvent] = useState<boolean>(false)
@@ -30,8 +41,7 @@ function Events() {
     const { allCategories } = useGetCategories()
     const { allPlaces } = useGetPlaces()
     const { allEvents } = useGetEvents()
-
-    console.log(allEvents)
+    const { allDoubles } = useGetDoubles()
 
     const allEventsOn = () => {
         setShowAllEvents(true)
@@ -50,19 +60,66 @@ function Events() {
         setToggleEvent(false)
     }
 
-    const onSubmit = async (input: formObject) => {
-        const requestBody = {
-            name: input.eventName,
-            categoriesIds: categoriesState,
-            placesIds: placesState,
+    const createEventOnSubmit = async (input: createEventFormObject) => {
+        try {
+            const requestBody = {
+                name: input.eventName,
+                categoriesIds: categoriesState,
+                placesIds: placesState,
+            }
+
+            const data = await axios.post(
+                'http://localhost:3000/events/',
+                requestBody
+            )
+
+            console.log(data)
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response && axiosError.response.status === 400) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message.join(', '))
+                } else {
+                    setError(true)
+                    setErrorMessage('Error creating doubles')
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error creating doubles')
+            }
         }
+    }
 
-        const data = await axios.post(
-            'http://localhost:3000/events/',
-            requestBody
-        )
+    const registerDoubleOnSubmit = async (input: registerDoublesFormObject) => {
+        try {
+            const requestBody = {
+                doublesId: input.doublesId,
+                eventId: selectedEvent?.id,
+            }
+            console.log('aaaaaaaa')
 
-        console.log(data)
+            const data = await axios.post(
+                'http://localhost:3000/events/register',
+                requestBody
+            )
+
+            console.log(data)
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response && axiosError.response.status === 400) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message.join(', '))
+                } else {
+                    setError(true)
+                    setErrorMessage('Error creating doubles')
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error creating doubles')
+            }
+        }
     }
 
     return (
@@ -78,7 +135,7 @@ function Events() {
                             <EventForm
                                 allPlaces={allPlaces}
                                 allCategories={allCategories}
-                                onSubmit={onSubmit}
+                                onSubmit={createEventOnSubmit}
                                 categoriesState={categoriesState}
                                 setCategoriesState={setCategoriesState}
                                 placesState={placesState}
@@ -90,6 +147,12 @@ function Events() {
                                 }}
                             />
                         </div>
+
+                        {isError && (
+                            <div className="mt-4">
+                                <ErrorAlert message={errorMessage} />
+                            </div>
+                        )}
 
                         {!showAllEvents && (
                             <Button
@@ -126,11 +189,29 @@ function Events() {
                 </div>
             )}
             {toggleEvent && (
-                <div className="flex justify-center">
-                    <ExtendedEventCard
-                        event={selectedEvent}
-                        toggleEventOff={toggleEventOff}
-                    />
+                <div className="flex flex-col ">
+                    {selectedEvent && (
+                        <div className="flex flex-col justify-center mt-2 mb-4">
+                            <RegisterDoublesForm
+                                categoriesState={categoriesState}
+                                eventCategories={selectedEvent.categories.map(
+                                    (cat) => cat
+                                )}
+                                onSubmit={registerDoubleOnSubmit}
+                                setCategoriesState={setCategoriesState}
+                                defaultValues={{
+                                    doublesId: '',
+                                }}
+                                allDoubles={allDoubles}
+                            />
+                        </div>
+                    )}
+                    <div className="flex justify-center">
+                        <ExtendedEventCard
+                            event={selectedEvent}
+                            toggleEventOff={toggleEventOff}
+                        />
+                    </div>
                 </div>
             )}
         </>

@@ -1,35 +1,57 @@
 import PlayerForm, { playerFormObject } from '@/components/custom/playerForm'
 import { useGetCategories } from '@/hooks/useGetCategories'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useState } from 'react'
 import ball from '../styles/png/ball.png'
 import { Player, Position } from '@/types/padel.types'
+import { ErrorAlert } from '@/components/custom/errorAlert'
 
 export const Route = createLazyFileRoute('/players')({
     component: Players,
 })
 
+export type ErrorResponse = {
+    message: string[]
+}
+
 function Players() {
-    // const [showAllEvents, setShowAllEvents] = useState<boolean>(false)
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const [categoriesState, setCategoriesState] = useState<string[]>([])
     const { allCategories } = useGetCategories()
 
     const onSubmit = async (input: playerFormObject) => {
-        const requestBody: Player = {
-            firstName: input.firstName,
-            lastName: input.lastName,
-            email: input.email,
-            categoryId: input.categoryId,
-            position: input.position as Position,
+        try {
+            const requestBody: Player = {
+                firstName: input.firstName,
+                lastName: input.lastName,
+                email: input.email,
+                categoryId: input.categoryId,
+                position: input.position as Position,
+            }
+
+            const data = await axios.post(
+                'http://localhost:3000/player/create-player',
+                requestBody
+            )
+
+            console.log(data)
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response && axiosError.response.status === 400) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message.join(', '))
+                } else {
+                    setError(true)
+                    setErrorMessage('Error creating doubles')
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error creating doubles')
+            }
         }
-
-        const data = await axios.post(
-            'http://localhost:3000/player/create-player',
-            requestBody
-        )
-
-        console.log(data)
     }
 
     return (
@@ -56,30 +78,11 @@ function Players() {
                         />
                     </div>
 
-                    {/* {!showAllEvents && (
-                        <Button onClick={() => allEventsOn()} className="mt-12">
-                            Show all events
-                        </Button>
-                    )} */}
-                    {/* 
-                    {showAllEvents && (
-                        <div className="flex flex-col justify-center">
-                            {allEvents?.map((event, index) => (
-                                <div
-                                    key={index}
-                                    className="justify-between w-1/3 mt-2"
-                                >
-                                    <EventCard event={event} key={index} />
-                                </div>
-                            ))}
-                            <Button
-                                onClick={() => allEventsOff()}
-                                className="mt-12"
-                            >
-                                Close
-                            </Button>
+                    {isError && (
+                        <div className="mt-4">
+                            <ErrorAlert message={errorMessage} />
                         </div>
-                    )} */}
+                    )}
                 </div>
             </div>
         </>

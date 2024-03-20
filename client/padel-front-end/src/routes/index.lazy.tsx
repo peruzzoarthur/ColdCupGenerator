@@ -5,5 +5,5 @@ export const Route = createLazyFileRoute('/')({
 })
 
 function Index() {
-    return <div className="p-2 text-5xl">Hello from Index!</div>
+    return <div className="p-2 text-5xl">Hello!</div>
 }

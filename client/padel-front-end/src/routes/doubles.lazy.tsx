@@ -1,31 +1,58 @@
+import { AxiosError } from 'axios'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios from 'axios'
 // import { useState } from 'react'
 import ball from '../styles/png/ball.png'
 import DoublesForm, { doublesFormObject } from '@/components/custom/doublesForm'
 import { useGetPlayers } from '@/hooks/useGetPlayers'
+import { useState } from 'react'
+import { ErrorAlert } from '@/components/custom/errorAlert'
 
 export const Route = createLazyFileRoute('/doubles')({
     component: Doubles,
 })
 
+export type ErrorResponse = {
+    message: string
+}
+
 function Doubles() {
     // const [showAllEvents, setShowAllEvents] = useState<boolean>(false)
     // const [categoriesState, setCategoriesState] = useState<string[]>([])
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { allPlayers } = useGetPlayers()
 
     const onSubmit = async (input: doublesFormObject) => {
-        const requestBody: doublesFormObject = {
-            playerOneId: input.playerOneId,
-            playerTwoId: input.playerTwoId,
-        }
-        console.log(requestBody)
-        const data = await axios.post(
-            'http://localhost:3000/doubles',
-            requestBody
-        )
+        try {
+            const requestBody: doublesFormObject = {
+                playerOneId: input.playerOneId,
+                playerTwoId: input.playerTwoId,
+            }
+            console.log(requestBody)
 
-        console.log(data)
+            const response = await axios.post(
+                'http://localhost:3000/doubles',
+                requestBody
+            )
+
+            console.log(response.data)
+            // Handle successful submission
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response && axiosError.response.status === 400) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                } else {
+                    setError(true)
+                    setErrorMessage('Error creating doubles')
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error creating doubles')
+            }
+        }
     }
 
     return (
@@ -46,6 +73,11 @@ function Doubles() {
                             }}
                         />
                     </div>
+                    {isError && (
+                        <div className="mt-4">
+                            <ErrorAlert message={errorMessage} />
+                        </div>
+                    )}
 
                     {/* {!showAllEvents && (
                         <Button onClick={() => allEventsOn()} className="mt-12">

@@ -3,13 +3,14 @@ export type Player = {
     lastName: string
     email: string
     categoryId: string
-
     position: Position
     id: string
 }
 
 export type Double = {
     players: Player[]
+    id: string
+    category?: Category
 }
 
 export type EventDouble = {

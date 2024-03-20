@@ -1,5 +1,4 @@
-import { Cross2Icon } from '@radix-ui/react-icons'
-
+import { Cross2Icon, PersonIcon } from '@radix-ui/react-icons'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,9 +14,6 @@ import { PadelEvent } from '@/types/padel.types'
 type ExtendedEventCardProps = React.ComponentProps<typeof Card> & {
     event: PadelEvent | undefined
     toggleEventOff: () => void
-    // setSelectedEvent: React.Dispatch<
-    //     React.SetStateAction<PadelEvent | undefined>
-    // >
 }
 
 export function ExtendedEventCard({
@@ -67,27 +63,34 @@ export function ExtendedEventCard({
                     </div>
                 </div>
                 <div>
-                    <h1 className="text-xl font-bold">Doubles registered</h1>
+                    <h1 className="text-lg font-bold">Doubles registered</h1>
                     <div className="grid pb-4 mb-4 grid-cols-4rt grid-cols last:mb-0 last:pb-0">
                         <div className="space-y-2">
-                            {event?.categories.map((cat) => (
-                                <>
-                                    <p>{`Category: ${cat.level} - ${cat.type}`}</p>
-                                    {cat.eventDoubles?.map((ed) => (
-                                        <div className="flex items-center p-4 space-x-4 border rounded-md ">
-                                            <div className="flex-1 space-y-1">
-                                                {ed.double.players.map((p) => (
-                                                    <>
-                                                        <p className="pb-2">{`${p.firstName} ${p.lastName}`}</p>
-                                                        <p className="text-sm">
-                                                            {p.categoryId}{' '}
-                                                        </p>
-                                                    </>
-                                                ))}
+                            {event?.categories.map((cat, outerIndex) => (
+                                <div key={outerIndex}>
+                                    <p className="text-slate-700">{`[${cat.level} ${cat.type}]`}</p>
+                                    {cat.eventDoubles?.map((ed, innerIndex) => (
+                                        <div key={innerIndex}>
+                                            <div className="flex items-center p-4 space-x-4 border rounded-md">
+                                                <div className="flex-1 space-y-1">
+                                                    {ed.double.players.map(
+                                                        (p, playerIndex) => (
+                                                            <div
+                                                                className="flex mb-1"
+                                                                key={
+                                                                    playerIndex
+                                                                }
+                                                            >
+                                                                <PersonIcon className="mr-2" />
+                                                                <p className="pb-2 mb-0.5">{`${p.firstName} ${p.lastName}`}</p>
+                                                            </div>
+                                                        )
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
-                                </>
+                                </div>
                             ))}
                         </div>
                     </div>

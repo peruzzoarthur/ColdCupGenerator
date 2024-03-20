@@ -51,8 +51,6 @@ const PlayerForm: React.FC<PlayerFormProps> = ({
     onSubmit,
     defaultValues,
     allCategories,
-    // categoriesState,
-    // setCategoriesState,
 }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -60,19 +58,6 @@ const PlayerForm: React.FC<PlayerFormProps> = ({
     })
 
     const { handleSubmit } = form
-
-    // const addCategory = (id: string) => {
-    //     console.log(id)
-    //     const stringArray: string[] = categoriesState.concat(id)
-    //     setCategoriesState(stringArray)
-    // }
-
-    // const removeCategory = (deleteId: string) => {
-    //     const stringArray: string[] = categoriesState.filter(
-    //         (id) => id !== deleteId
-    //     )
-    //     setCategoriesState(stringArray)
-    // }
 
     return (
         <Form {...form}>

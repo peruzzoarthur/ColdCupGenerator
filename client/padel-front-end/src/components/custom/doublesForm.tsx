@@ -26,8 +26,6 @@ type DoublesFormProps = {
     onSubmit: SubmitHandler<doublesFormObject>
     defaultValues: doublesFormObject
     allPlayers: Player[] | undefined
-    // playersState: string[]
-    // setPlayersState: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export type doublesFormObject = {
@@ -44,8 +42,6 @@ const DoublesForm: React.FC<DoublesFormProps> = ({
     onSubmit,
     defaultValues,
     allPlayers,
-    // categoriesState,
-    // setCategoriesState,
 }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -53,19 +49,6 @@ const DoublesForm: React.FC<DoublesFormProps> = ({
     })
 
     const { handleSubmit } = form
-
-    // const addCategory = (id: string) => {
-    //     console.log(id)
-    //     const stringArray: string[] = categoriesState.concat(id)
-    //     setCategoriesState(stringArray)
-    // }
-
-    // const removeCategory = (deleteId: string) => {
-    //     const stringArray: string[] = categoriesState.filter(
-    //         (id) => id !== deleteId
-    //     )
-    //     setCategoriesState(stringArray)
-    // }
 
     return (
         <Form {...form}>
