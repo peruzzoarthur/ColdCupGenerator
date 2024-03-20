@@ -2,8 +2,9 @@ export class CreatePlayerDto {
   firstName: string;
   lastName: string;
   email: string;
-  categoryId: number;
-  categoryType: CatType;
+  categoryLevel?: number;
+  categoryType?: CatType;
+  categoryId: string;
   position: Position;
 }
 

@@ -21,16 +21,6 @@ let PlayerService = class PlayerService {
     }
     async createPlayer(createPlayerDto) {
         try {
-            createPlayerDto.firstName = uniqueNamesGenerator({
-                dictionaries: [names],
-            });
-            createPlayerDto.lastName = uniqueNamesGenerator({
-                dictionaries: [adjectives],
-                style: "capital",
-            });
-            const level = 1;
-            const type = "ALL";
-            const category = await this.categoriesService.getCategory(level, type);
             const newPlayer = await this.prismaService.player.create({
                 data: {
                     position: createPlayerDto.position,
@@ -39,7 +29,7 @@ let PlayerService = class PlayerService {
                     lastName: createPlayerDto.lastName,
                     categories: {
                         connect: {
-                            id: category.id,
+                            id: createPlayerDto.categoryId,
                         },
                     },
                 },

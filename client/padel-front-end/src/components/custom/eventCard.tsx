@@ -14,9 +14,13 @@ import { PadelEvent } from '@/types/padel.types'
 
 type EventCardProps = React.ComponentProps<typeof Card> & {
     event: PadelEvent
+    toggleEventOn: (event: PadelEvent) => void
+    // setSelectedEvent: React.Dispatch<
+    //     React.SetStateAction<PadelEvent | undefined>
+    // >
 }
 
-export function EventCard({ className, event }: EventCardProps) {
+export function EventCard({ className, event, toggleEventOn }: EventCardProps) {
     return (
         <Card className={cn('w-[380px]', className)}>
             <CardHeader>
@@ -60,7 +64,7 @@ export function EventCard({ className, event }: EventCardProps) {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button className="w-full">
+                <Button onClick={() => toggleEventOn(event)} className="w-full">
                     <CheckCircledIcon className="w-4 h-4 mr-2" /> Register in
                     event
                 </Button>

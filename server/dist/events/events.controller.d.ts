@@ -17,8 +17,9 @@ export declare class EventsController {
     }>;
     findAllEvents(): Promise<{
         id: string;
-        name: string;
         categories: {
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
             id: string;
             eventDoubles: {
                 double: {
@@ -32,9 +33,8 @@ export declare class EventsController {
                     }[];
                 };
             }[];
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
         }[];
+        name: string;
         places: {
             id: string;
             name: string;

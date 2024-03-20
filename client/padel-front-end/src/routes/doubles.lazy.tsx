@@ -15,7 +15,7 @@ function Doubles() {
     const { allPlayers } = useGetPlayers()
 
     const onSubmit = async (input: doublesFormObject) => {
-        const requestBody = {
+        const requestBody: doublesFormObject = {
             playerOneId: input.playerOneId,
             playerTwoId: input.playerTwoId,
         }

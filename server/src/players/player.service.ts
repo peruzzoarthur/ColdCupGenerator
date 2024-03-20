@@ -19,18 +19,18 @@ export class PlayerService {
 
   async createPlayer(createPlayerDto: CreatePlayerDto) {
     try {
-      createPlayerDto.firstName = uniqueNamesGenerator({
-        dictionaries: [names],
-      });
+      // createPlayerDto.firstName = uniqueNamesGenerator({
+      //   dictionaries: [names],
+      // });
 
-      createPlayerDto.lastName = uniqueNamesGenerator({
-        dictionaries: [adjectives],
-        style: "capital",
-      });
-      const level = 1;
-      const type: CatType = "ALL" as CatType;
+      // createPlayerDto.lastName = uniqueNamesGenerator({
+      //   dictionaries: [adjectives],
+      //   style: "capital",
+      // });
+      // const level = 1;
+      // const type: CatType = "ALL" as CatType;
 
-      const category = await this.categoriesService.getCategory(level, type);
+      // const category = await this.categoriesService.getCategory(level, type);
 
       const newPlayer = await this.prismaService.player.create({
         data: {
@@ -40,7 +40,7 @@ export class PlayerService {
           lastName: createPlayerDto.lastName,
           categories: {
             connect: {
-              id: category.id,
+              id: createPlayerDto.categoryId,
             },
           },
         },
