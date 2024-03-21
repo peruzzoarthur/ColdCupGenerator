@@ -10,6 +10,7 @@ import {
 import { DoublesService } from "./doubles.service";
 import { CreateDoubleDto } from "./dto/create-double.dto";
 import { UpdateDoubleDto } from "./dto/update-double.dto";
+import { GetDoublesByIdDto } from "./dto/get-doubles-by-id.dto";
 
 @Controller("doubles")
 export class DoublesController {
@@ -25,9 +26,9 @@ export class DoublesController {
     return this.doublesService.findAllDoubles();
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.doublesService.findOne(+id);
+  @Post("doubles-by-id")
+  async getDoublesById(@Body() getDoublesByIdDto: GetDoublesByIdDto) {
+    return await this.doublesService.getDoublesById(getDoublesByIdDto);
   }
 
   @Patch(":id")

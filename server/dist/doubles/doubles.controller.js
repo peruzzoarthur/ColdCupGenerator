@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const doubles_service_1 = require("./doubles.service");
 const create_double_dto_1 = require("./dto/create-double.dto");
 const update_double_dto_1 = require("./dto/update-double.dto");
+const get_doubles_by_id_dto_1 = require("./dto/get-doubles-by-id.dto");
 let DoublesController = class DoublesController {
     constructor(doublesService) {
         this.doublesService = doublesService;
@@ -27,8 +28,8 @@ let DoublesController = class DoublesController {
     findAll() {
         return this.doublesService.findAllDoubles();
     }
-    findOne(id) {
-        return this.doublesService.findOne(+id);
+    async getDoublesById(getDoublesByIdDto) {
+        return await this.doublesService.getDoublesById(getDoublesByIdDto);
     }
     update(id, updateDoubleDto) {
         return this.doublesService.update(+id, updateDoubleDto);
@@ -52,12 +53,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], DoublesController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(":id"),
-    __param(0, (0, common_1.Param)("id")),
+    (0, common_1.Post)("doubles-by-id"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], DoublesController.prototype, "findOne", null);
+    __metadata("design:paramtypes", [get_doubles_by_id_dto_1.GetDoublesByIdDto]),
+    __metadata("design:returntype", Promise)
+], DoublesController.prototype, "getDoublesById", null);
 __decorate([
     (0, common_1.Patch)(":id"),
     __param(0, (0, common_1.Param)("id")),

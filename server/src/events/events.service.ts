@@ -38,6 +38,7 @@ export class EventsService {
         id: true,
         name: true,
         places: true,
+        eventDoubles: true,
         categories: {
           select: {
             id: true,

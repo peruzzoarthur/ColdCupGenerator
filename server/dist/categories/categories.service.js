@@ -37,7 +37,7 @@ let CategoriesService = class CategoriesService {
     remove(id) {
         return `This action removes a #${id} category`;
     }
-    async getCategory(level, type) {
+    async getCategoryByQuery(level, type) {
         const id = await this.prismaService.category.findFirstOrThrow({
             where: {
                 level: level,
@@ -45,6 +45,19 @@ let CategoriesService = class CategoriesService {
             },
         });
         return id;
+    }
+    async getCategoryById(getCategoryByIdDto) {
+        const category = await this.prismaService.category.findUnique({
+            where: {
+                id: getCategoryByIdDto.id,
+            },
+            select: {
+                id: true,
+                type: true,
+                level: true,
+            },
+        });
+        return category;
     }
 };
 exports.CategoriesService = CategoriesService;

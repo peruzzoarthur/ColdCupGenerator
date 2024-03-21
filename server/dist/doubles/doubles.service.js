@@ -61,8 +61,17 @@ let DoublesService = class DoublesService {
         });
         return doubles;
     }
-    findOne(id) {
-        return `This action returns a #${id} double`;
+    async getDoublesById(getDoublesByIdDto) {
+        const doubles = await this.prismaService.double.findUnique({
+            where: {
+                id: getDoublesByIdDto.id,
+            },
+            select: {
+                id: true,
+                players: true,
+            },
+        });
+        return doubles;
     }
     update(id, updateDoubleDto) {
         return `This action updates a #${id} double`;

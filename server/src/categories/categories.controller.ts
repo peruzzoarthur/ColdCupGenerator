@@ -12,6 +12,7 @@ import { CategoriesService } from "./categories.service";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { CatType } from "./types/categories.types";
+import { GetCategoryByIdDto } from "./dto/get-category-by-id.dto";
 
 @Controller("categories")
 export class CategoriesController {
@@ -20,12 +21,17 @@ export class CategoriesController {
   async findAll() {
     return await this.categoriesService.findAll();
   }
+
+  @Post("category-by-id")
+  async getCategoryById(@Body() getCategoryByIdDto: GetCategoryByIdDto) {
+    return await this.categoriesService.getCategoryById(getCategoryByIdDto);
+  }
   @Get("id")
-  async getCategoryById(
+  async getCategoryByQuery(
     @Query("level") level: number,
     @Query("type") type: CatType
   ) {
-    return await this.categoriesService.getCategory(Number(level), type);
+    return await this.categoriesService.getCategoryByQuery(Number(level), type);
   }
 
   @Post()

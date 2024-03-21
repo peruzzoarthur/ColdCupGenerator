@@ -3,6 +3,7 @@ import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { PrismaService } from "../prisma.service";
 import { CatType } from "./types/categories.types";
+import { GetCategoryByIdDto } from "./dto/get-category-by-id.dto";
 
 @Injectable()
 export class CategoriesService {
@@ -33,7 +34,7 @@ export class CategoriesService {
     return `This action removes a #${id} category`;
   }
 
-  async getCategory(level: number, type: CatType) {
+  async getCategoryByQuery(level: number, type: CatType) {
     const id = await this.prismaService.category.findFirstOrThrow({
       where: {
         level: level,
@@ -41,5 +42,19 @@ export class CategoriesService {
       },
     });
     return id;
+  }
+
+  async getCategoryById(getCategoryByIdDto: GetCategoryByIdDto) {
+    const category = await this.prismaService.category.findUnique({
+      where: {
+        id: getCategoryByIdDto.id,
+      },
+      select: {
+        id: true,
+        type: true,
+        level: true,
+      },
+    });
+    return category;
   }
 }

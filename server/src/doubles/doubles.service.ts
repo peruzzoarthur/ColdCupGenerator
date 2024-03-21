@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateDoubleDto } from "./dto/create-double.dto";
 import { UpdateDoubleDto } from "./dto/update-double.dto";
 import { PrismaService } from "src/prisma.service";
+import { GetDoublesByIdDto } from "./dto/get-doubles-by-id.dto";
 
 @Injectable()
 export class DoublesService {
@@ -62,8 +63,17 @@ export class DoublesService {
     return doubles;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} double`;
+  async getDoublesById(getDoublesByIdDto: GetDoublesByIdDto) {
+    const doubles = await this.prismaService.double.findUnique({
+      where: {
+        id: getDoublesByIdDto.id,
+      },
+      select: {
+        id: true,
+        players: true,
+      },
+    });
+    return doubles;
   }
 
   update(id: number, updateDoubleDto: UpdateDoubleDto) {

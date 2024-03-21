@@ -18,6 +18,7 @@ const categories_service_1 = require("./categories.service");
 const create_category_dto_1 = require("./dto/create-category.dto");
 const update_category_dto_1 = require("./dto/update-category.dto");
 const categories_types_1 = require("./types/categories.types");
+const get_category_by_id_dto_1 = require("./dto/get-category-by-id.dto");
 let CategoriesController = class CategoriesController {
     constructor(categoriesService) {
         this.categoriesService = categoriesService;
@@ -25,8 +26,11 @@ let CategoriesController = class CategoriesController {
     async findAll() {
         return await this.categoriesService.findAll();
     }
-    async getCategoryById(level, type) {
-        return await this.categoriesService.getCategory(Number(level), type);
+    async getCategoryById(getCategoryByIdDto) {
+        return await this.categoriesService.getCategoryById(getCategoryByIdDto);
+    }
+    async getCategoryByQuery(level, type) {
+        return await this.categoriesService.getCategoryByQuery(Number(level), type);
     }
     async create(createCategoryDto) {
         return await this.categoriesService.create(createCategoryDto);
@@ -46,13 +50,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "findAll", null);
 __decorate([
+    (0, common_1.Post)("category-by-id"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [get_category_by_id_dto_1.GetCategoryByIdDto]),
+    __metadata("design:returntype", Promise)
+], CategoriesController.prototype, "getCategoryById", null);
+__decorate([
     (0, common_1.Get)("id"),
     __param(0, (0, common_1.Query)("level")),
     __param(1, (0, common_1.Query)("type")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", Promise)
-], CategoriesController.prototype, "getCategoryById", null);
+], CategoriesController.prototype, "getCategoryByQuery", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
