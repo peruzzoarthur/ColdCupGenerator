@@ -10,6 +10,11 @@ export declare class DoublesController {
         categoryId: string;
     }>;
     findAll(): Promise<{
+        category: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        };
         id: string;
         players: {
             id: string;
@@ -19,11 +24,6 @@ export declare class DoublesController {
             role: import(".prisma/client").$Enums.Role;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
-        category: {
-            id: string;
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-        };
     }[]>;
     getDoublesById(getDoublesByIdDto: GetDoublesByIdDto): Promise<{
         id: string;

@@ -4,6 +4,7 @@ import { UpdateEventDto } from "./dto/update-event.dto";
 import { PrismaService } from "src/prisma.service";
 import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
 import { CategoriesService } from "src/categories/categories.service";
+import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 
 @Injectable()
 export class EventsService {
@@ -75,6 +76,33 @@ export class EventsService {
     });
     return createdEventDouble;
   }
+
+  async getEventById(getEventByIdDto: GetEventByIdDto) {
+    const event = await this.prismaService.event.findUnique({
+      where: {
+        id: getEventByIdDto.id,
+      },
+      select: {
+        id: true,
+        eventDoubles: true,
+        categories: {
+          select: {
+            eventDoubles: true,
+            level: true,
+            type: true,
+            doubles: {
+              select: {
+                id: true,
+                players: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return event;
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} event`;
   }

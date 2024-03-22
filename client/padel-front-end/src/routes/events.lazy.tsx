@@ -15,6 +15,7 @@ import RegisterDoublesForm, {
     registerDoublesFormObject,
 } from '@/components/custom/registerDoublesForm'
 import { useGetDoubles } from '@/hooks/useGetDoubles'
+import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 
 type createEventFormObject = {
     eventName: string
@@ -50,13 +51,16 @@ function Events() {
     const allEventsOff = () => {
         setShowAllEvents(false)
     }
+    // const { categoriesInEventWithDoublesRegistered } = useGetDoublesInEvent(
+    //     selectedEvent?.id,
+    // )
 
-    const toggleEventOn = (event: PadelEvent) => {
-        setToggleEvent(true)
-        setSelectedEvent(event)
+    const toggleEventOn = async (event: PadelEvent) => {
+        await setSelectedEvent(event)
+        await setToggleEvent(true)
     }
 
-    const toggleEventOff = () => {
+    const toggleEventOff = async () => {
         setToggleEvent(false)
     }
 
@@ -97,7 +101,6 @@ function Events() {
                 doublesId: input.doublesId,
                 eventId: selectedEvent?.id,
             }
-            console.log('aaaaaaaa')
 
             const data = await axios.post(
                 'http://localhost:3000/events/register',
@@ -207,10 +210,12 @@ function Events() {
                         </div>
                     )}
                     <div className="flex justify-center">
-                        <ExtendedEventCard
-                            event={selectedEvent}
-                            toggleEventOff={toggleEventOff}
-                        />
+                        {selectedEvent && toggleEvent && (
+                            <ExtendedEventCard
+                                event={selectedEvent}
+                                toggleEventOff={toggleEventOff}
+                            />
+                        )}
                     </div>
                 </div>
             )}

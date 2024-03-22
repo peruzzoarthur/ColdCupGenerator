@@ -10,17 +10,25 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 import { PadelEvent } from '@/types/padel.types'
+import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 
 type ExtendedEventCardProps = React.ComponentProps<typeof Card> & {
-    event: PadelEvent | undefined
+    event: PadelEvent
     toggleEventOff: () => void
+    // categoriesWithDoublesInEvent: Category[]
 }
 
 export function ExtendedEventCard({
     className,
     event,
     toggleEventOff,
+    // categoriesWithDoublesInEvent,
 }: ExtendedEventCardProps) {
+    const { categoriesInEventWithDoublesRegistered } = useGetDoublesInEvent(
+        event.id
+    )
+
+    console.log(categoriesInEventWithDoublesRegistered)
     return (
         <Card className={cn('w-[640px]', className)}>
             <CardHeader>
@@ -65,34 +73,45 @@ export function ExtendedEventCard({
                 <div>
                     <h1 className="text-lg font-bold">Doubles registered</h1>
                     <div className="grid pb-4 mb-4 grid-cols-4rt grid-cols last:mb-0 last:pb-0">
-                        <div className="space-y-2">
-                            {event?.categories.map((cat, outerIndex) => (
-                                <div key={outerIndex}>
-                                    <p className="text-slate-700">{`[${cat.level} ${cat.type}]`}</p>
-                                    {cat.eventDoubles?.map((ed, innerIndex) => (
-                                        <div key={innerIndex}>
-                                            <div className="flex items-center p-4 space-x-4 border rounded-md">
-                                                <div className="flex-1 space-y-1">
-                                                    {ed.double.players.map(
-                                                        (p, playerIndex) => (
-                                                            <div
-                                                                className="flex mb-1"
-                                                                key={
-                                                                    playerIndex
-                                                                }
-                                                            >
-                                                                <PersonIcon className="mr-2" />
-                                                                <p className="pb-2 mb-0.5">{`${p.firstName} ${p.lastName}`}</p>
+                        {categoriesInEventWithDoublesRegistered && (
+                            <div>
+                                <div className="space-y-2">
+                                    {categoriesInEventWithDoublesRegistered.map(
+                                        (cat, outerIndex) => (
+                                            <div key={outerIndex}>
+                                                <p className="text-slate-700">{`[${cat.level} ${cat.type}]`}</p>
+                                                {cat.doubles?.map(
+                                                    (ed, innerIndex) => (
+                                                        <div key={innerIndex}>
+                                                            <div className="flex items-center p-4 space-x-4 border rounded-md">
+                                                                <div className="flex-1 space-y-1">
+                                                                    {ed.players.map(
+                                                                        (
+                                                                            p,
+                                                                            playerIndex
+                                                                        ) => (
+                                                                            <div
+                                                                                className="flex mb-1"
+                                                                                key={
+                                                                                    playerIndex
+                                                                                }
+                                                                            >
+                                                                                <PersonIcon className="mr-2" />
+                                                                                <p className="pb-2 mb-0.5">{`${p.firstName} ${p.lastName}`}</p>
+                                                                            </div>
+                                                                        )
+                                                                    )}
+                                                                </div>
                                                             </div>
-                                                        )
-                                                    )}
-                                                </div>
+                                                        </div>
+                                                    )
+                                                )}
                                             </div>
-                                        </div>
-                                    ))}
+                                        )
+                                    )}
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </CardContent>

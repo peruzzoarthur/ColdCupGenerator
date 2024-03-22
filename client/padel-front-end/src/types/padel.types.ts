@@ -14,7 +14,9 @@ export type Double = {
 }
 
 export type EventDouble = {
-    double: Double
+    categoryId: string
+    doubleId: string
+    eventId: string
 }
 
 export type Place = {
@@ -27,13 +29,15 @@ export type Category = {
     id: string
     type: string
     level: number
-    eventDoubles?: EventDouble[]
+    doubles?: Double[]
+    eventDoubles?: Double[]
 }
 
 export type PadelEvent = {
     id: string
     name: string
     places: Place[]
+    eventDoubles?: EventDouble[]
     categories: Category[]
 }
 

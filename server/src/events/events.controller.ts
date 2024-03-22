@@ -11,6 +11,7 @@ import { EventsService } from "./events.service";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
+import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 
 @Controller("events")
 export class EventsController {
@@ -19,6 +20,11 @@ export class EventsController {
   @Post()
   async create(@Body() createEventDto: CreateEventDto) {
     return await this.eventsService.createEvent(createEventDto);
+  }
+
+  @Post("event-by-id")
+  async getEventById(@Body() getEventByIdDto: GetEventByIdDto) {
+    return await this.eventsService.getEventById(getEventByIdDto);
   }
 
   @Post("register")

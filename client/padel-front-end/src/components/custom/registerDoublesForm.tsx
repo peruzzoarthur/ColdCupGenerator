@@ -51,9 +51,9 @@ const RegisterDoublesForm: React.FC<RegisterDoublesFormProps> = ({
 
     const { handleSubmit } = form
 
-    console.log(form.getValues())
+    // console.log(form.getValues())
 
-    console.log(allDoubles)
+    // console.log(allDoubles)
 
     return (
         <Form {...form}>

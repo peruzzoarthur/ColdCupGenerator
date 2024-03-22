@@ -76,6 +76,31 @@ let EventsService = class EventsService {
         });
         return createdEventDouble;
     }
+    async getEventById(getEventByIdDto) {
+        const event = await this.prismaService.event.findUnique({
+            where: {
+                id: getEventByIdDto.id,
+            },
+            select: {
+                id: true,
+                eventDoubles: true,
+                categories: {
+                    select: {
+                        eventDoubles: true,
+                        level: true,
+                        type: true,
+                        doubles: {
+                            select: {
+                                id: true,
+                                players: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        return event;
+    }
     findOne(id) {
         return `This action returns a #${id} event`;
     }

@@ -7,26 +7,26 @@ export declare class PlayerController {
     getPlayersByCategory({ id }: {
         id: string;
     }): Promise<{
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
         id: string;
         categories: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         }[];
-        firstName: string;
-        lastName: string;
-        position: import(".prisma/client").$Enums.PlayerPosition;
     }[]>;
     getAllPlayers(): Promise<{
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
         id: string;
         categories: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         }[];
-        firstName: string;
-        lastName: string;
-        position: import(".prisma/client").$Enums.PlayerPosition;
     }[]>;
     createPost(createPlayerDto: CreatePlayerDto): Promise<any>;
     publishPlayer({ id }: {
