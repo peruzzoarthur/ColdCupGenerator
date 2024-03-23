@@ -14,14 +14,17 @@ export declare class EventsController {
     getEventById(getEventByIdDto: GetEventByIdDto): Promise<{
         id: string;
         categories: {
-            eventDoubles: {
-                eventId: string;
-                doubleId: string;
-                categoryId: string;
-            }[];
+            id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
-            doubles: {
+        }[];
+        eventDoubles: {
+            category: {
+                id: string;
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+            };
+            double: {
                 id: string;
                 players: {
                     id: string;
@@ -31,12 +34,12 @@ export declare class EventsController {
                     role: import(".prisma/client").$Enums.Role;
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
-            }[];
-        }[];
-        eventDoubles: {
-            eventId: string;
-            doubleId: string;
-            categoryId: string;
+                category: {
+                    id: string;
+                    level: number;
+                    type: import(".prisma/client").$Enums.CatType;
+                };
+            };
         }[];
     }>;
     registerDoublesInEvent(registerDoublesInEventDto: RegisterDoublesInEventDto): Promise<{

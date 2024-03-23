@@ -83,18 +83,23 @@ let EventsService = class EventsService {
             },
             select: {
                 id: true,
-                eventDoubles: true,
-                categories: {
+                eventDoubles: {
                     select: {
-                        eventDoubles: true,
-                        level: true,
-                        type: true,
-                        doubles: {
+                        category: true,
+                        double: {
                             select: {
                                 id: true,
                                 players: true,
+                                category: true,
                             },
                         },
+                    },
+                },
+                categories: {
+                    select: {
+                        id: true,
+                        type: true,
+                        level: true,
                     },
                 },
             },

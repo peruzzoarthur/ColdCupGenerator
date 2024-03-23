@@ -84,18 +84,25 @@ export class EventsService {
       },
       select: {
         id: true,
-        eventDoubles: true,
-        categories: {
+        eventDoubles: {
           select: {
-            eventDoubles: true,
-            level: true,
-            type: true,
-            doubles: {
+            category: true,
+            // categoryId: true,
+            double: {
               select: {
                 id: true,
                 players: true,
+                category: true,
               },
             },
+            // doubleId: true,
+          },
+        },
+        categories: {
+          select: {
+            id: true,
+            type: true,
+            level: true,
           },
         },
       },

@@ -15,7 +15,6 @@ import RegisterDoublesForm, {
     registerDoublesFormObject,
 } from '@/components/custom/registerDoublesForm'
 import { useGetDoubles } from '@/hooks/useGetDoubles'
-import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 
 type createEventFormObject = {
     eventName: string

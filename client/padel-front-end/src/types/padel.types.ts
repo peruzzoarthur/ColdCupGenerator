@@ -17,6 +17,8 @@ export type EventDouble = {
     categoryId: string
     doubleId: string
     eventId: string
+    double?: Double
+    category?: Category
 }
 
 export type Place = {

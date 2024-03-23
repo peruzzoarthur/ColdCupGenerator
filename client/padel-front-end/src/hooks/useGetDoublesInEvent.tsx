@@ -1,12 +1,20 @@
-import { PadelEvent } from '@/types/padel.types'
+import { Category, Double, PadelEvent } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { useState } from 'react'
 // import { useState } from 'react'
 
-export const useGetDoublesInEvent = (eventId: string) => {
-    // const [event, setEvent] = useState<PadelEvent | undefined>()
+type DoublesByCategory = {
+    [category: string]: {
+        category: Category
+        doubles: Double[]
+    }
+}
 
-    const { data: categoriesInEventWithDoublesRegistered } = useQuery({
+export const useGetDoublesInEvent = (eventId: string) => {
+    const [eventById, setEventById] = useState<PadelEvent | undefined>()
+
+    const { data } = useQuery({
         queryKey: ['get-doubles-in-event', eventId],
         queryFn: async () => {
             const requestEventByIdDto = {
@@ -16,24 +24,44 @@ export const useGetDoublesInEvent = (eventId: string) => {
                 'http://localhost:3000/events/event-by-id',
                 requestEventByIdDto
             )
-            // setEvent(fetchEvent)
+            setEventById(fetchEvent)
 
-            // const categories = event?.categories
+            if (!fetchEvent || !fetchEvent.eventDoubles) {
+                return
+            }
 
-            const doublesInEventIds = fetchEvent?.eventDoubles?.map(
-                (doubles) => doubles.doubleId
-            )
+            const categoriesInEvent = fetchEvent.categories
 
-            console.log(doublesInEventIds)
-            const filter = fetchEvent?.categories?.filter((cat) =>
-                cat.doubles?.some((doubles) =>
-                    doublesInEventIds?.includes(doubles.id)
-                )
-            )
-            console.log(filter)
-            return filter
+            const doublesInEvent = fetchEvent.eventDoubles
+
+            console.log('Categories in event:')
+            console.log(categoriesInEvent)
+            console.log(`Doubles in event:`)
+            console.log(doublesInEvent)
+
+            const doublesByCategoryId: DoublesByCategory = {}
+
+            // Initialize categorizedDoubles with empty arrays for each category level
+            categoriesInEvent.forEach((category) => {
+                doublesByCategoryId[category.id.toString()] = {
+                    category: category,
+                    doubles: [],
+                }
+            })
+
+            // Push doubles into categorizedDoubles based on their category level
+            doublesInEvent.forEach((eventDouble) => {
+                if (!eventDouble.category || !eventDouble.double) {
+                    console.log('ima dead')
+                    return
+                }
+                const categoryId = eventDouble.category.id
+                doublesByCategoryId[categoryId].doubles.push(eventDouble.double)
+            })
+
+            return doublesByCategoryId
         },
     })
 
-    return { categoriesInEventWithDoublesRegistered }
+    return { data, eventById }
 }
