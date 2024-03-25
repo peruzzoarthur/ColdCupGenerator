@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios from 'axios'
 // import { useState } from 'react'
@@ -7,6 +7,8 @@ import DoublesForm, { doublesFormObject } from '@/components/custom/doublesForm'
 import { useGetPlayers } from '@/hooks/useGetPlayers'
 import { useState } from 'react'
 import { ErrorAlert } from '@/components/custom/errorAlert'
+import { useToast } from '@/components/ui/use-toast'
+import { Double } from '@/types/padel.types'
 
 export const Route = createLazyFileRoute('/doubles')({
     component: Doubles,
@@ -22,6 +24,16 @@ function Doubles() {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { allPlayers } = useGetPlayers()
+    const { toast } = useToast()
+
+    const toasted = (doubles: Double) => {
+        toast({
+            title: 'Success! 🙌',
+
+            description: `Created doubles for Player 1: ${doubles.players[0].firstName} ${doubles.players[0].lastName} and Player 2: ${doubles.players[1].firstName} ${doubles.players[1].lastName} .`,
+            // className: 'bg-emerald-600 bg-opacity-60 text-white',
+        })
+    }
 
     const onSubmit = async (input: doublesFormObject) => {
         try {
@@ -29,15 +41,14 @@ function Doubles() {
                 playerOneId: input.playerOneId,
                 playerTwoId: input.playerTwoId,
             }
-            console.log(requestBody)
 
-            const response = await axios.post(
+            const data: AxiosResponse<Double> = await axios.post(
                 'http://localhost:3000/doubles',
                 requestBody
             )
 
-            console.log(response.data)
-            // Handle successful submission
+            console.log(data)
+            toasted(data.data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>

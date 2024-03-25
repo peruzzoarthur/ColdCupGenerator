@@ -47,8 +47,8 @@ export class PlayerController {
     return null;
   }
 
-  @Delete("/player/:id")
+  @Delete(":id")
   async deletePlayer(@Param() { id }: { id: string }) {
-    return null;
+    return await this.playerService.deletePlayer(id);
   }
 }

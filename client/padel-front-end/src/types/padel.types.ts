@@ -5,6 +5,7 @@ export type Player = {
     categoryId: string
     position: Position
     id: string
+    categories?: Category[]
 }
 
 export type Double = {
@@ -19,6 +20,7 @@ export type EventDouble = {
     eventId: string
     double?: Double
     category?: Category
+    event?: PadelEvent
 }
 
 export type Place = {

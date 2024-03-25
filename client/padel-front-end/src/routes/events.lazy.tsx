@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useGetCategories } from '@/hooks/useGetCategories'
 import EventForm from '@/components/custom/eventForm'
 import { useState } from 'react'
@@ -8,13 +8,14 @@ import { useGetEvents } from '@/hooks/useGetEvents'
 import { EventCard } from '@/components/custom/eventCard'
 import { Button } from '@/components/ui/button'
 import ball from '../styles/png/ball.png'
-import { PadelEvent } from '@/types/padel.types'
+import { Double, EventDouble, PadelEvent } from '@/types/padel.types'
 import { ExtendedEventCard } from '@/components/custom/expandedEventCard'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import RegisterDoublesForm, {
     registerDoublesFormObject,
 } from '@/components/custom/registerDoublesForm'
 import { useGetDoubles } from '@/hooks/useGetDoubles'
+import { useToast } from '@/components/ui/use-toast'
 
 type createEventFormObject = {
     eventName: string
@@ -42,6 +43,26 @@ function Events() {
     const { allPlaces } = useGetPlaces()
     const { allEvents } = useGetEvents()
     const { allDoubles } = useGetDoubles()
+    const { toast } = useToast()
+
+    const createEventToast = (event: PadelEvent) => {
+        toast({
+            title: 'Success! 🙌',
+
+            description: `Created Event ${event.name} at ${event.places.map((p) => p.name).join(', ')} with categories: ${event.categories.map((c) => `${c.level} ${c.type}`).join(', ')}.`,
+            // className: 'bg-emerald-600 bg-opacity-60 text-white',
+        })
+    }
+
+    const registerDoublesToast = (
+        double: Double | undefined,
+        event: PadelEvent | undefined
+    ) => {
+        toast({
+            title: 'Success! 🙌',
+            description: `Registered doubles ${double?.players.map((p) => `${p.firstName} ${p.lastName}`).join(', ')} at event ${event?.name}`,
+        })
+    }
 
     const allEventsOn = () => {
         setShowAllEvents(true)
@@ -50,13 +71,10 @@ function Events() {
     const allEventsOff = () => {
         setShowAllEvents(false)
     }
-    // const { categoriesInEventWithDoublesRegistered } = useGetDoublesInEvent(
-    //     selectedEvent?.id,
-    // )
 
     const toggleEventOn = async (event: PadelEvent) => {
-        await setSelectedEvent(event)
-        await setToggleEvent(true)
+        setSelectedEvent(event)
+        setToggleEvent(true)
     }
 
     const toggleEventOff = async () => {
@@ -71,11 +89,12 @@ function Events() {
                 placesIds: placesState,
             }
 
-            const data = await axios.post(
+            const data: AxiosResponse<PadelEvent> = await axios.post(
                 'http://localhost:3000/events/',
                 requestBody
             )
 
+            createEventToast(data.data)
             console.log(data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -101,11 +120,11 @@ function Events() {
                 eventId: selectedEvent?.id,
             }
 
-            const data = await axios.post(
+            const data: AxiosResponse<EventDouble> = await axios.post(
                 'http://localhost:3000/events/register',
                 requestBody
             )
-
+            registerDoublesToast(data.data.double, data.data.event)
             console.log(data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -126,98 +145,107 @@ function Events() {
 
     return (
         <>
-            {!toggleEvent && (
-                <div className="flex justify-center">
-                    <div className="flex flex-col w-2/3">
-                        <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
-                            Create an event
-                            <img src={ball} alt="ball" className="w-8 h-8" />
-                        </h1>
-                        <div className="flex flex-col">
-                            <EventForm
-                                allPlaces={allPlaces}
-                                allCategories={allCategories}
-                                onSubmit={createEventOnSubmit}
-                                categoriesState={categoriesState}
-                                setCategoriesState={setCategoriesState}
-                                placesState={placesState}
-                                setPlacesState={setPlacesState}
-                                defaultValues={{
-                                    eventName: '',
-                                    categoriesIds: '',
-                                    placesIds: '',
-                                }}
-                            />
-                        </div>
-
-                        {isError && (
-                            <div className="mt-4">
-                                <ErrorAlert message={errorMessage} />
+            <div className="flex justify-center w-full">
+                {!toggleEvent && (
+                    <div className="flex justify-center w-full">
+                        <div className="flex flex-col w-2/3">
+                            <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+                                Create an event
+                                <img
+                                    src={ball}
+                                    alt="ball"
+                                    className="w-8 h-8"
+                                />
+                            </h1>
+                            <div className="flex flex-col">
+                                <EventForm
+                                    allPlaces={allPlaces}
+                                    allCategories={allCategories}
+                                    onSubmit={createEventOnSubmit}
+                                    categoriesState={categoriesState}
+                                    setCategoriesState={setCategoriesState}
+                                    placesState={placesState}
+                                    setPlacesState={setPlacesState}
+                                    defaultValues={{
+                                        eventName: '',
+                                        categoriesIds: '',
+                                        placesIds: '',
+                                    }}
+                                />
                             </div>
-                        )}
 
-                        {!showAllEvents && (
-                            <Button
-                                onClick={() => allEventsOn()}
-                                className="mt-12"
-                            >
-                                Show all events
-                            </Button>
-                        )}
+                            {isError && (
+                                <div className="mt-4">
+                                    <ErrorAlert message={errorMessage} />
+                                </div>
+                            )}
 
-                        {showAllEvents && (
-                            <div className="flex flex-col justify-center">
-                                {allEvents?.map((event, index) => (
-                                    <div
-                                        key={index}
-                                        className="justify-between w-1/3 mt-2"
-                                    >
-                                        <EventCard
-                                            event={event}
-                                            key={index}
-                                            toggleEventOn={toggleEventOn}
-                                        />
-                                    </div>
-                                ))}
+                            {!showAllEvents && (
                                 <Button
-                                    onClick={allEventsOff}
+                                    onClick={() => allEventsOn()}
                                     className="mt-12"
                                 >
-                                    Close
+                                    Show all events
                                 </Button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
-            {toggleEvent && (
-                <div className="flex flex-col ">
-                    {selectedEvent && (
-                        <div className="flex flex-col justify-center mt-2 mb-4">
-                            <RegisterDoublesForm
-                                categoriesState={categoriesState}
-                                eventCategories={selectedEvent.categories.map(
-                                    (cat) => cat
-                                )}
-                                onSubmit={registerDoubleOnSubmit}
-                                setCategoriesState={setCategoriesState}
-                                defaultValues={{
-                                    doublesId: '',
-                                }}
-                                allDoubles={allDoubles}
-                            />
+                            )}
+
+                            {showAllEvents && (
+                                <div className="flex flex-col justify-center">
+                                    <div className="flex flex-col justify-end">
+                                        {allEvents?.map((event, index) => (
+                                            <div key={index} className="mt-2 ">
+                                                <EventCard
+                                                    event={event}
+                                                    key={index}
+                                                    toggleEventOn={
+                                                        toggleEventOn
+                                                    }
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <Button
+                                        onClick={allEventsOff}
+                                        className="mt-12"
+                                    >
+                                        Close
+                                    </Button>
+                                </div>
+                            )}
                         </div>
-                    )}
-                    <div className="flex justify-center">
-                        {selectedEvent && toggleEvent && (
-                            <ExtendedEventCard
-                                event={selectedEvent}
-                                toggleEventOff={toggleEventOff}
-                            />
-                        )}
                     </div>
-                </div>
-            )}
+                )}
+                {toggleEvent && (
+                    <div className="flex flex-col w-4/5">
+                        <div className="flex flex-col justify-center ">
+                            {selectedEvent && (
+                                <div className="flex flex-col justify-center mt-2 mb-4">
+                                    <RegisterDoublesForm
+                                        categoriesState={categoriesState}
+                                        eventCategories={selectedEvent.categories.map(
+                                            (cat) => cat
+                                        )}
+                                        onSubmit={registerDoubleOnSubmit}
+                                        setCategoriesState={setCategoriesState}
+                                        defaultValues={{
+                                            doublesId: '',
+                                        }}
+                                        allDoubles={allDoubles}
+                                    />
+                                </div>
+                            )}
+                            <div className="flex justify-center">
+                                {selectedEvent && toggleEvent && (
+                                    <ExtendedEventCard
+                                        event={selectedEvent}
+                                        toggleEventOff={toggleEventOff}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
         </>
     )
 }

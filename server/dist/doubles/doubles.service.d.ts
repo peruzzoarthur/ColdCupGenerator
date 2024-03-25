@@ -7,7 +7,14 @@ export declare class DoublesService {
     constructor(prismaService: PrismaService);
     createDouble(createDoubleDto: CreateDoubleDto): Promise<{
         id: string;
-        categoryId: string;
+        players: {
+            id: string;
+            email: string;
+            firstName: string;
+            lastName: string;
+            role: import(".prisma/client").$Enums.Role;
+            position: import(".prisma/client").$Enums.PlayerPosition;
+        }[];
     }>;
     findAllDoubles(): Promise<{
         category: {

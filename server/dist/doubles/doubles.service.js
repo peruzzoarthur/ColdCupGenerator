@@ -48,6 +48,10 @@ let DoublesService = class DoublesService {
                     },
                 },
             },
+            select: {
+                id: true,
+                players: true,
+            },
         });
         return double;
     }

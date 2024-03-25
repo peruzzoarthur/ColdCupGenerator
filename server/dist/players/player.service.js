@@ -72,6 +72,27 @@ let PlayerService = class PlayerService {
         });
         return allPlayers;
     }
+    async deletePlayer(playerId) {
+        try {
+            const getPlayer = await this.prismaService.player.findUnique({
+                where: {
+                    id: playerId,
+                },
+            });
+            if (!getPlayer) {
+                throw new common_1.HttpException("Player not found", common_1.HttpStatus.BAD_REQUEST);
+            }
+            const removePlayer = await this.prismaService.player.delete({
+                where: {
+                    id: playerId,
+                },
+            });
+            return removePlayer;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
 };
 exports.PlayerService = PlayerService;
 exports.PlayerService = PlayerService = __decorate([

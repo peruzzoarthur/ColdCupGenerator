@@ -33,6 +33,12 @@ let EventsService = class EventsService {
                     connect: placesToConnect,
                 },
             },
+            select: {
+                id: true,
+                categories: true,
+                name: true,
+                places: true,
+            },
         });
         return event;
     }
@@ -72,6 +78,14 @@ let EventsService = class EventsService {
                 eventId: registerDoublesInEventDto.eventId,
                 doubleId: doublesToRegister.id,
                 categoryId: doublesToRegister.categoryId,
+            },
+            select: {
+                double: {
+                    select: {
+                        players: true,
+                    },
+                },
+                event: true,
             },
         });
         return createdEventDouble;

@@ -1,11 +1,6 @@
+import { Place } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-
-export type Place = {
-    id: string
-    name: string
-    address: string
-}
 
 export const useGetPlaces = () => {
     const { data: allPlaces, isFetching } = useQuery({

@@ -41,7 +41,6 @@ export const useGetDoublesInEvent = (eventId: string) => {
 
             const doublesByCategoryId: DoublesByCategory = {}
 
-            // Initialize categorizedDoubles with empty arrays for each category level
             categoriesInEvent.forEach((category) => {
                 doublesByCategoryId[category.id.toString()] = {
                     category: category,
@@ -49,7 +48,6 @@ export const useGetDoublesInEvent = (eventId: string) => {
                 }
             })
 
-            // Push doubles into categorizedDoubles based on their category level
             doublesInEvent.forEach((eventDouble) => {
                 if (!eventDouble.category || !eventDouble.double) {
                     console.log('ima dead')
