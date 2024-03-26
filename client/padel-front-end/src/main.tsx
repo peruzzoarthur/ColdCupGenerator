@@ -6,6 +6,7 @@ import { routeTree } from './routeTree.gen'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import { Toaster } from './components/ui/toaster'
+import { StrictMode } from 'react'
 
 const queryClient = new QueryClient()
 
@@ -30,10 +31,12 @@ if (!rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement)
     root.render(
         <>
-            <Toaster />
-            <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router} />
-            </QueryClientProvider>
+            <StrictMode>
+                <Toaster />
+                <QueryClientProvider client={queryClient}>
+                    <RouterProvider router={router} />
+                </QueryClientProvider>
+            </StrictMode>
         </>
     )
 }

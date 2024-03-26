@@ -20,28 +20,32 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select'
-import { Player } from '@/types/padel.types'
+import { Category, Player } from '@/types/padel.types'
 
 type DoublesFormProps = {
     onSubmit: SubmitHandler<doublesFormObject>
     defaultValues: doublesFormObject
     allPlayers: Player[] | undefined
+    allCategories: Category[] | undefined
 }
 
 export type doublesFormObject = {
     playerOneId: string
     playerTwoId: string
+    categoryId: string
 }
 
 const formSchema = z.object({
     playerOneId: z.string(),
     playerTwoId: z.string(),
+    categoryId: z.string(),
 })
 
 const DoublesForm: React.FC<DoublesFormProps> = ({
     onSubmit,
     defaultValues,
     allPlayers,
+    allCategories,
 }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -105,6 +109,38 @@ const DoublesForm: React.FC<DoublesFormProps> = ({
                                     {allPlayers?.map((p, index) => (
                                         <SelectItem value={p.id} key={index}>
                                             {`${p.firstName} ${p.lastName}`}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Category</FormLabel>
+                        <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                        >
+                            <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select category" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Categories</SelectLabel>
+                                    {allCategories?.map((c, index) => (
+                                        <SelectItem value={c.id} key={index}>
+                                            {`${c.level} ${c.type}`}
                                         </SelectItem>
                                     ))}
                                 </SelectGroup>

@@ -33,11 +33,11 @@ export class DoublesController {
 
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateDoubleDto: UpdateDoubleDto) {
-    return this.doublesService.update(+id, updateDoubleDto);
+    return this.doublesService.updateCategory(id, updateDoubleDto);
   }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    return this.doublesService.remove(+id);
+    return this.doublesService.deleteDoubles(id);
   }
 }

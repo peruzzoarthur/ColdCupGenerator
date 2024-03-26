@@ -9,6 +9,10 @@ import { useState } from 'react'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import { useToast } from '@/components/ui/use-toast'
 import { Double } from '@/types/padel.types'
+import { useGetCategories } from '@/hooks/useGetCategories'
+import { Button } from '@/components/ui/button'
+import { useGetDoubles } from '@/hooks/useGetDoubles'
+import { DoublesCard } from '@/components/custom/doublesCard'
 
 export const Route = createLazyFileRoute('/doubles')({
     component: Doubles,
@@ -19,19 +23,26 @@ export type ErrorResponse = {
 }
 
 function Doubles() {
-    // const [showAllEvents, setShowAllEvents] = useState<boolean>(false)
-    // const [categoriesState, setCategoriesState] = useState<string[]>([])
+    const [showAllDoubles, setShowAllDoubles] = useState<boolean>(false)
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { allPlayers } = useGetPlayers()
+    const { allCategories } = useGetCategories()
     const { toast } = useToast()
+    const { allDoubles, refetchDoubles } = useGetDoubles()
+
+    const allDoublesOn = () => {
+        setShowAllDoubles(true)
+    }
+
+    const allDoublesOff = () => {
+        setShowAllDoubles(false)
+    }
 
     const toasted = (doubles: Double) => {
         toast({
             title: 'Success! 🙌',
-
             description: `Created doubles for Player 1: ${doubles.players[0].firstName} ${doubles.players[0].lastName} and Player 2: ${doubles.players[1].firstName} ${doubles.players[1].lastName} .`,
-            // className: 'bg-emerald-600 bg-opacity-60 text-white',
         })
     }
 
@@ -40,6 +51,7 @@ function Doubles() {
             const requestBody: doublesFormObject = {
                 playerOneId: input.playerOneId,
                 playerTwoId: input.playerTwoId,
+                categoryId: input.categoryId,
             }
 
             const data: AxiosResponse<Double> = await axios.post(
@@ -52,7 +64,10 @@ function Doubles() {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>
-                if (axiosError.response && axiosError.response.status === 400) {
+                if (
+                    axiosError.response &&
+                    (axiosError.response.status === 400 || 409)
+                ) {
                     setError(true)
                     setErrorMessage(axiosError.response.data.message)
                 } else {
@@ -77,43 +92,43 @@ function Doubles() {
                     <div className="flex flex-col">
                         <DoublesForm
                             allPlayers={allPlayers}
+                            allCategories={allCategories}
                             onSubmit={onSubmit}
                             defaultValues={{
                                 playerOneId: '',
                                 playerTwoId: '',
+                                categoryId: '',
                             }}
                         />
                     </div>
+
                     {isError && (
-                        <div className="mt-4">
+                        <div onClick={() => setError(false)} className="mt-4">
                             <ErrorAlert message={errorMessage} />
                         </div>
                     )}
-
-                    {/* {!showAllEvents && (
-                        <Button onClick={() => allEventsOn()} className="mt-12">
-                            Show all events
+                    {!showAllDoubles && (
+                        <Button onClick={allDoublesOn} className="mt-4">
+                            Show all doubles
                         </Button>
-                    )} */}
-                    {/* 
-                    {showAllEvents && (
-                        <div className="flex flex-col justify-center">
-                            {allEvents?.map((event, index) => (
-                                <div
+                    )}
+                    {showAllDoubles && (
+                        <>
+                            {allDoubles?.map((d, index) => (
+                                <DoublesCard
+                                    doubles={d}
                                     key={index}
-                                    className="justify-between w-1/3 mt-2"
-                                >
-                                    <EventCard event={event} key={index} />
-                                </div>
+                                    className="mt-2"
+                                    setError={setError}
+                                    setErrorMessage={setErrorMessage}
+                                    allCategories={allCategories}
+                                    refetchDoubles={refetchDoubles}
+                                    setShowAllDoubles={setShowAllDoubles}
+                                />
                             ))}
-                            <Button
-                                onClick={() => allEventsOff()}
-                                className="mt-12"
-                            >
-                                Close
-                            </Button>
-                        </div>
-                    )} */}
+                            <Button onClick={allDoublesOff}>Close</Button>
+                        </>
+                    )}
                 </div>
             </div>
         </>

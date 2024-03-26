@@ -16,10 +16,7 @@ export class DoublesService {
     }
 
     if (!createDoubleDto.playerOneId || !createDoubleDto.playerTwoId) {
-      throw new HttpException(
-        "Only one player set to doubles",
-        HttpStatus.BAD_REQUEST
-      );
+      throw new HttpException("Select two players...", HttpStatus.BAD_REQUEST);
     }
     const playerOne = await this.prismaService.player.findUnique({
       where: {
@@ -37,14 +34,34 @@ export class DoublesService {
       },
     });
 
-    const double = await this.prismaService.double.create({
+    const doublesExist = await this.prismaService.double.findFirst({
+      where: {
+        AND: [
+          {
+            players: {
+              some: { id: playerOne.id },
+            },
+          },
+          { players: { some: { id: playerTwo.id } } },
+        ],
+      },
+    });
+
+    if (doublesExist) {
+      throw new HttpException(
+        "Players already registered as doubles.",
+        HttpStatus.CONFLICT
+      );
+    }
+
+    const createDoubles = await this.prismaService.double.create({
       data: {
         players: {
           connect: [{ id: playerOne.id }, { id: playerTwo.id }],
         },
         category: {
           connect: {
-            id: playerTwo.categories[0].id,
+            id: createDoubleDto.categoryId,
           },
         },
       },
@@ -53,7 +70,7 @@ export class DoublesService {
         players: true,
       },
     });
-    return double;
+    return createDoubles;
   }
 
   async findAllDoubles() {
@@ -80,11 +97,45 @@ export class DoublesService {
     return doubles;
   }
 
-  update(id: number, updateDoubleDto: UpdateDoubleDto) {
-    return `This action updates a #${id} double`;
+  async updateCategory(doublesId: string, updateDoubleDto: UpdateDoubleDto) {
+    const getDoubles = await this.prismaService.double.findUnique({
+      where: {
+        id: doublesId,
+      },
+    });
+
+    if (!getDoubles) {
+      throw new HttpException("Doubles not found", HttpStatus.BAD_REQUEST);
+    }
+
+    const updateDoubles = this.prismaService.double.update({
+      where: {
+        id: doublesId,
+      },
+      data: {
+        categoryId: updateDoubleDto.categoryId,
+      },
+    });
+    return updateDoubles;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} double`;
+  async deleteDoubles(doublesId: string) {
+    const getDoubles = await this.prismaService.double.findUnique({
+      where: {
+        id: doublesId,
+      },
+    });
+
+    if (!getDoubles) {
+      throw new HttpException("Doubles not found", HttpStatus.BAD_REQUEST);
+    }
+
+    const removeDoubles = await this.prismaService.double.delete({
+      where: {
+        id: doublesId,
+      },
+    });
+
+    return removeDoubles;
   }
 }

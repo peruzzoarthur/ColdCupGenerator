@@ -28,7 +28,14 @@ export declare class PlayerController {
             type: import(".prisma/client").$Enums.CatType;
         }[];
     }[]>;
-    createPost(createPlayerDto: CreatePlayerDto): Promise<any>;
+    createPost(createPlayerDto: CreatePlayerDto): Promise<{
+        id: string;
+        email: string;
+        firstName: string;
+        lastName: string;
+        role: import(".prisma/client").$Enums.Role;
+        position: import(".prisma/client").$Enums.PlayerPosition;
+    }>;
     publishPlayer({ id }: {
         id: string;
     }, updatePlayerDto: UpdatePlayerDto): Promise<any>;

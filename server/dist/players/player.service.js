@@ -20,26 +20,29 @@ let PlayerService = class PlayerService {
         this.categoriesService = categoriesService;
     }
     async createPlayer(createPlayerDto) {
-        try {
-            const newPlayer = await this.prismaService.player.create({
-                data: {
-                    position: createPlayerDto.position,
-                    email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
-                    firstName: createPlayerDto.firstName,
-                    lastName: createPlayerDto.lastName,
-                    categories: {
-                        connect: {
-                            id: createPlayerDto.categoryId,
-                        },
+        const checkPlayer = await this.prismaService.player.findFirst({
+            where: {
+                email: createPlayerDto.email,
+            },
+        });
+        console.log(checkPlayer);
+        if (!checkPlayer) {
+            throw new common_1.HttpException("Error creating user, verify information passed and check if e-mail is already registered", common_1.HttpStatus.BAD_REQUEST);
+        }
+        const newPlayer = await this.prismaService.player.create({
+            data: {
+                position: createPlayerDto.position,
+                email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
+                firstName: createPlayerDto.firstName,
+                lastName: createPlayerDto.lastName,
+                categories: {
+                    connect: {
+                        id: createPlayerDto.categoryId,
                     },
                 },
-            });
-            return newPlayer;
-        }
-        catch (error) {
-            console.error("Error creating player:", error);
-            return error;
-        }
+            },
+        });
+        return newPlayer;
     }
     async getAllPlayers() {
         const allPlayers = this.prismaService.player.findMany({
@@ -73,25 +76,20 @@ let PlayerService = class PlayerService {
         return allPlayers;
     }
     async deletePlayer(playerId) {
-        try {
-            const getPlayer = await this.prismaService.player.findUnique({
-                where: {
-                    id: playerId,
-                },
-            });
-            if (!getPlayer) {
-                throw new common_1.HttpException("Player not found", common_1.HttpStatus.BAD_REQUEST);
-            }
-            const removePlayer = await this.prismaService.player.delete({
-                where: {
-                    id: playerId,
-                },
-            });
-            return removePlayer;
+        const getPlayer = await this.prismaService.player.findUnique({
+            where: {
+                id: playerId,
+            },
+        });
+        if (!getPlayer) {
+            throw new common_1.HttpException("Player not found", common_1.HttpStatus.BAD_REQUEST);
         }
-        catch (error) {
-            throw error;
-        }
+        const removePlayer = await this.prismaService.player.delete({
+            where: {
+                id: playerId,
+            },
+        });
+        return removePlayer;
     }
 };
 exports.PlayerService = PlayerService;

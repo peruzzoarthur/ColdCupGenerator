@@ -19,38 +19,35 @@ export class PlayerService {
   ) {}
 
   async createPlayer(createPlayerDto: CreatePlayerDto) {
-    try {
-      // createPlayerDto.firstName = uniqueNamesGenerator({
-      //   dictionaries: [names],
-      // });
+    const checkPlayer = await this.prismaService.player.findFirst({
+      where: {
+        email: createPlayerDto.email,
+      },
+    });
 
-      // createPlayerDto.lastName = uniqueNamesGenerator({
-      //   dictionaries: [adjectives],
-      //   style: "capital",
-      // });
-      // const level = 1;
-      // const type: CatType = "ALL" as CatType;
+    console.log(checkPlayer);
 
-      // const category = await this.categoriesService.getCategory(level, type);
+    if (!checkPlayer) {
+      throw new HttpException(
+        "Error creating user, verify information passed and check if e-mail is already registered",
+        HttpStatus.BAD_REQUEST
+      );
+    }
 
-      const newPlayer = await this.prismaService.player.create({
-        data: {
-          position: createPlayerDto.position,
-          email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
-          firstName: createPlayerDto.firstName,
-          lastName: createPlayerDto.lastName,
-          categories: {
-            connect: {
-              id: createPlayerDto.categoryId,
-            },
+    const newPlayer = await this.prismaService.player.create({
+      data: {
+        position: createPlayerDto.position,
+        email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
+        firstName: createPlayerDto.firstName,
+        lastName: createPlayerDto.lastName,
+        categories: {
+          connect: {
+            id: createPlayerDto.categoryId,
           },
         },
-      });
-      return newPlayer;
-    } catch (error) {
-      console.error("Error creating player:", error);
-      return error;
-    }
+      },
+    });
+    return newPlayer;
   }
 
   async getAllPlayers() {
@@ -87,26 +84,22 @@ export class PlayerService {
   }
 
   async deletePlayer(playerId: string) {
-    try {
-      const getPlayer = await this.prismaService.player.findUnique({
-        where: {
-          id: playerId,
-        },
-      });
+    const getPlayer = await this.prismaService.player.findUnique({
+      where: {
+        id: playerId,
+      },
+    });
 
-      if (!getPlayer) {
-        throw new HttpException("Player not found", HttpStatus.BAD_REQUEST);
-      }
-
-      const removePlayer = await this.prismaService.player.delete({
-        where: {
-          id: playerId,
-        },
-      });
-
-      return removePlayer;
-    } catch (error) {
-      throw error;
+    if (!getPlayer) {
+      throw new HttpException("Player not found", HttpStatus.BAD_REQUEST);
     }
+
+    const removePlayer = await this.prismaService.player.delete({
+      where: {
+        id: playerId,
+      },
+    });
+
+    return removePlayer;
   }
 }

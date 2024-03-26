@@ -16,7 +16,7 @@ export const Route = createLazyFileRoute('/players')({
 })
 
 export type ErrorResponse = {
-    message: string[]
+    message: string
 }
 
 type CreatePlayer = Omit<Player, 'id'>
@@ -68,9 +68,12 @@ function Players() {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>
-                if (axiosError.response && axiosError.response.status === 400) {
+                if (
+                    axiosError.response &&
+                    (axiosError.response.status === 400 || 409)
+                ) {
                     setError(true)
-                    setErrorMessage(axiosError.response.data.message.join(', '))
+                    setErrorMessage(axiosError.response.data.message)
                 } else {
                     setError(true)
                     setErrorMessage('Error creating doubles')

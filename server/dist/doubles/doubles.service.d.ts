@@ -43,6 +43,12 @@ export declare class DoublesService {
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }>;
-    update(id: number, updateDoubleDto: UpdateDoubleDto): string;
-    remove(id: number): string;
+    updateCategory(doublesId: string, updateDoubleDto: UpdateDoubleDto): Promise<{
+        id: string;
+        categoryId: string;
+    }>;
+    deleteDoubles(doublesId: string): Promise<{
+        id: string;
+        categoryId: string;
+    }>;
 }

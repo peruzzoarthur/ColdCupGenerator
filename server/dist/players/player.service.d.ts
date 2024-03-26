@@ -5,7 +5,14 @@ export declare class PlayerService {
     private readonly prismaService;
     private readonly categoriesService;
     constructor(prismaService: PrismaService, categoriesService: CategoriesService);
-    createPlayer(createPlayerDto: CreatePlayerDto): Promise<any>;
+    createPlayer(createPlayerDto: CreatePlayerDto): Promise<{
+        id: string;
+        email: string;
+        firstName: string;
+        lastName: string;
+        role: import(".prisma/client").$Enums.Role;
+        position: import(".prisma/client").$Enums.PlayerPosition;
+    }>;
     getAllPlayers(): Promise<{
         id: string;
         firstName: string;

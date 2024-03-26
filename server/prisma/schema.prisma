@@ -87,7 +87,7 @@ model Game {
 
 model Player {
   id         String          @id @default(uuid())
-  email      String?
+  email      String?         @unique
   firstName  String?
   lastName   String?
   role       Role            @default(USER)

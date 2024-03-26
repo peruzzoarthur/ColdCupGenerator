@@ -32,10 +32,10 @@ let DoublesController = class DoublesController {
         return await this.doublesService.getDoublesById(getDoublesByIdDto);
     }
     update(id, updateDoubleDto) {
-        return this.doublesService.update(+id, updateDoubleDto);
+        return this.doublesService.updateCategory(id, updateDoubleDto);
     }
     remove(id) {
-        return this.doublesService.remove(+id);
+        return this.doublesService.deleteDoubles(id);
     }
 };
 exports.DoublesController = DoublesController;

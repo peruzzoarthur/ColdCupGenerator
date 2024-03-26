@@ -21,9 +21,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select'
-import { Category } from '@/hooks/useGetCategories'
 import { Badge } from '../ui/badge'
-import { Place } from '@/hooks/useGetPlaces'
+import { Category, Place } from '@/types/padel.types'
 
 type EventFormProps = {
     onSubmit: SubmitHandler<formObject>
