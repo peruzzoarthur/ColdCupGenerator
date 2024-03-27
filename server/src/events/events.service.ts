@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import { PrismaService } from "src/prisma.service";
@@ -72,7 +72,65 @@ export class EventsService {
   ) {
     const doublesToRegister = await this.prismaService.double.findUnique({
       where: { id: registerDoublesInEventDto.doublesId },
+      select: {
+        categoryId: true,
+        id: true,
+        players: {
+          select: {
+            firstName: true,
+            lastName: true,
+            id: true,
+          },
+        },
+      },
     });
+
+    const isDoubleInEvent = await this.prismaService.event.findUnique({
+      where: {
+        id: registerDoublesInEventDto.eventId,
+        eventDoubles: {
+          some: {
+            doubleId: registerDoublesInEventDto.doublesId,
+            eventId: registerDoublesInEventDto.eventId,
+          },
+        },
+      },
+    });
+
+    if (isDoubleInEvent) {
+      throw new HttpException(
+        "Doubles are already registered in this event",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    const playerOne = doublesToRegister.players[0];
+    const playerTwo = doublesToRegister.players[1];
+
+    const isPlayerOneInThisCategory = await this.prismaService.event.findUnique(
+      {
+        where: {
+          id: registerDoublesInEventDto.eventId,
+          eventDoubles: {
+            some: {
+              categoryId: doublesToRegister.categoryId,
+            },
+          },
+          players: {
+            some: {
+              id: playerOne.id,
+            },
+          },
+        },
+      }
+    );
+
+    if (isPlayerOneInThisCategory) {
+      throw new HttpException(
+        "Player one is already registered in this category.",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
     const createdEventDouble = await this.prismaService.eventDouble.create({
       data: {
         eventId: registerDoublesInEventDto.eventId,

@@ -155,7 +155,7 @@ export function DoublesCard({
                                     </div>
                                 </div>
                             </CardContent>
-                            <CardFooter>
+                            <CardFooter className="justify-end">
                                 <Pencil1Icon
                                     onClick={() => {
                                         setEditOn(true)
@@ -241,13 +241,13 @@ export function DoublesCard({
                                                 </div>
                                             </div>
                                         </CardContent>
-                                        <CardFooter>
+                                        <CardFooter className="justify-end">
                                             <Pencil1Icon
                                                 onClick={() => setEditOn(false)}
                                                 className="justify-end w-4 h-4 mr-2 hover:cursor-pointer"
                                             />
                                         </CardFooter>
-                                        <div className="flex flex-row justify-between ml-4 mr-4">
+                                        <div className="flex flex-row justify-center mb-2 space-x-10">
                                             <Button
                                                 onClick={async () =>
                                                     await handleUpdateDoubles(
@@ -259,7 +259,7 @@ export function DoublesCard({
                                                 Update
                                             </Button>
                                             <Button
-                                                className="bg-red-700"
+                                                className="bg-red-700 hover:bg-red-900"
                                                 onClick={async () =>
                                                     await handleRemoveDoubles(
                                                         doubles

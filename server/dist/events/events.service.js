@@ -72,7 +72,52 @@ let EventsService = class EventsService {
     async registerDoublesInEvent(registerDoublesInEventDto) {
         const doublesToRegister = await this.prismaService.double.findUnique({
             where: { id: registerDoublesInEventDto.doublesId },
+            select: {
+                categoryId: true,
+                id: true,
+                players: {
+                    select: {
+                        firstName: true,
+                        lastName: true,
+                        id: true,
+                    },
+                },
+            },
         });
+        const isDoubleInEvent = await this.prismaService.event.findUnique({
+            where: {
+                id: registerDoublesInEventDto.eventId,
+                eventDoubles: {
+                    some: {
+                        doubleId: registerDoublesInEventDto.doublesId,
+                        eventId: registerDoublesInEventDto.eventId,
+                    },
+                },
+            },
+        });
+        if (isDoubleInEvent) {
+            throw new common_1.HttpException("Doubles are already registered in this event", common_1.HttpStatus.BAD_REQUEST);
+        }
+        const playerOne = doublesToRegister.players[0];
+        const playerTwo = doublesToRegister.players[1];
+        const isPlayerOneInThisCategory = await this.prismaService.event.findUnique({
+            where: {
+                id: registerDoublesInEventDto.eventId,
+                eventDoubles: {
+                    some: {
+                        categoryId: doublesToRegister.categoryId,
+                    },
+                },
+                players: {
+                    some: {
+                        id: playerOne.id,
+                    },
+                },
+            },
+        });
+        if (isPlayerOneInThisCategory) {
+            throw new common_1.HttpException("Player one is already registered in this category.", common_1.HttpStatus.BAD_REQUEST);
+        }
         const createdEventDouble = await this.prismaService.eventDouble.create({
             data: {
                 eventId: registerDoublesInEventDto.eventId,

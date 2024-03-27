@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreatePlaceDto } from "./dto/create-place.dto";
 import { UpdatePlaceDto } from "./dto/update-place.dto";
 import { PrismaService } from "src/prisma.service";
@@ -7,6 +7,19 @@ import { PrismaService } from "src/prisma.service";
 export class PlacesService {
   constructor(private readonly prismaService: PrismaService) {}
   async createPlace(createPlaceDto: CreatePlaceDto) {
+    const checkAddress = await this.prismaService.place.findUnique({
+      where: {
+        address: createPlaceDto.address,
+      },
+    });
+
+    if (checkAddress) {
+      throw new HttpException(
+        "Address already registered.",
+        HttpStatus.CONFLICT
+      );
+    }
+
     const place = await this.prismaService.place.create({
       data: {
         name: createPlaceDto.name,

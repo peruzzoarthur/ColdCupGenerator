@@ -123,7 +123,12 @@ function Players() {
                                         setErrorMessage={setErrorMessage}
                                     />
                                 ))}
-                                <Button onClick={allPlayersOff}>Close</Button>
+                                <Button
+                                    className="mt-2"
+                                    onClick={allPlayersOff}
+                                >
+                                    Close
+                                </Button>
                             </>
                         )}
                     </div>

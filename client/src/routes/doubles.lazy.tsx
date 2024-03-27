@@ -33,6 +33,10 @@ function Doubles() {
 
     const allDoublesOn = () => {
         setShowAllDoubles(true)
+        refetchDoubles()
+        if (showAllDoubles) {
+            setShowAllDoubles(false)
+        }
     }
 
     const allDoublesOff = () => {
@@ -126,7 +130,9 @@ function Doubles() {
                                     setShowAllDoubles={setShowAllDoubles}
                                 />
                             ))}
-                            <Button onClick={allDoublesOff}>Close</Button>
+                            <Button className="mt-2" onClick={allDoublesOff}>
+                                Close
+                            </Button>
                         </>
                     )}
                 </div>

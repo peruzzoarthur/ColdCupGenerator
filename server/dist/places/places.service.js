@@ -17,6 +17,14 @@ let PlacesService = class PlacesService {
         this.prismaService = prismaService;
     }
     async createPlace(createPlaceDto) {
+        const checkAddress = await this.prismaService.place.findUnique({
+            where: {
+                address: createPlaceDto.address,
+            },
+        });
+        if (checkAddress) {
+            throw new common_1.HttpException("Address already registered.", common_1.HttpStatus.CONFLICT);
+        }
         const place = await this.prismaService.place.create({
             data: {
                 name: createPlaceDto.name,

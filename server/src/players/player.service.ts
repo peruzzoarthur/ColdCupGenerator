@@ -19,35 +19,37 @@ export class PlayerService {
   ) {}
 
   async createPlayer(createPlayerDto: CreatePlayerDto) {
-    const checkPlayer = await this.prismaService.player.findFirst({
-      where: {
-        email: createPlayerDto.email,
-      },
-    });
-
-    console.log(checkPlayer);
-
-    if (!checkPlayer) {
-      throw new HttpException(
-        "Error creating user, verify information passed and check if e-mail is already registered",
-        HttpStatus.BAD_REQUEST
-      );
-    }
-
-    const newPlayer = await this.prismaService.player.create({
-      data: {
-        position: createPlayerDto.position,
-        email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
-        firstName: createPlayerDto.firstName,
-        lastName: createPlayerDto.lastName,
-        categories: {
-          connect: {
-            id: createPlayerDto.categoryId,
+    try {
+      const newPlayer = await this.prismaService.player.create({
+        data: {
+          position: createPlayerDto.position,
+          email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
+          firstName: createPlayerDto.firstName,
+          lastName: createPlayerDto.lastName,
+          categories: {
+            connect: {
+              id: createPlayerDto.categoryId,
+            },
           },
         },
-      },
-    });
-    return newPlayer;
+      });
+      return newPlayer;
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new HttpException(
+          "Error creating user, email already registered",
+          HttpStatus.BAD_REQUEST
+        );
+      } else {
+        throw new HttpException(
+          "Error creating user. Please try again later.",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+    }
   }
 
   async getAllPlayers() {

@@ -61,15 +61,18 @@ const RegisterDoublesForm: React.FC<RegisterDoublesFormProps> = ({
                 control={form.control}
                 name="doublesId"
                 render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="max-h-96">
                         <FormLabel>Doubles</FormLabel>
                         <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                         >
                             <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Add doubles" />
+                                <SelectTrigger className="h-12 [&>span]:line-clamp-2 text-left">
+                                    <SelectValue
+                                        className="h-12"
+                                        placeholder="Add doubles"
+                                    />
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>

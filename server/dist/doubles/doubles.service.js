@@ -23,6 +23,9 @@ let DoublesService = class DoublesService {
         if (!createDoubleDto.playerOneId || !createDoubleDto.playerTwoId) {
             throw new common_1.HttpException("Select two players...", common_1.HttpStatus.BAD_REQUEST);
         }
+        if (!createDoubleDto.categoryId) {
+            throw new common_1.HttpException("Please select a category...", common_1.HttpStatus.BAD_REQUEST);
+        }
         const playerOne = await this.prismaService.player.findUnique({
             where: {
                 id: createDoubleDto.playerOneId,

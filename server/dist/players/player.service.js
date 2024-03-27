@@ -13,6 +13,7 @@ exports.PlayerService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
 const categories_service_1 = require("../categories/categories.service");
+const client_1 = require("@prisma/client");
 const { uniqueNamesGenerator, names, adjectives, } = require("unique-names-generator");
 let PlayerService = class PlayerService {
     constructor(prismaService, categoriesService) {
@@ -20,29 +21,31 @@ let PlayerService = class PlayerService {
         this.categoriesService = categoriesService;
     }
     async createPlayer(createPlayerDto) {
-        const checkPlayer = await this.prismaService.player.findFirst({
-            where: {
-                email: createPlayerDto.email,
-            },
-        });
-        console.log(checkPlayer);
-        if (!checkPlayer) {
-            throw new common_1.HttpException("Error creating user, verify information passed and check if e-mail is already registered", common_1.HttpStatus.BAD_REQUEST);
-        }
-        const newPlayer = await this.prismaService.player.create({
-            data: {
-                position: createPlayerDto.position,
-                email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
-                firstName: createPlayerDto.firstName,
-                lastName: createPlayerDto.lastName,
-                categories: {
-                    connect: {
-                        id: createPlayerDto.categoryId,
+        try {
+            const newPlayer = await this.prismaService.player.create({
+                data: {
+                    position: createPlayerDto.position,
+                    email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
+                    firstName: createPlayerDto.firstName,
+                    lastName: createPlayerDto.lastName,
+                    categories: {
+                        connect: {
+                            id: createPlayerDto.categoryId,
+                        },
                     },
                 },
-            },
-        });
-        return newPlayer;
+            });
+            return newPlayer;
+        }
+        catch (error) {
+            if (error instanceof client_1.Prisma.PrismaClientKnownRequestError &&
+                error.code === "P2002") {
+                throw new common_1.HttpException("Error creating user, email already registered", common_1.HttpStatus.BAD_REQUEST);
+            }
+            else {
+                throw new common_1.HttpException("Error creating user. Please try again later.", common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
     }
     async getAllPlayers() {
         const allPlayers = this.prismaService.player.findMany({

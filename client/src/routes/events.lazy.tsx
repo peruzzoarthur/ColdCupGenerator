@@ -24,7 +24,7 @@ type createEventFormObject = {
 }
 
 export type ErrorResponse = {
-    message: string[]
+    message: string
 }
 
 export const Route = createLazyFileRoute('/events')({
@@ -41,7 +41,7 @@ function Events() {
     const [placesState, setPlacesState] = useState<string[]>([])
     const { allCategories } = useGetCategories()
     const { allPlaces } = useGetPlaces()
-    const { allEvents } = useGetEvents()
+    const { allEvents, refetchEvents } = useGetEvents()
     const { allDoubles } = useGetDoubles()
     const { toast } = useToast()
 
@@ -95,13 +95,14 @@ function Events() {
             )
 
             createEventToast(data.data)
-            console.log(data)
+
+            refetchEvents()
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>
                 if (axiosError.response && axiosError.response.status === 400) {
                     setError(true)
-                    setErrorMessage(axiosError.response.data.message.join(', '))
+                    setErrorMessage(axiosError.response.data.message)
                 } else {
                     setError(true)
                     setErrorMessage('Error creating doubles')
@@ -131,7 +132,7 @@ function Events() {
                 const axiosError = error as AxiosError<ErrorResponse>
                 if (axiosError.response && axiosError.response.status === 400) {
                     setError(true)
-                    setErrorMessage(axiosError.response.data.message.join(', '))
+                    setErrorMessage(axiosError.response.data.message)
                 } else {
                     setError(true)
                     setErrorMessage('Error creating doubles')
@@ -147,7 +148,7 @@ function Events() {
         <>
             <div className="flex justify-center w-full">
                 {!toggleEvent && (
-                    <div className="flex justify-center w-full">
+                    <div className="flex flex-col items-center justify-center w-full">
                         <div className="flex flex-col w-2/3">
                             <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
                                 Create an event
@@ -157,7 +158,7 @@ function Events() {
                                     className="w-8 h-8"
                                 />
                             </h1>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col justify-center">
                                 <EventForm
                                     allPlaces={allPlaces}
                                     allCategories={allCategories}
@@ -175,7 +176,10 @@ function Events() {
                             </div>
 
                             {isError && (
-                                <div className="mt-4">
+                                <div
+                                    onClick={() => setError(false)}
+                                    className="mt-4"
+                                >
                                     <ErrorAlert message={errorMessage} />
                                 </div>
                             )}
@@ -188,35 +192,33 @@ function Events() {
                                     Show all events
                                 </Button>
                             )}
-
-                            {showAllEvents && (
-                                <div className="flex flex-col justify-center">
-                                    <div className="flex flex-col justify-end">
-                                        {allEvents?.map((event, index) => (
-                                            <div key={index} className="mt-2 ">
-                                                <EventCard
-                                                    event={event}
-                                                    key={index}
-                                                    toggleEventOn={
-                                                        toggleEventOn
-                                                    }
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <Button
-                                        onClick={allEventsOff}
-                                        className="mt-12"
-                                    >
-                                        Close
-                                    </Button>
-                                </div>
-                            )}
                         </div>
+                        {showAllEvents && (
+                            <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-col">
+                                    {allEvents?.map((event, index) => (
+                                        <div key={index} className="mt-2 ">
+                                            <EventCard
+                                                event={event}
+                                                key={index}
+                                                toggleEventOn={toggleEventOn}
+                                                className="md:w-[640px] lg:w-[720px] xl:w-[860px] 2xl:w-[1024px]"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                <Button
+                                    onClick={allEventsOff}
+                                    className="mt-12"
+                                >
+                                    Close
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 )}
                 {toggleEvent && (
-                    <div className="flex flex-col w-4/5">
+                    <div className="flex flex-col w-4/5 lg:w-2/3">
                         <div className="flex flex-col justify-center ">
                             {selectedEvent && (
                                 <div className="flex flex-col justify-center mt-2 mb-4">
@@ -232,6 +234,14 @@ function Events() {
                                         }}
                                         allDoubles={allDoubles}
                                     />
+                                </div>
+                            )}
+                            {isError && (
+                                <div
+                                    onClick={() => setError(false)}
+                                    className="mb-4 "
+                                >
+                                    <ErrorAlert message={errorMessage} />
                                 </div>
                             )}
                             <div className="flex justify-center">
