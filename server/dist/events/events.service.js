@@ -13,10 +13,12 @@ exports.EventsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
 const categories_service_1 = require("../categories/categories.service");
+const matches_service_1 = require("../matches/matches.service");
 let EventsService = class EventsService {
-    constructor(prismaService, categoriesService) {
+    constructor(prismaService, categoriesService, matchesService) {
         this.prismaService = prismaService;
         this.categoriesService = categoriesService;
+        this.matchesService = matchesService;
     }
     async createEvent(createEventDto) {
         const placesToConnect = createEventDto.placesIds.map((id) => ({ id }));
@@ -48,6 +50,18 @@ let EventsService = class EventsService {
                 id: true,
                 name: true,
                 places: true,
+                matches: {
+                    select: {
+                        categoryId: true,
+                        doubles: {
+                            select: {
+                                players: true,
+                                id: true,
+                            },
+                        },
+                        eventId: true,
+                    },
+                },
                 eventDoubles: true,
                 isActive: true,
                 categories: {
@@ -156,6 +170,14 @@ let EventsService = class EventsService {
                         },
                     },
                 },
+                matches: {
+                    select: {
+                        categoryId: true,
+                        doubles: true,
+                        eventId: true,
+                        isFinished: true,
+                    },
+                },
                 categories: {
                     select: {
                         id: true,
@@ -189,25 +211,21 @@ let EventsService = class EventsService {
             console.log("active?");
         }
         const totalCategories = event.categories.length;
+        const aCategory = event.categories[0].id;
         const doublesIds = event.categories.flatMap((cat) => cat.eventDoubles.map((ed) => ed.doubleId));
         const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
-        const matches = [];
         for (let i = 0; i < doublesIds.length; i++) {
             for (let j = i + 1; j < doublesIds.length; j++) {
                 console.log(`${doublesIds[i]} x ${doublesIds[j]}`);
-                matches.push({
-                    doublesOne: {
-                        doubleId: doublesIds[i],
-                        double: eventDoubles[i].double,
-                    },
-                    doublesTwo: {
-                        doubleId: doublesIds[j],
-                        double: eventDoubles[j].double,
-                    },
+                const newMatch = await this.matchesService.create({
+                    doublesIds: [doublesIds[i], doublesIds[j]],
+                    categoryId: aCategory,
+                    eventId: event.id,
                 });
+                console.log(newMatch);
             }
         }
-        return matches;
+        return eventDoubles;
     }
     findOne(id) {
         return `This action returns a #${id} event`;
@@ -223,6 +241,7 @@ exports.EventsService = EventsService;
 exports.EventsService = EventsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        categories_service_1.CategoriesService])
+        categories_service_1.CategoriesService,
+        matches_service_1.MatchesService])
 ], EventsService);
 //# sourceMappingURL=events.service.js.map

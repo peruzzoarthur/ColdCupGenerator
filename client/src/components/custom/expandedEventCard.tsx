@@ -37,8 +37,7 @@ export function ExtendedEventCard({
     // categoriesWithDoublesInEvent,
 }: ExtendedEventCardProps) {
     const { data: categoriesWithEventDoubles } = useGetDoublesInEvent(event.id)
-    const [activate, setActivate] = useState<boolean>(false)
-    const [matches, setMatches] = useState<Match[] | undefined>()
+    // const [activate, setActivate] = useState<boolean>(false)
     // console.log(doublesInEvent)
     const handleActivate = async (eventId: string) => {
         try {
@@ -49,9 +48,7 @@ export function ExtendedEventCard({
                 'http://localhost:3000/events/activate-event',
                 requestEventByIdDto
             )
-            setActivate(true)
-            console.log(matches)
-            setMatches(matches)
+            // setActivate(true)
             return matches
         } catch (error) {
             console.error(error)
@@ -147,21 +144,16 @@ export function ExtendedEventCard({
             </CardContent>
             <CardFooter>
                 <div className="flex flex-col items-center w-full space-x-5">
-                    {activate && matches && (
-                        <>
-                            <div className="flex flex-col">
-                                {matches.map((m) => (
-                                    <>
-                                        <div className="flex flex-row justify-between">
-                                            <p>{m.doublesOne.doubleId}</p>
+                    <>
+                        <div className="flex flex-col">
+                            {event.matches.map((m) => (
+                                <p>
+                                    {m.doubles[0].id} x {m.doubles[1].id}
+                                </p>
+                            ))}
+                        </div>
+                    </>
 
-                                            <p> {m.doublesTwo.doubleId}</p>
-                                        </div>
-                                    </>
-                                ))}
-                            </div>
-                        </>
-                    )}
                     <div className="flex flex-row space-x-5">
                         <Button
                             onClick={() => toggleEventOff()}

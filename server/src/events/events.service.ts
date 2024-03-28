@@ -6,12 +6,14 @@ import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
 import { CategoriesService } from "src/categories/categories.service";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { Double } from "@prisma/client";
+import { MatchesService } from "src/matches/matches.service";
 
 @Injectable()
 export class EventsService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly categoriesService: CategoriesService
+    private readonly categoriesService: CategoriesService,
+    private readonly matchesService: MatchesService
   ) {}
   async createEvent(createEventDto: CreateEventDto) {
     const placesToConnect = createEventDto.placesIds.map((id) => ({ id }));
@@ -46,6 +48,18 @@ export class EventsService {
         id: true,
         name: true,
         places: true,
+        matches: {
+          select: {
+            categoryId: true,
+            doubles: {
+              select: {
+                players: true,
+                id: true,
+              },
+            },
+            eventId: true,
+          },
+        },
         eventDoubles: true,
         isActive: true,
         categories: {
@@ -173,6 +187,14 @@ export class EventsService {
             // doubleId: true,
           },
         },
+        matches: {
+          select: {
+            categoryId: true,
+            doubles: true,
+            eventId: true,
+            isFinished: true,
+          },
+        },
         categories: {
           select: {
             id: true,
@@ -207,29 +229,37 @@ export class EventsService {
     }
 
     const totalCategories = event.categories.length;
+    const aCategory = event.categories[0].id;
     const doublesIds = event.categories.flatMap((cat) =>
       cat.eventDoubles.map((ed) => ed.doubleId)
     );
 
     const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
 
-    const matches: Match[] = [];
+    // const matches: Match[] = [];
     for (let i = 0; i < doublesIds.length; i++) {
       for (let j = i + 1; j < doublesIds.length; j++) {
         console.log(`${doublesIds[i]} x ${doublesIds[j]}`);
-        matches.push({
-          doublesOne: {
-            doubleId: doublesIds[i],
-            double: eventDoubles[i].double,
-          },
-          doublesTwo: {
-            doubleId: doublesIds[j],
-            double: eventDoubles[j].double,
-          },
+        // matches.push({
+        //   doublesOne: {
+        //     doubleId: doublesIds[i],
+        //     double: eventDoubles[i].double,
+        //   },
+        //   doublesTwo: {
+        //     doubleId: doublesIds[j],
+        //     double: eventDoubles[j].double,
+        //   },
+        // });
+        const newMatch = await this.matchesService.create({
+          doublesIds: [doublesIds[i], doublesIds[j]],
+          categoryId: aCategory,
+          eventId: event.id,
         });
+        console.log(newMatch);
       }
     }
-    return matches;
+
+    return eventDoubles;
   }
 
   findOne(id: number) {

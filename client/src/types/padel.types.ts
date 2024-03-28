@@ -43,8 +43,15 @@ export type PadelEvent = {
     places: Place[]
     eventDoubles?: EventDouble[]
     categories: Category[]
+    matches: Match[]
 }
 
+export type Match = {
+    doubles: Double[]
+    categoryId: string
+    eventId: string
+    doublesId: string
+}
 export enum CatType {
     ALL = 'ALL',
     F = 'F',

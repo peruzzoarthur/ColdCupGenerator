@@ -43,6 +43,15 @@ export declare class EventsController {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         }[];
+        matches: {
+            doubles: {
+                id: string;
+                categoryId: string;
+            }[];
+            isFinished: boolean;
+            categoryId: string;
+            eventId: string;
+        }[];
         eventDoubles: {
             category: {
                 id: string;
@@ -68,19 +77,18 @@ export declare class EventsController {
         }[];
     }>;
     activateEvent(getEventByIdDto: GetEventByIdDto): Promise<{
-        doublesOne: {
-            doubleId: string;
-            double: {
+        doubleId: string;
+        double: {
+            id: string;
+            players: {
                 id: string;
-                categoryId: string;
-            };
-        };
-        doublesTwo: {
-            doubleId: string;
-            double: {
-                id: string;
-                categoryId: string;
-            };
+                email: string;
+                firstName: string;
+                lastName: string;
+                role: import(".prisma/client").$Enums.Role;
+                position: import(".prisma/client").$Enums.PlayerPosition;
+            }[];
+            categoryId: string;
         };
     }[]>;
     registerDoublesInEvent(registerDoublesInEventDto: RegisterDoublesInEventDto): Promise<{
@@ -121,6 +129,21 @@ export declare class EventsController {
             }[];
             level: number;
             type: import(".prisma/client").$Enums.CatType;
+        }[];
+        matches: {
+            doubles: {
+                id: string;
+                players: {
+                    id: string;
+                    email: string;
+                    firstName: string;
+                    lastName: string;
+                    role: import(".prisma/client").$Enums.Role;
+                    position: import(".prisma/client").$Enums.PlayerPosition;
+                }[];
+            }[];
+            categoryId: string;
+            eventId: string;
         }[];
         places: {
             id: string;
