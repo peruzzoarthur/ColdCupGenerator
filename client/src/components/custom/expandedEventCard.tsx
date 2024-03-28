@@ -9,12 +9,25 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
-import { PadelEvent } from '@/types/padel.types'
+import { Double, PadelEvent } from '@/types/padel.types'
 import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
+import axios from 'axios'
+import { useState } from 'react'
 
 type ExtendedEventCardProps = React.ComponentProps<typeof Card> & {
     event: PadelEvent
     toggleEventOff: () => void
+}
+
+type Match = {
+    doublesOne: {
+        doubleId: string
+        double: Double
+    }
+    doublesTwo: {
+        doubleId: string
+        double: Double
+    }
 }
 
 export function ExtendedEventCard({
@@ -24,10 +37,27 @@ export function ExtendedEventCard({
     // categoriesWithDoublesInEvent,
 }: ExtendedEventCardProps) {
     const { data: categoriesWithEventDoubles } = useGetDoublesInEvent(event.id)
-
-    console.log(categoriesWithEventDoubles)
-
+    const [activate, setActivate] = useState<boolean>(false)
+    const [matches, setMatches] = useState<Match[] | undefined>()
     // console.log(doublesInEvent)
+    const handleActivate = async (eventId: string) => {
+        try {
+            const requestEventByIdDto = {
+                id: eventId,
+            }
+            const { data: matches }: { data: Match[] } = await axios.post(
+                'http://localhost:3000/events/activate-event',
+                requestEventByIdDto
+            )
+            setActivate(true)
+            console.log(matches)
+            setMatches(matches)
+            return matches
+        } catch (error) {
+            console.error(error)
+            return error
+        }
+    }
 
     // console.log(eventById)
     return (
@@ -116,9 +146,37 @@ export function ExtendedEventCard({
                 )}
             </CardContent>
             <CardFooter>
-                <Button onClick={() => toggleEventOff()} className="w-full">
-                    <Cross2Icon className="w-4 h-4 mr-2" /> Close event
-                </Button>
+                <div className="flex flex-col items-center w-full space-x-5">
+                    {activate && matches && (
+                        <>
+                            <div className="flex flex-col">
+                                {matches.map((m) => (
+                                    <>
+                                        <div className="flex flex-row justify-between">
+                                            <p>{m.doublesOne.doubleId}</p>
+
+                                            <p> {m.doublesTwo.doubleId}</p>
+                                        </div>
+                                    </>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                    <div className="flex flex-row space-x-5">
+                        <Button
+                            onClick={() => toggleEventOff()}
+                            className="w-full"
+                        >
+                            <Cross2Icon className="w-4 h-4" /> Close event
+                        </Button>
+                        <Button
+                            onClick={() => handleActivate(event.id)}
+                            className=" bg-slate-200"
+                        >
+                            Activate
+                        </Button>
+                    </div>
+                </div>
             </CardFooter>
         </Card>
     )

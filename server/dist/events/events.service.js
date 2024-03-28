@@ -49,6 +49,7 @@ let EventsService = class EventsService {
                 name: true,
                 places: true,
                 eventDoubles: true,
+                isActive: true,
                 categories: {
                     select: {
                         id: true,
@@ -142,6 +143,7 @@ let EventsService = class EventsService {
             },
             select: {
                 id: true,
+                isActive: true,
                 eventDoubles: {
                     select: {
                         category: true,
@@ -159,11 +161,53 @@ let EventsService = class EventsService {
                         id: true,
                         type: true,
                         level: true,
+                        eventDoubles: {
+                            where: { eventId: getEventByIdDto.id },
+                            select: {
+                                double: {
+                                    select: {
+                                        id: true,
+                                        categoryId: true,
+                                        players: true,
+                                    },
+                                },
+                                doubleId: true,
+                            },
+                        },
                     },
                 },
             },
         });
         return event;
+    }
+    async activateEvent(getEventByIdDto) {
+        const event = await this.getEventById(getEventByIdDto);
+        if (!event.isActive) {
+            console.log("not active");
+        }
+        else {
+            console.log("active?");
+        }
+        const totalCategories = event.categories.length;
+        const doublesIds = event.categories.flatMap((cat) => cat.eventDoubles.map((ed) => ed.doubleId));
+        const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
+        const matches = [];
+        for (let i = 0; i < doublesIds.length; i++) {
+            for (let j = i + 1; j < doublesIds.length; j++) {
+                console.log(`${doublesIds[i]} x ${doublesIds[j]}`);
+                matches.push({
+                    doublesOne: {
+                        doubleId: doublesIds[i],
+                        double: eventDoubles[i].double,
+                    },
+                    doublesTwo: {
+                        doubleId: doublesIds[j],
+                        double: eventDoubles[j].double,
+                    },
+                });
+            }
+        }
+        return matches;
     }
     findOne(id) {
         return `This action returns a #${id} event`;

@@ -29,6 +29,9 @@ let EventsController = class EventsController {
     async getEventById(getEventByIdDto) {
         return await this.eventsService.getEventById(getEventByIdDto);
     }
+    async activateEvent(getEventByIdDto) {
+        return await this.eventsService.activateEvent(getEventByIdDto);
+    }
     async registerDoublesInEvent(registerDoublesInEventDto) {
         console.log("registering");
         return await this.eventsService.registerDoublesInEvent(registerDoublesInEventDto);
@@ -61,6 +64,13 @@ __decorate([
     __metadata("design:paramtypes", [get_event_by_id_dto_1.GetEventByIdDto]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "getEventById", null);
+__decorate([
+    (0, common_1.Post)("activate-event"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [get_event_by_id_dto_1.GetEventByIdDto]),
+    __metadata("design:returntype", Promise)
+], EventsController.prototype, "activateEvent", null);
 __decorate([
     (0, common_1.Post)("register"),
     __param(0, (0, common_1.Body)()),

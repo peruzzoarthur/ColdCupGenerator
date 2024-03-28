@@ -5,6 +5,7 @@ import { PrismaService } from "src/prisma.service";
 import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
 import { CategoriesService } from "src/categories/categories.service";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
+import { Double } from "@prisma/client";
 
 @Injectable()
 export class EventsService {
@@ -46,6 +47,7 @@ export class EventsService {
         name: true,
         places: true,
         eventDoubles: true,
+        isActive: true,
         categories: {
           select: {
             id: true,
@@ -156,6 +158,7 @@ export class EventsService {
       },
       select: {
         id: true,
+        isActive: true,
         eventDoubles: {
           select: {
             category: true,
@@ -175,11 +178,58 @@ export class EventsService {
             id: true,
             type: true,
             level: true,
+            eventDoubles: {
+              where: { eventId: getEventByIdDto.id },
+              select: {
+                double: {
+                  select: {
+                    id: true,
+                    categoryId: true,
+                    players: true,
+                  },
+                },
+                doubleId: true,
+              },
+            },
           },
         },
       },
     });
     return event;
+  }
+
+  async activateEvent(getEventByIdDto: GetEventByIdDto) {
+    const event = await this.getEventById(getEventByIdDto);
+    if (!event.isActive) {
+      console.log("not active");
+    } else {
+      console.log("active?");
+    }
+
+    const totalCategories = event.categories.length;
+    const doublesIds = event.categories.flatMap((cat) =>
+      cat.eventDoubles.map((ed) => ed.doubleId)
+    );
+
+    const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
+
+    const matches: Match[] = [];
+    for (let i = 0; i < doublesIds.length; i++) {
+      for (let j = i + 1; j < doublesIds.length; j++) {
+        console.log(`${doublesIds[i]} x ${doublesIds[j]}`);
+        matches.push({
+          doublesOne: {
+            doubleId: doublesIds[i],
+            double: eventDoubles[i].double,
+          },
+          doublesTwo: {
+            doubleId: doublesIds[j],
+            double: eventDoubles[j].double,
+          },
+        });
+      }
+    }
+    return matches;
   }
 
   findOne(id: number) {
@@ -194,3 +244,14 @@ export class EventsService {
     return `This action removes a #${id} event`;
   }
 }
+
+type Match = {
+  doublesOne: {
+    doubleId: string;
+    double: Double;
+  };
+  doublesTwo: {
+    doubleId: string;
+    double: Double;
+  };
+};

@@ -27,6 +27,11 @@ export class EventsController {
     return await this.eventsService.getEventById(getEventByIdDto);
   }
 
+  @Post("activate-event")
+  async activateEvent(@Body() getEventByIdDto: GetEventByIdDto) {
+    return await this.eventsService.activateEvent(getEventByIdDto);
+  }
+
   @Post("register")
   async registerDoublesInEvent(
     @Body() registerDoublesInEventDto: RegisterDoublesInEventDto

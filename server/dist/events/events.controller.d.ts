@@ -8,12 +8,12 @@ export declare class EventsController {
     constructor(eventsService: EventsService);
     create(createEventDto: CreateEventDto): Promise<{
         id: string;
+        name: string;
         categories: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         }[];
-        name: string;
         places: {
             id: string;
             name: string;
@@ -22,6 +22,27 @@ export declare class EventsController {
     }>;
     getEventById(getEventByIdDto: GetEventByIdDto): Promise<{
         id: string;
+        isActive: boolean;
+        categories: {
+            id: string;
+            eventDoubles: {
+                doubleId: string;
+                double: {
+                    id: string;
+                    players: {
+                        id: string;
+                        email: string;
+                        firstName: string;
+                        lastName: string;
+                        role: import(".prisma/client").$Enums.Role;
+                        position: import(".prisma/client").$Enums.PlayerPosition;
+                    }[];
+                    categoryId: string;
+                };
+            }[];
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        }[];
         eventDoubles: {
             category: {
                 id: string;
@@ -29,11 +50,6 @@ export declare class EventsController {
                 type: import(".prisma/client").$Enums.CatType;
             };
             double: {
-                category: {
-                    id: string;
-                    level: number;
-                    type: import(".prisma/client").$Enums.CatType;
-                };
                 id: string;
                 players: {
                     id: string;
@@ -43,14 +59,30 @@ export declare class EventsController {
                     role: import(".prisma/client").$Enums.Role;
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
+                category: {
+                    id: string;
+                    level: number;
+                    type: import(".prisma/client").$Enums.CatType;
+                };
             };
         }[];
-        categories: {
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-            id: string;
-        }[];
     }>;
+    activateEvent(getEventByIdDto: GetEventByIdDto): Promise<{
+        doublesOne: {
+            doubleId: string;
+            double: {
+                id: string;
+                categoryId: string;
+            };
+        };
+        doublesTwo: {
+            doubleId: string;
+            double: {
+                id: string;
+                categoryId: string;
+            };
+        };
+    }[]>;
     registerDoublesInEvent(registerDoublesInEventDto: RegisterDoublesInEventDto): Promise<{
         event: {
             id: string;
@@ -70,14 +102,9 @@ export declare class EventsController {
     }>;
     findAllEvents(): Promise<{
         id: string;
-        eventDoubles: {
-            eventId: string;
-            doubleId: string;
-            categoryId: string;
-        }[];
+        name: string;
+        isActive: boolean;
         categories: {
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
             id: string;
             eventDoubles: {
                 double: {
@@ -92,12 +119,18 @@ export declare class EventsController {
                     }[];
                 };
             }[];
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
         }[];
-        name: string;
         places: {
             id: string;
             name: string;
             address: string;
+        }[];
+        eventDoubles: {
+            eventId: string;
+            doubleId: string;
+            categoryId: string;
         }[];
     }[]>;
     findOne(id: string): string;

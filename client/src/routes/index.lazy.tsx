@@ -28,10 +28,10 @@ const onPopulate = async (level: number) => {
 }
 
 const handlePopulate = async () => {
-    onPopulate(1)
-    onPopulate(2)
-    onPopulate(3)
-    onPopulate(4)
+    await onPopulate(1)
+    await onPopulate(2)
+    await onPopulate(3)
+    await onPopulate(4)
 }
 
 function Index() {

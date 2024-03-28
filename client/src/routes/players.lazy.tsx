@@ -19,7 +19,7 @@ export type ErrorResponse = {
     message: string
 }
 
-type CreatePlayer = Omit<Player, 'id'>
+export type CreatePlayer = Omit<Player, 'id'>
 
 function Players() {
     const [isError, setError] = useState<boolean>(false)
