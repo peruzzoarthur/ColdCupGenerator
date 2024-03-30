@@ -12,7 +12,7 @@ import {
 import { Double, PadelEvent } from '@/types/padel.types'
 import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 import axios from 'axios'
-import { useState } from 'react'
+// import { useState } from 'react'
 
 type ExtendedEventCardProps = React.ComponentProps<typeof Card> & {
     event: PadelEvent
@@ -143,33 +143,57 @@ export function ExtendedEventCard({
                 )}
             </CardContent>
             <CardFooter>
-                <div className="flex flex-col items-center w-full space-x-5">
+                <div className="flex items-center justify-center w-full">
                     <>
                         <div className="flex flex-col">
-                            {event.matches.map((m) => (
-                                <p>
-                                    {m.doubles[0].id} x {m.doubles[1].id}
-                                </p>
+                            {event.matches.map((m, matchIndex) => (
+                                <>
+                                    <h1 className="text-lg font-bold">
+                                        Match {matchIndex + 1}
+                                    </h1>
+                                    <div className="flex flex-row">
+                                        {m.doubles.map((d, index) => (
+                                            <div key={index}>
+                                                <div className="flex items-center p-4 space-x-4 border rounded-md">
+                                                    <div className="flex-row flex-1 space-y-1">
+                                                        {d.players.map(
+                                                            (
+                                                                p,
+                                                                playerIndex
+                                                            ) => (
+                                                                <div
+                                                                    className="flex mb-1"
+                                                                    key={
+                                                                        playerIndex
+                                                                    }
+                                                                >
+                                                                    <PersonIcon className="mr-2" />
+                                                                    <p className="pb-2 mb-0.5">{`${p.firstName} ${p.lastName}`}</p>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
                             ))}
                         </div>
                     </>
-
-                    <div className="flex flex-row space-x-5">
-                        <Button
-                            onClick={() => toggleEventOff()}
-                            className="w-full"
-                        >
-                            <Cross2Icon className="w-4 h-4" /> Close event
-                        </Button>
-                        <Button
-                            onClick={() => handleActivate(event.id)}
-                            className=" bg-slate-200"
-                        >
-                            Activate
-                        </Button>
-                    </div>
                 </div>
             </CardFooter>
+            <div className="flex flex-row space-x-5">
+                <Button onClick={() => toggleEventOff()} className="w-full">
+                    <Cross2Icon className="w-4 h-4" /> Close event
+                </Button>
+                <Button
+                    onClick={() => handleActivate(event.id)}
+                    className=" bg-slate-200"
+                >
+                    Activate
+                </Button>
+            </div>
         </Card>
     )
 }

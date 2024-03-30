@@ -16,14 +16,22 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const RegisterLazyImport = createFileRoute('/register')()
 const PlayersLazyImport = createFileRoute('/players')()
 const PlacesLazyImport = createFileRoute('/places')()
+const LoginLazyImport = createFileRoute('/login')()
 const EventsLazyImport = createFileRoute('/events')()
 const DoublesLazyImport = createFileRoute('/doubles')()
+const DashboardLazyImport = createFileRoute('/dashboard')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const RegisterLazyRoute = RegisterLazyImport.update({
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/register.lazy').then((d) => d.Route))
 
 const PlayersLazyRoute = PlayersLazyImport.update({
   path: '/players',
@@ -35,6 +43,11 @@ const PlacesLazyRoute = PlacesLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/places.lazy').then((d) => d.Route))
 
+const LoginLazyRoute = LoginLazyImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+
 const EventsLazyRoute = EventsLazyImport.update({
   path: '/events',
   getParentRoute: () => rootRoute,
@@ -44,6 +57,11 @@ const DoublesLazyRoute = DoublesLazyImport.update({
   path: '/doubles',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/doubles.lazy').then((d) => d.Route))
+
+const DashboardLazyRoute = DashboardLazyImport.update({
+  path: '/dashboard',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/dashboard.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
@@ -67,12 +85,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard': {
+      preLoaderRoute: typeof DashboardLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/doubles': {
       preLoaderRoute: typeof DoublesLazyImport
       parentRoute: typeof rootRoute
     }
     '/events': {
       preLoaderRoute: typeof EventsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
     '/places': {
@@ -83,6 +109,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayersLazyImport
       parentRoute: typeof rootRoute
     }
+    '/register': {
+      preLoaderRoute: typeof RegisterLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -91,10 +121,13 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   AboutLazyRoute,
+  DashboardLazyRoute,
   DoublesLazyRoute,
   EventsLazyRoute,
+  LoginLazyRoute,
   PlacesLazyRoute,
   PlayersLazyRoute,
+  RegisterLazyRoute,
 ])
 
 /* prettier-ignore-end */
