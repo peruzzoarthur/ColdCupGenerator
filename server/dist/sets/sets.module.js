@@ -10,13 +10,16 @@ exports.SetsModule = void 0;
 const common_1 = require("@nestjs/common");
 const sets_service_1 = require("./sets.service");
 const sets_controller_1 = require("./sets.controller");
+const prisma_service_1 = require("../prisma.service");
+const games_service_1 = require("../games/games.service");
 let SetsModule = class SetsModule {
 };
 exports.SetsModule = SetsModule;
 exports.SetsModule = SetsModule = __decorate([
     (0, common_1.Module)({
         controllers: [sets_controller_1.SetsController],
-        providers: [sets_service_1.SetsService],
+        providers: [sets_service_1.SetsService, prisma_service_1.PrismaService, games_service_1.GamesService],
+        exports: [sets_service_1.SetsService],
     })
 ], SetsModule);
 //# sourceMappingURL=sets.module.js.map

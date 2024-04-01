@@ -17,21 +17,25 @@ const common_1 = require("@nestjs/common");
 const matches_service_1 = require("./matches.service");
 const create_match_dto_1 = require("./dto/create-match.dto");
 const update_match_dto_1 = require("./dto/update-match.dto");
+const match_finished_dto_1 = require("./dto/match-finished.dto");
 let MatchesController = class MatchesController {
     constructor(matchesService) {
         this.matchesService = matchesService;
     }
-    create(createMatchDto) {
-        return this.matchesService.create(createMatchDto);
+    async create(createMatchDto) {
+        return await this.matchesService.create(createMatchDto);
     }
-    findAll() {
-        return this.matchesService.findAll();
+    async findAll() {
+        return await this.matchesService.findAll();
     }
-    findOne(id) {
-        return this.matchesService.findOne(+id);
+    async findOne(id) {
+        return await this.matchesService.findOne(id);
     }
     update(id, updateMatchDto) {
-        return this.matchesService.update(+id, updateMatchDto);
+        return this.matchesService.update(id, updateMatchDto);
+    }
+    async matchFinished(id, matchFinishedDto) {
+        return await this.matchesService.matchFinished(id, matchFinishedDto);
     }
     remove(id) {
         return this.matchesService.remove(+id);
@@ -43,38 +47,46 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_match_dto_1.CreateMatchDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], MatchesController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], MatchesController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], MatchesController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Patch)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_match_dto_1.UpdateMatchDto]),
     __metadata("design:returntype", void 0)
 ], MatchesController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Patch)("/finish-match/:id"),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, match_finished_dto_1.MatchFinishedDto]),
+    __metadata("design:returntype", Promise)
+], MatchesController.prototype, "matchFinished", null);
+__decorate([
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], MatchesController.prototype, "remove", null);
 exports.MatchesController = MatchesController = __decorate([
-    (0, common_1.Controller)('matches'),
+    (0, common_1.Controller)("matches"),
     __metadata("design:paramtypes", [matches_service_1.MatchesService])
 ], MatchesController);
 //# sourceMappingURL=matches.controller.js.map

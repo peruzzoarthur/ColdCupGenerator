@@ -11,13 +11,15 @@ const common_1 = require("@nestjs/common");
 const matches_service_1 = require("./matches.service");
 const matches_controller_1 = require("./matches.controller");
 const prisma_service_1 = require("../prisma.service");
+const sets_service_1 = require("../sets/sets.service");
+const games_service_1 = require("../games/games.service");
 let MatchesModule = class MatchesModule {
 };
 exports.MatchesModule = MatchesModule;
 exports.MatchesModule = MatchesModule = __decorate([
     (0, common_1.Module)({
         controllers: [matches_controller_1.MatchesController],
-        providers: [matches_service_1.MatchesService, prisma_service_1.PrismaService],
+        providers: [matches_service_1.MatchesService, prisma_service_1.PrismaService, sets_service_1.SetsService, games_service_1.GamesService],
     })
 ], MatchesModule);
 //# sourceMappingURL=matches.module.js.map

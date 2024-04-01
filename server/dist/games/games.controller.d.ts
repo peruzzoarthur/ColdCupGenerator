@@ -1,10 +1,14 @@
-import { GamesService } from './games.service';
-import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto } from './dto/update-game.dto';
+import { GamesService } from "./games.service";
+import { CreateGameDto } from "./dto/create-game.dto";
+import { UpdateGameDto } from "./dto/update-game.dto";
 export declare class GamesController {
     private readonly gamesService;
     constructor(gamesService: GamesService);
-    create(createGameDto: CreateGameDto): string;
+    create(createGameDto: CreateGameDto): Promise<{
+        id: string;
+        setId: string;
+        winnerId: string;
+    }>;
     findAll(): string;
     findOne(id: string): string;
     update(id: string, updateGameDto: UpdateGameDto): string;

@@ -17,21 +17,25 @@ const common_1 = require("@nestjs/common");
 const sets_service_1 = require("./sets.service");
 const create_set_dto_1 = require("./dto/create-set.dto");
 const update_set_dto_1 = require("./dto/update-set.dto");
+const set_finished_dto_1 = require("./dto/set-finished.dto");
 let SetsController = class SetsController {
     constructor(setsService) {
         this.setsService = setsService;
     }
-    create(createSetDto) {
-        return this.setsService.create(createSetDto);
+    async create(createSetDto) {
+        return await this.setsService.create(createSetDto);
     }
-    findAll() {
-        return this.setsService.findAll();
+    async findAll() {
+        return await this.setsService.findAll();
     }
     findOne(id) {
-        return this.setsService.findOne(+id);
+        return this.setsService.findOne(id);
     }
     update(id, updateSetDto) {
         return this.setsService.update(+id, updateSetDto);
+    }
+    async matchFinished(id, setFinishedDto) {
+        return await this.setsService.setFinished(id, setFinishedDto);
     }
     remove(id) {
         return this.setsService.remove(+id);
@@ -43,38 +47,46 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_set_dto_1.CreateSetDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SetsController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SetsController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], SetsController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Patch)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_set_dto_1.UpdateSetDto]),
     __metadata("design:returntype", void 0)
 ], SetsController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Patch)("/finish-set/:id"),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, set_finished_dto_1.SetFinishedDto]),
+    __metadata("design:returntype", Promise)
+], SetsController.prototype, "matchFinished", null);
+__decorate([
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], SetsController.prototype, "remove", null);
 exports.SetsController = SetsController = __decorate([
-    (0, common_1.Controller)('sets'),
+    (0, common_1.Controller)("sets"),
     __metadata("design:paramtypes", [sets_service_1.SetsService])
 ], SetsController);
 //# sourceMappingURL=sets.controller.js.map

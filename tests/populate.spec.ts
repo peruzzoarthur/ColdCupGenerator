@@ -83,5 +83,10 @@ test("test", async ({ page }) => {
     // await page.getByRole("button", { name: "Close event" }).click();
     // await page.getByRole("button", { name: "Register in event" }).click();
   }
+  await page.goto("http://localhost:5173/");
+  await page.getByRole("link", { name: "Events" }).click();
+  await page.getByRole("button", { name: "Show all events" }).click();
+  await page.getByRole("button", { name: "Register in event" }).click();
+  await page.getByRole("button", { name: "Activate" }).click();
   // register doubles in event
 });

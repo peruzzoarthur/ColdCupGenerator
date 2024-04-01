@@ -13,13 +13,22 @@ const events_controller_1 = require("./events.controller");
 const prisma_service_1 = require("../prisma.service");
 const categories_service_1 = require("../categories/categories.service");
 const matches_service_1 = require("../matches/matches.service");
+const sets_service_1 = require("../sets/sets.service");
+const games_service_1 = require("../games/games.service");
 let EventsModule = class EventsModule {
 };
 exports.EventsModule = EventsModule;
 exports.EventsModule = EventsModule = __decorate([
     (0, common_1.Module)({
         controllers: [events_controller_1.EventsController],
-        providers: [events_service_1.EventsService, prisma_service_1.PrismaService, categories_service_1.CategoriesService, matches_service_1.MatchesService],
+        providers: [
+            events_service_1.EventsService,
+            prisma_service_1.PrismaService,
+            categories_service_1.CategoriesService,
+            matches_service_1.MatchesService,
+            sets_service_1.SetsService,
+            games_service_1.GamesService,
+        ],
     })
 ], EventsModule);
 //# sourceMappingURL=events.module.js.map

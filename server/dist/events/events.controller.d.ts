@@ -22,35 +22,35 @@ export declare class EventsController {
     }>;
     getEventById(getEventByIdDto: GetEventByIdDto): Promise<{
         id: string;
-        isActive: boolean;
-        categories: {
-            id: string;
-            eventDoubles: {
-                doubleId: string;
-                double: {
-                    id: string;
-                    players: {
-                        id: string;
-                        email: string;
-                        firstName: string;
-                        lastName: string;
-                        role: import(".prisma/client").$Enums.Role;
-                        position: import(".prisma/client").$Enums.PlayerPosition;
-                    }[];
-                    categoryId: string;
-                };
-            }[];
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-        }[];
         matches: {
+            type: import(".prisma/client").$Enums.MatchType;
+            isFinished: boolean;
             doubles: {
                 id: string;
                 categoryId: string;
             }[];
-            isFinished: boolean;
+            winner: {
+                id: string;
+                categoryId: string;
+            };
             categoryId: string;
+            winnerDoublesId: string;
             eventId: string;
+            players: {
+                id: string;
+                email: string;
+                firstName: string;
+                lastName: string;
+                role: import(".prisma/client").$Enums.Role;
+                position: import(".prisma/client").$Enums.PlayerPosition;
+            }[];
+            sets: {
+                id: string;
+                type: import(".prisma/client").$Enums.SetType;
+                setWinnerId: string;
+                result: string;
+                isFinished: boolean;
+            }[];
         }[];
         eventDoubles: {
             category: {
@@ -75,11 +75,32 @@ export declare class EventsController {
                 };
             };
         }[];
+        isActive: boolean;
+        categories: {
+            id: string;
+            type: import(".prisma/client").$Enums.CatType;
+            level: number;
+            eventDoubles: {
+                double: {
+                    id: string;
+                    categoryId: string;
+                    players: {
+                        id: string;
+                        email: string;
+                        firstName: string;
+                        lastName: string;
+                        role: import(".prisma/client").$Enums.Role;
+                        position: import(".prisma/client").$Enums.PlayerPosition;
+                    }[];
+                };
+                doubleId: string;
+            }[];
+        }[];
     }>;
     activateEvent(getEventByIdDto: GetEventByIdDto): Promise<{
-        doubleId: string;
         double: {
             id: string;
+            categoryId: string;
             players: {
                 id: string;
                 email: string;
@@ -88,14 +109,16 @@ export declare class EventsController {
                 role: import(".prisma/client").$Enums.Role;
                 position: import(".prisma/client").$Enums.PlayerPosition;
             }[];
-            categoryId: string;
         };
+        doubleId: string;
     }[]>;
     registerDoublesInEvent(registerDoublesInEventDto: RegisterDoublesInEventDto): Promise<{
         event: {
             id: string;
             name: string;
             isActive: boolean;
+            startDate: Date;
+            finishDate: Date;
         };
         double: {
             players: {
@@ -111,26 +134,8 @@ export declare class EventsController {
     findAllEvents(): Promise<{
         id: string;
         name: string;
-        isActive: boolean;
-        categories: {
-            id: string;
-            eventDoubles: {
-                double: {
-                    id: string;
-                    players: {
-                        id: string;
-                        email: string;
-                        firstName: string;
-                        lastName: string;
-                        role: import(".prisma/client").$Enums.Role;
-                        position: import(".prisma/client").$Enums.PlayerPosition;
-                    }[];
-                };
-            }[];
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-        }[];
         matches: {
+            isFinished: boolean;
             doubles: {
                 id: string;
                 players: {
@@ -144,16 +149,42 @@ export declare class EventsController {
             }[];
             categoryId: string;
             eventId: string;
-        }[];
-        places: {
-            id: string;
-            name: string;
-            address: string;
+            sets: {
+                id: string;
+                type: import(".prisma/client").$Enums.SetType;
+                setWinnerId: string;
+                result: string;
+                isFinished: boolean;
+            }[];
         }[];
         eventDoubles: {
             eventId: string;
             doubleId: string;
             categoryId: string;
+        }[];
+        isActive: boolean;
+        categories: {
+            id: string;
+            type: import(".prisma/client").$Enums.CatType;
+            level: number;
+            eventDoubles: {
+                double: {
+                    id: string;
+                    players: {
+                        id: string;
+                        email: string;
+                        firstName: string;
+                        lastName: string;
+                        role: import(".prisma/client").$Enums.Role;
+                        position: import(".prisma/client").$Enums.PlayerPosition;
+                    }[];
+                };
+            }[];
+        }[];
+        places: {
+            id: string;
+            name: string;
+            address: string;
         }[];
     }[]>;
     findOne(id: string): string;

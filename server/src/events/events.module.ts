@@ -4,9 +4,18 @@ import { EventsController } from "./events.controller";
 import { PrismaService } from "src/prisma.service";
 import { CategoriesService } from "src/categories/categories.service";
 import { MatchesService } from "src/matches/matches.service";
+import { SetsService } from "src/sets/sets.service";
+import { GamesService } from "src/games/games.service";
 
 @Module({
   controllers: [EventsController],
-  providers: [EventsService, PrismaService, CategoriesService, MatchesService],
+  providers: [
+    EventsService,
+    PrismaService,
+    CategoriesService,
+    MatchesService,
+    SetsService,
+    GamesService,
+  ],
 })
 export class EventsModule {}

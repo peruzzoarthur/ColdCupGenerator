@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MatchesService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
+const sets_service_1 = require("../sets/sets.service");
 let MatchesService = class MatchesService {
-    constructor(prismaService) {
+    constructor(prismaService, setsService) {
         this.prismaService = prismaService;
+        this.setsService = setsService;
     }
     async create(createMatchDto) {
         const match = await this.prismaService.match.create({
@@ -29,18 +31,71 @@ let MatchesService = class MatchesService {
                 category: true,
                 categoryId: true,
                 doubles: true,
+                type: true,
+                sets: true,
             },
         });
+        const superSet = await this.setsService.create({
+            doublesOneGames: 0,
+            doublesTwoGames: 0,
+            matchId: match.id,
+            doublesIds: createMatchDto.doublesIds,
+        });
+        console.log(superSet);
         return match;
     }
-    findAll() {
-        return `This action returns all matches`;
+    async findAll() {
+        return this.prismaService.match.findMany({
+            select: {
+                id: true,
+                isFinished: true,
+                category: true,
+                winner: true,
+                eventId: true,
+                date: true,
+                type: true,
+                sets: true,
+            },
+        });
     }
-    findOne(id) {
-        return `This action returns a #${id} match`;
+    async findOne(id) {
+        const match = this.prismaService.match.findUnique({
+            where: { id: id },
+            select: {
+                id: true,
+                isFinished: true,
+                type: true,
+                doubles: true,
+            },
+        });
+        if (!match) {
+            throw new common_1.HttpException("Match not found", common_1.HttpStatus.NOT_FOUND);
+        }
+        return match;
     }
-    update(id, updateMatchDto) {
+    async update(id, updateMatchDto) {
         return `This action updates a #${id} match`;
+    }
+    async matchFinished(id, matchFinishedDto) {
+        const match = await this.prismaService.match.findUnique({
+            where: {
+                id: id,
+            },
+        });
+        console.log(matchFinishedDto);
+        if (!match) {
+            throw new common_1.HttpException("Match not found", common_1.HttpStatus.NOT_FOUND);
+        }
+        const updatedMatch = await this.prismaService.match.update({
+            where: {
+                id: id,
+            },
+            data: {
+                isFinished: true,
+                winnerDoublesId: matchFinishedDto.winnerDoublesId,
+            },
+        });
+        return updatedMatch;
     }
     remove(id) {
         return `This action removes a #${id} match`;
@@ -49,6 +104,7 @@ let MatchesService = class MatchesService {
 exports.MatchesService = MatchesService;
 exports.MatchesService = MatchesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        sets_service_1.SetsService])
 ], MatchesService);
 //# sourceMappingURL=matches.service.js.map

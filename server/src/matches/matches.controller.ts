@@ -1,34 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MatchesService } from './matches.service';
-import { CreateMatchDto } from './dto/create-match.dto';
-import { UpdateMatchDto } from './dto/update-match.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from "@nestjs/common";
+import { MatchesService } from "./matches.service";
+import { CreateMatchDto } from "./dto/create-match.dto";
+import { UpdateMatchDto } from "./dto/update-match.dto";
+import { MatchFinishedDto } from "./dto/match-finished.dto";
 
-@Controller('matches')
+@Controller("matches")
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
 
   @Post()
-  create(@Body() createMatchDto: CreateMatchDto) {
-    return this.matchesService.create(createMatchDto);
+  async create(@Body() createMatchDto: CreateMatchDto) {
+    return await this.matchesService.create(createMatchDto);
   }
 
   @Get()
-  findAll() {
-    return this.matchesService.findAll();
+  async findAll() {
+    return await this.matchesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.matchesService.findOne(+id);
+  @Get(":id")
+  async findOne(@Param("id") id: string) {
+    return await this.matchesService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
-    return this.matchesService.update(+id, updateMatchDto);
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() updateMatchDto: UpdateMatchDto) {
+    return this.matchesService.update(id, updateMatchDto);
+  }
+  @Patch("/finish-match/:id")
+  async matchFinished(
+    @Param("id") id: string,
+    @Body() matchFinishedDto: MatchFinishedDto
+  ) {
+    return await this.matchesService.matchFinished(id, matchFinishedDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.matchesService.remove(+id);
   }
 }

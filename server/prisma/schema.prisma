@@ -21,7 +21,17 @@ model Event {
   matches      Match[]
   places       Place[]
   eventDoubles EventDouble[] // Relation to link doubles specifically to an event
+  startDate    DateTime?
+  finishDate   DateTime?
+  // courts       Court[]
 }
+
+// model Court {
+//   id          String  @id @default(uuid())
+//   name        String
+//   isAvailable Boolean @default(true)
+//   events      Event[]
+// }
 
 model EventDouble {
   event      Event    @relation(fields: [eventId], references: [id])
@@ -48,39 +58,40 @@ model Category {
 }
 
 model Match {
-  id         String    @id @default(uuid())
-  players    Player[]
-  isFinished Boolean   @default(false)
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
-  winner     Double?   @relation("MatchWinnerDouble", fields: [doubleId], references: [id])
-  doubleId   String?
-  result     String?
-  doubles    Double[]
-  event      Event?    @relation(fields: [eventId], references: [id])
-  eventId    String?
-  date       DateTime?
+  id              String    @id @default(uuid())
+  players         Player[]
+  isFinished      Boolean   @default(false)
+  category        Category? @relation(fields: [categoryId], references: [id])
+  categoryId      String?
+  winner          Double?   @relation("MatchWinnerDouble", fields: [winnerDoublesId], references: [id])
+  winnerDoublesId String?
+  sets            Set[]
+  doubles         Double[]
+  event           Event?    @relation(fields: [eventId], references: [id])
+  eventId         String?
+  date            DateTime?
+  type            MatchType @default(SUPERSET)
 }
 
 model Set {
-  id       String   @id @default(uuid())
-  type     SetType  @default(NORMAL)
-  games    Game[]
-  players  Player[]
-  doubles  Double[]
-  winner   Double?  @relation("SetWinnerDouble", fields: [winnerId], references: [id])
-  winnerId String?
-  result   String?
+  id          String   @id @default(uuid())
+  type        SetType  @default(SUPER)
+  // players     Player[]
+  doubles     Double[]
+  winner      Double?  @relation("SetWinnerDouble", fields: [setWinnerId], references: [id])
+  setWinnerId String?
+  result      String?
+  match       Match    @relation(fields: [id], references: [id])
+  games       Game[]
+  isFinished  Boolean  @default(false)
 }
 
 model Game {
   id       String  @id @default(uuid())
   set      Set     @relation(fields: [setId], references: [id])
   setId    String
-  Player   Player? @relation(fields: [playerId], references: [id])
-  playerId String?
-  Double   Double? @relation(fields: [doubleId], references: [id])
-  doubleId String?
+  // Double   Double? @relation(fields: [doubleId], references: [id])
+  // doubleId String?
   winner   Double? @relation("GameWinnerDouble", fields: [winnerId], references: [id])
   winnerId String?
 }
@@ -96,21 +107,22 @@ model Player {
   matches    Match[]
   doubles    Double[]
   events     Event[]
-  sets       Set[]
-  games      Game[]
+  // sets       Set[]
+  // games      Game[]
 }
 
 model Double {
-  id          String        @id @default(uuid())
+  id          String   @id @default(uuid())
   players     Player[]
   matchs      Match[]
-  category    Category      @relation(fields: [categoryId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
   categoryId  String
-  games       Game[]
+  // games       Game[]
   sets        Set[]
-  matchesWins Match[]       @relation("MatchWinnerDouble")
-  setsWins    Set[]         @relation("SetWinnerDouble")
-  gamesWins   Game[]        @relation("GameWinnerDouble")
+  matchesWins Match[]  @relation("MatchWinnerDouble")
+  setsWins    Set[]    @relation("SetWinnerDouble")
+  gamesWins   Game[]   @relation("GameWinnerDouble")
+
   eventDouble EventDouble[]
 }
 
@@ -140,4 +152,10 @@ enum PlayerPosition {
 enum SetType {
   NORMAL
   SUPER
+}
+
+enum MatchType {
+  BO3
+  BO5
+  SUPERSET
 }

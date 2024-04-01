@@ -21,8 +21,8 @@ let GamesController = class GamesController {
     constructor(gamesService) {
         this.gamesService = gamesService;
     }
-    create(createGameDto) {
-        return this.gamesService.create(createGameDto);
+    async create(createGameDto) {
+        return await this.gamesService.create(createGameDto);
     }
     findAll() {
         return this.gamesService.findAll();
@@ -43,7 +43,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_game_dto_1.CreateGameDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], GamesController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
@@ -52,29 +52,29 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], GamesController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], GamesController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Patch)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_game_dto_1.UpdateGameDto]),
     __metadata("design:returntype", void 0)
 ], GamesController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], GamesController.prototype, "remove", null);
 exports.GamesController = GamesController = __decorate([
-    (0, common_1.Controller)('games'),
+    (0, common_1.Controller)("games"),
     __metadata("design:paramtypes", [games_service_1.GamesService])
 ], GamesController);
 //# sourceMappingURL=games.controller.js.map

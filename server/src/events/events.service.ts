@@ -58,6 +58,8 @@ export class EventsService {
               },
             },
             eventId: true,
+            sets: true,
+            isFinished: true,
           },
         },
         eventDoubles: true,
@@ -193,6 +195,11 @@ export class EventsService {
             doubles: true,
             eventId: true,
             isFinished: true,
+            type: true,
+            winner: true,
+            winnerDoublesId: true,
+            sets: true,
+            players: true,
           },
         },
         categories: {
@@ -236,20 +243,10 @@ export class EventsService {
 
     const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
 
-    // const matches: Match[] = [];
     for (let i = 0; i < doublesIds.length; i++) {
       for (let j = i + 1; j < doublesIds.length; j++) {
         console.log(`${doublesIds[i]} x ${doublesIds[j]}`);
-        // matches.push({
-        //   doublesOne: {
-        //     doubleId: doublesIds[i],
-        //     double: eventDoubles[i].double,
-        //   },
-        //   doublesTwo: {
-        //     doubleId: doublesIds[j],
-        //     double: eventDoubles[j].double,
-        //   },
-        // });
+
         const newMatch = await this.matchesService.create({
           doublesIds: [doublesIds[i], doublesIds[j]],
           categoryId: aCategory,
