@@ -48,9 +48,21 @@ export type PadelEvent = {
 
 export type Match = {
     doubles: Double[]
+    category: Category
     categoryId: string
     eventId: string
     doublesId: string
+    isFinished: boolean
+    sets: Set[]
+    winner: Double
+}
+
+export type Set = {
+    id: string
+    type: string
+    setWinner: Double
+    isFinished: boolean
+    result: string
 }
 export enum CatType {
     ALL = 'ALL',

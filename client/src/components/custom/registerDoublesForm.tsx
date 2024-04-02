@@ -97,9 +97,9 @@ const RegisterDoublesForm: React.FC<RegisterDoublesFormProps> = ({
                 )}
             />
 
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-4">
                 <Button
-                    className="w-1/6 bg-slate-600 bg-opacity-65"
+                    className="w-1/8 bg-opacity-65"
                     onClick={handleSubmit(() => onSubmit(form.getValues()))}
                     type="button"
                 >

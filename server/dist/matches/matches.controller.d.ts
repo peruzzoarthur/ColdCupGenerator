@@ -7,13 +7,9 @@ export declare class MatchesController {
     constructor(matchesService: MatchesService);
     create(createMatchDto: CreateMatchDto): Promise<{
         id: string;
-        type: import(".prisma/client").$Enums.MatchType;
         isFinished: boolean;
-        doubles: {
-            id: string;
-            categoryId: string;
-        }[];
         categoryId: string;
+        type: import(".prisma/client").$Enums.MatchType;
         category: {
             id: string;
             level: number;
@@ -26,21 +22,25 @@ export declare class MatchesController {
             result: string;
             isFinished: boolean;
         }[];
+        doubles: {
+            id: string;
+            categoryId: string;
+        }[];
     }>;
     findAll(): Promise<{
         id: string;
-        type: import(".prisma/client").$Enums.MatchType;
         isFinished: boolean;
-        winner: {
-            id: string;
-            categoryId: string;
-        };
         eventId: string;
         date: Date;
+        type: import(".prisma/client").$Enums.MatchType;
         category: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
+        };
+        winner: {
+            id: string;
+            categoryId: string;
         };
         sets: {
             id: string;
@@ -52,8 +52,8 @@ export declare class MatchesController {
     }[]>;
     findOne(id: string): Promise<{
         id: string;
-        type: import(".prisma/client").$Enums.MatchType;
         isFinished: boolean;
+        type: import(".prisma/client").$Enums.MatchType;
         doubles: {
             id: string;
             categoryId: string;

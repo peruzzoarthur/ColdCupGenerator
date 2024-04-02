@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import { Toaster } from './components/ui/toaster'
 import { StrictMode } from 'react'
+import { ThemeProvider } from './components/themeProvider'
 
 const queryClient = new QueryClient()
 
@@ -32,10 +33,12 @@ if (!rootElement.innerHTML) {
     root.render(
         <>
             <StrictMode>
-                <Toaster />
-                <QueryClientProvider client={queryClient}>
-                    <RouterProvider router={router} />
-                </QueryClientProvider>
+                <ThemeProvider>
+                    <Toaster />
+                    <QueryClientProvider client={queryClient}>
+                        <RouterProvider router={router} />
+                    </QueryClientProvider>
+                </ThemeProvider>
             </StrictMode>
         </>
     )

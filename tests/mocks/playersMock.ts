@@ -59,6 +59,21 @@ export const playersMock: CreatePlayer[] = [
     email: "irmadajuma@proton.me",
     position: Position.REVES,
   },
+  {
+    firstName: "Mercedes",
+    lastName: "Orquita",
+    categoryId: "",
+    email: "mercedita@proton.me",
+    position: Position.REVES,
+  },
+
+  {
+    firstName: "Marley",
+    lastName: "Ceva Pra Nos",
+    categoryId: "",
+    email: "marleyzin@proton.me",
+    position: Position.DRIVE,
+  },
   // {
   //   firstName: "",
   //   lastName: "",

@@ -36,6 +36,7 @@ let SetsService = class SetsService {
     async findAll() {
         return await this.prismaService.set.findMany({
             select: {
+                match: true,
                 id: true,
                 isFinished: true,
                 result: true,

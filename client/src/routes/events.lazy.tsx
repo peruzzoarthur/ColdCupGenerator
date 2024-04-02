@@ -9,13 +9,14 @@ import { EventCard } from '@/components/custom/eventCard'
 import { Button } from '@/components/ui/button'
 import ball from '../styles/png/ball.png'
 import { Double, EventDouble, PadelEvent } from '@/types/padel.types'
-import { ExtendedEventCard } from '@/components/custom/expandedEventCard'
+// import { ExtendedEventCard } from '@/components/custom/expandedEventCard'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import RegisterDoublesForm, {
     registerDoublesFormObject,
 } from '@/components/custom/registerDoublesForm'
 import { useGetDoubles } from '@/hooks/useGetDoubles'
 import { useToast } from '@/components/ui/use-toast'
+import { EventDashboard } from '@/components/custom/eventDashboard'
 
 type createEventFormObject = {
     eventName: string
@@ -246,7 +247,7 @@ function Events() {
                             )}
                             <div className="flex justify-center">
                                 {selectedEvent && toggleEvent && (
-                                    <ExtendedEventCard
+                                    <EventDashboard
                                         event={selectedEvent}
                                         toggleEventOff={toggleEventOff}
                                     />

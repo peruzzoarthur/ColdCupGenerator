@@ -37,8 +37,13 @@ test("test", async ({ page }) => {
       )
       .click();
     await page.getByLabel("Category").click();
-    await page.getByLabel("1 ALL").click();
-    await page.getByRole("button", { name: "Submit" }).click();
+    if (i > 6) {
+      await page.getByLabel("2 ALL").click();
+      await page.getByRole("button", { name: "Submit" }).click();
+    } else {
+      await page.getByLabel("1 ALL").click();
+      await page.getByRole("button", { name: "Submit" }).click();
+    }
   }
 
   // add doubles
@@ -59,12 +64,15 @@ test("test", async ({ page }) => {
   await page.getByLabel("Categories").click();
   await page.getByLabel("1").click();
   await page.getByRole("button", { name: "Add Category" }).click();
+  await page.getByLabel("Categories").click();
+  await page.getByLabel("2").click();
+  await page.getByRole("button", { name: "Add Category" }).click();
   await page.getByLabel("Places").click();
   await page.getByLabel("Complexo CK").click();
   await page.getByRole("button", { name: "Add Place" }).click();
   await page.getByRole("button", { name: "Submit" }).click();
   await page.getByRole("button", { name: "Show all events" }).click();
-  await page.getByRole("button", { name: "Register in event" }).click();
+  await page.getByRole("button", { name: "Open event" }).click();
 
   // create event
 
@@ -86,7 +94,7 @@ test("test", async ({ page }) => {
   await page.goto("http://localhost:5173/");
   await page.getByRole("link", { name: "Events" }).click();
   await page.getByRole("button", { name: "Show all events" }).click();
-  await page.getByRole("button", { name: "Register in event" }).click();
-  await page.getByRole("button", { name: "Activate" }).click();
+  await page.getByRole("button", { name: "Open event" }).click();
+  await page.getByRole("button", { name: "Generate matches 🎾" }).click();
   // register doubles in event
 });

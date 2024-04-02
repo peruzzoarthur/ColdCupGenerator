@@ -65,8 +65,7 @@ export function EventCard({ className, event, toggleEventOn }: EventCardProps) {
                     onClick={async () => await toggleEventOn(event)}
                     className="w-full"
                 >
-                    <CheckCircledIcon className="w-4 h-4 mr-2" /> Register in
-                    event
+                    <CheckCircledIcon className="w-4 h-4 mr-2" /> Open event
                 </Button>
             </CardFooter>
         </Card>

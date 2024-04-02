@@ -50,6 +50,14 @@ export class EventsService {
         places: true,
         matches: {
           select: {
+            winner: true,
+            date: true,
+            category: {
+              select: {
+                level: true,
+                type: true,
+              },
+            },
             categoryId: true,
             doubles: {
               select: {
@@ -62,7 +70,16 @@ export class EventsService {
             isFinished: true,
           },
         },
-        eventDoubles: true,
+        eventDoubles: {
+          select: {
+            double: {
+              select: {
+                players: true,
+              },
+            },
+            category: true,
+          },
+        },
         isActive: true,
         categories: {
           select: {

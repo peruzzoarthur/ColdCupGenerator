@@ -68,7 +68,7 @@ const PlaceForm: React.FC<PlaceFormProps> = ({ onSubmit, defaultValues }) => {
 
             <div className="flex justify-center mt-2">
                 <Button
-                    className="w-1/6 bg-slate-600 bg-opacity-65"
+                    className="w-1/6bg-opacity-65"
                     onClick={handleSubmit(onSubmit)}
                     type="button"
                 >

@@ -20,6 +20,15 @@ export declare class SetsController {
             id: string;
             categoryId: string;
         }[];
+        match: {
+            id: string;
+            isFinished: boolean;
+            categoryId: string;
+            winnerDoublesId: string;
+            eventId: string;
+            date: Date;
+            type: import(".prisma/client").$Enums.MatchType;
+        };
         games: {
             id: string;
             setId: string;

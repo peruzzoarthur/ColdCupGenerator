@@ -34,10 +34,10 @@ export const useGetDoublesInEvent = (eventId: string) => {
 
             const doublesInEvent = fetchEvent.eventDoubles
 
-            console.log('Categories in event:')
-            console.log(categoriesInEvent)
-            console.log(`Doubles in event:`)
-            console.log(doublesInEvent)
+            // console.log('Categories in event:')
+            // console.log(categoriesInEvent)
+            // console.log(`Doubles in event:`)
+            // console.log(doublesInEvent)
 
             const doublesByCategoryId: DoublesByCategory = {}
 

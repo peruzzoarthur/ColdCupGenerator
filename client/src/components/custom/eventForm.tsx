@@ -235,9 +235,9 @@ const EventForm: React.FC<EventFormProps> = ({
                 )}
             />
 
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-4">
                 <Button
-                    className="w-1/6 bg-slate-600 bg-opacity-65"
+                    className="w-1/6 bg-opacity-65"
                     onClick={handleSubmit(onSubmit)}
                     type="button"
                 >
