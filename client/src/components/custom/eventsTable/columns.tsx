@@ -33,6 +33,13 @@ export const columns: ColumnDef<RegisteredDoublesTable>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            return (
+                <div className="font-medium text-right">
+                    {row.getValue('categoryLevel')}
+                </div>
+            )
+        },
     },
     {
         accessorKey: 'categoryType',
@@ -47,6 +54,13 @@ export const columns: ColumnDef<RegisteredDoublesTable>[] = [
                     Category Type
                     <ArrowUpDown className="w-4 h-4 ml-2" />
                 </Button>
+            )
+        },
+        cell: ({ row }) => {
+            return (
+                <div className="font-medium text-center">
+                    {row.getValue('categoryType')}
+                </div>
             )
         },
     },
