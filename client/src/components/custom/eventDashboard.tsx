@@ -33,7 +33,6 @@ import { Match, PadelEvent } from '@/types/padel.types'
 import axios from 'axios'
 import { EventDoublesTable } from './eventsTable/eventDoublesTable'
 import { RegisteredDoublesTable, columns } from './eventsTable/columns'
-import { MatchCard } from './matchCard'
 import { MatchesCarousel } from './matchesCarousel'
 
 type EventDashBoardProps = {

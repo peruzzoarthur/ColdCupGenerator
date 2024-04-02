@@ -22,15 +22,17 @@ export const columns: ColumnDef<RegisteredDoublesTable>[] = [
         accessorKey: 'categoryLevel',
         header: ({ column }) => {
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }
-                >
-                    Level
-                    <ArrowUpDown className="w-4 h-4 ml-2" />
-                </Button>
+                <div className="text-right">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === 'asc')
+                        }
+                    >
+                        Level
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                </div>
             )
         },
         cell: ({ row }) => {
@@ -45,15 +47,17 @@ export const columns: ColumnDef<RegisteredDoublesTable>[] = [
         accessorKey: 'categoryType',
         header: ({ column }) => {
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }
-                >
-                    Category Type
-                    <ArrowUpDown className="w-4 h-4 ml-2" />
-                </Button>
+                <div className="text-center ">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === 'asc')
+                        }
+                    >
+                        Category Type
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                </div>
             )
         },
         cell: ({ row }) => {
