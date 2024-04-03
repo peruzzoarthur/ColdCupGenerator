@@ -50,6 +50,10 @@ export declare class MatchesController {
             isFinished: boolean;
         }[];
     }[]>;
+    findResult(id: string): Promise<{
+        doublesOneGames: number;
+        doublesTwoGames: number;
+    }>;
     findOne(id: string): Promise<{
         id: string;
         isFinished: boolean;

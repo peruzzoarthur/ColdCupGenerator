@@ -15,13 +15,6 @@ export declare class SetsService {
         isFinished: boolean;
     }>;
     findAll(): Promise<{
-        result: string;
-        id: string;
-        isFinished: boolean;
-        doubles: {
-            id: string;
-            categoryId: string;
-        }[];
         match: {
             id: string;
             isFinished: boolean;
@@ -31,10 +24,11 @@ export declare class SetsService {
             date: Date;
             type: import(".prisma/client").$Enums.MatchType;
         };
-        games: {
+        result: string;
+        id: string;
+        doubles: {
             id: string;
-            setId: string;
-            winnerId: string;
+            categoryId: string;
         }[];
         _count: {
             doubles: number;
@@ -42,15 +36,21 @@ export declare class SetsService {
             match: number;
             games: number;
         };
+        isFinished: boolean;
+        games: {
+            id: string;
+            setId: string;
+            winnerId: string;
+        }[];
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
         type: import(".prisma/client").$Enums.SetType;
-        isFinished: boolean;
+        id: string;
         doubles: {
             id: string;
             categoryId: string;
         }[];
+        isFinished: boolean;
     }>;
     update(id: number, updateSetDto: UpdateSetDto): string;
     setFinished(id: string, setFinishedDto: SetFinishedDto): Promise<{

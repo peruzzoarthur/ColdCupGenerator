@@ -73,6 +73,52 @@ let MatchesService = class MatchesService {
         }
         return match;
     }
+    async findResult(id) {
+        const match = this.prismaService.match.findUnique({
+            where: { id: id },
+            select: {
+                id: true,
+                isFinished: true,
+                doubles: true,
+                sets: {
+                    select: {
+                        games: {
+                            select: {
+                                winner: true,
+                                winnerId: true,
+                            },
+                        },
+                        id: true,
+                        winner: true,
+                    },
+                },
+            },
+        });
+        if (!match) {
+            throw new common_1.HttpException("Match not found", common_1.HttpStatus.NOT_FOUND);
+        }
+        if (!(await match).isFinished) {
+            return;
+        }
+        const querySet = await match.sets({
+            select: {
+                games: {
+                    select: { winner: true },
+                },
+            },
+        });
+        const games = querySet.flatMap((s) => s.games);
+        const doubles = await match.doubles();
+        const doublesOneId = doubles[0].id;
+        const doublesTwoId = doubles[1].id;
+        const doublesOneGames = games.filter((game) => game.winner.id === doublesOneId);
+        console.log(doublesOneGames.length);
+        const doublesTwoGames = games.filter((game) => game.winner.id === doublesTwoId);
+        return {
+            doublesOneGames: doublesOneGames.length,
+            doublesTwoGames: doublesTwoGames.length,
+        };
+    }
     async update(id, updateMatchDto) {
         return `This action updates a #${id} match`;
     }
@@ -81,11 +127,18 @@ let MatchesService = class MatchesService {
             where: {
                 id: id,
             },
+            select: {
+                id: true,
+                doubles: true,
+                sets: true,
+            },
         });
-        console.log(matchFinishedDto);
+        console.log(match);
         if (!match) {
             throw new common_1.HttpException("Match not found", common_1.HttpStatus.NOT_FOUND);
         }
+        const setFinished = this.setsService.setFinished(match.sets[0].id, matchFinishedDto);
+        console.log(setFinished);
         const updatedMatch = await this.prismaService.match.update({
             where: {
                 id: id,

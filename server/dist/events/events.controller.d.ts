@@ -21,6 +21,7 @@ export declare class EventsController {
         }[];
     }>;
     getEventById(getEventByIdDto: GetEventByIdDto): Promise<{
+        id: string;
         matches: {
             isFinished: boolean;
             categoryId: string;
@@ -51,7 +52,6 @@ export declare class EventsController {
                 categoryId: string;
             }[];
         }[];
-        id: string;
         eventDoubles: {
             category: {
                 id: string;
@@ -132,7 +132,10 @@ export declare class EventsController {
         };
     }>;
     findAllEvents(): Promise<{
+        id: string;
+        name: string;
         matches: {
+            id: string;
             isFinished: boolean;
             categoryId: string;
             eventId: string;
@@ -164,8 +167,6 @@ export declare class EventsController {
                 }[];
             }[];
         }[];
-        id: string;
-        name: string;
         eventDoubles: {
             category: {
                 id: string;

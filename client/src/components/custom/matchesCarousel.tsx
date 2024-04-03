@@ -18,7 +18,11 @@ export function MatchesCarousel({ matches }: MatchesCarouselProps) {
                 {matches.map((match, index) => (
                     <CarouselItem key={index}>
                         <div className="p-1">
-                            <MatchCard match={match} key={index} />
+                            <MatchCard
+                                match={match}
+                                key={index}
+                                matchIndex={index}
+                            />
                         </div>
                     </CarouselItem>
                 ))}

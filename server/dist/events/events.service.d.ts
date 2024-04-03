@@ -25,7 +25,10 @@ export declare class EventsService {
         }[];
     }>;
     findAllEvents(): Promise<{
+        id: string;
+        name: string;
         matches: {
+            id: string;
             isFinished: boolean;
             categoryId: string;
             eventId: string;
@@ -57,8 +60,6 @@ export declare class EventsService {
                 }[];
             }[];
         }[];
-        id: string;
-        name: string;
         eventDoubles: {
             category: {
                 id: string;
@@ -121,6 +122,7 @@ export declare class EventsService {
         };
     }>;
     getEventById(getEventByIdDto: GetEventByIdDto): Promise<{
+        id: string;
         matches: {
             isFinished: boolean;
             categoryId: string;
@@ -151,7 +153,6 @@ export declare class EventsService {
                 categoryId: string;
             }[];
         }[];
-        id: string;
         eventDoubles: {
             category: {
                 id: string;

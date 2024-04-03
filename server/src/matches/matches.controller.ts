@@ -26,6 +26,11 @@ export class MatchesController {
     return await this.matchesService.findAll();
   }
 
+  @Get("/result/:id")
+  async findResult(@Param("id") id: string) {
+    return await this.matchesService.findResult(id);
+  }
+
   @Get(":id")
   async findOne(@Param("id") id: string) {
     return await this.matchesService.findOne(id);

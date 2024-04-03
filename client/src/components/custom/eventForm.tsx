@@ -1,5 +1,6 @@
 import React from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -65,7 +66,6 @@ const EventForm: React.FC<EventFormProps> = ({
     const { handleSubmit } = form
 
     const addCategory = (id: string) => {
-        console.log(id)
         const stringArray: string[] = categoriesState.concat(id)
         setCategoriesState(stringArray)
     }
@@ -78,7 +78,6 @@ const EventForm: React.FC<EventFormProps> = ({
     }
 
     const addPlace = (id: string) => {
-        console.log(`Placiiing ${id}`)
         const stringArray: string[] = placesState.concat(id)
         setPlacesState(stringArray)
     }
@@ -159,8 +158,7 @@ const EventForm: React.FC<EventFormProps> = ({
                                                     >{`${category.level}`}</Badge>
                                                 )
                                             } else {
-                                                // Handle the case where the category is not found
-                                                return null // or you can render a default badge
+                                                return null
                                             }
                                         }
                                     )}

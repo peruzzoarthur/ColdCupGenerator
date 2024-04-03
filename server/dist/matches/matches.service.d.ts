@@ -61,6 +61,10 @@ export declare class MatchesService {
             categoryId: string;
         }[];
     }>;
+    findResult(id: string): Promise<{
+        doublesOneGames: number;
+        doublesTwoGames: number;
+    }>;
     update(id: string, updateMatchDto: UpdateMatchDto): Promise<string>;
     matchFinished(id: string, matchFinishedDto: MatchFinishedDto): Promise<{
         id: string;

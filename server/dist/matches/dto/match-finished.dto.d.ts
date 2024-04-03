@@ -1,4 +1,8 @@
 export declare class MatchFinishedDto {
-    result: string;
+    result?: string;
+    doublesOneId: string;
+    doublesOneGames: number;
+    doublesTwoId: string;
+    doublesTwoGames: number;
     winnerDoublesId: string;
 }

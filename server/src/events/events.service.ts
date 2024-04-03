@@ -50,6 +50,7 @@ export class EventsService {
         places: true,
         matches: {
           select: {
+            id: true,
             winner: true,
             date: true,
             category: {

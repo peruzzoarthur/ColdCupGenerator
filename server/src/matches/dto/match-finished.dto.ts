@@ -2,7 +2,11 @@ import { MatchType } from "@prisma/client";
 
 export class MatchFinishedDto {
   // matchId: string;
-  result: string;
-  // isFinished: boolean;
+  result?: string;
+  doublesOneId: string;
+  doublesOneGames: number;
+  doublesTwoId: string;
+  doublesTwoGames: number;
   winnerDoublesId: string;
+  // isFinished: boolean;
 }
