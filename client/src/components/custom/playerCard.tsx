@@ -41,7 +41,7 @@ export function PlayerCard({
     const handleDelete = async (id: string) => {
         try {
             const data = await axios.delete(
-                `http://localhost:3000/player/${id}`
+                `${import.meta.env.VITE_SERVER_URL}/player/${id}`
             )
 
             toasted(player)

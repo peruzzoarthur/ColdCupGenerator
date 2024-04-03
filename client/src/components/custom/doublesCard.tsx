@@ -65,7 +65,7 @@ export function DoublesCard({
     const handleDelete = async (id: string) => {
         try {
             const data = await axios.delete(
-                `http://localhost:3000/doubles/${id}`
+                `${import.meta.env.VITE_SERVER_URL}/doubles/${id}`
             )
 
             deleteDoublesToasted(doubles)
@@ -99,7 +99,7 @@ export function DoublesCard({
             }
 
             const data = await axios.patch(
-                `http://localhost:3000/doubles/${id}`,
+                `${import.meta.env.VITE_SERVER_URL}/doubles/${id}`,
                 requestBody
             )
 

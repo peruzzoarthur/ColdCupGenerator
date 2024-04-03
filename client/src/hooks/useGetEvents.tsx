@@ -11,7 +11,7 @@ export const useGetEvents = () => {
         queryKey: ['get-all-events'],
         queryFn: async () => {
             const { data }: { data: PadelEvent[] } = await axios.get(
-                'http://localhost:3000/events'
+                `${import.meta.env.VITE_SERVER_URL}/events`
             )
             if (data) {
                 return data
@@ -20,6 +20,7 @@ export const useGetEvents = () => {
         },
     })
     const eventsIds = allEvents?.map((item) => item.id)
+    console.log(import.meta.env.VITE_SERVER_URL)
 
     return { allEvents, isFetching, eventsIds, refetchEvents }
 }

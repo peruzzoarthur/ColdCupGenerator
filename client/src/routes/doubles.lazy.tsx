@@ -59,7 +59,7 @@ function Doubles() {
             }
 
             const data: AxiosResponse<Double> = await axios.post(
-                'http://localhost:3000/doubles',
+                `${import.meta.env.VITE_SERVER_URL}/doubles`,
                 requestBody
             )
 

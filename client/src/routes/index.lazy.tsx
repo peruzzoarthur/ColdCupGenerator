@@ -19,7 +19,7 @@ const onPopulate = async (level: number) => {
     }
 
     const data: AxiosResponse<Category> = await axios.post(
-        'http://localhost:3000/categories/',
+        `${import.meta.env.VITE_SERVER_URL}/categories/`,
         requestBody
     )
 

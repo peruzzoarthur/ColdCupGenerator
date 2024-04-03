@@ -18,7 +18,7 @@ export const useGetCategories = () => {
         queryKey: ['get-all-categories'],
         queryFn: async () => {
             const { data }: { data: Category[] } = await axios.get(
-                'http://localhost:3000/categories'
+                `${import.meta.env.VITE_SERVER_URL}/categories`
             )
             if (data) {
                 return data

@@ -59,7 +59,7 @@ function Players() {
             }
 
             const data: AxiosResponse<Player> = await axios.post(
-                'http://localhost:3000/player/create-player',
+                `${import.meta.env.VITE_SERVER_URL}/player/create-player`,
                 requestBody
             )
 

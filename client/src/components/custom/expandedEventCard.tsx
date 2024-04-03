@@ -45,7 +45,7 @@ export function ExtendedEventCard({
                 id: eventId,
             }
             const { data: matches }: { data: Match[] } = await axios.post(
-                'http://localhost:3000/events/activate-event',
+                `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
                 requestEventByIdDto
             )
             // setActivate(true)

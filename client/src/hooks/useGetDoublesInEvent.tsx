@@ -21,7 +21,7 @@ export const useGetDoublesInEvent = (eventId: string) => {
                 id: eventId,
             }
             const { data: fetchEvent }: { data: PadelEvent } = await axios.post(
-                'http://localhost:3000/events/event-by-id',
+                `${import.meta.env.VITE_SERVER_URL}/events/event-by-id`,
                 requestEventByIdDto
             )
             setEventById(fetchEvent)

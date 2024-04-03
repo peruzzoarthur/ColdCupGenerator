@@ -11,7 +11,7 @@ export const useGetDoubles = () => {
         queryKey: ['get-all-doubles'],
         queryFn: async () => {
             const { data }: { data: Double[] } = await axios.get(
-                'http://localhost:3000/doubles'
+                `${import.meta.env.VITE_SERVER_URL}/doubles`
             )
             if (data) {
                 return data

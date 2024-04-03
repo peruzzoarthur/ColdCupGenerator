@@ -7,7 +7,7 @@ export const useGetPlaces = () => {
         queryKey: ['get-all-places'],
         queryFn: async () => {
             const { data }: { data: Place[] } = await axios.get(
-                'http://localhost:3000/places'
+                `${import.meta.env.VITE_SERVER_URL}/places`
             )
             if (data) {
                 return data

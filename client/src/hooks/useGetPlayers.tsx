@@ -7,7 +7,7 @@ export const useGetPlayers = () => {
         queryKey: ['get-all-players'],
         queryFn: async () => {
             const { data }: { data: Player[] } = await axios.get(
-                'http://localhost:3000/player'
+                `${import.meta.env.VITE_SERVER_URL}/player`
             )
             if (data) {
                 return data

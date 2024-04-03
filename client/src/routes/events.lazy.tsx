@@ -91,7 +91,7 @@ function Events() {
             }
 
             const data: AxiosResponse<PadelEvent> = await axios.post(
-                'http://localhost:3000/events/',
+                `${import.meta.env.VITE_SERVER_URL}/events/`,
                 requestBody
             )
 
@@ -123,11 +123,10 @@ function Events() {
             }
 
             const data: AxiosResponse<EventDouble> = await axios.post(
-                'http://localhost:3000/events/register',
+                `${import.meta.env.VITE_SERVER_URL}/events/register`,
                 requestBody
             )
             registerDoublesToast(data.data.double, data.data.event)
-            console.log(data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>

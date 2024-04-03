@@ -41,7 +41,7 @@ function Places() {
             }
 
             const data: AxiosResponse<Place> = await axios.post(
-                'http://localhost:3000/places/',
+                `${import.meta.env.VITE_SERVER_URL}/places/`,
                 requestBody
             )
             toasted(data.data)
