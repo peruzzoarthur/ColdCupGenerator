@@ -249,6 +249,7 @@ function Events() {
                                     <EventDashboard
                                         event={selectedEvent}
                                         toggleEventOff={toggleEventOff}
+                                        refetchEvents={refetchEvents}
                                     />
                                 )}
                             </div>

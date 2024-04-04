@@ -34,15 +34,24 @@ import axios from 'axios'
 import { EventDoublesTable } from './eventsTable/eventDoublesTable'
 import { RegisteredDoublesTable, columns } from './eventsTable/columns'
 import { MatchesCarousel } from './matchesCarousel'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { useState } from 'react'
 
 type EventDashBoardProps = {
     event: PadelEvent
     toggleEventOff: () => void
+    refetchEvents: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent[] | undefined, Error>>
 }
-export function EventDashboard({ event, toggleEventOff }: EventDashBoardProps) {
-    // const { data: categoriesWithEventDoubles } = useGetDoublesInEvent(event.id)
-    // const [activate, setActivate] = useState<boolean>(false)
-    // console.log(doublesInEvent)
+
+export function EventDashboard({
+    event,
+    toggleEventOff,
+    refetchEvents,
+}: EventDashBoardProps) {
+    const [matches, setMatches] = useState<Match[]>(event.matches)
+
     const handleActivate = async (eventId: string) => {
         try {
             const requestEventByIdDto = {
@@ -55,7 +64,6 @@ export function EventDashboard({ event, toggleEventOff }: EventDashBoardProps) {
             // setActivate(true)
             return matches
         } catch (error) {
-            console.error(error)
             return error
         }
     }
@@ -187,129 +195,38 @@ export function EventDashboard({ event, toggleEventOff }: EventDashBoardProps) {
                             Generate matches 🎾
                         </Button>
                     </div>
+
+                    <h1 className="text-2xl font-bold">Matches</h1>
+
+                    <h1 className="text-xl font-bold">Pending matches</h1>
                     <div className="flex justify-center">
-                        <MatchesCarousel matches={event.matches} />
+                        <MatchesCarousel
+                            matches={matches.filter(
+                                (match) => match.isFinished === false
+                            )}
+                            setMatches={setMatches}
+                            refetchEvents={refetchEvents}
+                            eventId={event.id}
+                        />
                     </div>
+
+                    <h1 className="text-xl font-bold">Finished matches</h1>
+                    <div className="flex justify-center">
+                        <MatchesCarousel
+                            matches={matches.filter(
+                                (match) => match.isFinished === true
+                            )}
+                            setMatches={setMatches}
+                            refetchEvents={refetchEvents}
+                            eventId={event.id}
+                        />
+                    </div>
+
+                    {/* <Button onClick={handleReloadCarousel}>
+                        Reload Carousel
+                    </Button> */}
                 </main>
             </div>
         </div>
     )
 }
-
-// {categoriesWithEventDoubles ? (
-//     <div>
-//         {Object.keys(
-//             categoriesWithEventDoubles
-//         ).map((categoryId) => {
-//             const { category, doubles } =
-//                 categoriesWithEventDoubles[
-//                     categoryId
-//                 ]
-//             return (
-//                 <Table>
-//                     <TableHeader>
-//                         <TableRow>
-//                             <TableHead className="hidden w-[100px] sm:table-cell">
-//                                 Players
-//                             </TableHead>
-//                             <TableHead>
-//                                 Status
-//                             </TableHead>
-//                             <TableHead>
-//                                 Level
-//                             </TableHead>
-//                             <TableHead>
-//                                 Category
-//                                 type
-//                             </TableHead>
-
-//                             <TableHead>
-//                                 <span className="sr-only">
-//                                     Actions
-//                                 </span>
-//                             </TableHead>
-//                         </TableRow>
-//                     </TableHeader>
-//                     {doubles.map(
-//                         (doubles) => (
-//                             <TableRow>
-//                                 <TableCell className="font-medium">
-//                                     <p>
-//                                         {
-//                                             doubles
-//                                                 .players[0]
-//                                                 .firstName
-//                                         }{' '}
-//                                         {
-//                                             doubles
-//                                                 .players[0]
-//                                                 .lastName
-//                                         }
-//                                     </p>
-//                                     <p>
-//                                         {
-//                                             doubles
-//                                                 .players[1]
-//                                                 .firstName
-//                                         }{' '}
-//                                         {
-//                                             doubles
-//                                                 .players[1]
-//                                                 .lastName
-//                                         }
-//                                     </p>
-//                                 </TableCell>
-//                                 <TableCell>
-//                                     <Badge variant="outline">
-//                                         Active
-//                                     </Badge>
-//                                 </TableCell>
-//                                 <TableCell>
-//                                     {
-//                                         category.level
-//                                     }
-//                                 </TableCell>
-//                                 <TableCell className="hidden md:table-cell">
-//                                     {
-//                                         category.type
-//                                     }
-//                                 </TableCell>
-
-//                                 <TableCell>
-//                                     <DropdownMenu>
-//                                         <DropdownMenuTrigger
-//                                             asChild
-//                                         >
-//                                             <Button
-//                                                 aria-haspopup="true"
-//                                                 size="icon"
-//                                                 variant="ghost"
-//                                             >
-//                                                 <MoreHorizontal className="w-4 h-4" />
-//                                                 <span className="sr-only">
-//                                                     Toggle
-//                                                     menu
-//                                                 </span>
-//                                             </Button>
-//                                         </DropdownMenuTrigger>
-//                                         <DropdownMenuContent align="end">
-//                                             <DropdownMenuLabel>
-//                                                 Actions
-//                                             </DropdownMenuLabel>
-//                                             <DropdownMenuItem>
-//                                                 Edit
-//                                             </DropdownMenuItem>
-//                                             <DropdownMenuItem>
-//                                                 Delete
-//                                             </DropdownMenuItem>
-//                                         </DropdownMenuContent>
-//                                     </DropdownMenu>
-//                                 </TableCell>
-//                             </TableRow>
-//                         )
-//                     )}
-//                 </Table>
-//             )
-//         })}{' '}
-//     </div>
-// ) : null}

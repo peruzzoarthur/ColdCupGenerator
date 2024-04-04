@@ -45,7 +45,7 @@ export function DoublesCard({
     refetchDoubles,
     setShowAllDoubles,
 }: DoublesCardProps) {
-    const [reloadCard, setReloadCard] = useState(true)
+    const [showCard, setShowCard] = useState(true)
     const [editOn, setEditOn] = useState(false)
     const [newCategoryId, setNewCategoryId] = useState<string | undefined>(
         'Edit doubles category'
@@ -69,7 +69,7 @@ export function DoublesCard({
             )
 
             deleteDoublesToasted(doubles)
-            setReloadCard(false)
+            setShowCard(false)
 
             return data
         } catch (error) {
@@ -104,7 +104,7 @@ export function DoublesCard({
             )
 
             updateDoublesToasted(doubles)
-            setReloadCard(false)
+            setShowCard(false)
 
             return data
         } catch (error) {
@@ -129,7 +129,7 @@ export function DoublesCard({
 
     return (
         <>
-            {reloadCard && (
+            {showCard && (
                 <>
                     {!editOn && (
                         <Card className={cn('w-[380px]', className)}>

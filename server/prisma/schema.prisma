@@ -59,6 +59,7 @@ model Category {
 
 model Match {
   id              String    @id @default(uuid())
+  number          Int       @default(autoincrement())
   players         Player[]
   isFinished      Boolean   @default(false)
   category        Category? @relation(fields: [categoryId], references: [id])

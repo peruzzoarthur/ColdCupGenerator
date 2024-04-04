@@ -48,6 +48,7 @@ export type PadelEvent = {
 
 export type Match = {
     id: string
+    number: number
     doubles: Double[]
     category: Category
     categoryId: string

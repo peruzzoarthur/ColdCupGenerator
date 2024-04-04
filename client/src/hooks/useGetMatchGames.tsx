@@ -7,7 +7,11 @@ type MatchGamesResponse = {
 }
 
 export const useGetMatchGames = (matchId: string) => {
-    const { data: matchGames, isFetching } = useQuery({
+    const {
+        data: matchGames,
+        isFetching,
+        refetch: refetchMatchGames,
+    } = useQuery({
         queryKey: ['get-match-games', matchId],
         queryFn: async () => {
             const { data }: { data: MatchGamesResponse } = await axios.get(
@@ -16,9 +20,9 @@ export const useGetMatchGames = (matchId: string) => {
             if (data) {
                 return data
             }
-            return
+            return null
         },
     })
 
-    return { matchGames, isFetching }
+    return { matchGames, isFetching, refetchMatchGames }
 }

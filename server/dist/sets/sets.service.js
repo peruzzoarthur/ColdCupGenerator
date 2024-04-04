@@ -73,6 +73,9 @@ let SetsService = class SetsService {
         if (!set) {
             throw new common_1.HttpException("Set not found", common_1.HttpStatus.NOT_FOUND);
         }
+        if (set.isFinished) {
+            throw new common_1.HttpException("This set is finished", common_1.HttpStatus.BAD_REQUEST);
+        }
         for (let i = 0; i < setFinishedDto.doublesOneGames; i++) {
             await this.gamesService.create({
                 setId: set.id,

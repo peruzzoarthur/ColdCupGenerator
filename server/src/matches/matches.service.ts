@@ -99,7 +99,7 @@ export class MatchesService {
       throw new HttpException("Match not found", HttpStatus.NOT_FOUND);
     }
 
-    if (!(await match).isFinished) {
+    if ((await match).isFinished === null) {
       return;
     }
 
@@ -150,7 +150,7 @@ export class MatchesService {
       throw new HttpException("Match not found", HttpStatus.NOT_FOUND);
     }
 
-    const setFinished = this.setsService.setFinished(
+    const setFinished = await this.setsService.setFinished(
       match.sets[0].id,
       matchFinishedDto
     );

@@ -97,7 +97,7 @@ let MatchesService = class MatchesService {
         if (!match) {
             throw new common_1.HttpException("Match not found", common_1.HttpStatus.NOT_FOUND);
         }
-        if (!(await match).isFinished) {
+        if ((await match).isFinished === null) {
             return;
         }
         const querySet = await match.sets({
@@ -137,7 +137,7 @@ let MatchesService = class MatchesService {
         if (!match) {
             throw new common_1.HttpException("Match not found", common_1.HttpStatus.NOT_FOUND);
         }
-        const setFinished = this.setsService.setFinished(match.sets[0].id, matchFinishedDto);
+        const setFinished = await this.setsService.setFinished(match.sets[0].id, matchFinishedDto);
         console.log(setFinished);
         const updatedMatch = await this.prismaService.match.update({
             where: {

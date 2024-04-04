@@ -67,8 +67,13 @@ export class SetsService {
         id: id,
       },
     });
+
     if (!set) {
       throw new HttpException("Set not found", HttpStatus.NOT_FOUND);
+    }
+
+    if (set.isFinished) {
+      throw new HttpException("This set is finished", HttpStatus.BAD_REQUEST);
     }
 
     for (let i = 0; i < setFinishedDto.doublesOneGames; i++) {

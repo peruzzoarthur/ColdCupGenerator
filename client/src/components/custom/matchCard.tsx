@@ -10,21 +10,43 @@ import {
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { MatchForm, matchFormObject } from './matchForm'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useGetMatchGames } from '@/hooks/useGetMatchGames'
 import { useState } from 'react'
 import { Pencil1Icon } from '@radix-ui/react-icons'
+import { useToast } from '../ui/use-toast'
+import { ErrorAlert } from './errorAlert'
 
+type ErrorResponse = {
+    message: string
+}
 type MatchCardProps = React.ComponentProps<typeof Card> & {
     match: Match
-    matchIndex: number
 }
-export const MatchCard = ({ match, matchIndex, className }: MatchCardProps) => {
-    // todo add toaster and refetch?
-    // todo add real number to matches - back-end @unique(autoincrement()) i guess
+export const MatchCard = ({ match, className }: MatchCardProps) => {
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
+    const { toast } = useToast()
+
+    const sendResultToast = (match: Match, form: matchFormObject) => {
+        toast({
+            title: 'Success! 🙌',
+            description: `Sent result:\n
+            ${match.doubles[0].players[0].firstName} ${match.doubles[0].players[0].lastName} / ${match.doubles[0].players[1].firstName} ${match.doubles[0].players[1].lastName}: ${form.doublesOneGames} ---
+            ${match.doubles[1].players[0].firstName} ${match.doubles[1].players[0].lastName} / ${match.doubles[1].players[1].firstName} ${match.doubles[1].players[1].lastName}: ${form.doublesTwoGames}`,
+            // className: 'bg-emerald-600 bg-opacity-60 text-white',
+        })
+    }
     const [editOn, setEditOn] = useState<boolean>(false)
-    const { matchGames } = useGetMatchGames(match.id)
+
+    const { matchGames, refetchMatchGames } = useGetMatchGames(
+        match.id,
+        match.isFinished
+    )
+
+    // const [showCard, setShowCard] = useState<boolean>(true)
+
     const onSubmit = async (input: matchFormObject) => {
         try {
             const requestBody = {
@@ -41,17 +63,36 @@ export const MatchCard = ({ match, matchIndex, className }: MatchCardProps) => {
             )
 
             console.log(data)
+            sendResultToast(match, input)
+            // setShowCard(false)
+            await refetchMatchGames()
+
             return data
         } catch (error) {
-            console.error(error)
-            return error
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (
+                    axiosError.response &&
+                    (axiosError.response.status === 400 || 404)
+                ) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                } else {
+                    setError(true)
+                    setErrorMessage('Error setting match result')
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error setting match result')
+            }
         }
     }
     return (
         <>
+            {/* {showCard ? ( */}
             <Card className={cn('w-[380px]', className)}>
                 <CardHeader>
-                    <CardTitle>{`Match ${matchIndex + 1}`}</CardTitle>
+                    <CardTitle>{`Match #${match.number}`}</CardTitle>
                     <CardDescription>
                         Category - {match.category?.level}{' '}
                         {match.category?.type}
@@ -215,6 +256,20 @@ export const MatchCard = ({ match, matchIndex, className }: MatchCardProps) => {
                     )}
                 </CardContent>
             </Card>
+
+            {/* <Button onClick={handleReloadCard}>Reload Card</Button> */}
+            {isError && (
+                <div onClick={() => setError(false)} className="mt-4">
+                    <ErrorAlert message={errorMessage} />
+                </div>
+            )}
         </>
     )
 }
+
+//     : (
+//        <div className="flex items-center align-middle justify-evenly">
+//            <h2>Match finished</h2>
+//            {/* // todo align to center of div */}
+//        </div>
+//    )}
