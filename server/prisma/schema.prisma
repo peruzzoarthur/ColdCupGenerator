@@ -7,6 +7,10 @@ generator docs {
   provider = "node node_modules/prisma-docs-generator"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -88,12 +92,13 @@ model Set {
 }
 
 model Game {
-  id       String  @id @default(uuid())
-  set      Set     @relation(fields: [setId], references: [id])
+  id       String   @id @default(uuid())
+  set      Set      @relation(fields: [setId], references: [id])
   setId    String
   // Double   Double? @relation(fields: [doubleId], references: [id])
   // doubleId String?
-  winner   Double? @relation("GameWinnerDouble", fields: [winnerId], references: [id])
+  doubles  Double[] @relation("GamesPlayed") //todo testing
+  winner   Double?  @relation("GameWinnerDouble", fields: [winnerId], references: [id])
   winnerId String?
 }
 
@@ -118,7 +123,7 @@ model Double {
   matchs      Match[]
   category    Category @relation(fields: [categoryId], references: [id])
   categoryId  String
-  // games       Game[]
+  games       Game[]   @relation("GamesPlayed") //todo testing
   sets        Set[]
   matchesWins Match[]  @relation("MatchWinnerDouble")
   setsWins    Set[]    @relation("SetWinnerDouble")

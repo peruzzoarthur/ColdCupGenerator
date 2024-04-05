@@ -35,7 +35,8 @@ import { EventDoublesTable } from './eventsTable/eventDoublesTable'
 import { RegisteredDoublesTable, columns } from './eventsTable/columns'
 import { MatchesCarousel } from './matchesCarousel'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useGetEventById } from '@/hooks/useGetEventById'
+// import { useState } from 'react'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -50,7 +51,14 @@ export function EventDashboard({
     toggleEventOff,
     refetchEvents,
 }: EventDashBoardProps) {
-    const [matches, setMatches] = useState<Match[]>(event.matches)
+    // const [matches, setMatches] = useState<Match[]>(event.matches)
+    const {
+        finishedMatches,
+        pendingMatches,
+        refetchEventById,
+        eventById,
+        isFetchingEventById,
+    } = useGetEventById(event.id)
 
     const handleActivate = async (eventId: string) => {
         try {
@@ -69,13 +77,24 @@ export function EventDashboard({
     }
 
     const tableData: RegisteredDoublesTable[] | undefined =
-        event?.eventDoubles?.map((d) => {
+        eventById?.eventDoubles?.map((d) => {
+            const winningGames = d.double?.gamesWins.length
+            const totalGames = d.double?.games.length
+            const lostGames = (totalGames ?? 0) - (winningGames ?? 0)
+            const gamesDiff = (winningGames ?? 0) - (lostGames ?? 0)
+
+            // const lostGames = totalGames? - (winningGames ?? 0
             return {
                 id: d.doubleId,
                 playerOneName: `${d.double?.players[0].firstName} ${d.double?.players[0].lastName}`,
                 playerTwoName: `${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`,
                 categoryLevel: d.category?.level,
                 categoryType: d.category?.type,
+                // todo
+                matchesWon: d.double?.matchesWins.length,
+                W: winningGames,
+                T: totalGames,
+                gamesDiff: gamesDiff,
             }
         })
 
@@ -188,42 +207,55 @@ export function EventDashboard({
                         </TabsContent>
                     </Tabs>
                     <div className="flex justify-center">
-                        <Button
-                            className="w-48 mb-2 mr-2 "
-                            onClick={async () => handleActivate(event.id)}
-                        >
-                            Generate matches 🎾
-                        </Button>
+                        {event.matches.length === 0 ? (
+                            <Button
+                                className="w-48 mb-2 mr-2 "
+                                onClick={async () => handleActivate(event.id)}
+                            >
+                                Generate matches 🎾
+                            </Button>
+                        ) : null}
                     </div>
 
                     <h1 className="text-2xl font-bold">Matches</h1>
 
-                    <h1 className="text-xl font-bold">Pending matches</h1>
-                    <div className="flex justify-center">
-                        <MatchesCarousel
-                            matches={matches.filter(
-                                (match) => match.isFinished === false
-                            )}
-                            setMatches={setMatches}
-                            refetchEvents={refetchEvents}
-                            eventId={event.id}
-                        />
-                    </div>
+                    {!isFetchingEventById &&
+                    pendingMatches &&
+                    pendingMatches.length !== 0 ? (
+                        <>
+                            <h1 className="text-xl font-bold">
+                                Pending matches
+                            </h1>
+                            <div className="flex justify-center">
+                                <MatchesCarousel
+                                    matches={pendingMatches}
+                                    refetchEvents={refetchEvents}
+                                    refetchEventById={refetchEventById}
+                                />
+                            </div>
+                        </>
+                    ) : null}
+                    {!isFetchingEventById &&
+                    finishedMatches &&
+                    finishedMatches.length !== 0 ? (
+                        <>
+                            <h1 className="text-xl font-bold">
+                                Finished matches
+                            </h1>
+                            <div className="flex justify-center">
+                                <MatchesCarousel
+                                    matches={finishedMatches}
+                                    refetchEvents={refetchEvents}
+                                    refetchEventById={refetchEventById}
+                                />
+                            </div>
+                        </>
+                    ) : null}
 
-                    <h1 className="text-xl font-bold">Finished matches</h1>
-                    <div className="flex justify-center">
-                        <MatchesCarousel
-                            matches={matches.filter(
-                                (match) => match.isFinished === true
-                            )}
-                            setMatches={setMatches}
-                            refetchEvents={refetchEvents}
-                            eventId={event.id}
-                        />
-                    </div>
+                    <div className="flex justify-center"></div>
 
-                    {/* <Button onClick={handleReloadCarousel}>
-                        Reload Carousel
+                    {/* <Button onClick={() => refetchEventMatches()}>
+                        Refresh
                     </Button> */}
                 </main>
             </div>

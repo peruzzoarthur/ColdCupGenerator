@@ -1,4 +1,4 @@
-import { Match } from '@/types/padel.types'
+import { Match, PadelEvent } from '@/types/padel.types'
 import {
     Card,
     CardContent,
@@ -16,14 +16,22 @@ import { useState } from 'react'
 import { Pencil1Icon } from '@radix-ui/react-icons'
 import { useToast } from '../ui/use-toast'
 import { ErrorAlert } from './errorAlert'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 type ErrorResponse = {
     message: string
 }
 type MatchCardProps = React.ComponentProps<typeof Card> & {
     match: Match
+    refetchEventById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
-export const MatchCard = ({ match, className }: MatchCardProps) => {
+export const MatchCard = ({
+    match,
+    className,
+    refetchEventById,
+}: MatchCardProps) => {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
@@ -66,6 +74,7 @@ export const MatchCard = ({ match, className }: MatchCardProps) => {
             sendResultToast(match, input)
             // setShowCard(false)
             await refetchMatchGames()
+            await refetchEventById()
 
             return data
         } catch (error) {
@@ -256,6 +265,11 @@ export const MatchCard = ({ match, className }: MatchCardProps) => {
                     )}
                 </CardContent>
             </Card>
+            {/* ) : (
+                <div className="flex items-center align-middle justify-evenly">
+                    <h2>Match finished</h2>
+                </div>
+            )} */}
 
             {/* <Button onClick={handleReloadCard}>Reload Card</Button> */}
             {isError && (
@@ -266,10 +280,3 @@ export const MatchCard = ({ match, className }: MatchCardProps) => {
         </>
     )
 }
-
-//     : (
-//        <div className="flex items-center align-middle justify-evenly">
-//            <h2>Match finished</h2>
-//            {/* // todo align to center of div */}
-//        </div>
-//    )}

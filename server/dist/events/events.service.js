@@ -79,6 +79,7 @@ let EventsService = class EventsService {
                         double: {
                             select: {
                                 players: true,
+                                matchesWins: true,
                             },
                         },
                         category: true,
@@ -261,6 +262,74 @@ let EventsService = class EventsService {
     }
     remove(id) {
         return `This action removes a #${id} event`;
+    }
+    async getEventByIdParam(id) {
+        const event = await this.prismaService.event.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                id: true,
+                name: true,
+                places: true,
+                matches: {
+                    select: {
+                        number: true,
+                        id: true,
+                        winner: true,
+                        date: true,
+                        category: {
+                            select: {
+                                level: true,
+                                type: true,
+                            },
+                        },
+                        categoryId: true,
+                        doubles: {
+                            select: {
+                                players: true,
+                                id: true,
+                            },
+                        },
+                        eventId: true,
+                        sets: true,
+                        isFinished: true,
+                    },
+                },
+                eventDoubles: {
+                    select: {
+                        double: {
+                            select: {
+                                players: true,
+                                matchesWins: true,
+                                games: true,
+                                gamesWins: true,
+                            },
+                        },
+                        category: true,
+                    },
+                },
+                isActive: true,
+                categories: {
+                    select: {
+                        id: true,
+                        type: true,
+                        level: true,
+                        eventDoubles: {
+                            select: {
+                                double: {
+                                    select: {
+                                        players: true,
+                                        id: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        return event;
     }
 };
 exports.EventsService = EventsService;

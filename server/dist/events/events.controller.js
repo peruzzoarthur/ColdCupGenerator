@@ -40,7 +40,7 @@ let EventsController = class EventsController {
         return await this.eventsService.findAllEvents();
     }
     findOne(id) {
-        return this.eventsService.findOne(+id);
+        return this.eventsService.getEventByIdParam(id);
     }
     update(id, updateEventDto) {
         return this.eventsService.update(+id, updateEventDto);

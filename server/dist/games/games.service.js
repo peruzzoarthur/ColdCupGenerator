@@ -24,6 +24,14 @@ let GamesService = class GamesService {
                         id: createGameDto.setId,
                     },
                 },
+                doubles: {
+                    connect: [
+                        {
+                            id: createGameDto.doublesOneId,
+                        },
+                        { id: createGameDto.doublesTwoId },
+                    ],
+                },
                 winner: {
                     connect: { id: createGameDto.winnerDoublesId },
                 },

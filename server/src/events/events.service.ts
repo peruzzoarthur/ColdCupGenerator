@@ -77,6 +77,7 @@ export class EventsService {
             double: {
               select: {
                 players: true,
+                matchesWins: true,
               },
             },
             category: true,
@@ -288,6 +289,75 @@ export class EventsService {
 
   remove(id: number) {
     return `This action removes a #${id} event`;
+  }
+
+  async getEventByIdParam(id: string) {
+    const event = await this.prismaService.event.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        places: true,
+        matches: {
+          select: {
+            number: true,
+            id: true,
+            winner: true,
+            date: true,
+            category: {
+              select: {
+                level: true,
+                type: true,
+              },
+            },
+            categoryId: true,
+            doubles: {
+              select: {
+                players: true,
+                id: true,
+              },
+            },
+            eventId: true,
+            sets: true,
+            isFinished: true,
+          },
+        },
+        eventDoubles: {
+          select: {
+            double: {
+              select: {
+                players: true,
+                matchesWins: true,
+                games: true,
+                gamesWins: true,
+              },
+            },
+            category: true,
+          },
+        },
+        isActive: true,
+        categories: {
+          select: {
+            id: true,
+            type: true,
+            level: true,
+            eventDoubles: {
+              select: {
+                double: {
+                  select: {
+                    players: true,
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return event;
   }
 }
 

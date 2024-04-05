@@ -20,7 +20,6 @@ export const useGetEvents = () => {
         },
     })
     const eventsIds = allEvents?.map((item) => item.id)
-    console.log(import.meta.env.VITE_SERVER_URL)
 
     return { allEvents, isFetching, eventsIds, refetchEvents }
 }

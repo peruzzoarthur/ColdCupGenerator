@@ -1,0 +1,210 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Event {
+  id String [pk]
+  name String [not null]
+  categories Category [not null]
+  isActive Boolean [not null, default: false]
+  players Player [not null]
+  matches Match [not null]
+  places Place [not null]
+  eventDoubles EventDouble [not null]
+  startDate DateTime
+  finishDate DateTime
+}
+
+Table EventDouble {
+  event Event [not null]
+  eventId String [not null]
+  double Double [not null]
+  doubleId String [not null]
+  category Category [not null]
+  categoryId String [not null]
+
+  indexes {
+    (eventId, doubleId, categoryId) [pk]
+  }
+}
+
+Table Category {
+  id String [pk]
+  level Int [not null]
+  players Player [not null]
+  doubles Double [not null]
+  type CatType [not null]
+  events Event [not null]
+  matches Match [not null]
+  eventDoubles EventDouble [not null]
+
+  indexes {
+    (level, type) [unique]
+  }
+}
+
+Table Match {
+  id String [pk]
+  number Int [increment, not null]
+  players Player [not null]
+  isFinished Boolean [not null, default: false]
+  category Category
+  categoryId String
+  winner Double
+  winnerDoublesId String
+  sets Set [not null]
+  doubles Double [not null]
+  event Event
+  eventId String
+  date DateTime
+  type MatchType [not null, default: 'SUPERSET']
+}
+
+Table Set {
+  id String [pk]
+  type SetType [not null, default: 'SUPER']
+  doubles Double [not null]
+  winner Double
+  setWinnerId String
+  result String
+  match Match [not null]
+  games Game [not null]
+  isFinished Boolean [not null, default: false]
+}
+
+Table Game {
+  id String [pk]
+  set Set [not null]
+  setId String [not null]
+  doubles Double [not null]
+  winner Double
+  winnerId String
+}
+
+Table Player {
+  id String [pk]
+  email String [unique]
+  firstName String
+  lastName String
+  role Role [not null, default: 'USER']
+  categories Category [not null]
+  position PlayerPosition
+  matches Match [not null]
+  doubles Double [not null]
+  events Event [not null]
+}
+
+Table Double {
+  id String [pk]
+  players Player [not null]
+  matchs Match [not null]
+  category Category [not null]
+  categoryId String [not null]
+  games Game [not null]
+  sets Set [not null]
+  matchesWins Match [not null]
+  setsWins Set [not null]
+  gamesWins Game [not null]
+  eventDouble EventDouble [not null]
+}
+
+Table Place {
+  id String [pk]
+  name String
+  address String [unique]
+  events Event [not null]
+}
+
+Table CategoryToEvent {
+  categoriesId String [ref: > Category.id]
+  eventsId String [ref: > Event.id]
+}
+
+Table EventToPlayer {
+  playersId String [ref: > Player.id]
+  eventsId String [ref: > Event.id]
+}
+
+Table EventToPlace {
+  placesId String [ref: > Place.id]
+  eventsId String [ref: > Event.id]
+}
+
+Table CategoryToPlayer {
+  playersId String [ref: > Player.id]
+  categoriesId String [ref: > Category.id]
+}
+
+Table MatchToPlayer {
+  playersId String [ref: > Player.id]
+  matchesId String [ref: > Match.id]
+}
+
+Table DoubleToMatch {
+  doublesId String [ref: > Double.id]
+  matchsId String [ref: > Match.id]
+}
+
+Table DoubleToSet {
+  doublesId String [ref: > Double.id]
+  setsId String [ref: > Set.id]
+}
+
+Table GamesPlayed {
+  doublesId String [ref: > Double.id]
+  gamesId String [ref: > Game.id]
+}
+
+Table DoubleToPlayer {
+  doublesId String [ref: > Double.id]
+  playersId String [ref: > Player.id]
+}
+
+Enum Role {
+  USER
+  ADMIN
+}
+
+Enum CatType {
+  ALL
+  F
+  M
+}
+
+Enum PlayerPosition {
+  REVES
+  DRIVE
+}
+
+Enum SetType {
+  NORMAL
+  SUPER
+}
+
+Enum MatchType {
+  BO3
+  BO5
+  SUPERSET
+}
+
+Ref: EventDouble.eventId > Event.id
+
+Ref: EventDouble.doubleId > Double.id
+
+Ref: EventDouble.categoryId > Category.id
+
+Ref: Match.categoryId > Category.id
+
+Ref: Match.winnerDoublesId > Double.id
+
+Ref: Match.eventId > Event.id
+
+Ref: Set.setWinnerId > Double.id
+
+Ref: Set.id > Match.id
+
+Ref: Game.setId > Set.id
+
+Ref: Game.winnerId > Double.id
+
+Ref: Double.categoryId > Category.id

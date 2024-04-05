@@ -80,6 +80,8 @@ export class SetsService {
       await this.gamesService.create({
         setId: set.id,
         winnerDoublesId: setFinishedDto.doublesOneId,
+        doublesOneId: setFinishedDto.doublesOneId,
+        doublesTwoId: setFinishedDto.doublesTwoId,
       });
     }
 
@@ -87,6 +89,8 @@ export class SetsService {
       await this.gamesService.create({
         setId: set.id,
         winnerDoublesId: setFinishedDto.doublesTwoId,
+        doublesOneId: setFinishedDto.doublesOneId,
+        doublesTwoId: setFinishedDto.doublesTwoId,
       });
     }
 

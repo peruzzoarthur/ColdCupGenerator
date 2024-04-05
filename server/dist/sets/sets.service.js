@@ -80,12 +80,16 @@ let SetsService = class SetsService {
             await this.gamesService.create({
                 setId: set.id,
                 winnerDoublesId: setFinishedDto.doublesOneId,
+                doublesOneId: setFinishedDto.doublesOneId,
+                doublesTwoId: setFinishedDto.doublesTwoId,
             });
         }
         for (let i = 0; i < setFinishedDto.doublesTwoGames; i++) {
             await this.gamesService.create({
                 setId: set.id,
                 winnerDoublesId: setFinishedDto.doublesTwoId,
+                doublesOneId: setFinishedDto.doublesOneId,
+                doublesTwoId: setFinishedDto.doublesTwoId,
             });
         }
         const updatedSet = await this.prismaService.set.update({

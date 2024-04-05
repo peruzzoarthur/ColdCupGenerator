@@ -8,13 +8,6 @@ export declare class MatchesService {
     private readonly setsService;
     constructor(prismaService: PrismaService, setsService: SetsService);
     create(createMatchDto: CreateMatchDto): Promise<{
-        sets: {
-            id: string;
-            type: import(".prisma/client").$Enums.SetType;
-            setWinnerId: string;
-            result: string;
-            isFinished: boolean;
-        }[];
         id: string;
         type: import(".prisma/client").$Enums.MatchType;
         isFinished: boolean;
@@ -28,8 +21,6 @@ export declare class MatchesService {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
-    }>;
-    findAll(): Promise<{
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -37,6 +28,8 @@ export declare class MatchesService {
             result: string;
             isFinished: boolean;
         }[];
+    }>;
+    findAll(): Promise<{
         id: string;
         type: import(".prisma/client").$Enums.MatchType;
         isFinished: boolean;
@@ -51,6 +44,13 @@ export declare class MatchesService {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
+        sets: {
+            id: string;
+            type: import(".prisma/client").$Enums.SetType;
+            setWinnerId: string;
+            result: string;
+            isFinished: boolean;
+        }[];
     }[]>;
     findOne(id: string): Promise<{
         id: string;
