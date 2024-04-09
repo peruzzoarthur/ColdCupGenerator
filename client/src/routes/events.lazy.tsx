@@ -222,7 +222,7 @@ function Events() {
                         <div className="flex flex-col justify-center ">
                             {selectedEvent && (
                                 <div className="flex flex-col justify-center mt-2 mb-4">
-                                    <h1 className="justify-center text-3xl font-medium">
+                                    <h1 className="justify-center mb-4 text-3xl font-medium">
                                         🏆 {selectedEvent.name} 🏆
                                     </h1>
                                     <RegisterDoublesForm

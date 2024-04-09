@@ -8,7 +8,7 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
+    // FormLabel,
     FormMessage,
 } from '@/components/ui/form'
 import {
@@ -62,7 +62,7 @@ const RegisterDoublesForm: React.FC<RegisterDoublesFormProps> = ({
                 name="doublesId"
                 render={({ field }) => (
                     <FormItem className="max-h-96">
-                        <FormLabel>Doubles</FormLabel>
+                        {/* <FormLabel>Doubles</FormLabel> */}
                         <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}

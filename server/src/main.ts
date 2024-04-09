@@ -1,7 +1,7 @@
-import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { NestFactory, Reflector } from "@nestjs/core";
+import { AppModule } from "./app.module";
+import * as cookieParser from "cookie-parser";
+import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
 // import { ExcludeNullInterceptor } from './utils/excludeNull.interceptor';
 
 async function bootstrap() {
@@ -11,6 +11,6 @@ async function bootstrap() {
   // app.useGlobalInterceptors(new ExcludeNullInterceptor());
   app.use(cookieParser());
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
