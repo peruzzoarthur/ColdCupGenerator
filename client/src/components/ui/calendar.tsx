@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+// import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 import { DayPicker } from 'react-day-picker'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
@@ -56,19 +56,19 @@ function Calendar({
                 day_hidden: 'invisible',
                 ...classNames,
             }}
-            components={{
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            // components={{
+            //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                IconLeft: ({ ...props }) => (
-                    <ChevronLeftIcon className="w-4 h-4" />
-                ),
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                IconRight: ({ ...props }) => (
-                    <ChevronRightIcon className="w-4 h-4" />
-                ),
-            }}
-            {...props}
+            //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            //     IconLeft: ({ ...props }) => (
+            //         <ChevronLeftIcon className="w-4 h-4" />
+            //     ),
+            //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            //     IconRight: ({ ...props }) => (
+            //         <ChevronRightIcon className="w-4 h-4" />
+            //     ),
+            // }}
+            // {...props}
         />
     )
 }
