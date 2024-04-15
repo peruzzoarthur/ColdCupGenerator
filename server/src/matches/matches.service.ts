@@ -35,6 +35,7 @@ export class MatchesService {
       doublesTwoGames: 0,
       matchId: match.id,
       doublesIds: createMatchDto.doublesIds,
+      eventId: createMatchDto.eventId,
     });
 
     console.log(superSet);

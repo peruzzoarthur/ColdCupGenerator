@@ -27,6 +27,8 @@ model Event {
   eventDoubles EventDouble[] // Relation to link doubles specifically to an event
   startDate    DateTime?
   finishDate   DateTime?
+  games        Game[]
+  sets         Set[]
   // courts       Court[]
 }
 
@@ -89,6 +91,7 @@ model Set {
   match       Match    @relation(fields: [id], references: [id])
   games       Game[]
   isFinished  Boolean  @default(false)
+  events      Event[]
 }
 
 model Game {
@@ -100,6 +103,7 @@ model Game {
   doubles  Double[] @relation("GamesPlayed") //todo testing
   winner   Double?  @relation("GameWinnerDouble", fields: [winnerId], references: [id])
   winnerId String?
+  events   Event[]
 }
 
 model Player {

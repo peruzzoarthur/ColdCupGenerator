@@ -5,4 +5,5 @@ export declare class SetFinishedDto {
     doublesTwoId: string;
     doublesTwoGames: number;
     winnerDoublesId: string;
+    eventId: string;
 }

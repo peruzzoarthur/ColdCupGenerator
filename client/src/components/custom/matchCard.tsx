@@ -63,6 +63,7 @@ export const MatchCard = ({
                 doublesTwoGames: input.doublesTwoGames,
                 doublesTwoId: match.doubles[1].id,
                 winnerDoublesId: input.winnerDoublesId,
+                eventId: match.eventId,
             }
 
             const data = await axios.patch(

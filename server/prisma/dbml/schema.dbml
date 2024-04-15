@@ -13,6 +13,8 @@ Table Event {
   eventDoubles EventDouble [not null]
   startDate DateTime
   finishDate DateTime
+  games Game [not null]
+  sets Set [not null]
 }
 
 Table EventDouble {
@@ -70,6 +72,7 @@ Table Set {
   match Match [not null]
   games Game [not null]
   isFinished Boolean [not null, default: false]
+  events Event [not null]
 }
 
 Table Game {
@@ -79,6 +82,7 @@ Table Game {
   doubles Double [not null]
   winner Double
   winnerId String
+  events Event [not null]
 }
 
 Table Player {
@@ -127,6 +131,16 @@ Table EventToPlayer {
 
 Table EventToPlace {
   placesId String [ref: > Place.id]
+  eventsId String [ref: > Event.id]
+}
+
+Table EventToGame {
+  gamesId String [ref: > Game.id]
+  eventsId String [ref: > Event.id]
+}
+
+Table EventToSet {
+  setsId String [ref: > Set.id]
   eventsId String [ref: > Event.id]
 }
 

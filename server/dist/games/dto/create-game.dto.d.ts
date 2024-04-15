@@ -3,4 +3,5 @@ export declare class CreateGameDto {
     winnerDoublesId: string;
     doublesOneId: string;
     doublesTwoId: string;
+    eventId: string;
 }

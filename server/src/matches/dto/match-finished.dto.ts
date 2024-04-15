@@ -18,4 +18,8 @@ export class MatchFinishedDto {
   @IsString()
   @IsNotEmpty()
   winnerDoublesId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  eventId: string;
 }

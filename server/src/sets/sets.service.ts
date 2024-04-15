@@ -22,6 +22,11 @@ export class SetsService {
         doubles: {
           connect: createSetDto.doublesIds.map((id) => ({ id })),
         },
+        events: {
+          connect: {
+            id: createSetDto.eventId,
+          },
+        },
       },
     });
     return newSet;
@@ -82,6 +87,7 @@ export class SetsService {
         winnerDoublesId: setFinishedDto.doublesOneId,
         doublesOneId: setFinishedDto.doublesOneId,
         doublesTwoId: setFinishedDto.doublesTwoId,
+        eventId: setFinishedDto.eventId,
       });
     }
 
@@ -91,6 +97,7 @@ export class SetsService {
         winnerDoublesId: setFinishedDto.doublesTwoId,
         doublesOneId: setFinishedDto.doublesOneId,
         doublesTwoId: setFinishedDto.doublesTwoId,
+        eventId: setFinishedDto.eventId,
       });
     }
 

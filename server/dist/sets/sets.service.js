@@ -29,6 +29,11 @@ let SetsService = class SetsService {
                 doubles: {
                     connect: createSetDto.doublesIds.map((id) => ({ id })),
                 },
+                events: {
+                    connect: {
+                        id: createSetDto.eventId,
+                    },
+                },
             },
         });
         return newSet;
@@ -82,6 +87,7 @@ let SetsService = class SetsService {
                 winnerDoublesId: setFinishedDto.doublesOneId,
                 doublesOneId: setFinishedDto.doublesOneId,
                 doublesTwoId: setFinishedDto.doublesTwoId,
+                eventId: setFinishedDto.eventId,
             });
         }
         for (let i = 0; i < setFinishedDto.doublesTwoGames; i++) {
@@ -90,6 +96,7 @@ let SetsService = class SetsService {
                 winnerDoublesId: setFinishedDto.doublesTwoId,
                 doublesOneId: setFinishedDto.doublesOneId,
                 doublesTwoId: setFinishedDto.doublesTwoId,
+                eventId: setFinishedDto.eventId,
             });
         }
         const updatedSet = await this.prismaService.set.update({

@@ -3,4 +3,5 @@ export class CreateGameDto {
   winnerDoublesId: string;
   doublesOneId: string;
   doublesTwoId: string; // TODO
+  eventId: string;
 }

@@ -292,18 +292,40 @@ let EventsService = class EventsService {
                             },
                         },
                         eventId: true,
-                        sets: true,
                         isFinished: true,
                     },
                 },
                 eventDoubles: {
+                    where: {
+                        eventId: id,
+                    },
                     select: {
                         double: {
                             select: {
                                 players: true,
-                                matchesWins: true,
-                                games: true,
-                                gamesWins: true,
+                                matchesWins: {
+                                    where: {
+                                        eventId: id,
+                                    },
+                                },
+                                games: {
+                                    where: {
+                                        events: {
+                                            some: {
+                                                id: id,
+                                            },
+                                        },
+                                    },
+                                },
+                                gamesWins: {
+                                    where: {
+                                        events: {
+                                            some: {
+                                                id: id,
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                         category: true,

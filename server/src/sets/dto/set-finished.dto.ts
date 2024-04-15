@@ -17,4 +17,8 @@ export class SetFinishedDto {
   @IsString()
   @IsNotEmpty()
   winnerDoublesId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  eventId: string;
 }

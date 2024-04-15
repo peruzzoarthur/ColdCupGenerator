@@ -39,4 +39,9 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], MatchFinishedDto.prototype, "winnerDoublesId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], MatchFinishedDto.prototype, "eventId", void 0);
 //# sourceMappingURL=match-finished.dto.js.map
