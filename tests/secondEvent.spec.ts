@@ -43,7 +43,7 @@ test("test", async ({ page }) => {
   await page.getByRole("button", { name: "Show all events" }).click();
   await page.getByRole("button", { name: "Open event" }).nth(1).click();
   await page.getByRole("button", { name: "Generate matches 🎾" }).click();
-  // register doubles in event
+  // register doubles in event.
 
   // // set games results
 

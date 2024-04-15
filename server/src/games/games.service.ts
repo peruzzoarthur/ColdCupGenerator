@@ -22,6 +22,11 @@ export class GamesService {
             { id: createGameDto.doublesTwoId },
           ],
         },
+        events: {
+          connect: {
+            id: createGameDto.eventId,
+          },
+        },
         winner: {
           connect: { id: createGameDto.winnerDoublesId },
         },

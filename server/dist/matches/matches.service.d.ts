@@ -9,9 +9,12 @@ export declare class MatchesService {
     constructor(prismaService: PrismaService, setsService: SetsService);
     create(createMatchDto: CreateMatchDto): Promise<{
         id: string;
-        isFinished: boolean;
-        categoryId: string;
+        doubles: {
+            id: string;
+            categoryId: string;
+        }[];
         type: import(".prisma/client").$Enums.MatchType;
+        isFinished: boolean;
         category: {
             id: string;
             level: number;
@@ -24,26 +27,21 @@ export declare class MatchesService {
             result: string;
             isFinished: boolean;
         }[];
-        doubles: {
-            id: string;
-            categoryId: string;
-        }[];
+        categoryId: string;
     }>;
     findAll(): Promise<{
         id: string;
-        isFinished: boolean;
-        eventId: string;
-        date: Date;
-        type: import(".prisma/client").$Enums.MatchType;
-        category: {
-            id: string;
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-        };
         winner: {
             id: string;
             categoryId: string;
         };
+        type: import(".prisma/client").$Enums.MatchType;
+        isFinished: boolean;
+        category: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        };
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -51,15 +49,17 @@ export declare class MatchesService {
             result: string;
             isFinished: boolean;
         }[];
+        eventId: string;
+        date: Date;
     }[]>;
     findOne(id: string): Promise<{
         id: string;
-        isFinished: boolean;
-        type: import(".prisma/client").$Enums.MatchType;
         doubles: {
             id: string;
             categoryId: string;
         }[];
+        type: import(".prisma/client").$Enums.MatchType;
+        isFinished: boolean;
     }>;
     findResult(id: string): Promise<{
         doublesOneGames: number;
