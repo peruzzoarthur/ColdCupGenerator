@@ -15,6 +15,7 @@ Table Event {
   finishDate DateTime
   games Game [not null]
   sets Set [not null]
+  matchDates MatchDate [not null]
 }
 
 Table EventDouble {
@@ -60,6 +61,22 @@ Table Match {
   eventId String
   date DateTime
   type MatchType [not null, default: 'SUPERSET']
+  matchDate MatchDate
+  matchDateId String [unique]
+}
+
+Table MatchDate {
+  id String [pk]
+  event Event [not null]
+  eventId String [not null]
+  match Match
+  matchId String
+  start DateTime [not null]
+  finish DateTime [not null]
+
+  indexes {
+    (eventId, start, finish) [unique]
+  }
 }
 
 Table Set {
@@ -212,6 +229,10 @@ Ref: Match.categoryId > Category.id
 Ref: Match.winnerDoublesId > Double.id
 
 Ref: Match.eventId > Event.id
+
+Ref: Match.matchDateId - MatchDate.id
+
+Ref: MatchDate.eventId > Event.id
 
 Ref: Set.setWinnerId > Double.id
 

@@ -29,6 +29,7 @@ model Event {
   finishDate   DateTime?
   games        Game[]
   sets         Set[]
+  matchDates   MatchDate[]
   // courts       Court[]
 }
 
@@ -64,20 +65,34 @@ model Category {
 }
 
 model Match {
-  id              String    @id @default(uuid())
-  number          Int       @default(autoincrement())
+  id              String     @id @default(uuid())
+  number          Int        @default(autoincrement())
   players         Player[]
-  isFinished      Boolean   @default(false)
-  category        Category? @relation(fields: [categoryId], references: [id])
+  isFinished      Boolean    @default(false)
+  category        Category?  @relation(fields: [categoryId], references: [id])
   categoryId      String?
-  winner          Double?   @relation("MatchWinnerDouble", fields: [winnerDoublesId], references: [id])
+  winner          Double?    @relation("MatchWinnerDouble", fields: [winnerDoublesId], references: [id])
   winnerDoublesId String?
   sets            Set[]
   doubles         Double[]
-  event           Event?    @relation(fields: [eventId], references: [id])
+  event           Event?     @relation(fields: [eventId], references: [id])
   eventId         String?
   date            DateTime?
-  type            MatchType @default(SUPERSET)
+  type            MatchType  @default(SUPERSET)
+  matchDate       MatchDate? @relation("MatchToDate", fields: [matchDateId], references: [id])
+  matchDateId     String?    @unique
+}
+
+model MatchDate {
+  id      String   @id @default(uuid())
+  event   Event    @relation(fields: [eventId], references: [id])
+  eventId String
+  match   Match?   @relation("MatchToDate")
+  matchId String?
+  start   DateTime
+  finish  DateTime
+
+  @@unique([eventId, start, finish]) // todo add courts here when created...
 }
 
 model Set {

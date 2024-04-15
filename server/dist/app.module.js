@@ -19,6 +19,7 @@ const matches_module_1 = require("./matches/matches.module");
 const sets_module_1 = require("./sets/sets.module");
 const games_module_1 = require("./games/games.module");
 const places_module_1 = require("./places/places.module");
+const match_dates_module_1 = require("./match-dates/match-dates.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -38,6 +39,7 @@ exports.AppModule = AppModule = __decorate([
             sets_module_1.SetsModule,
             games_module_1.GamesModule,
             places_module_1.PlacesModule,
+            match_dates_module_1.MatchDatesModule,
         ],
         controllers: [],
         providers: [prisma_service_1.PrismaService],

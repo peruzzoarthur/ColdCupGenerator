@@ -34,15 +34,50 @@ let EventsService = class EventsService {
                 places: {
                     connect: placesToConnect,
                 },
+                startDate: "2024-04-15T12:00:00.000Z",
+                finishDate: "2024-04-19T12:00:00.000Z",
             },
             select: {
                 id: true,
                 categories: true,
                 name: true,
                 places: true,
+                startDate: true,
+                finishDate: true,
             },
         });
         return event;
+    }
+    async createScheduleTest(createScheduleDto) {
+        let daysArray = [];
+        const oneDayInMs = 86400000;
+        const oneHourInMs = 3600000;
+        const oneMinInMs = 60000;
+        const firstDay = new Date(createScheduleDto.startDate);
+        const lastDay = new Date(createScheduleDto.finishDate);
+        const days = Math.round((lastDay.valueOf() - firstDay.valueOf()) / oneDayInMs);
+        for (let i = 0; i < days; i++) {
+            const date = new Date(firstDay.valueOf() + i * oneDayInMs);
+            console.log(date);
+            daysArray.push({
+                day: i + 1,
+                date: date.toISOString(),
+                timeOfFirstMatch: createScheduleDto.timeOfFirstMatch,
+                timeOfLastMatch: createScheduleDto.timeOfLastMatch,
+                matchDuration: createScheduleDto.matchDurationInMinutes,
+            });
+        }
+        for (let i = 0; i < daysArray.length; i++) {
+            console.log(new Date(daysArray[i].date).valueOf());
+            const initialTime = new Date(daysArray[i].date).valueOf() +
+                daysArray[i].timeOfFirstMatch * oneHourInMs;
+            const hoursPlaying = daysArray[i].timeOfLastMatch - daysArray[i].timeOfFirstMatch;
+            const matchDuration = daysArray[i].matchDuration * oneMinInMs;
+            for (let j = initialTime; j <= initialTime + 3600000 * hoursPlaying; j += matchDuration) {
+                console.log(new Date(j));
+            }
+        }
+        return daysArray;
     }
     async findAllEvents() {
         return await this.prismaService.event.findMany({
