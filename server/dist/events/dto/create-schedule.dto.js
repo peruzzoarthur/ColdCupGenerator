@@ -36,4 +36,9 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateScheduletDto.prototype, "matchDurationInMinutes", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateScheduletDto.prototype, "eventId", void 0);
 //# sourceMappingURL=create-schedule.dto.js.map

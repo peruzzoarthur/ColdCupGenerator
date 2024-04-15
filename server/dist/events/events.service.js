@@ -73,8 +73,15 @@ let EventsService = class EventsService {
                 daysArray[i].timeOfFirstMatch * oneHourInMs;
             const hoursPlaying = daysArray[i].timeOfLastMatch - daysArray[i].timeOfFirstMatch;
             const matchDuration = daysArray[i].matchDuration * oneMinInMs;
-            for (let j = initialTime; j <= initialTime + 3600000 * hoursPlaying; j += matchDuration) {
+            for (let j = initialTime; j <= initialTime + oneHourInMs * hoursPlaying; j += matchDuration) {
                 console.log(new Date(j));
+                await this.prismaService.matchDate.create({
+                    data: {
+                        start: new Date(j),
+                        finish: new Date(j + matchDuration),
+                        eventId: createScheduleDto.eventId,
+                    },
+                });
             }
         }
         return daysArray;

@@ -16,4 +16,8 @@ export class CreateScheduletDto {
 
   @IsNumber()
   matchDurationInMinutes: number;
+
+  @IsNotEmpty()
+  @IsString()
+  eventId: string;
 }

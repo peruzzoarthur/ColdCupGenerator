@@ -4,4 +4,5 @@ export declare class CreateScheduletDto {
     timeOfFirstMatch: number;
     timeOfLastMatch: number;
     matchDurationInMinutes: number;
+    eventId: string;
 }

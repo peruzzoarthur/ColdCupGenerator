@@ -26,7 +26,7 @@ let MatchDatesService = class MatchDatesService {
         });
     }
     findAll() {
-        return `This action returns all matchDates`;
+        return this.prismaService.matchDate.findMany();
     }
     findOne(id) {
         return `This action returns a #${id} matchDate`;

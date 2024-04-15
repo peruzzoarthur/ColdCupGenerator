@@ -11,7 +11,13 @@ export declare class MatchDatesService {
         start: Date;
         finish: Date;
     }, never, import("@prisma/client/runtime/library").DefaultArgs>;
-    findAll(): string;
+    findAll(): import(".prisma/client").Prisma.PrismaPromise<{
+        id: string;
+        eventId: string;
+        matchId: string;
+        start: Date;
+        finish: Date;
+    }[]>;
     findOne(id: number): string;
     update(id: number, updateMatchDateDto: UpdateMatchDateDto): string;
     remove(id: number): string;

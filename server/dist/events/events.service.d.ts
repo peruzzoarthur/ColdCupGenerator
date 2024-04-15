@@ -78,9 +78,9 @@ export declare class EventsService {
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
             }[];
+            eventId: string;
             isFinished: boolean;
             categoryId: string;
-            eventId: string;
             date: Date;
             category: {
                 level: number;
@@ -188,10 +188,10 @@ export declare class EventsService {
                 id: string;
                 categoryId: string;
             }[];
+            eventId: string;
             isFinished: boolean;
             categoryId: string;
             winnerDoublesId: string;
-            eventId: string;
             winner: {
                 id: string;
                 categoryId: string;
@@ -275,9 +275,9 @@ export declare class EventsService {
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
             }[];
+            eventId: string;
             isFinished: boolean;
             categoryId: string;
-            eventId: string;
             date: Date;
             category: {
                 level: number;

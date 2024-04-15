@@ -74,10 +74,10 @@ export declare class EventsController {
                 id: string;
                 categoryId: string;
             }[];
+            eventId: string;
             isFinished: boolean;
             categoryId: string;
             winnerDoublesId: string;
-            eventId: string;
             winner: {
                 id: string;
                 categoryId: string;
@@ -184,9 +184,9 @@ export declare class EventsController {
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
             }[];
+            eventId: string;
             isFinished: boolean;
             categoryId: string;
-            eventId: string;
             date: Date;
             category: {
                 level: number;
@@ -267,9 +267,9 @@ export declare class EventsController {
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
             }[];
+            eventId: string;
             isFinished: boolean;
             categoryId: string;
-            eventId: string;
             date: Date;
             category: {
                 level: number;

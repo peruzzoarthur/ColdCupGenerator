@@ -93,10 +93,17 @@ export class EventsService {
       const matchDuration = daysArray[i].matchDuration * oneMinInMs;
       for (
         let j = initialTime;
-        j <= initialTime + 3600000 * hoursPlaying;
+        j <= initialTime + oneHourInMs * hoursPlaying;
         j += matchDuration
       ) {
-        console.log(new Date(j));
+        console.log(new Date(j)); // todo instead of console.log call for this.prismaServe.matchDates.create
+        await this.prismaService.matchDate.create({
+          data: {
+            start: new Date(j),
+            finish: new Date(j + matchDuration),
+            eventId: createScheduleDto.eventId,
+          },
+        });
       }
     }
     return daysArray;

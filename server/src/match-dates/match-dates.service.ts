@@ -18,7 +18,7 @@ export class MatchDatesService {
   }
 
   findAll() {
-    return `This action returns all matchDates`;
+    return this.prismaService.matchDate.findMany();
   }
 
   findOne(id: number) {
