@@ -322,24 +322,43 @@ export class EventsService {
       console.log("active?");
     }
 
-    const totalCategories = event.categories.length;
-    const aCategory = event.categories[0].id;
+    // const totalCategories = event.categories.length;
+    // const aCategory = event.categories[0].id;
     const doublesIds = event.categories.flatMap((cat) =>
-      cat.eventDoubles.map((ed) => ed.doubleId)
+      cat.eventDoubles.map((ed) => {
+        return {
+          doublesId: ed.doubleId,
+          catId: ed.double.categoryId,
+        };
+      })
     );
+    // console.log("DoublesIds");
+    // console.log(doublesIds);
+
+    const categoriesIds = event.categories.flatMap((cat) => cat.id);
+    // console.log("CategoriesIds");
+
+    // console.log(categoriesIds);
 
     const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
 
-    for (let i = 0; i < doublesIds.length; i++) {
-      for (let j = i + 1; j < doublesIds.length; j++) {
-        console.log(`${doublesIds[i]} x ${doublesIds[j]}`);
-
-        const newMatch = await this.matchesService.create({
-          doublesIds: [doublesIds[i], doublesIds[j]],
-          categoryId: aCategory,
-          eventId: event.id,
-        });
-        console.log(newMatch);
+    for (let k = 0; k <= categoriesIds.length; k++) {
+      const filteredDoublesIds = doublesIds.filter(
+        (d) => d.catId === categoriesIds[k]
+      );
+      for (let i = 0; i < filteredDoublesIds.length; i++) {
+        for (let j = i + 1; j < filteredDoublesIds.length; j++) {
+          // console.log(`${filteredDoublesIds[i]} x ${filteredDoublesIds[j]}`);
+          const newMatch = await this.matchesService.create({
+            doublesIds: [
+              filteredDoublesIds[i].doublesId,
+              filteredDoublesIds[j].doublesId,
+            ],
+            categoryId: categoriesIds[k],
+            eventId: event.id,
+          });
+          console.log(newMatch);
+        }
       }
     }
 

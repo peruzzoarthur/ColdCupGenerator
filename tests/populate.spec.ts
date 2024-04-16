@@ -37,7 +37,8 @@ test("test", async ({ page }) => {
       )
       .click();
     await page.getByLabel("Category").click();
-    if (i > 6) {
+    if (i > 4) {
+      //! changed from 6 to 4
       await page.getByLabel("2 ALL").click();
       await page.getByRole("button", { name: "Submit" }).click();
     } else {
