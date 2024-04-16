@@ -4,4 +4,5 @@ export declare class CreateMatchDto {
     eventId: string;
     categoryId: string;
     type?: MatchType;
+    matchDateId?: string;
 }

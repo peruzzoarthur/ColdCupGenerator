@@ -84,7 +84,7 @@ model Match {
 }
 
 model MatchDate {
-  id      String   @id @default(uuid())
+  id      String   @id @unique @default(uuid())
   event   Event    @relation(fields: [eventId], references: [id])
   eventId String
   match   Match?   @relation("MatchToDate")
@@ -92,7 +92,7 @@ model MatchDate {
   start   DateTime
   finish  DateTime
 
-  @@unique([eventId, start, finish]) // todo add courts here when created...
+  // @@unique([eventId, start, finish]) // todo add courts here when created...
 }
 
 model Set {

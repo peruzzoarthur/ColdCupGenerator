@@ -9,36 +9,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateScheduletDto = void 0;
+exports.CreateScheduleDto = void 0;
 const class_validator_1 = require("class-validator");
-class CreateScheduletDto {
+class CreateScheduleDto {
 }
-exports.CreateScheduletDto = CreateScheduletDto;
+exports.CreateScheduleDto = CreateScheduleDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsDateString)(),
     __metadata("design:type", String)
-], CreateScheduletDto.prototype, "startDate", void 0);
+], CreateScheduleDto.prototype, "startDate", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsDateString)(),
     __metadata("design:type", String)
-], CreateScheduletDto.prototype, "finishDate", void 0);
+], CreateScheduleDto.prototype, "finishDate", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], CreateScheduletDto.prototype, "timeOfFirstMatch", void 0);
+], CreateScheduleDto.prototype, "timeOfFirstMatch", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], CreateScheduletDto.prototype, "timeOfLastMatch", void 0);
+], CreateScheduleDto.prototype, "timeOfLastMatch", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], CreateScheduletDto.prototype, "matchDurationInMinutes", void 0);
+], CreateScheduleDto.prototype, "matchDurationInMinutes", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateScheduletDto.prototype, "eventId", void 0);
+], CreateScheduleDto.prototype, "eventId", void 0);
 //# sourceMappingURL=create-schedule.dto.js.map

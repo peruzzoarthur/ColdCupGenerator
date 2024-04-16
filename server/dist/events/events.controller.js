@@ -65,7 +65,7 @@ __decorate([
     (0, common_1.Post)("test"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_schedule_dto_1.CreateScheduletDto]),
+    __metadata("design:paramtypes", [create_schedule_dto_1.CreateScheduleDto]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "createScheduleTest", null);
 __decorate([

@@ -7,7 +7,7 @@ import { CategoriesService } from "src/categories/categories.service";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { Double } from "@prisma/client";
 import { MatchesService } from "src/matches/matches.service";
-import { CreateScheduletDto } from "./dto/create-schedule.dto";
+import { CreateScheduleDto } from "./dto/create-schedule.dto";
 
 type Day = {
   day: number;
@@ -55,7 +55,7 @@ export class EventsService {
   }
 
   async createScheduleTest(
-    createScheduleDto: CreateScheduletDto
+    createScheduleDto: CreateScheduleDto
   ): Promise<Day[]> {
     let daysArray: Day[] = [];
     const oneDayInMs = 86400000;
@@ -309,18 +309,42 @@ export class EventsService {
             },
           },
         },
+        matchDates: {
+          select: {
+            id: true,
+            match: true,
+            matchId: true,
+            start: true,
+            finish: true,
+            eventId: true,
+            event: true,
+          },
+        },
       },
     });
     return event;
   }
 
   async activateEvent(getEventByIdDto: GetEventByIdDto) {
+    const createGameDatesMock: CreateScheduleDto = {
+      eventId: getEventByIdDto.id,
+      startDate: "2024-06-15T00:00:00Z",
+      finishDate: "2024-06-19T23:59:59Z",
+      timeOfFirstMatch: 8,
+      timeOfLastMatch: 20,
+      matchDurationInMinutes: 60,
+    };
+
+    await this.createScheduleTest(createGameDatesMock);
     const event = await this.getEventById(getEventByIdDto);
     if (!event.isActive) {
       console.log("not active");
     } else {
       console.log("active?");
     }
+
+    const matchDatesAvailable = event.matchDates;
+    console.log(matchDatesAvailable);
 
     // const totalCategories = event.categories.length;
     // const aCategory = event.categories[0].id;
@@ -361,6 +385,15 @@ export class EventsService {
         }
       }
     }
+
+    await this.prismaService.event.update({
+      where: {
+        id: getEventByIdDto.id,
+      },
+      data: {
+        isActive: true,
+      },
+    });
 
     return eventDoubles;
   }

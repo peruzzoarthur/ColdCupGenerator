@@ -267,11 +267,31 @@ let EventsService = class EventsService {
                         },
                     },
                 },
+                matchDates: {
+                    select: {
+                        id: true,
+                        match: true,
+                        matchId: true,
+                        start: true,
+                        finish: true,
+                        eventId: true,
+                        event: true,
+                    },
+                },
             },
         });
         return event;
     }
     async activateEvent(getEventByIdDto) {
+        const createGameDatesMock = {
+            eventId: getEventByIdDto.id,
+            startDate: "2024-06-15T00:00:00Z",
+            finishDate: "2024-06-19T23:59:59Z",
+            timeOfFirstMatch: 8,
+            timeOfLastMatch: 20,
+            matchDurationInMinutes: 60,
+        };
+        await this.createScheduleTest(createGameDatesMock);
         const event = await this.getEventById(getEventByIdDto);
         if (!event.isActive) {
             console.log("not active");
@@ -279,6 +299,8 @@ let EventsService = class EventsService {
         else {
             console.log("active?");
         }
+        const matchDatesAvailable = event.matchDates;
+        console.log(matchDatesAvailable);
         const doublesIds = event.categories.flatMap((cat) => cat.eventDoubles.map((ed) => {
             return {
                 doublesId: ed.doubleId,
@@ -303,6 +325,14 @@ let EventsService = class EventsService {
                 }
             }
         }
+        await this.prismaService.event.update({
+            where: {
+                id: getEventByIdDto.id,
+            },
+            data: {
+                isActive: true,
+            },
+        });
         return eventDoubles;
     }
     findOne(id) {

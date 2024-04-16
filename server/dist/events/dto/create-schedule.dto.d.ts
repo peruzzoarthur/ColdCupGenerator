@@ -1,4 +1,4 @@
-export declare class CreateScheduletDto {
+export declare class CreateScheduleDto {
     startDate: string;
     finishDate: string;
     timeOfFirstMatch: number;

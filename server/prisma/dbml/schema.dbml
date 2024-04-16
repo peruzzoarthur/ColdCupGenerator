@@ -73,10 +73,6 @@ Table MatchDate {
   matchId String
   start DateTime [not null]
   finish DateTime [not null]
-
-  indexes {
-    (eventId, start, finish) [unique]
-  }
 }
 
 Table Set {
