@@ -26,7 +26,15 @@ let MatchDatesService = class MatchDatesService {
         });
     }
     findAll() {
-        return this.prismaService.matchDate.findMany();
+        return this.prismaService.matchDate.findMany({
+            select: {
+                id: true,
+                eventId: true,
+                start: true,
+                finish: true,
+                match: true,
+            },
+        });
     }
     findOne(id) {
         return `This action returns a #${id} matchDate`;

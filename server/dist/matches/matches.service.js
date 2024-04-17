@@ -24,6 +24,11 @@ let MatchesService = class MatchesService {
                 doubles: { connect: createMatchDto.doublesIds.map((id) => ({ id })) },
                 eventId: createMatchDto.eventId,
                 categoryId: createMatchDto.categoryId,
+                matchDate: {
+                    connect: {
+                        id: createMatchDto.matchDateId,
+                    },
+                },
             },
             select: {
                 id: true,
@@ -56,6 +61,7 @@ let MatchesService = class MatchesService {
                 date: true,
                 type: true,
                 sets: true,
+                matchDate: true,
             },
         });
     }

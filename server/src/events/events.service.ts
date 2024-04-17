@@ -8,6 +8,7 @@ import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { Double } from "@prisma/client";
 import { MatchesService } from "src/matches/matches.service";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
+import { ActivateEventDto } from "./dto/activate-event.dto";
 
 type Day = {
   day: number;
@@ -38,8 +39,8 @@ export class EventsService {
         places: {
           connect: placesToConnect,
         },
-        startDate: "2024-04-15T12:00:00.000Z",
-        finishDate: "2024-04-19T12:00:00.000Z",
+        // startDate: "2024-04-15T12:00:00.000Z",
+        // finishDate: "2024-04-19T12:00:00.000Z",
       },
       select: {
         id: true,
@@ -101,7 +102,7 @@ export class EventsService {
           data: {
             start: new Date(j),
             finish: new Date(j + matchDuration),
-            eventId: createScheduleDto.eventId,
+            eventId: createScheduleDto.id,
           },
         });
       }
@@ -313,7 +314,7 @@ export class EventsService {
           select: {
             id: true,
             match: true,
-            matchId: true,
+            // matchId: true,
             start: true,
             finish: true,
             eventId: true,
@@ -325,29 +326,10 @@ export class EventsService {
     return event;
   }
 
-  async activateEvent(getEventByIdDto: GetEventByIdDto) {
-    const createGameDatesMock: CreateScheduleDto = {
-      eventId: getEventByIdDto.id,
-      startDate: "2024-06-15T00:00:00Z",
-      finishDate: "2024-06-19T23:59:59Z",
-      timeOfFirstMatch: 8,
-      timeOfLastMatch: 20,
-      matchDurationInMinutes: 60,
-    };
+  async activateEvent(activateEventDto: ActivateEventDto) {
+    await this.createScheduleTest(activateEventDto);
+    const event = await this.getEventById(activateEventDto);
 
-    await this.createScheduleTest(createGameDatesMock);
-    const event = await this.getEventById(getEventByIdDto);
-    if (!event.isActive) {
-      console.log("not active");
-    } else {
-      console.log("active?");
-    }
-
-    const matchDatesAvailable = event.matchDates;
-    console.log(matchDatesAvailable);
-
-    // const totalCategories = event.categories.length;
-    // const aCategory = event.categories[0].id;
     const doublesIds = event.categories.flatMap((cat) =>
       cat.eventDoubles.map((ed) => {
         return {
@@ -356,39 +338,42 @@ export class EventsService {
         };
       })
     );
-    // console.log("DoublesIds");
-    // console.log(doublesIds);
-
     const categoriesIds = event.categories.flatMap((cat) => cat.id);
-    // console.log("CategoriesIds");
-
-    // console.log(categoriesIds);
-
     const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
+    const matchDatesAvailable = (
+      await this.getEventById({ id: event.id })
+    ).matchDates
+      .filter((matchDate) => matchDate.match === null)
+      .map((md) => md.id);
 
-    for (let k = 0; k <= categoriesIds.length; k++) {
+    let count: number = 0;
+    for (let k = 0; k < categoriesIds.length; k++) {
       const filteredDoublesIds = doublesIds.filter(
         (d) => d.catId === categoriesIds[k]
-      );
+      ); // filter doubles based on it's category.
       for (let i = 0; i < filteredDoublesIds.length; i++) {
         for (let j = i + 1; j < filteredDoublesIds.length; j++) {
           // console.log(`${filteredDoublesIds[i]} x ${filteredDoublesIds[j]}`);
-          const newMatch = await this.matchesService.create({
+          console.log(`Variables: k=${k} i=${i} j=${j}. ___calling with 
+          {matchDateId: ${matchDatesAvailable[count]}} for categoryId: ${categoriesIds[k]}`);
+          await this.matchesService.create({
             doublesIds: [
               filteredDoublesIds[i].doublesId,
               filteredDoublesIds[j].doublesId,
             ],
             categoryId: categoriesIds[k],
+
             eventId: event.id,
+            matchDateId: matchDatesAvailable[count],
           });
-          console.log(newMatch);
+          count++;
         }
       }
     }
 
     await this.prismaService.event.update({
       where: {
-        id: getEventByIdDto.id,
+        id: activateEventDto.id,
       },
       data: {
         isActive: true,

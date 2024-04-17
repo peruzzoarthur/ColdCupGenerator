@@ -70,9 +70,13 @@ Table MatchDate {
   event Event [not null]
   eventId String [not null]
   match Match
-  matchId String
+  matchId String [unique]
   start DateTime [not null]
   finish DateTime [not null]
+
+  indexes {
+    (eventId, start, finish) [unique]
+  }
 }
 
 Table Set {
@@ -226,9 +230,9 @@ Ref: Match.winnerDoublesId > Double.id
 
 Ref: Match.eventId > Event.id
 
-Ref: Match.matchDateId - MatchDate.id
-
 Ref: MatchDate.eventId > Event.id
+
+Ref: MatchDate.matchId - Match.id
 
 Ref: Set.setWinnerId > Double.id
 

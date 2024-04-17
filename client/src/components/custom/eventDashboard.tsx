@@ -62,12 +62,17 @@ export function EventDashboard({
 
     const handleActivate = async (eventId: string) => {
         try {
-            const requestEventByIdDto = {
+            const activateEventDto = {
                 id: eventId,
+                startDate: '2024-06-15T00:00:00Z',
+                finishDate: '2024-06-15T20:00:00Z',
+                timeOfFirstMatch: 8,
+                timeOfLastMatch: 20,
+                matchDurationInMinutes: 60,
             }
             const { data: matches }: { data: Match[] } = await axios.post(
                 `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
-                requestEventByIdDto
+                activateEventDto
             )
             // setActivate(true)
             return matches

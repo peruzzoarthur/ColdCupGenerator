@@ -19,5 +19,5 @@ export class CreateScheduleDto {
 
   @IsNotEmpty()
   @IsString()
-  eventId: string;
+  id: string;
 }

@@ -12,13 +12,23 @@ export class MatchDatesService {
         eventId: createMatchDateDto.eventId,
         start: createMatchDateDto.startDate,
         finish: createMatchDateDto.finishDate,
-        // matchId: createMatchDateDto.matchId ?? undefined,
+        // match: {
+        //   connect: { id: createMatchDateDto.matchId ?? null },
+        // },
       },
     });
   }
 
   findAll() {
-    return this.prismaService.matchDate.findMany();
+    return this.prismaService.matchDate.findMany({
+      select: {
+        id: true,
+        eventId: true,
+        start: true,
+        finish: true,
+        match: true,
+      },
+    });
   }
 
   findOne(id: number) {

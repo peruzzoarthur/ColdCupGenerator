@@ -12,6 +12,6 @@ export class CreateMatchDateDto {
   @IsString()
   eventId: string;
 
-  //   @IsString()
-  //   matchId: string | undefined;
+  @IsString()
+  matchId?: string | null;
 }

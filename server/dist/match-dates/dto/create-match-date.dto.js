@@ -29,4 +29,8 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateMatchDateDto.prototype, "eventId", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateMatchDateDto.prototype, "matchId", void 0);
 //# sourceMappingURL=create-match-date.dto.js.map

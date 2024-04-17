@@ -18,11 +18,11 @@ export class MatchesService {
         doubles: { connect: createMatchDto.doublesIds.map((id) => ({ id })) },
         eventId: createMatchDto.eventId,
         categoryId: createMatchDto.categoryId,
-        // matchDate: {
-        //   connect: {
-        //     id: createMatchDto.matchDateId ?? null,
-        //   },
-        // }, // ! aaaaaaaaaaaaaa
+        matchDate: {
+          connect: {
+            id: createMatchDto.matchDateId,
+          },
+        }, // ! aaaaaaaaaaaaaa
       },
       select: {
         id: true,
@@ -59,6 +59,7 @@ export class MatchesService {
         date: true,
         type: true,
         sets: true,
+        matchDate: true,
       },
     });
   }

@@ -40,5 +40,5 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateScheduleDto.prototype, "eventId", void 0);
+], CreateScheduleDto.prototype, "id", void 0);
 //# sourceMappingURL=create-schedule.dto.js.map
