@@ -40,6 +40,8 @@ export declare class EventsService {
         id: string;
         name: string;
         isActive: boolean;
+        startDate: Date;
+        finishDate: Date;
         categories: {
             id: string;
             eventDoubles: {
@@ -133,6 +135,9 @@ export declare class EventsService {
             isActive: boolean;
             startDate: Date;
             finishDate: Date;
+            matchDuration: bigint;
+            timeOfFirstMatch: bigint;
+            timeOfLastMatch: bigint;
         };
         double: {
             players: {
@@ -229,6 +234,9 @@ export declare class EventsService {
                 isActive: boolean;
                 startDate: Date;
                 finishDate: Date;
+                matchDuration: bigint;
+                timeOfFirstMatch: bigint;
+                timeOfLastMatch: bigint;
             };
             eventId: string;
             start: Date;
@@ -246,21 +254,7 @@ export declare class EventsService {
             };
         }[];
     }>;
-    activateEvent(activateEventDto: ActivateEventDto): Promise<{
-        double: {
-            id: string;
-            players: {
-                id: string;
-                email: string;
-                firstName: string;
-                lastName: string;
-                role: import(".prisma/client").$Enums.Role;
-                position: import(".prisma/client").$Enums.PlayerPosition;
-            }[];
-            categoryId: string;
-        };
-        doubleId: string;
-    }[]>;
+    activateEvent(activateEventDto: ActivateEventDto): Promise<void>;
     findOne(id: number): string;
     update(id: number, updateEventDto: UpdateEventDto): string;
     remove(id: number): string;

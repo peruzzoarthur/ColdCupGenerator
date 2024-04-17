@@ -39,8 +39,8 @@ export class EventsService {
         places: {
           connect: placesToConnect,
         },
-        // startDate: "2024-04-15T12:00:00.000Z",
-        // finishDate: "2024-04-19T12:00:00.000Z",
+        startDate: createEventDto.startDate,
+        finishDate: createEventDto.finishDate,
       },
       select: {
         id: true,
@@ -116,6 +116,8 @@ export class EventsService {
         id: true,
         name: true,
         places: true,
+        startDate: true,
+        finishDate: true,
         matches: {
           select: {
             number: true,
@@ -339,7 +341,7 @@ export class EventsService {
       })
     );
     const categoriesIds = event.categories.flatMap((cat) => cat.id);
-    const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
+
     const matchDatesAvailable = (
       await this.getEventById({ id: event.id })
     ).matchDates
@@ -380,7 +382,7 @@ export class EventsService {
       },
     });
 
-    return eventDoubles;
+    return;
   }
 
   findOne(id: number) {

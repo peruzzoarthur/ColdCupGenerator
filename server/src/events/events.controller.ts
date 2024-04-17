@@ -13,6 +13,7 @@ import { UpdateEventDto } from "./dto/update-event.dto";
 import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
+import { ActivateEventDto } from "./dto/activate-event.dto";
 
 @Controller("events")
 export class EventsController {
@@ -34,8 +35,8 @@ export class EventsController {
   }
 
   @Post("activate-event")
-  async activateEvent(@Body() getEventByIdDto: GetEventByIdDto) {
-    return await this.eventsService.activateEvent(getEventByIdDto);
+  async activateEvent(@Body() activateEventDto: ActivateEventDto) {
+    return await this.eventsService.activateEvent(activateEventDto);
   }
 
   @Post("register")

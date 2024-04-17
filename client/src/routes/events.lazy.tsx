@@ -18,10 +18,12 @@ import { useGetDoubles } from '@/hooks/useGetDoubles'
 import { useToast } from '@/components/ui/use-toast'
 import { EventDashboard } from '@/components/custom/eventDashboard'
 
-type createEventFormObject = {
+export type createEventFormObject = {
     eventName: string
     categoriesIds: string
     placesIds: string
+    startDate: Date
+    finishDate: Date
 }
 
 export type ErrorResponse = {
@@ -88,6 +90,8 @@ function Events() {
                 name: input.eventName,
                 categoriesIds: categoriesState,
                 placesIds: placesState,
+                startDate: input.startDate,
+                finishDate: input.finishDate,
             }
 
             const data: AxiosResponse<PadelEvent> = await axios.post(
@@ -167,11 +171,13 @@ function Events() {
                                     setCategoriesState={setCategoriesState}
                                     placesState={placesState}
                                     setPlacesState={setPlacesState}
-                                    defaultValues={{
-                                        eventName: '',
-                                        categoriesIds: '',
-                                        placesIds: '',
-                                    }}
+                                    // defaultValues={{
+                                    //     eventName: '',
+                                    //     categoriesIds: '',
+                                    //     placesIds: '',
+                                    //     startDate: new Date(),
+                                    //     finishDate: new Date(),
+                                    // }}
                                 />
                             </div>
 

@@ -29,4 +29,14 @@ __decorate([
     (0, class_validator_1.ArrayNotEmpty)(),
     __metadata("design:type", Array)
 ], CreateEventDto.prototype, "placesIds", void 0);
+__decorate([
+    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateEventDto.prototype, "startDate", void 0);
+__decorate([
+    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateEventDto.prototype, "finishDate", void 0);
 //# sourceMappingURL=create-event.dto.js.map

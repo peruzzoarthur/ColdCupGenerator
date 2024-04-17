@@ -71,6 +71,17 @@ test("test", async ({ page }) => {
   await page.getByLabel("Places").click();
   await page.getByLabel("Complexo CK").click();
   await page.getByRole("button", { name: "Add Place" }).click();
+  await page.getByLabel("First day").click();
+  await page.getByText("18", { exact: true }).click();
+  await page.getByLabel("First day").click();
+
+  // await page.getByRole("img", { name: "ball" }).click();
+  // await page.locator("body").press("Escape");
+  // await expect(page.getByText("April")).toBeVisible();
+  await page.getByLabel("Last day").click();
+  await page.getByText("19", { exact: true }).last().click();
+  await page.getByLabel("Last day").click();
+
   await page.getByRole("button", { name: "Submit" }).click();
   await page.getByRole("button", { name: "Show all events" }).click();
   await page.getByRole("button", { name: "Open event" }).click();

@@ -60,12 +60,16 @@ export function EventDashboard({
         isFetchingEventById,
     } = useGetEventById(event.id)
 
-    const handleActivate = async (eventId: string) => {
+    const handleActivate = async (
+        eventId: string,
+        startDate: Date,
+        finishDate: Date
+    ) => {
         try {
             const activateEventDto = {
                 id: eventId,
                 startDate: '2024-06-15T00:00:00Z',
-                finishDate: '2024-06-15T20:00:00Z',
+                finishDate: '2024-06-15T20:00:00Z', // ! hard-coded
                 timeOfFirstMatch: 8,
                 timeOfLastMatch: 20,
                 matchDurationInMinutes: 60,

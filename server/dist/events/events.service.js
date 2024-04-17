@@ -34,6 +34,8 @@ let EventsService = class EventsService {
                 places: {
                     connect: placesToConnect,
                 },
+                startDate: createEventDto.startDate,
+                finishDate: createEventDto.finishDate,
             },
             select: {
                 id: true,
@@ -90,6 +92,8 @@ let EventsService = class EventsService {
                 id: true,
                 name: true,
                 places: true,
+                startDate: true,
+                finishDate: true,
                 matches: {
                     select: {
                         number: true,
@@ -289,7 +293,6 @@ let EventsService = class EventsService {
             };
         }));
         const categoriesIds = event.categories.flatMap((cat) => cat.id);
-        const eventDoubles = event.categories.flatMap((cat) => cat.eventDoubles);
         const matchDatesAvailable = (await this.getEventById({ id: event.id })).matchDates
             .filter((matchDate) => matchDate.match === null)
             .map((md) => md.id);
@@ -321,7 +324,7 @@ let EventsService = class EventsService {
                 isActive: true,
             },
         });
-        return eventDoubles;
+        return;
     }
     findOne(id) {
         return `This action returns a #${id} event`;

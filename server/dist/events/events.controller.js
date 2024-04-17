@@ -20,6 +20,7 @@ const update_event_dto_1 = require("./dto/update-event.dto");
 const register_doubles_event_dto_1 = require("./dto/register-doubles-event.dto");
 const get_event_by_id_dto_1 = require("./dto/get-event-by-id.dto");
 const create_schedule_dto_1 = require("./dto/create-schedule.dto");
+const activate_event_dto_1 = require("./dto/activate-event.dto");
 let EventsController = class EventsController {
     constructor(eventsService) {
         this.eventsService = eventsService;
@@ -33,8 +34,8 @@ let EventsController = class EventsController {
     async getEventById(getEventByIdDto) {
         return await this.eventsService.getEventById(getEventByIdDto);
     }
-    async activateEvent(getEventByIdDto) {
-        return await this.eventsService.activateEvent(getEventByIdDto);
+    async activateEvent(activateEventDto) {
+        return await this.eventsService.activateEvent(activateEventDto);
     }
     async registerDoublesInEvent(registerDoublesInEventDto) {
         console.log("registering");
@@ -79,7 +80,7 @@ __decorate([
     (0, common_1.Post)("activate-event"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [get_event_by_id_dto_1.GetEventByIdDto]),
+    __metadata("design:paramtypes", [activate_event_dto_1.ActivateEventDto]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "activateEvent", null);
 __decorate([

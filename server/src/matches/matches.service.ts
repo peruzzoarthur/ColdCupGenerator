@@ -59,7 +59,9 @@ export class MatchesService {
         date: true,
         type: true,
         sets: true,
-        matchDate: true,
+        matchDate: {
+          select: {},
+        },
       },
     });
   }

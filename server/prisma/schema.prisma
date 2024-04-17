@@ -17,19 +17,22 @@ datasource db {
 }
 
 model Event {
-  id           String        @id @default(uuid())
-  name         String
-  categories   Category[]
-  isActive     Boolean       @default(false)
-  players      Player[]
-  matches      Match[]
-  places       Place[]
-  eventDoubles EventDouble[] // Relation to link doubles specifically to an event
-  startDate    DateTime?
-  finishDate   DateTime?
-  games        Game[]
-  sets         Set[]
-  matchDates   MatchDate[]
+  id               String        @id @default(uuid())
+  name             String
+  categories       Category[]
+  isActive         Boolean       @default(false)
+  players          Player[]
+  matches          Match[]
+  places           Place[]
+  eventDoubles     EventDouble[] // Relation to link doubles specifically to an event
+  startDate        DateTime?
+  finishDate       DateTime?
+  matchDuration    BigInt?
+  timeOfFirstMatch BigInt?
+  timeOfLastMatch  BigInt?
+  games            Game[]
+  sets             Set[]
+  matchDates       MatchDate[]
   // courts       Court[]
 }
 

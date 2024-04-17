@@ -1,5 +1,6 @@
 import React from 'react'
-import { SubmitHandler } from 'react-hook-form'
+import { format } from 'date-fns'
+import { FieldValues, SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,9 +25,13 @@ import {
 } from '../ui/select'
 import { Badge } from '../ui/badge'
 import { Category, Place } from '@/types/padel.types'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { cn } from '@/lib/utils'
+import { CalendarIcon } from 'lucide-react'
+import { Calendar } from '../ui/calendar'
 
 type EventFormProps = {
-    onSubmit: SubmitHandler<formObject>
+    onSubmit: SubmitHandler<FieldValues>
     defaultValues: formObject
     allCategories: Category[] | undefined
     categoriesState: string[]
@@ -40,12 +45,16 @@ type formObject = {
     eventName: string
     categoriesIds: string
     placesIds: string
+    startDate: Date
+    finishDate: Date
 }
 
 const formSchema = z.object({
     eventName: z.string(),
     categoriesIds: z.string(),
     placesIds: z.string(),
+    startDate: z.date(),
+    finishDate: z.date(),
 })
 
 const EventForm: React.FC<EventFormProps> = ({
@@ -60,7 +69,7 @@ const EventForm: React.FC<EventFormProps> = ({
 }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
-        defaultValues: defaultValues,
+        // defaultValues: defaultValues,
     })
 
     const { handleSubmit } = form
@@ -232,7 +241,95 @@ const EventForm: React.FC<EventFormProps> = ({
                     </FormItem>
                 )}
             />
+            <div className="flex justify-center mt-6 gap-x-6">
+                <FormField
+                    control={form.control}
+                    name="startDate"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel>First day</FormLabel>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                            variant={'outline'}
+                                            className={cn(
+                                                'w-[240px] pl-3 text-left font-normal',
+                                                !field.value &&
+                                                    'text-muted-foreground'
+                                            )}
+                                        >
+                                            {field.value ? (
+                                                format(field.value, 'PPP')
+                                            ) : (
+                                                <span>Pick a date</span>
+                                            )}
+                                            <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                >
+                                    <Calendar
+                                        mode="single"
+                                        selected={field.value}
+                                        onSelect={field.onChange}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            {/* <FormDescription>First day.</FormDescription> */}
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
+                <FormField
+                    control={form.control}
+                    name="finishDate"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                            <FormLabel>Last day</FormLabel>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                            variant={'outline'}
+                                            className={cn(
+                                                'w-[240px] pl-3 text-left font-normal',
+                                                !field.value &&
+                                                    'text-muted-foreground'
+                                            )}
+                                        >
+                                            {field.value ? (
+                                                format(field.value, 'PPP')
+                                            ) : (
+                                                <span>Pick a date</span>
+                                            )}
+                                            <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                >
+                                    <Calendar
+                                        mode="single"
+                                        selected={field.value}
+                                        onSelect={field.onChange}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            {/* <FormDescription>Last day.</FormDescription> */}
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
             <div className="flex justify-center mt-4">
                 <Button
                     className="w-1/6 bg-opacity-65"
