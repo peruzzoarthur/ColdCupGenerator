@@ -171,13 +171,13 @@ function Events() {
                                     setCategoriesState={setCategoriesState}
                                     placesState={placesState}
                                     setPlacesState={setPlacesState}
-                                    // defaultValues={{
-                                    //     eventName: '',
-                                    //     categoriesIds: '',
-                                    //     placesIds: '',
-                                    //     startDate: new Date(),
-                                    //     finishDate: new Date(),
-                                    // }}
+                                    defaultValues={{
+                                        eventName: '',
+                                        categoriesIds: '',
+                                        placesIds: '',
+                                        startDate: new Date(),
+                                        finishDate: new Date(),
+                                    }}
                                 />
                             </div>
 

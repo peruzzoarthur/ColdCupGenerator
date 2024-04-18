@@ -61,9 +61,9 @@ export function EventDashboard({
     } = useGetEventById(event.id)
 
     const handleActivate = async (
-        eventId: string,
-        startDate: Date,
-        finishDate: Date
+        eventId: string
+        // startDate: Date,
+        // finishDate: Date
     ) => {
         try {
             const activateEventDto = {

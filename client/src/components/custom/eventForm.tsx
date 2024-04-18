@@ -1,6 +1,6 @@
 import React from 'react'
 import { format } from 'date-fns'
-import { FieldValues, SubmitHandler } from 'react-hook-form'
+import { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -31,7 +31,7 @@ import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '../ui/calendar'
 
 type EventFormProps = {
-    onSubmit: SubmitHandler<FieldValues>
+    onSubmit: SubmitHandler<formObject>
     defaultValues: formObject
     allCategories: Category[] | undefined
     categoriesState: string[]
@@ -69,7 +69,7 @@ const EventForm: React.FC<EventFormProps> = ({
 }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
-        // defaultValues: defaultValues,
+        defaultValues: defaultValues,
     })
 
     const { handleSubmit } = form
