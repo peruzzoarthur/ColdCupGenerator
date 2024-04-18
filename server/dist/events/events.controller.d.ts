@@ -293,6 +293,7 @@ export declare class EventsController {
                     role: import(".prisma/client").$Enums.Role;
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
+                categoryId: string;
             }[];
             eventId: string;
             isFinished: boolean;
@@ -319,6 +320,7 @@ export declare class EventsController {
                 type: import(".prisma/client").$Enums.CatType;
             };
             double: {
+                id: string;
                 players: {
                     id: string;
                     email: string;
@@ -332,6 +334,7 @@ export declare class EventsController {
                     setId: string;
                     winnerId: string;
                 }[];
+                categoryId: string;
                 matchesWins: {
                     id: string;
                     number: number;

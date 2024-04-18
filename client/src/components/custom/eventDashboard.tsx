@@ -1,4 +1,4 @@
-import { File, ListFilter, Search } from 'lucide-react'
+import { File, ListFilter } from 'lucide-react'
 
 import {
     Breadcrumb,
@@ -19,15 +19,15 @@ import {
 } from '@/components/ui/card'
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { Match, PadelEvent } from '@/types/padel.types'
 // import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 import axios from 'axios'
@@ -36,7 +36,7 @@ import { RegisteredDoublesTable, columns } from './eventsTable/columns'
 import { MatchesCarousel } from './matchesCarousel'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useGetEventById } from '@/hooks/useGetEventById'
-// import { useState } from 'react'
+import { useState } from 'react'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -52,6 +52,8 @@ export function EventDashboard({
     refetchEvents,
 }: EventDashBoardProps) {
     // const [matches, setMatches] = useState<Match[]>(event.matches)
+
+    const [catFilter, setCatFilter] = useState('all')
     const {
         finishedMatches,
         pendingMatches,
@@ -99,6 +101,7 @@ export function EventDashboard({
 
             // const lostGames = totalGames? - (winningGames ?? 0
             return {
+                catId: d.double?.categoryId,
                 id: d.doubleId,
                 playerOneName: `${d.double?.players[0].firstName} ${d.double?.players[0].lastName}`,
                 playerTwoName: `${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`,
@@ -128,29 +131,29 @@ export function EventDashboard({
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>Specific Event</BreadcrumbPage>
+                                <BreadcrumbPage>{event.name}</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <div className="relative flex-1 ml-auto md:grow-0">
+                    {/* <div className="relative flex-1 ml-auto md:grow-0">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             type="search"
                             placeholder="Search..."
                             className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
                         />
-                    </div>
+                    </div> */}
                 </header>
                 <main className="grid items-start flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
                     <Tabs defaultValue="all">
                         <div className="flex items-center">
-                            <TabsList>
+                            {/* <TabsList>
                                 <TabsTrigger value="all">All</TabsTrigger>
                                 <TabsTrigger value="active">Active</TabsTrigger>
                                 <TabsTrigger value="finished">
                                     Finished
                                 </TabsTrigger>
-                            </TabsList>
+                            </TabsList> */}
                             <div className="flex items-center gap-2 ml-auto">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -165,18 +168,30 @@ export function EventDashboard({
                                             </span>
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
+
+                                    <DropdownMenuContent className="w-56">
                                         <DropdownMenuLabel>
-                                            Filter by
+                                            Categories
                                         </DropdownMenuLabel>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuCheckboxItem checked>
-                                            Active
-                                        </DropdownMenuCheckboxItem>
-
-                                        <DropdownMenuCheckboxItem>
-                                            Finished
-                                        </DropdownMenuCheckboxItem>
+                                        <DropdownMenuRadioGroup
+                                            value={catFilter}
+                                            onValueChange={setCatFilter}
+                                        >
+                                            <DropdownMenuRadioItem value="all">
+                                                All
+                                            </DropdownMenuRadioItem>
+                                            {event.categories.map(
+                                                (c, index) => (
+                                                    <DropdownMenuRadioItem
+                                                        key={index}
+                                                        value={c.id}
+                                                    >
+                                                        {c.level} {c.type}
+                                                    </DropdownMenuRadioItem>
+                                                )
+                                            )}
+                                        </DropdownMenuRadioGroup>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                                 <Button
@@ -204,7 +219,12 @@ export function EventDashboard({
                                     {tableData ? (
                                         <EventDoublesTable
                                             columns={columns}
-                                            data={tableData}
+                                            data={tableData.filter((td) => {
+                                                if (catFilter === 'all') {
+                                                    return td
+                                                }
+                                                return td.catId === catFilter
+                                            })}
                                         />
                                     ) : null}
                                 </CardContent>

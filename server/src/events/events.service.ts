@@ -422,6 +422,7 @@ export class EventsService {
       },
       select: {
         id: true,
+
         name: true,
         places: true,
         matches: {
@@ -441,6 +442,7 @@ export class EventsService {
               select: {
                 players: true,
                 id: true,
+                categoryId: true,
               },
             },
             eventId: true,
@@ -455,6 +457,8 @@ export class EventsService {
             double: {
               select: {
                 players: true,
+                id: true,
+                categoryId: true,
                 matchesWins: {
                   where: {
                     eventId: id,

@@ -379,6 +379,7 @@ let EventsService = class EventsService {
                             select: {
                                 players: true,
                                 id: true,
+                                categoryId: true,
                             },
                         },
                         eventId: true,
@@ -393,6 +394,8 @@ let EventsService = class EventsService {
                         double: {
                             select: {
                                 players: true,
+                                id: true,
+                                categoryId: true,
                                 matchesWins: {
                                     where: {
                                         eventId: id,
