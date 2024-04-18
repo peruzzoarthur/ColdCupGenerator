@@ -99,7 +99,6 @@ export function EventDashboard({
             const lostGames = (totalGames ?? 0) - (winningGames ?? 0)
             const gamesDiff = (winningGames ?? 0) - (lostGames ?? 0)
 
-            // const lostGames = totalGames? - (winningGames ?? 0
             return {
                 catId: d.double?.categoryId,
                 id: d.doubleId,
@@ -107,7 +106,6 @@ export function EventDashboard({
                 playerTwoName: `${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`,
                 categoryLevel: d.category?.level,
                 categoryType: d.category?.type,
-                // todo
                 matchesWon: d.double?.matchesWins.length,
                 W: winningGames,
                 T: totalGames,
@@ -144,164 +142,154 @@ export function EventDashboard({
                         />
                     </div> */}
                 </header>
-                <main className="grid items-start flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-                    <Tabs defaultValue="all">
-                        <div className="flex items-center">
-                            {/* <TabsList>
+            </div>
+            <main className="grid items-start flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+                <Tabs defaultValue="all">
+                    <div className="flex items-center">
+                        {/* <TabsList>
                                 <TabsTrigger value="all">All</TabsTrigger>
                                 <TabsTrigger value="active">Active</TabsTrigger>
                                 <TabsTrigger value="finished">
                                     Finished
                                 </TabsTrigger>
                             </TabsList> */}
-                            <div className="flex items-center gap-2 ml-auto">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="gap-1 h-7"
-                                        >
-                                            <ListFilter className="h-3.5 w-3.5" />
-                                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                                Filter
-                                            </span>
-                                        </Button>
-                                    </DropdownMenuTrigger>
+                        <div className="flex items-center gap-2 ml-auto">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="gap-1 h-7"
+                                    >
+                                        <ListFilter className="h-3.5 w-3.5" />
+                                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                            Filter
+                                        </span>
+                                    </Button>
+                                </DropdownMenuTrigger>
 
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuLabel>
-                                            Categories
-                                        </DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuRadioGroup
-                                            value={catFilter}
-                                            onValueChange={setCatFilter}
-                                        >
-                                            <DropdownMenuRadioItem value="all">
-                                                All
+                                <DropdownMenuContent className="w-56">
+                                    <DropdownMenuLabel>
+                                        Categories
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuRadioGroup
+                                        value={catFilter}
+                                        onValueChange={setCatFilter}
+                                    >
+                                        <DropdownMenuRadioItem value="all">
+                                            All
+                                        </DropdownMenuRadioItem>
+                                        {event.categories.map((c, index) => (
+                                            <DropdownMenuRadioItem
+                                                key={index}
+                                                value={c.id}
+                                            >
+                                                {c.level} {c.type}
                                             </DropdownMenuRadioItem>
-                                            {event.categories.map(
-                                                (c, index) => (
-                                                    <DropdownMenuRadioItem
-                                                        key={index}
-                                                        value={c.id}
-                                                    >
-                                                        {c.level} {c.type}
-                                                    </DropdownMenuRadioItem>
-                                                )
-                                            )}
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="gap-1 h-7"
-                                >
-                                    <File className="h-3.5 w-3.5" />
-                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                        Export
-                                    </span>
-                                </Button>
-                            </div>
-                        </div>
-                        <TabsContent value="all">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Doubles Registered</CardTitle>
-                                    <CardDescription>
-                                        Manage doubles registered in the events
-                                        and generate games.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    {tableData ? (
-                                        <EventDoublesTable
-                                            columns={columns}
-                                            data={tableData.filter((td) => {
-                                                if (catFilter === 'all') {
-                                                    return td
-                                                }
-                                                return td.catId === catFilter
-                                            })}
-                                        />
-                                    ) : null}
-                                </CardContent>
-                                <CardFooter>
-                                    <div className="text-xs text-muted-foreground">
-                                        Showing <strong>1-10</strong> of{' '}
-                                        <strong>
-                                            {event.eventDoubles?.length}
-                                        </strong>{' '}
-                                        doubles
-                                    </div>
-                                </CardFooter>
-                            </Card>
-                        </TabsContent>
-                    </Tabs>
-                    <div className="flex justify-center">
-                        {event.matches.length === 0 ? (
+                                        ))}
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                             <Button
-                                className="w-48 mb-2 mr-2 "
-                                onClick={async () =>
-                                    handleActivate(
-                                        event.id,
-                                        event.startDate,
-                                        event.finishDate,
-                                        event.timeOfFirstMatch,
-                                        event.timeOfLastMatch,
-                                        event.matchDurationInMinutes
-                                    )
-                                }
+                                size="sm"
+                                variant="outline"
+                                className="gap-1 h-7"
                             >
-                                Generate matches 🎾
+                                <File className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                    Export
+                                </span>
                             </Button>
-                        ) : null}
+                        </div>
                     </div>
-
-                    <h1 className="text-2xl font-bold">Matches</h1>
-
-                    {!isFetchingEventById &&
-                    pendingMatches &&
-                    pendingMatches.length !== 0 ? (
-                        <>
-                            <h1 className="text-xl font-bold">
-                                Pending matches
-                            </h1>
-                            <div className="flex justify-center">
-                                <MatchesCarousel
-                                    matches={pendingMatches}
-                                    refetchEvents={refetchEvents}
-                                    refetchEventById={refetchEventById}
-                                />
-                            </div>
-                        </>
+                    <TabsContent value="all">
+                        <Card className="w-full">
+                            <CardHeader>
+                                <CardTitle>Doubles Registered</CardTitle>
+                                <CardDescription>
+                                    Manage doubles registered in the events and
+                                    generate games.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {tableData ? (
+                                    <EventDoublesTable
+                                        columns={columns}
+                                        data={tableData.filter((td) => {
+                                            if (catFilter === 'all') {
+                                                return td
+                                            }
+                                            return td.catId === catFilter
+                                        })}
+                                    />
+                                ) : null}
+                            </CardContent>
+                            <CardFooter>
+                                <div className="text-xs text-muted-foreground">
+                                    Showing <strong>1-10</strong> of{' '}
+                                    <strong>
+                                        {event.eventDoubles?.length}
+                                    </strong>{' '}
+                                    doubles
+                                </div>
+                            </CardFooter>
+                        </Card>
+                    </TabsContent>
+                </Tabs>
+                <div className="flex justify-center">
+                    {event.matches.length === 0 ? (
+                        <Button
+                            className="w-48 mb-2 mr-2 "
+                            onClick={async () =>
+                                handleActivate(
+                                    event.id,
+                                    event.startDate,
+                                    event.finishDate,
+                                    event.timeOfFirstMatch,
+                                    event.timeOfLastMatch,
+                                    event.matchDurationInMinutes
+                                )
+                            }
+                        >
+                            Generate matches 🎾
+                        </Button>
                     ) : null}
-                    {!isFetchingEventById &&
-                    finishedMatches &&
-                    finishedMatches.length !== 0 ? (
-                        <>
-                            <h1 className="text-xl font-bold">
-                                Finished matches
-                            </h1>
-                            <div className="flex justify-center">
-                                <MatchesCarousel
-                                    matches={finishedMatches}
-                                    refetchEvents={refetchEvents}
-                                    refetchEventById={refetchEventById}
-                                />
-                            </div>
-                        </>
-                    ) : null}
+                </div>
 
-                    <div className="flex justify-center"></div>
+                <h1 className="text-2xl font-bold">Matches</h1>
 
-                    {/* <Button onClick={() => refetchEventMatches()}>
-                        Refresh
-                    </Button> */}
-                </main>
-            </div>
+                {!isFetchingEventById &&
+                pendingMatches &&
+                pendingMatches.length !== 0 ? (
+                    <>
+                        <h1 className="text-xl font-bold">Pending matches</h1>
+                        <div className="flex md:justify-start lg:justify-center">
+                            <MatchesCarousel
+                                matches={pendingMatches}
+                                refetchEvents={refetchEvents}
+                                refetchEventById={refetchEventById}
+                            />
+                        </div>
+                    </>
+                ) : null}
+                {!isFetchingEventById &&
+                finishedMatches &&
+                finishedMatches.length !== 0 ? (
+                    <>
+                        <h1 className="text-xl font-bold">Finished matches</h1>
+                        <div className="flex md:justify-start lg:justify-center">
+                            <MatchesCarousel
+                                matches={finishedMatches}
+                                refetchEvents={refetchEvents}
+                                refetchEventById={refetchEventById}
+                            />
+                        </div>
+                    </>
+                ) : null}
+
+                <div className="flex justify-center"></div>
+            </main>
         </div>
     )
 }
