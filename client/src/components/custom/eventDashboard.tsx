@@ -61,15 +61,17 @@ export function EventDashboard({
     } = useGetEventById(event.id)
 
     const handleActivate = async (
-        eventId: string
-        // startDate: Date,
-        // finishDate: Date
+        eventId: string,
+        startDate: string,
+        finishDate: string
     ) => {
         try {
             const activateEventDto = {
                 id: eventId,
-                startDate: '2024-06-15T00:00:00Z',
-                finishDate: '2024-06-15T20:00:00Z', // ! hard-coded
+                // startDate: '2024-06-15T00:00:00Z',
+                // finishDate: '2024-06-15T20:00:00Z', // ! hard-coded
+                startDate: startDate,
+                finishDate: finishDate,
                 timeOfFirstMatch: 8,
                 timeOfLastMatch: 20,
                 matchDurationInMinutes: 60,
@@ -219,7 +221,13 @@ export function EventDashboard({
                         {event.matches.length === 0 ? (
                             <Button
                                 className="w-48 mb-2 mr-2 "
-                                onClick={async () => handleActivate(event.id)}
+                                onClick={async () =>
+                                    handleActivate(
+                                        event.id,
+                                        event.startDate,
+                                        event.finishDate
+                                    )
+                                }
                             >
                                 Generate matches 🎾
                             </Button>

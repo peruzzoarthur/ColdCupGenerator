@@ -153,6 +153,8 @@ export declare class EventsService {
     getEventById(getEventByIdDto: GetEventByIdDto): Promise<{
         id: string;
         isActive: boolean;
+        startDate: Date;
+        finishDate: Date;
         categories: {
             id: string;
             eventDoubles: {

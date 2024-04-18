@@ -323,6 +323,8 @@ export class EventsService {
             event: true,
           },
         },
+        startDate: true,
+        finishDate: true,
       },
     });
     return event;

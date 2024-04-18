@@ -52,6 +52,8 @@ export type PadelEvent = {
     eventDoubles?: Double[]
     categories: Category[]
     matches: Match[]
+    startDate: string
+    finishDate: string
 }
 
 export type Match = {

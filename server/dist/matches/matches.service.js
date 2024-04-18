@@ -62,7 +62,13 @@ let MatchesService = class MatchesService {
                 type: true,
                 sets: true,
                 matchDate: {
-                    select: {},
+                    select: {
+                        id: true,
+                        eventId: true,
+                        start: true,
+                        finish: true,
+                        matchId: true,
+                    },
                 },
             },
         });
