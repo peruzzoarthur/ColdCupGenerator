@@ -41,6 +41,9 @@ export class EventsService {
         },
         startDate: createEventDto.startDate,
         finishDate: createEventDto.finishDate,
+        timeOfFirstMatch: Number(createEventDto.timeOfFirstMatch),
+        timeOfLastMatch: Number(createEventDto.timeOfLastMatch),
+        matchDurationInMinutes: Number(createEventDto.matchDurationInMinutes),
       },
       select: {
         id: true,
@@ -118,6 +121,9 @@ export class EventsService {
         places: true,
         startDate: true,
         finishDate: true,
+        timeOfFirstMatch: true,
+        timeOfLastMatch: true,
+        matchDurationInMinutes: true,
         matches: {
           select: {
             number: true,
@@ -265,6 +271,9 @@ export class EventsService {
       select: {
         id: true,
         isActive: true,
+        timeOfFirstMatch: true,
+        timeOfLastMatch: true,
+        matchDurationInMinutes: true,
         eventDoubles: {
           select: {
             category: true,
@@ -331,7 +340,14 @@ export class EventsService {
   }
 
   async activateEvent(activateEventDto: ActivateEventDto) {
-    await this.createScheduleTest(activateEventDto);
+    await this.createScheduleTest({
+      id: activateEventDto.id,
+      startDate: activateEventDto.startDate,
+      finishDate: activateEventDto.finishDate,
+      timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+      timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+      matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+    });
     const event = await this.getEventById(activateEventDto);
 
     const doublesIds = event.categories.flatMap((cat) =>

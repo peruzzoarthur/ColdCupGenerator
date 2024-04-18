@@ -24,6 +24,9 @@ export type createEventFormObject = {
     placesIds: string
     startDate: Date
     finishDate: Date
+    timeOfFirstMatch: string
+    timeOfLastMatch: string
+    matchDurationInMinutes: string
 }
 
 export type ErrorResponse = {
@@ -92,6 +95,9 @@ function Events() {
                 placesIds: placesState,
                 startDate: input.startDate,
                 finishDate: input.finishDate,
+                timeOfFirstMatch: input.timeOfFirstMatch,
+                timeOfLastMatch: input.timeOfLastMatch,
+                matchDurationInMinutes: input.matchDurationInMinutes,
             }
 
             const data: AxiosResponse<PadelEvent> = await axios.post(
@@ -175,8 +181,11 @@ function Events() {
                                         eventName: '',
                                         categoriesIds: '',
                                         placesIds: '',
-                                        startDate: new Date(),
-                                        finishDate: new Date(),
+                                        startDate: '' as unknown as Date,
+                                        finishDate: '' as unknown as Date,
+                                        matchDurationInMinutes: '',
+                                        timeOfFirstMatch: '',
+                                        timeOfLastMatch: '',
                                     }}
                                 />
                             </div>

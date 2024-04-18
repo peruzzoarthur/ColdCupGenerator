@@ -63,7 +63,10 @@ export function EventDashboard({
     const handleActivate = async (
         eventId: string,
         startDate: string,
-        finishDate: string
+        finishDate: string,
+        timeOfFirstMatch: number,
+        timeOfLastMatch: number,
+        matchDurationInMinutes: number
     ) => {
         try {
             const activateEventDto = {
@@ -72,9 +75,9 @@ export function EventDashboard({
                 // finishDate: '2024-06-15T20:00:00Z', // ! hard-coded
                 startDate: startDate,
                 finishDate: finishDate,
-                timeOfFirstMatch: 8,
-                timeOfLastMatch: 20,
-                matchDurationInMinutes: 60,
+                timeOfFirstMatch: timeOfFirstMatch,
+                timeOfLastMatch: timeOfLastMatch,
+                matchDurationInMinutes: matchDurationInMinutes,
             }
             const { data: matches }: { data: Match[] } = await axios.post(
                 `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
@@ -225,7 +228,10 @@ export function EventDashboard({
                                     handleActivate(
                                         event.id,
                                         event.startDate,
-                                        event.finishDate
+                                        event.finishDate,
+                                        event.timeOfFirstMatch,
+                                        event.timeOfLastMatch,
+                                        event.matchDurationInMinutes
                                     )
                                 }
                             >

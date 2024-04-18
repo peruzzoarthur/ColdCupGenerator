@@ -29,6 +29,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { cn } from '@/lib/utils'
 import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '../ui/calendar'
+import { timesForMatches } from '../../util/times'
 
 type EventFormProps = {
     onSubmit: SubmitHandler<formObject>
@@ -47,6 +48,9 @@ type formObject = {
     placesIds: string
     startDate: Date
     finishDate: Date
+    timeOfFirstMatch: string
+    timeOfLastMatch: string
+    matchDurationInMinutes: string
 }
 
 const formSchema = z.object({
@@ -55,6 +59,9 @@ const formSchema = z.object({
     placesIds: z.string(),
     startDate: z.date(),
     finishDate: z.date(),
+    timeOfFirstMatch: z.string(),
+    timeOfLastMatch: z.string(),
+    matchDurationInMinutes: z.string(),
 })
 
 const EventForm: React.FC<EventFormProps> = ({
@@ -330,6 +337,81 @@ const EventForm: React.FC<EventFormProps> = ({
                     )}
                 />
             </div>
+            <FormField
+                name="timeOfFirstMatch"
+                control={form.control}
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>First game</FormLabel>
+                        <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                        >
+                            <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select time" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>
+                                        Select time for first match
+                                    </SelectLabel>
+                                    {timesForMatches.map((t, index) => (
+                                        <SelectItem value={t.value} key={index}>
+                                            {t.text}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                name="timeOfLastMatch"
+                control={form.control}
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Last game</FormLabel>
+                        <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                        >
+                            <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select time" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Select time</SelectLabel>
+                                    {timesForMatches.map((t, index) => (
+                                        <SelectItem value={t.value} key={index}>
+                                            {t.text}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                name="matchDurationInMinutes"
+                control={form.control}
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Match duration in minutes</FormLabel>
+                        <FormControl>
+                            <Input placeholder="60" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
             <div className="flex justify-center mt-4">
                 <Button
                     className="w-1/6 bg-opacity-65"

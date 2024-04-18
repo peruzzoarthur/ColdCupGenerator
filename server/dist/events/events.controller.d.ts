@@ -36,6 +36,9 @@ export declare class EventsController {
         isActive: boolean;
         startDate: Date;
         finishDate: Date;
+        matchDurationInMinutes: number;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
         categories: {
             id: string;
             eventDoubles: {
@@ -117,9 +120,9 @@ export declare class EventsController {
                 isActive: boolean;
                 startDate: Date;
                 finishDate: Date;
-                matchDuration: bigint;
-                timeOfFirstMatch: bigint;
-                timeOfLastMatch: bigint;
+                matchDurationInMinutes: number;
+                timeOfFirstMatch: number;
+                timeOfLastMatch: number;
             };
             eventId: string;
             start: Date;
@@ -145,9 +148,9 @@ export declare class EventsController {
             isActive: boolean;
             startDate: Date;
             finishDate: Date;
-            matchDuration: bigint;
-            timeOfFirstMatch: bigint;
-            timeOfLastMatch: bigint;
+            matchDurationInMinutes: number;
+            timeOfFirstMatch: number;
+            timeOfLastMatch: number;
         };
         double: {
             players: {
@@ -166,6 +169,9 @@ export declare class EventsController {
         isActive: boolean;
         startDate: Date;
         finishDate: Date;
+        matchDurationInMinutes: number;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
         categories: {
             id: string;
             eventDoubles: {

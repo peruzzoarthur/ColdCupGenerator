@@ -81,6 +81,12 @@ test("test", async ({ page }) => {
   await page.getByLabel("Last day").click();
   await page.getByText("19", { exact: true }).last().click();
   await page.getByLabel("Last day").click();
+  await page.getByLabel("First game").click();
+  await page.getByLabel("08:").click();
+  await page.getByLabel("Last game").click();
+  await page.getByLabel("16:").click();
+  await page.getByPlaceholder("60").click();
+  await page.getByPlaceholder("60").fill("60");
 
   await page.getByRole("button", { name: "Submit" }).click();
   await page.getByRole("button", { name: "Show all events" }).click();

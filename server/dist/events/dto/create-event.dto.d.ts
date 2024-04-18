@@ -4,4 +4,7 @@ export declare class CreateEventDto {
     placesIds: string[];
     startDate: string;
     finishDate: string;
+    timeOfFirstMatch: number;
+    timeOfLastMatch: number;
+    matchDurationInMinutes: number;
 }

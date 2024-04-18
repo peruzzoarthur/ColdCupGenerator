@@ -3,6 +3,7 @@ import {
   IsArray,
   IsDateString,
   IsNotEmpty,
+  IsNumber,
   IsString,
 } from "class-validator";
 
@@ -26,4 +27,14 @@ export class CreateEventDto {
   @IsDateString()
   @IsNotEmpty()
   finishDate: string;
+
+  @IsNotEmpty()
+  @IsString()
+  timeOfFirstMatch: number;
+  @IsNotEmpty()
+  @IsString()
+  timeOfLastMatch: number;
+  @IsNotEmpty()
+  @IsString()
+  matchDurationInMinutes: number;
 }

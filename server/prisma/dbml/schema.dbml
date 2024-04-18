@@ -13,9 +13,9 @@ Table Event {
   eventDoubles EventDouble [not null]
   startDate DateTime
   finishDate DateTime
-  matchDuration BigInt
-  timeOfFirstMatch BigInt
-  timeOfLastMatch BigInt
+  matchDurationInMinutes Int
+  timeOfFirstMatch Int
+  timeOfLastMatch Int
   games Game [not null]
   sets Set [not null]
   matchDates MatchDate [not null]

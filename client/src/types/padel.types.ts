@@ -54,6 +54,9 @@ export type PadelEvent = {
     matches: Match[]
     startDate: string
     finishDate: string
+    timeOfFirstMatch: number
+    timeOfLastMatch: number
+    matchDurationInMinutes: number
 }
 
 export type Match = {

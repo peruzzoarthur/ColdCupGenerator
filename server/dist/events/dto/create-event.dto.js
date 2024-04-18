@@ -39,4 +39,19 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "finishDate", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", Number)
+], CreateEventDto.prototype, "timeOfFirstMatch", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", Number)
+], CreateEventDto.prototype, "timeOfLastMatch", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", Number)
+], CreateEventDto.prototype, "matchDurationInMinutes", void 0);
 //# sourceMappingURL=create-event.dto.js.map
