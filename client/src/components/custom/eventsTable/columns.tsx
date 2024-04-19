@@ -15,7 +15,7 @@ export type RegisteredDoublesTable = {
     // status: 'pending' | 'registered'
 }
 
-export const columns: ColumnDef<RegisteredDoublesTable>[] = [
+export const doublesColumns: ColumnDef<RegisteredDoublesTable>[] = [
     // {
     //     accessorKey: 'status',
     //     header: 'Status',

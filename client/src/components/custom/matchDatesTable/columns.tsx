@@ -5,7 +5,7 @@ export type MatchDatesTable = {
     finish: string | undefined
 }
 
-export const columns: ColumnDef<MatchDatesTable>[] = [
+export const matchDateColumns: ColumnDef<MatchDatesTable>[] = [
     // {
     //     accessorKey: 'status',
     //     header: 'Status',

@@ -32,11 +32,12 @@ import { Match, PadelEvent } from '@/types/padel.types'
 // import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 import axios from 'axios'
 import { EventDoublesTable } from './eventsTable/eventDoublesTable'
-import { RegisteredDoublesTable, columns } from './eventsTable/columns'
+import { RegisteredDoublesTable, doublesColumns } from './eventsTable/columns'
 import { MatchesCarousel } from './matchesCarousel'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useGetEventById } from '@/hooks/useGetEventById'
 import { useState } from 'react'
+import { MatchDatesTable, matchDateColumns } from './matchDatesTable/columns'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -110,6 +111,17 @@ export function EventDashboard({
                 W: winningGames,
                 T: totalGames,
                 gamesDiff: gamesDiff,
+            }
+        })
+
+    const matchDatesTableData: MatchDatesTable[] | undefined =
+        eventById?.matches.map((m) => {
+            const start = m.matchDate.start
+            const finish = m.matchDate.finish
+
+            return {
+                start: start,
+                finish: finish,
             }
         })
 
@@ -215,7 +227,7 @@ export function EventDashboard({
                             <CardContent>
                                 {doublesTableData ? (
                                     <EventDoublesTable
-                                        columns={columns}
+                                        columns={doublesColumns}
                                         data={doublesTableData.filter((td) => {
                                             if (catFilter === 'all') {
                                                 return td
@@ -287,7 +299,12 @@ export function EventDashboard({
                         </div>
                     </>
                 ) : null}
-
+                {matchDatesTableData ? (
+                    <EventDoublesTable
+                        columns={matchDateColumns}
+                        data={matchDatesTableData}
+                    />
+                ) : null}
                 <div className="flex justify-center"></div>
             </main>
         </div>
