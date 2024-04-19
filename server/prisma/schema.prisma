@@ -80,7 +80,7 @@ model Match {
   doubles         Double[]
   event           Event?     @relation(fields: [eventId], references: [id])
   eventId         String?
-  date            DateTime?
+  // date            DateTime?
   type            MatchType  @default(SUPERSET)
   matchDate       MatchDate?
   matchDateId     String?    @unique

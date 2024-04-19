@@ -92,7 +92,7 @@ export function EventDashboard({
         }
     }
 
-    const tableData: RegisteredDoublesTable[] | undefined =
+    const doublesTableData: RegisteredDoublesTable[] | undefined =
         eventById?.eventDoubles?.map((d) => {
             const winningGames = d.double?.gamesWins.length
             const totalGames = d.double?.games.length
@@ -213,10 +213,10 @@ export function EventDashboard({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                {tableData ? (
+                                {doublesTableData ? (
                                     <EventDoublesTable
                                         columns={columns}
-                                        data={tableData.filter((td) => {
+                                        data={doublesTableData.filter((td) => {
                                             if (catFilter === 'all') {
                                                 return td
                                             }
@@ -264,7 +264,7 @@ export function EventDashboard({
                 pendingMatches.length !== 0 ? (
                     <>
                         <h1 className="text-xl font-bold">Pending matches</h1>
-                        <div className="flex md:justify-start lg:justify-center">
+                        <div className="flex justify-center">
                             <MatchesCarousel
                                 matches={pendingMatches}
                                 refetchEvents={refetchEvents}
@@ -278,7 +278,7 @@ export function EventDashboard({
                 finishedMatches.length !== 0 ? (
                     <>
                         <h1 className="text-xl font-bold">Finished matches</h1>
-                        <div className="flex md:justify-start lg:justify-center">
+                        <div className="flex justify-center">
                             <MatchesCarousel
                                 matches={finishedMatches}
                                 refetchEvents={refetchEvents}

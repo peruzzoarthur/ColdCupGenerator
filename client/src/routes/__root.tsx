@@ -3,7 +3,6 @@ import React, { Suspense } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { UserDropDown } from '@/components/custom/userDropdown'
-import { ThemeDropDown } from '@/components/custom/themeDropdown'
 
 const TanStackRouterDevtools =
     process.env.NODE_ENV === 'production'

@@ -97,6 +97,10 @@ export const MatchCard = ({
             }
         }
     }
+
+    const matchStartDate = new Date(match.matchDate.start)
+    const startTime = matchStartDate.toLocaleString()
+
     return (
         <>
             {/* {showCard ? ( */}
@@ -108,6 +112,7 @@ export const MatchCard = ({
                         {match.category?.type}
                     </CardDescription>
                     {match.isFinished ? <p>🟢</p> : <p>🟡</p>}
+                    <CardDescription>{startTime}</CardDescription>
                 </CardHeader>
 
                 <CardContent className="grid gap-2">

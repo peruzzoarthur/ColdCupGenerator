@@ -19,7 +19,6 @@ export declare class MatchDatesController {
             categoryId: string;
             winnerDoublesId: string;
             eventId: string;
-            date: Date;
             type: import(".prisma/client").$Enums.MatchType;
             matchDateId: string;
         };

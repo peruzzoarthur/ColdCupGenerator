@@ -56,7 +56,6 @@ export class MatchesService {
         category: true,
         winner: true,
         eventId: true,
-        date: true,
         type: true,
         sets: true,
         matchDate: {

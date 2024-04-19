@@ -129,7 +129,6 @@ export class EventsService {
             number: true,
             id: true,
             winner: true,
-            date: true,
             category: {
               select: {
                 level: true,
@@ -430,7 +429,14 @@ export class EventsService {
             number: true,
             id: true,
             winner: true,
-            date: true,
+            matchDate: {
+              select: {
+                start: true,
+                finish: true,
+                id: true,
+              },
+            },
+
             category: {
               select: {
                 level: true,

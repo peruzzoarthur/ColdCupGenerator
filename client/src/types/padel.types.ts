@@ -70,6 +70,13 @@ export type Match = {
     isFinished: boolean
     sets: Set[]
     winner: Double
+    matchDate: MatchDate
+}
+
+export type MatchDate = {
+    start: string
+    finish: string
+    id: string
 }
 
 export type Set = {

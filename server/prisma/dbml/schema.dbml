@@ -62,7 +62,6 @@ Table Match {
   doubles Double [not null]
   event Event
   eventId String
-  date DateTime
   type MatchType [not null, default: 'SUPERSET']
   matchDate MatchDate
   matchDateId String [unique]
