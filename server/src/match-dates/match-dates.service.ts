@@ -6,8 +6,8 @@ import { PrismaService } from "src/prisma.service";
 @Injectable()
 export class MatchDatesService {
   constructor(private readonly prismaService: PrismaService) {}
-  create(createMatchDateDto: CreateMatchDateDto) {
-    return this.prismaService.matchDate.create({
+  async create(createMatchDateDto: CreateMatchDateDto) {
+    return await this.prismaService.matchDate.create({
       data: {
         eventId: createMatchDateDto.eventId,
         start: createMatchDateDto.startDate,
@@ -19,16 +19,44 @@ export class MatchDatesService {
     });
   }
 
-  findAll() {
-    return this.prismaService.matchDate.findMany({
+  async findAll() {
+    return await this.prismaService.matchDate.findMany({
       select: {
         id: true,
         eventId: true,
         start: true,
         finish: true,
+        matchId: true,
         match: true,
       },
     });
+  }
+
+  async findMatchDatesInOrderByEventId(eventId: string) {
+    const matchDates = await this.prismaService.matchDate.findMany({
+      where: {
+        eventId: eventId,
+      },
+      orderBy: {
+        start: "asc",
+      },
+      select: {
+        start: true,
+        finish: true,
+        matchId: true,
+        match: {
+          select: {
+            number: true,
+            doubles: {
+              select: {
+                players: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return matchDates;
   }
 
   findOne(id: number) {

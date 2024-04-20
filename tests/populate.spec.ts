@@ -79,7 +79,7 @@ test("test", async ({ page }) => {
   // await page.locator("body").press("Escape");
   // await expect(page.getByText("April")).toBeVisible();
   await page.getByLabel("Last day").click();
-  await page.getByText("19", { exact: true }).last().click();
+  await page.getByText("20", { exact: true }).last().click();
   await page.getByLabel("Last day").click();
   await page.getByLabel("First game").click();
   await page.getByLabel("08:").click();

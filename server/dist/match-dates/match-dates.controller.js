@@ -28,7 +28,7 @@ let MatchDatesController = class MatchDatesController {
         return this.matchDatesService.findAll();
     }
     findOne(id) {
-        return this.matchDatesService.findOne(+id);
+        return this.matchDatesService.findMatchDatesInOrderByEventId(id);
     }
     update(id, updateMatchDateDto) {
         return this.matchDatesService.update(+id, updateMatchDateDto);
@@ -52,29 +52,29 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], MatchDatesController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], MatchDatesController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Patch)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_match_date_dto_1.UpdateMatchDateDto]),
     __metadata("design:returntype", void 0)
 ], MatchDatesController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], MatchDatesController.prototype, "remove", null);
 exports.MatchDatesController = MatchDatesController = __decorate([
-    (0, common_1.Controller)('match-dates'),
+    (0, common_1.Controller)("match-dates"),
     __metadata("design:paramtypes", [match_dates_service_1.MatchDatesService])
 ], MatchDatesController);
 //# sourceMappingURL=match-dates.controller.js.map

@@ -361,6 +361,13 @@ export declare class EventsService {
                 }[];
             };
         }[];
+        matchDates: {
+            id: string;
+            eventId: string;
+            matchId: string;
+            start: Date;
+            finish: Date;
+        }[];
     }>;
 }
 export {};

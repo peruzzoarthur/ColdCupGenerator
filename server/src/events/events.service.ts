@@ -421,9 +421,9 @@ export class EventsService {
       },
       select: {
         id: true,
-
         name: true,
         places: true,
+        matchDates: true,
         matches: {
           select: {
             number: true,
@@ -436,7 +436,6 @@ export class EventsService {
                 id: true,
               },
             },
-
             category: {
               select: {
                 level: true,

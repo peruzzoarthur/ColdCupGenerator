@@ -4,14 +4,19 @@ import { PrismaService } from "src/prisma.service";
 export declare class MatchDatesService {
     private readonly prismaService;
     constructor(prismaService: PrismaService);
-    create(createMatchDateDto: CreateMatchDateDto): import(".prisma/client").Prisma.Prisma__MatchDateClient<{
+    create(createMatchDateDto: CreateMatchDateDto): Promise<{
         id: string;
         eventId: string;
         matchId: string;
         start: Date;
         finish: Date;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs>;
-    findAll(): import(".prisma/client").Prisma.PrismaPromise<{
+    }>;
+    findAll(): Promise<{
+        id: string;
+        eventId: string;
+        matchId: string;
+        start: Date;
+        finish: Date;
         match: {
             id: string;
             number: number;
@@ -22,10 +27,24 @@ export declare class MatchDatesService {
             type: import(".prisma/client").$Enums.MatchType;
             matchDateId: string;
         };
-        id: string;
-        eventId: string;
+    }[]>;
+    findMatchDatesInOrderByEventId(eventId: string): Promise<{
+        matchId: string;
         start: Date;
         finish: Date;
+        match: {
+            number: number;
+            doubles: {
+                players: {
+                    id: string;
+                    email: string;
+                    firstName: string;
+                    lastName: string;
+                    role: import(".prisma/client").$Enums.Role;
+                    position: import(".prisma/client").$Enums.PlayerPosition;
+                }[];
+            }[];
+        };
     }[]>;
     findOne(id: number): string;
     update(id: number, updateMatchDateDto: UpdateMatchDateDto): string;

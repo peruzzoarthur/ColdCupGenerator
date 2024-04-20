@@ -361,6 +361,7 @@ let EventsService = class EventsService {
                 id: true,
                 name: true,
                 places: true,
+                matchDates: true,
                 matches: {
                     select: {
                         number: true,

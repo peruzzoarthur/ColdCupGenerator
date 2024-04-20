@@ -353,6 +353,13 @@ export declare class EventsController {
                 }[];
             };
         }[];
+        matchDates: {
+            id: string;
+            eventId: string;
+            matchId: string;
+            start: Date;
+            finish: Date;
+        }[];
     }>;
     update(id: string, updateEventDto: UpdateEventDto): string;
     remove(id: string): string;

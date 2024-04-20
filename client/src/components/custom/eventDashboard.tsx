@@ -37,7 +37,13 @@ import { MatchesCarousel } from './matchesCarousel'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useGetEventById } from '@/hooks/useGetEventById'
 import { useState } from 'react'
-import { MatchDatesTable, matchDateColumns } from './matchDatesTable/columns'
+import {
+    MatchDatesTableProps,
+    matchDateColumns,
+} from './matchDatesTable/columns'
+import { useGetEventMatchesById } from '@/hooks/useGetEventMatchesByDate'
+import { MatchDatesTable } from './matchDatesTable/matchDatesTable'
+import { getUniqueValuesForDays } from '@/util/getUniqueValuesForDays'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -54,7 +60,8 @@ export function EventDashboard({
 }: EventDashBoardProps) {
     // const [matches, setMatches] = useState<Match[]>(event.matches)
 
-    const [catFilter, setCatFilter] = useState('all')
+    const [catFilter, setCatFilter] = useState<string>('all')
+    const [dayFilter, setDayFilter] = useState('all')
     const {
         finishedMatches,
         pendingMatches,
@@ -62,6 +69,8 @@ export function EventDashboard({
         eventById,
         isFetchingEventById,
     } = useGetEventById(event.id)
+
+    const { eventMatchesById } = useGetEventMatchesById(event.id)
 
     const handleActivate = async (
         eventId: string,
@@ -114,14 +123,49 @@ export function EventDashboard({
             }
         })
 
-    const matchDatesTableData: MatchDatesTable[] | undefined =
-        eventById?.matches.map((m) => {
-            const start = m.matchDate.start
-            const finish = m.matchDate.finish
+    const eventDays = eventMatchesById?.map((md) => {
+        const date = new Date(md.start)
+        return date.getDate()
+    })
 
+    const uniqueValuesForDays = getUniqueValuesForDays(eventDays)
+
+    const uniqueDates = eventMatchesById
+        ? eventMatchesById
+              .map((md) => {
+                  return new Date(md.start)
+              })
+              .filter((ud) => {
+                  if (dayFilter === 'all') {
+                      return ud
+                  }
+                  return ud.getDate().toString() == dayFilter
+              })
+        : null
+
+    console.log(uniqueDates)
+
+    const matchDatesTableData: MatchDatesTableProps[] | undefined =
+        eventMatchesById?.map((md) => {
+            const startDate = new Date(md.start)
+            const startTime = startDate.toLocaleString()
+            if (md.match === null) {
+                return {
+                    number: undefined,
+                    start: startTime,
+                    finish: md.finish,
+                    matchId: md.matchId,
+                    doublesOne: undefined,
+                    doublesTwo: undefined,
+                }
+            }
             return {
-                start: start,
-                finish: finish,
+                number: md.match.number,
+                start: startTime,
+                finish: md.finish,
+                matchId: md.matchId,
+                doublesOne: `${md.match.doubles[0].players[0].firstName} ${md.match.doubles[0].players[0].lastName} / ${md.match.doubles[0].players[1].firstName} ${md.match.doubles[0].players[1].lastName}`,
+                doublesTwo: `${md.match.doubles[1].players[0].firstName} ${md.match.doubles[1].players[0].lastName} / ${md.match.doubles[1].players[1].firstName} ${md.match.doubles[1].players[1].lastName}`,
             }
         })
 
@@ -300,10 +344,75 @@ export function EventDashboard({
                     </>
                 ) : null}
                 {matchDatesTableData ? (
-                    <EventDoublesTable
-                        columns={matchDateColumns}
-                        data={matchDatesTableData}
-                    />
+                    <>
+                        <h1 className="text-xl font-bold">Schedule</h1>
+                        {dayFilter === 'all' ? <h2>Showing all</h2> : null}
+                        {dayFilter !== 'all' && uniqueDates ? (
+                            <h2>{uniqueDates[0].toDateString()}</h2>
+                        ) : null}
+
+                        <div className="flex items-center gap-2 ml-auto">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="gap-1 h-7"
+                                    >
+                                        <ListFilter className="h-3.5 w-3.5" />
+                                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                            Filter
+                                        </span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent className="w-56">
+                                    <DropdownMenuLabel>Days</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuRadioGroup
+                                        value={dayFilter}
+                                        onValueChange={setDayFilter}
+                                    >
+                                        <DropdownMenuRadioItem value="all">
+                                            All
+                                        </DropdownMenuRadioItem>
+                                        {uniqueValuesForDays.map((d, index) => (
+                                            <DropdownMenuRadioItem
+                                                key={index}
+                                                value={d.toString()}
+                                            >
+                                                {d}
+                                            </DropdownMenuRadioItem>
+                                        ))}
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                className="gap-1 h-7"
+                            >
+                                <File className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                    Export
+                                </span>
+                            </Button>
+                        </div>
+                        <MatchDatesTable
+                            columns={matchDateColumns}
+                            data={matchDatesTableData.filter((md) => {
+                                if (dayFilter === 'all') {
+                                    return md
+                                }
+                                if (md.start) {
+                                    const mdDate = new Date(md.start)
+                                    return (
+                                        mdDate.getDate().toString() == dayFilter
+                                    )
+                                }
+                            })}
+                        />
+                    </>
                 ) : null}
                 <div className="flex justify-center"></div>
             </main>
