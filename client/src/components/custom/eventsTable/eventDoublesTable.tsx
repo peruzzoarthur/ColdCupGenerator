@@ -43,7 +43,7 @@ export function EventDoublesTable<TData, TValue>({
 
     return (
         <>
-            <div className="border rounded-md">
+            <div className="flex w-full border rounded-md">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (

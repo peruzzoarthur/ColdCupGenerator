@@ -58,7 +58,7 @@ export class EventsService {
     return event;
   }
 
-  async createScheduleTest(
+  async createSchedule(
     createScheduleDto: CreateScheduleDto
   ): Promise<Day[]> {
     let daysArray: Day[] = [];
@@ -339,7 +339,7 @@ export class EventsService {
   }
 
   async activateEvent(activateEventDto: ActivateEventDto) {
-    await this.createScheduleTest({
+    await this.createSchedule({
       id: activateEventDto.id,
       startDate: activateEventDto.startDate,
       finishDate: activateEventDto.finishDate,

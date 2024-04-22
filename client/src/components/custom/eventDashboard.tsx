@@ -170,9 +170,9 @@ export function EventDashboard({
         })
 
     return (
-        <div className="flex flex-col w-full min-h-screen bg-muted/40">
-            <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-                <header className="sticky top-0 z-30 flex items-center gap-4 px-4 border-b h-14 bg-background sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+        <div className="flex flex-col w-full">
+            <div className="flex fle">
+                <header className="sticky top-0 z-30 flex items-center gap-4 px-4 h-14 bg-background sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
                     <Breadcrumb className="hidden md:flex">
                         <BreadcrumbList>
                             <BreadcrumbItem>
@@ -199,9 +199,10 @@ export function EventDashboard({
                     </div> */}
                 </header>
             </div>
-            <main className="grid items-start flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+            <div></div>
+            <main className="grid items-start flex-1 w-full gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
                 <Tabs defaultValue="all">
-                    <div className="flex items-center">
+                    <div className="flex items-center w-full">
                         {/* <TabsList>
                                 <TabsTrigger value="all">All</TabsTrigger>
                                 <TabsTrigger value="active">Active</TabsTrigger>
@@ -209,7 +210,7 @@ export function EventDashboard({
                                     Finished
                                 </TabsTrigger>
                             </TabsList> */}
-                        <div className="flex items-center gap-2 ml-auto">
+                        <div className="flex flex-row ml-auto">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
@@ -260,7 +261,7 @@ export function EventDashboard({
                         </div>
                     </div>
                     <TabsContent value="all">
-                        <Card className="w-full">
+                        <Card className="flex flex-col w-full">
                             <CardHeader>
                                 <CardTitle>Doubles Registered</CardTitle>
                                 <CardDescription>
@@ -270,15 +271,21 @@ export function EventDashboard({
                             </CardHeader>
                             <CardContent>
                                 {doublesTableData ? (
-                                    <EventDoublesTable
-                                        columns={doublesColumns}
-                                        data={doublesTableData.filter((td) => {
-                                            if (catFilter === 'all') {
-                                                return td
-                                            }
-                                            return td.catId === catFilter
-                                        })}
-                                    />
+                                    <div className="flex flex-col justify-center w-2/3 md:w-full sm:w-11/12">
+                                        <EventDoublesTable
+                                            columns={doublesColumns}
+                                            data={doublesTableData.filter(
+                                                (td) => {
+                                                    if (catFilter === 'all') {
+                                                        return td
+                                                    }
+                                                    return (
+                                                        td.catId === catFilter
+                                                    )
+                                                }
+                                            )}
+                                        />
+                                    </div>
                                 ) : null}
                             </CardContent>
                             <CardFooter>
@@ -320,7 +327,7 @@ export function EventDashboard({
                 pendingMatches.length !== 0 ? (
                     <>
                         <h1 className="text-xl font-bold">Pending matches</h1>
-                        <div className="flex justify-center">
+                        <div className="flex flex-col items-center justify-center w-2/3 md:w-full sm:w-11/12">
                             <MatchesCarousel
                                 matches={pendingMatches}
                                 refetchEvents={refetchEvents}
@@ -334,7 +341,7 @@ export function EventDashboard({
                 finishedMatches.length !== 0 ? (
                     <>
                         <h1 className="text-xl font-bold">Finished matches</h1>
-                        <div className="flex justify-center">
+                        <div className="flex flex-col items-center justify-center w-2/3 md:w-full sm:w-11/12">
                             <MatchesCarousel
                                 matches={finishedMatches}
                                 refetchEvents={refetchEvents}
@@ -398,24 +405,27 @@ export function EventDashboard({
                                 </span>
                             </Button>
                         </div>
-                        <MatchDatesTable
-                            columns={matchDateColumns}
-                            data={matchDatesTableData.filter((md) => {
-                                if (dayFilter === 'all') {
-                                    return md
-                                }
-                                if (md.start) {
-                                    const mdDate = new Date(md.start)
-                                    return (
-                                        mdDate.getDate().toString() == dayFilter
-                                    )
-                                }
-                            })}
-                        />
+                        <div className="flex flex-col justify-center w-2/3 md:w-full sm:w-11/12">
+                            <MatchDatesTable
+                                columns={matchDateColumns}
+                                data={matchDatesTableData.filter((md) => {
+                                    if (dayFilter === 'all') {
+                                        return md
+                                    }
+                                    if (md.start) {
+                                        const mdDate = new Date(md.start)
+                                        return (
+                                            mdDate.getDate().toString() ==
+                                            dayFilter
+                                        )
+                                    }
+                                })}
+                            />
+                        </div>
                     </>
                 ) : null}
-                <div className="flex justify-center"></div>
             </main>
+            <div className="flex justify-center"></div>
         </div>
     )
 }

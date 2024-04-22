@@ -51,7 +51,7 @@ let EventsService = class EventsService {
         });
         return event;
     }
-    async createScheduleTest(createScheduleDto) {
+    async createSchedule(createScheduleDto) {
         let daysArray = [];
         const oneDayInMs = 86400000;
         const oneHourInMs = 3600000;
@@ -295,7 +295,7 @@ let EventsService = class EventsService {
         return event;
     }
     async activateEvent(activateEventDto) {
-        await this.createScheduleTest({
+        await this.createSchedule({
             id: activateEventDto.id,
             startDate: activateEventDto.startDate,
             finishDate: activateEventDto.finishDate,

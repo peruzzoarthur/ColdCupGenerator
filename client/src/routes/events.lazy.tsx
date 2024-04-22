@@ -156,7 +156,7 @@ function Events() {
 
     return (
         <>
-            <div className="flex justify-center w-full">
+            <div className="flex flex-col justify-center w-full">
                 {!toggleEvent && (
                     <div className="flex flex-col items-center justify-center w-full">
                         <div className="flex flex-col w-2/3">
@@ -234,10 +234,10 @@ function Events() {
                 )}
                 {toggleEvent && (
                     <div className="flex flex-col items-center w-full">
-                        <div className="flex flex-col w-4/5 lg:w-2/3 ">
-                            <div className="flex flex-col justify-center ">
+                        <div className="flex flex-col items-center w-full ">
+                            <div className="flex flex-col items-center w-2/3 ">
                                 {selectedEvent && (
-                                    <div className="flex flex-col justify-center mt-2 mb-4">
+                                    <div className="flex flex-col justify-center w-full mt-2 mb-4">
                                         <h1 className="justify-center mb-4 text-3xl font-medium">
                                             🏆 {selectedEvent.name} 🏆
                                         </h1>
@@ -267,13 +267,15 @@ function Events() {
                                 )}
                             </div>
                         </div>
-                        {selectedEvent && toggleEvent && (
-                            <EventDashboard
-                                event={selectedEvent}
-                                toggleEventOff={toggleEventOff}
-                                refetchEvents={refetchEvents}
-                            />
-                        )}
+                    </div>
+                )}
+                {selectedEvent && toggleEvent && (
+                    <div className="flex flex-col">
+                        <EventDashboard
+                            event={selectedEvent}
+                            toggleEventOff={toggleEventOff}
+                            refetchEvents={refetchEvents}
+                        />
                     </div>
                 )}
             </div>

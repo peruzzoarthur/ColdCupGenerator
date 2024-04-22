@@ -24,7 +24,7 @@ export function MatchesCarousel({
 }: MatchesCarouselProps) {
     return (
         <>
-            <Carousel className="w-full max-w-[420px]">
+            <Carousel className="max-w-[420px]">
                 <CarouselContent>
                     {matches.map((match, index) => (
                         <CarouselItem key={index}>
