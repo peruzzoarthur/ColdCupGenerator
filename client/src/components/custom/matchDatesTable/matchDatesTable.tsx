@@ -43,7 +43,7 @@ export function MatchDatesTable<TData, TValue>({
 
     return (
         <>
-            <div className="border rounded-md">
+            <div className="flex w-full mt-2 border rounded-md">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
