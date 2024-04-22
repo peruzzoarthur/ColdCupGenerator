@@ -46,7 +46,7 @@ export function EventCard({ className, event, toggleEventOn }: EventCardProps) {
                             <p className="font-medium leading-none text-md">
                                 {event.name}
                             </p>
-                            <p className="text-sm text-black">Locations</p>
+                            <p className="text-sm">Locations</p>
 
                             {event.places.map((p, index) => (
                                 <p
