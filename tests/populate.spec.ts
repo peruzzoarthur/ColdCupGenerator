@@ -3,6 +3,7 @@ import { playersMock } from "./mocks/playersMock";
 
 test("test", async ({ page }) => {
   await page.goto("http://localhost:5173/");
+  // await page.goto("https://coldcupgenerator.up.railway.app/");
   await page.getByRole("button", { name: "Populate categories" }).click();
 
   // add players

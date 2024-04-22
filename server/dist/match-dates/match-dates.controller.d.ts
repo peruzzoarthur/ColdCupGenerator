@@ -12,11 +12,6 @@ export declare class MatchDatesController {
         finish: Date;
     }>;
     findAll(): Promise<{
-        id: string;
-        eventId: string;
-        matchId: string;
-        start: Date;
-        finish: Date;
         match: {
             id: string;
             number: number;
@@ -27,11 +22,13 @@ export declare class MatchDatesController {
             type: import(".prisma/client").$Enums.MatchType;
             matchDateId: string;
         };
-    }[]>;
-    findOne(id: string): Promise<{
+        id: string;
+        eventId: string;
         matchId: string;
         start: Date;
         finish: Date;
+    }[]>;
+    findOne(id: string): Promise<{
         match: {
             number: number;
             doubles: {
@@ -45,6 +42,9 @@ export declare class MatchDatesController {
                 }[];
             }[];
         };
+        matchId: string;
+        start: Date;
+        finish: Date;
     }[]>;
     update(id: string, updateMatchDateDto: UpdateMatchDateDto): string;
     remove(id: string): string;

@@ -19,7 +19,6 @@ const create_event_dto_1 = require("./dto/create-event.dto");
 const update_event_dto_1 = require("./dto/update-event.dto");
 const register_doubles_event_dto_1 = require("./dto/register-doubles-event.dto");
 const get_event_by_id_dto_1 = require("./dto/get-event-by-id.dto");
-const create_schedule_dto_1 = require("./dto/create-schedule.dto");
 const activate_event_dto_1 = require("./dto/activate-event.dto");
 let EventsController = class EventsController {
     constructor(eventsService) {
@@ -27,9 +26,6 @@ let EventsController = class EventsController {
     }
     async create(createEventDto) {
         return await this.eventsService.createEvent(createEventDto);
-    }
-    async createScheduleTest(createScheduleDto) {
-        return await this.eventsService.createScheduleTest(createScheduleDto);
     }
     async getEventById(getEventByIdDto) {
         return await this.eventsService.getEventById(getEventByIdDto);
@@ -62,13 +58,6 @@ __decorate([
     __metadata("design:paramtypes", [create_event_dto_1.CreateEventDto]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "create", null);
-__decorate([
-    (0, common_1.Post)("test"),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_schedule_dto_1.CreateScheduleDto]),
-    __metadata("design:returntype", Promise)
-], EventsController.prototype, "createScheduleTest", null);
 __decorate([
     (0, common_1.Post)("event-by-id"),
     __param(0, (0, common_1.Body)()),

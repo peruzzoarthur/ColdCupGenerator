@@ -12,11 +12,6 @@ export declare class MatchDatesService {
         finish: Date;
     }>;
     findAll(): Promise<{
-        id: string;
-        eventId: string;
-        matchId: string;
-        start: Date;
-        finish: Date;
         match: {
             id: string;
             number: number;
@@ -27,11 +22,13 @@ export declare class MatchDatesService {
             type: import(".prisma/client").$Enums.MatchType;
             matchDateId: string;
         };
-    }[]>;
-    findMatchDatesInOrderByEventId(eventId: string): Promise<{
+        id: string;
+        eventId: string;
         matchId: string;
         start: Date;
         finish: Date;
+    }[]>;
+    findMatchDatesInOrderByEventId(eventId: string): Promise<{
         match: {
             number: number;
             doubles: {
@@ -45,6 +42,9 @@ export declare class MatchDatesService {
                 }[];
             }[];
         };
+        matchId: string;
+        start: Date;
+        finish: Date;
     }[]>;
     findOne(id: number): string;
     update(id: number, updateMatchDateDto: UpdateMatchDateDto): string;

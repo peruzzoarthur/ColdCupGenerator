@@ -59,7 +59,8 @@ let EventsService = class EventsService {
         const firstDay = new Date(createScheduleDto.startDate);
         const lastDay = new Date(createScheduleDto.finishDate);
         const days = Math.round((lastDay.valueOf() - firstDay.valueOf()) / oneDayInMs);
-        for (let i = 0; i < days; i++) {
+        console.log(`Days: ${days}`);
+        for (let i = 0; i <= days; i++) {
             const date = new Date(firstDay.valueOf() + i * oneDayInMs);
             console.log(date);
             daysArray.push({

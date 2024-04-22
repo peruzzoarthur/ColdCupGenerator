@@ -73,9 +73,9 @@ export class EventsService {
     const days = Math.round(
       (lastDay.valueOf() - firstDay.valueOf()) / oneDayInMs
     );
-    // console.log(days);
+    console.log(`Days: ${days}`);
 
-    for (let i = 0; i < days; i++) {
+    for (let i = 0; i <= days; i++) {
       const date = new Date(firstDay.valueOf() + i * oneDayInMs);
       console.log(date);
       daysArray.push({

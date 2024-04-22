@@ -24,10 +24,10 @@ export class EventsController {
     return await this.eventsService.createEvent(createEventDto);
   }
 
-  @Post("test")
-  async createScheduleTest(@Body() createScheduleDto: CreateScheduleDto) {
-    return await this.eventsService.createScheduleTest(createScheduleDto);
-  }
+  // @Post("test")
+  // async createScheduleTest(@Body() createScheduleDto: CreateScheduleDto) {
+  //   return await this.eventsService.createScheduleTest(createScheduleDto);
+  // }
 
   @Post("event-by-id")
   async getEventById(@Body() getEventByIdDto: GetEventByIdDto) {
