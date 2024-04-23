@@ -33,7 +33,7 @@ model Event {
   games                  Game[]
   sets                   Set[]
   matchDates             MatchDate[]
-  eventType              EventType     @default(ALLxALL)
+  eventType              EventType     @default(ALLxALL) // todo change this default later
   // courts       Court[]
 }
 

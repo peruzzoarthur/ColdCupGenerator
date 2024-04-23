@@ -41,7 +41,6 @@ export function EventCard({ className, event, toggleEventOn }: EventCardProps) {
                 </div>
                 <div>
                     <div className="grid items-start pb-4 mb-4 last:mb-0 last:pb-0">
-                        <span className="flex w-2 h-2 translate-y-1 rounded-full bg-slate-800" />
                         <div className="space-y-1">
                             <p className="font-medium leading-none text-md">
                                 {event.name}

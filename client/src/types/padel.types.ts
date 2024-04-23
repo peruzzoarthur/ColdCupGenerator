@@ -43,6 +43,7 @@ export type Category = {
     level: number
     doubles?: Double[]
     eventDoubles?: Double[]
+    totalMatches?: number
 }
 
 export type PadelEvent = {
@@ -58,6 +59,9 @@ export type PadelEvent = {
     timeOfLastMatch: number
     matchDurationInMinutes: number
     matchDates: MatchDate[]
+    totalMatches?: number
+    availableMatchDates?: number
+    suitable?: boolean
 }
 
 export type Match = {

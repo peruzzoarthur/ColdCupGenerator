@@ -369,6 +369,7 @@ export declare class EventsController {
         }[];
         totalMatches: number;
         availableMatchDates: number;
+        suitable: boolean;
         isActive: boolean;
         startDate: Date;
         finishDate: Date;

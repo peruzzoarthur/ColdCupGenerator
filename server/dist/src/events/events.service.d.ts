@@ -385,6 +385,7 @@ export declare class EventsService {
         }[];
         totalMatches: number;
         availableMatchDates: number;
+        suitable: boolean;
         isActive: boolean;
         startDate: Date;
         finishDate: Date;

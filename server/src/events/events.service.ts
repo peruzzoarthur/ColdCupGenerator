@@ -531,7 +531,11 @@ export class EventsService {
             id: true,
             level: true,
             type: true,
-            eventDoubles: true,
+            eventDoubles: {
+              where: {
+                eventId: id,
+              },
+            },
           },
         },
       },
@@ -542,7 +546,7 @@ export class EventsService {
     const startDate = new Date(eventInfo.startDate);
     const finishDate = new Date(eventInfo.finishDate);
 
-    const days = finishDate.getDate() - startDate.getDate();
+    const days = 1 + finishDate.getDate() - startDate.getDate();
 
     // console.log(days);
 
@@ -554,20 +558,42 @@ export class EventsService {
     );
     // console.log(availableMatchDates);
 
-    const categoriesWithTotalMatches = categories.map((cat) => ({
-      ...cat,
-      totalMatches: Math.floor(
-        (cat.eventDoubles.length * cat.eventDoubles.length - 1) / 2
-      ),
-    }));
+    const categoriesWithTotalMatches = categories.map((cat) => {
+      const totalDoubles = cat.eventDoubles.length;
+      console.log(totalDoubles);
+      if (cat.eventDoubles.length === 0) {
+        return { ...cat, totalMatches: 0 };
+      }
+      if (cat.eventDoubles.length === 1) {
+        return { ...cat, totalMatches: 0 };
+      }
+      if (totalDoubles === 2) {
+        return { ...cat, totalMatches: 1 };
+      }
+      // else {
+      return {
+        ...cat,
+        totalMatches: Math.floor(
+          (cat.eventDoubles.length * cat.eventDoubles.length - 1) / 2
+        ),
+      };
+      // }
+    });
+
+    let totalMatches = categoriesWithTotalMatches
+      .flatMap((c) => c.totalMatches)
+      .reduce((acc, curr) => acc + curr, 0);
+
+    if (totalMatches === -1) {
+      totalMatches = 0;
+    }
 
     const eventWithTotalMatches = {
       ...eventInfo,
       categories: categoriesWithTotalMatches,
-      totalMatches: categoriesWithTotalMatches
-        .flatMap((c) => c.totalMatches)
-        .reduce((acc, curr) => acc + curr, 0),
+      totalMatches: totalMatches,
       availableMatchDates: availableMatchDates,
+      suitable: availableMatchDates - totalMatches > 0,
     };
 
     return eventWithTotalMatches;

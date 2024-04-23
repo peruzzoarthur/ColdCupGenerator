@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { PadelEvent } from '@/types/padel.types'
 
-export const useGetEventById = (eventId: string) => {
+export const useGetEventById = (eventId: string | undefined) => {
     const {
         data: eventById,
         isFetching: isFetchingEventById,
@@ -10,6 +10,9 @@ export const useGetEventById = (eventId: string) => {
     } = useQuery({
         queryKey: ['get-event-byId', eventId],
         queryFn: async () => {
+            if (eventId === undefined) {
+                return
+            }
             const { data }: { data: PadelEvent } = await axios.get(
                 `${import.meta.env.VITE_SERVER_URL}/events/${eventId}`
             )

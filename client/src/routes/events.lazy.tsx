@@ -17,6 +17,8 @@ import RegisterDoublesForm, {
 import { useGetDoubles } from '@/hooks/useGetDoubles'
 import { useToast } from '@/components/ui/use-toast'
 import { EventDashboard } from '@/components/custom/eventDashboard'
+import { useGetEventMatchesInfoById } from '@/hooks/useGetEventMatchesInfoById'
+import { useGetEventById } from '@/hooks/useGetEventById'
 
 export type createEventFormObject = {
     eventName: string
@@ -125,6 +127,11 @@ function Events() {
         }
     }
 
+    const { refetchEventMatchesInfoById } = useGetEventMatchesInfoById(
+        selectedEvent?.id
+    )
+    const { refetchEventById } = useGetEventById(selectedEvent?.id)
+
     const registerDoubleOnSubmit = async (input: registerDoublesFormObject) => {
         try {
             const requestBody = {
@@ -137,6 +144,8 @@ function Events() {
                 requestBody
             )
             registerDoublesToast(data.data.double, data.data.event)
+            await refetchEventMatchesInfoById()
+            await refetchEventById()
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>

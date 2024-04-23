@@ -45,6 +45,9 @@ import { useGetEventMatchesById } from '@/hooks/useGetEventMatchesByDate'
 import { MatchDatesTable } from './matchDatesTable/matchDatesTable'
 import { getUniqueValuesForDays } from '@/util/getUniqueValuesForDays'
 import { CoolButton } from '../ui/moving-border'
+import { useGetEventMatchesInfoById } from '@/hooks/useGetEventMatchesInfoById'
+import { EventInfoCard } from './eventInfoCard'
+import { Alert } from '../ui/alert'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -72,6 +75,7 @@ export function EventDashboard({
     } = useGetEventById(event.id)
 
     const { eventMatchesById } = useGetEventMatchesById(event.id)
+    const { eventMatchesInfoById } = useGetEventMatchesInfoById(event.id)
 
     const handleActivate = async (
         eventId: string,
@@ -193,12 +197,48 @@ export function EventDashboard({
                     {/* <div className="relative flex-1 ml-auto md:grow-0">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
-                            type="search"
-                            placeholder="Search..."
-                            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+                        type="search"
+                        placeholder="Search..."
+                        className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
                         />
                     </div> */}
                 </header>
+            </div>
+            <div className="flex justify-center p-10 ">
+                {event.matches.length === 0 && eventMatchesInfoById ? (
+                    <EventInfoCard event={eventMatchesInfoById}>
+                        {eventMatchesInfoById.suitable ? (
+                            <CoolButton
+                                className="items-center justify-center"
+                                onClick={async () =>
+                                    handleActivate(
+                                        event.id,
+                                        event.startDate,
+                                        event.finishDate,
+                                        event.timeOfFirstMatch,
+                                        event.timeOfLastMatch,
+                                        event.matchDurationInMinutes
+                                    )
+                                }
+                            >
+                                Generate matches 🎾
+                            </CoolButton>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center">
+                                <Alert
+                                    variant="destructive"
+                                    className="w-11/12 mb-2"
+                                >
+                                    {' '}
+                                    You need a bigger period of time, more
+                                    courts or places in order to fit all
+                                    matches...{' '}
+                                </Alert>
+                                <CoolButton>Edit</CoolButton>
+                            </div>
+                        )}
+                    </EventInfoCard>
+                ) : null}
             </div>
             <Tabs defaultValue="all">
                 <div className="flex items-center justify-center w-full">
@@ -293,24 +333,6 @@ export function EventDashboard({
                     </Card>
                 </TabsContent>
             </Tabs>
-            <div className="flex justify-center mt-2">
-                {event.matches.length === 0 ? (
-                    <CoolButton
-                        onClick={async () =>
-                            handleActivate(
-                                event.id,
-                                event.startDate,
-                                event.finishDate,
-                                event.timeOfFirstMatch,
-                                event.timeOfLastMatch,
-                                event.matchDurationInMinutes
-                            )
-                        }
-                    >
-                        Generate matches 🎾
-                    </CoolButton>
-                ) : null}
-            </div>
 
             <h1 className="text-2xl font-bold">Matches</h1>
 
