@@ -5,7 +5,7 @@ import { PrismaService } from "src/prisma.service";
 import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
 import { CategoriesService } from "src/categories/categories.service";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
-import { Double } from "@prisma/client";
+import { Category, Double } from "@prisma/client";
 import { MatchesService } from "src/matches/matches.service";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
@@ -58,9 +58,7 @@ export class EventsService {
     return event;
   }
 
-  async createSchedule(
-    createScheduleDto: CreateScheduleDto
-  ): Promise<Day[]> {
+  async createSchedule(createScheduleDto: CreateScheduleDto): Promise<Day[]> {
     let daysArray: Day[] = [];
     const oneDayInMs = 86400000;
     const oneHourInMs = 3600000;
@@ -514,20 +512,64 @@ export class EventsService {
     });
     return event;
   }
+
+  async getEventInfoForGenerateMatches(id: string) {
+    const eventInfo = await this.prismaService.event.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        eventType: true,
+        startDate: true,
+        finishDate: true,
+        timeOfFirstMatch: true,
+        timeOfLastMatch: true,
+        isActive: true,
+        matchDurationInMinutes: true,
+        categories: {
+          select: {
+            id: true,
+            level: true,
+            type: true,
+            eventDoubles: true,
+          },
+        },
+      },
+    });
+
+    const categories = eventInfo.categories;
+
+    const startDate = new Date(eventInfo.startDate);
+    const finishDate = new Date(eventInfo.finishDate);
+
+    const days = finishDate.getDate() - startDate.getDate();
+
+    // console.log(days);
+
+    const matchIntervalInHours = eventInfo.matchDurationInMinutes / 60;
+    const playtimePerDayInHours =
+      eventInfo.timeOfLastMatch - eventInfo.timeOfFirstMatch;
+    const availableMatchDates = Math.round(
+      (playtimePerDayInHours * days) / matchIntervalInHours
+    );
+    // console.log(availableMatchDates);
+
+    const categoriesWithTotalMatches = categories.map((cat) => ({
+      ...cat,
+      totalMatches: Math.floor(
+        (cat.eventDoubles.length * cat.eventDoubles.length - 1) / 2
+      ),
+    }));
+
+    const eventWithTotalMatches = {
+      ...eventInfo,
+      categories: categoriesWithTotalMatches,
+      totalMatches: categoriesWithTotalMatches
+        .flatMap((c) => c.totalMatches)
+        .reduce((acc, curr) => acc + curr, 0),
+      availableMatchDates: availableMatchDates,
+    };
+
+    return eventWithTotalMatches;
+  }
 }
-
-type Match = {
-  doublesOne: {
-    doubleId: string;
-    double: Double;
-  };
-  doublesTwo: {
-    doubleId: string;
-    double: Double;
-  };
-};
-
-type MatchSchedule = {
-  startTime: string;
-  endTime: string;
-};

@@ -19,6 +19,7 @@ Table Event {
   games Game [not null]
   sets Set [not null]
   matchDates MatchDate [not null]
+  eventType EventType [not null, default: 'ALLxALL']
 }
 
 Table EventDouble {
@@ -218,6 +219,11 @@ Enum MatchType {
   BO3
   BO5
   SUPERSET
+}
+
+Enum EventType {
+  ALLxALL
+  GROUPS
 }
 
 Ref: EventDouble.eventId > Event.id

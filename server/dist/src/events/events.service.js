@@ -453,6 +453,50 @@ let EventsService = class EventsService {
         });
         return event;
     }
+    async getEventInfoForGenerateMatches(id) {
+        const eventInfo = await this.prismaService.event.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                eventType: true,
+                startDate: true,
+                finishDate: true,
+                timeOfFirstMatch: true,
+                timeOfLastMatch: true,
+                isActive: true,
+                matchDurationInMinutes: true,
+                categories: {
+                    select: {
+                        id: true,
+                        level: true,
+                        type: true,
+                        eventDoubles: true,
+                    },
+                },
+            },
+        });
+        const categories = eventInfo.categories;
+        const startDate = new Date(eventInfo.startDate);
+        const finishDate = new Date(eventInfo.finishDate);
+        const days = finishDate.getDate() - startDate.getDate();
+        const matchIntervalInHours = eventInfo.matchDurationInMinutes / 60;
+        const playtimePerDayInHours = eventInfo.timeOfLastMatch - eventInfo.timeOfFirstMatch;
+        const availableMatchDates = Math.round((playtimePerDayInHours * days) / matchIntervalInHours);
+        const categoriesWithTotalMatches = categories.map((cat) => ({
+            ...cat,
+            totalMatches: Math.floor((cat.eventDoubles.length * cat.eventDoubles.length - 1) / 2),
+        }));
+        const eventWithTotalMatches = {
+            ...eventInfo,
+            categories: categoriesWithTotalMatches,
+            totalMatches: categoriesWithTotalMatches
+                .flatMap((c) => c.totalMatches)
+                .reduce((acc, curr) => acc + curr, 0),
+            availableMatchDates: availableMatchDates,
+        };
+        return eventWithTotalMatches;
+    }
 };
 exports.EventsService = EventsService;
 exports.EventsService = EventsService = __decorate([

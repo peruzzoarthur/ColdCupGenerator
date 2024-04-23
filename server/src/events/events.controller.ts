@@ -59,6 +59,11 @@ export class EventsController {
     return this.eventsService.getEventByIdParam(id);
   }
 
+  @Get("/event-info/:id")
+  getEventInfo(@Param("id") id: string) {
+    return this.eventsService.getEventInfoForGenerateMatches(id);
+  }
+
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateEventDto: UpdateEventDto) {
     return this.eventsService.update(+id, updateEventDto);

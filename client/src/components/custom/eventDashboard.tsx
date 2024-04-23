@@ -44,6 +44,7 @@ import {
 import { useGetEventMatchesById } from '@/hooks/useGetEventMatchesByDate'
 import { MatchDatesTable } from './matchDatesTable/matchDatesTable'
 import { getUniqueValuesForDays } from '@/util/getUniqueValuesForDays'
+import { CoolButton } from '../ui/moving-border'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -292,10 +293,9 @@ export function EventDashboard({
                     </Card>
                 </TabsContent>
             </Tabs>
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-2">
                 {event.matches.length === 0 ? (
-                    <Button
-                        className="w-48 mb-2 mr-2 "
+                    <CoolButton
                         onClick={async () =>
                             handleActivate(
                                 event.id,
@@ -308,7 +308,7 @@ export function EventDashboard({
                         }
                     >
                         Generate matches 🎾
-                    </Button>
+                    </CoolButton>
                 ) : null}
             </div>
 

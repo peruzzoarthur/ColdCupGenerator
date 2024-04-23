@@ -33,6 +33,7 @@ model Event {
   games                  Game[]
   sets                   Set[]
   matchDates             MatchDate[]
+  eventType              EventType     @default(ALLxALL)
   // courts       Court[]
 }
 
@@ -186,4 +187,9 @@ enum MatchType {
   BO3
   BO5
   SUPERSET
+}
+
+enum EventType {
+  ALLxALL
+  GROUPS
 }
