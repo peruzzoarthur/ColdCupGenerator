@@ -27,7 +27,6 @@ export declare class SetsService {
         };
         result: string;
         id: string;
-        isFinished: boolean;
         doubles: {
             id: string;
             categoryId: string;
@@ -44,15 +43,16 @@ export declare class SetsService {
             setId: string;
             winnerId: string;
         }[];
+        isFinished: boolean;
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
-        isFinished: boolean;
         type: import(".prisma/client").$Enums.SetType;
+        id: string;
         doubles: {
             id: string;
             categoryId: string;
         }[];
+        isFinished: boolean;
     }>;
     update(id: number, updateSetDto: UpdateSetDto): string;
     setFinished(id: string, setFinishedDto: SetFinishedDto): Promise<{

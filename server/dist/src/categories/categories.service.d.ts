@@ -25,8 +25,8 @@ export declare class CategoriesService {
         type: import(".prisma/client").$Enums.CatType;
     }>;
     getCategoryById(getCategoryByIdDto: GetCategoryByIdDto): Promise<{
-        id: string;
-        type: import(".prisma/client").$Enums.CatType;
         level: number;
+        type: import(".prisma/client").$Enums.CatType;
+        id: string;
     }>;
 }

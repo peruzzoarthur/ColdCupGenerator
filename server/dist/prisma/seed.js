@@ -14,6 +14,7 @@ async function rawSql() {
             .replace(/\s+/g, " ");
         const sqlStatements = splitStringByNotQuotedSemicolon(sqlReducedToStatements);
         for (const sql of sqlStatements) {
+            console.log(sql);
             await prisma.$executeRawUnsafe(sql);
         }
     }
@@ -41,7 +42,6 @@ function splitStringByNotQuotedSemicolon(input) {
     return result;
 }
 rawSql()
-    .then(rawSql)
     .then(async () => {
     await prisma.$disconnect();
 })

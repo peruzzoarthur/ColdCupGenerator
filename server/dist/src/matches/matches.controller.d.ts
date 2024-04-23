@@ -11,10 +11,13 @@ export declare class MatchesController {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
-        id: string;
-        isFinished: boolean;
         categoryId: string;
         type: import(".prisma/client").$Enums.MatchType;
+        id: string;
+        doubles: {
+            id: string;
+            categoryId: string;
+        }[];
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -22,10 +25,7 @@ export declare class MatchesController {
             result: string;
             isFinished: boolean;
         }[];
-        doubles: {
-            id: string;
-            categoryId: string;
-        }[];
+        isFinished: boolean;
     }>;
     findAll(): Promise<{
         category: {
@@ -40,14 +40,8 @@ export declare class MatchesController {
             start: Date;
             finish: Date;
         };
-        id: string;
-        eventId: string;
-        isFinished: boolean;
         type: import(".prisma/client").$Enums.MatchType;
-        winner: {
-            id: string;
-            categoryId: string;
-        };
+        id: string;
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -55,19 +49,25 @@ export declare class MatchesController {
             result: string;
             isFinished: boolean;
         }[];
+        eventId: string;
+        winner: {
+            id: string;
+            categoryId: string;
+        };
+        isFinished: boolean;
     }[]>;
     findResult(id: string): Promise<{
         doublesOneGames: number;
         doublesTwoGames: number;
     }>;
     findOne(id: string): Promise<{
-        id: string;
-        isFinished: boolean;
         type: import(".prisma/client").$Enums.MatchType;
+        id: string;
         doubles: {
             id: string;
             categoryId: string;
         }[];
+        isFinished: boolean;
     }>;
     update(id: string, updateMatchDto: UpdateMatchDto): Promise<string>;
     matchFinished(id: string, matchFinishedDto: MatchFinishedDto): Promise<{

@@ -25,7 +25,6 @@ export declare class SetsController {
         };
         result: string;
         id: string;
-        isFinished: boolean;
         doubles: {
             id: string;
             categoryId: string;
@@ -42,15 +41,16 @@ export declare class SetsController {
             setId: string;
             winnerId: string;
         }[];
+        isFinished: boolean;
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
-        isFinished: boolean;
         type: import(".prisma/client").$Enums.SetType;
+        id: string;
         doubles: {
             id: string;
             categoryId: string;
         }[];
+        isFinished: boolean;
     }>;
     update(id: string, updateSetDto: UpdateSetDto): string;
     matchFinished(id: string, setFinishedDto: SetFinishedDto): Promise<{
