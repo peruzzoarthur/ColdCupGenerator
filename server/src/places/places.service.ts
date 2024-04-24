@@ -57,8 +57,18 @@ export class PlacesService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} place`;
+  findOne(id: string) {
+    return this.prismaService.place.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        courts: true,
+        name: true,
+        address: true,
+      },
+    });
   }
 
   update(id: number, updatePlaceDto: UpdatePlaceDto) {

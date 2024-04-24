@@ -26,8 +26,8 @@ export class PlacesController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.placesService.findOne(+id);
+  findOne(@Param("id") id: string | undefined) {
+    return this.placesService.findOne(id);
   }
 
   @Patch(":id")

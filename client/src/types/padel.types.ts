@@ -35,6 +35,7 @@ export type Place = {
     id: string
     name: string
     address: string
+    courts: Court[]
 }
 
 export type Court = {

@@ -21,6 +21,7 @@ export const useGetEventById = (eventId: string | undefined) => {
             }
             return
         },
+        enabled: !!eventId,
     })
 
     const finishedMatches = eventById?.matches.filter(

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { format } from 'date-fns'
 import { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils'
 import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '../ui/calendar'
 import { timesForMatches } from '../../util/times'
+import { useGetPlaceCourts } from '@/hooks/useGetPlaceCourts'
 
 type EventFormProps = {
     onSubmit: SubmitHandler<formObject>
@@ -40,6 +41,8 @@ type EventFormProps = {
     allPlaces: Place[] | undefined
     placesState: string[]
     setPlacesState: React.Dispatch<React.SetStateAction<string[]>>
+    courtsState: string[]
+    setCourtsState: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 type formObject = {
@@ -73,6 +76,8 @@ const EventForm: React.FC<EventFormProps> = ({
     allPlaces,
     placesState,
     setPlacesState,
+    courtsState,
+    setCourtsState,
 }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -81,6 +86,14 @@ const EventForm: React.FC<EventFormProps> = ({
 
     const { handleSubmit } = form
 
+    // ! getPlaceCourts
+
+    const [selectedPlaceId, setSelectedPlaceId] = useState<string | undefined>(
+        undefined
+    )
+    const { placeCourts } = useGetPlaceCourts(selectedPlaceId)
+
+    // !
     const addCategory = (id: string) => {
         const stringArray: string[] = categoriesState.concat(id)
         setCategoriesState(stringArray)
@@ -103,6 +116,17 @@ const EventForm: React.FC<EventFormProps> = ({
             (id) => id !== deleteId
         )
         setPlacesState(stringArray)
+    }
+    const addCourt = (id: string) => {
+        const stringArray: string[] = courtsState.concat(id)
+        setCourtsState(stringArray)
+    }
+
+    const removeCourt = (deleteId: string) => {
+        const stringArray: string[] = courtsState.filter(
+            (id) => id !== deleteId
+        )
+        setCourtsState(stringArray)
     }
 
     return (
@@ -210,6 +234,31 @@ const EventForm: React.FC<EventFormProps> = ({
                                     ))}
                                 </SelectGroup>
                             </SelectContent>
+                            <div className="flex flex-col justify-center">
+                                <Button
+                                    onClick={() =>
+                                        setSelectedPlaceId(field.value)
+                                    }
+                                >
+                                    Courts
+                                </Button>
+                                {placeCourts ? (
+                                    <>
+                                        {placeCourts.map((c) => (
+                                            <p onClick={() => addCourt(c.id)}>
+                                                {c.name}
+                                            </p>
+                                        ))}
+                                        {courtsState ? (
+                                            <>
+                                                {courtsState.map((c) => (
+                                                    <Badge>{c}</Badge>
+                                                ))}{' '}
+                                            </>
+                                        ) : null}
+                                    </>
+                                ) : null}
+                            </div>
                             <div className="flex justify-center">
                                 <Button
                                     className="flex justify-center w-1/3 "

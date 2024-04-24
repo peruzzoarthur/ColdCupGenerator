@@ -47,6 +47,7 @@ function Events() {
     const [toggleEvent, setToggleEvent] = useState<boolean>(false)
     const [categoriesState, setCategoriesState] = useState<string[]>([])
     const [placesState, setPlacesState] = useState<string[]>([])
+    const [courtsState, setCourtsState] = useState<string[]>([])
     const { allCategories } = useGetCategories()
     const { allPlaces } = useGetPlaces()
     const { allEvents, refetchEvents } = useGetEvents()
@@ -186,6 +187,8 @@ function Events() {
                                     setCategoriesState={setCategoriesState}
                                     placesState={placesState}
                                     setPlacesState={setPlacesState}
+                                    courtsState={courtsState}
+                                    setCourtsState={setCourtsState}
                                     defaultValues={{
                                         eventName: '',
                                         categoriesIds: '',

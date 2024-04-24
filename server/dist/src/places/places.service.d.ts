@@ -14,15 +14,25 @@ export declare class PlacesService {
     findAllPlaces(): Promise<{
         id: string;
         name: string;
+        address: string;
         courts: {
             id: string;
             name: string;
             isAvailable: boolean;
             placeId: string;
         }[];
-        address: string;
     }[]>;
-    findOne(id: number): string;
+    findOne(id: string): import(".prisma/client").Prisma.Prisma__PlaceClient<{
+        id: string;
+        name: string;
+        address: string;
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        }[];
+    }, null, import("@prisma/client/runtime/library").DefaultArgs>;
     update(id: number, updatePlaceDto: UpdatePlaceDto): string;
     remove(id: number): string;
 }

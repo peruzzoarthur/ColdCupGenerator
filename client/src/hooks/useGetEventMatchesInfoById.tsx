@@ -21,6 +21,7 @@ export const useGetEventMatchesInfoById = (eventId: string | undefined) => {
             }
             return
         },
+        enabled: !!eventId,
     })
 
     return {

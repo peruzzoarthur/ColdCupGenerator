@@ -28,7 +28,7 @@ let PlacesController = class PlacesController {
         return this.placesService.findAllPlaces();
     }
     findOne(id) {
-        return this.placesService.findOne(+id);
+        return this.placesService.findOne(id);
     }
     update(id, updatePlaceDto) {
         return this.placesService.update(+id, updatePlaceDto);
