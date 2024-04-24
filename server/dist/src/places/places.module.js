@@ -11,13 +11,14 @@ const common_1 = require("@nestjs/common");
 const places_service_1 = require("./places.service");
 const places_controller_1 = require("./places.controller");
 const prisma_service_1 = require("../prisma.service");
+const courts_service_1 = require("../courts/courts.service");
 let PlacesModule = class PlacesModule {
 };
 exports.PlacesModule = PlacesModule;
 exports.PlacesModule = PlacesModule = __decorate([
     (0, common_1.Module)({
         controllers: [places_controller_1.PlacesController],
-        providers: [places_service_1.PlacesService, prisma_service_1.PrismaService],
+        providers: [places_service_1.PlacesService, prisma_service_1.PrismaService, courts_service_1.CourtsService],
     })
 ], PlacesModule);
 //# sourceMappingURL=places.module.js.map

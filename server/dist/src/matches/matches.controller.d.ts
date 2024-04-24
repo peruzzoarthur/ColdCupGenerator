@@ -79,6 +79,7 @@ export declare class MatchesController {
         eventId: string;
         type: import(".prisma/client").$Enums.MatchType;
         matchDateId: string;
+        courtId: string;
     }>;
     remove(id: string): string;
 }

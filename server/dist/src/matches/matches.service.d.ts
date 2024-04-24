@@ -81,6 +81,7 @@ export declare class MatchesService {
         eventId: string;
         type: import(".prisma/client").$Enums.MatchType;
         matchDateId: string;
+        courtId: string;
     }>;
     remove(id: number): string;
 }

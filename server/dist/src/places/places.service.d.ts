@@ -1,9 +1,11 @@
 import { CreatePlaceDto } from "./dto/create-place.dto";
 import { UpdatePlaceDto } from "./dto/update-place.dto";
 import { PrismaService } from "src/prisma.service";
+import { CourtsService } from "src/courts/courts.service";
 export declare class PlacesService {
     private readonly prismaService;
-    constructor(prismaService: PrismaService);
+    private readonly courtsService;
+    constructor(prismaService: PrismaService, courtsService: CourtsService);
     createPlace(createPlaceDto: CreatePlaceDto): Promise<{
         id: string;
         name: string;
@@ -12,6 +14,12 @@ export declare class PlacesService {
     findAllPlaces(): Promise<{
         id: string;
         name: string;
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        }[];
         address: string;
     }[]>;
     findOne(id: number): string;

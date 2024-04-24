@@ -125,6 +125,7 @@ export declare class EventsController {
                 eventId: string;
                 type: import(".prisma/client").$Enums.MatchType;
                 matchDateId: string;
+                courtId: string;
             };
             id: string;
             eventId: string;
@@ -215,6 +216,7 @@ export declare class EventsController {
                     eventId: string;
                     type: import(".prisma/client").$Enums.MatchType;
                     matchDateId: string;
+                    courtId: string;
                 }[];
             };
         }[];
@@ -314,6 +316,7 @@ export declare class EventsController {
                     eventId: string;
                     type: import(".prisma/client").$Enums.MatchType;
                     matchDateId: string;
+                    courtId: string;
                 }[];
                 gamesWins: {
                     id: string;

@@ -24,4 +24,9 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: "Please insert address. " }),
     __metadata("design:type", String)
 ], CreatePlaceDto.prototype, "address", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)({ message: "Please insert address. " }),
+    __metadata("design:type", String)
+], CreatePlaceDto.prototype, "courts", void 0);
 //# sourceMappingURL=create-place.dto.js.map

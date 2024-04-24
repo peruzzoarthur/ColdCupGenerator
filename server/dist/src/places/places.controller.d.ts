@@ -12,6 +12,12 @@ export declare class PlacesController {
     findAll(): Promise<{
         id: string;
         name: string;
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        }[];
         address: string;
     }[]>;
     findOne(id: string): string;

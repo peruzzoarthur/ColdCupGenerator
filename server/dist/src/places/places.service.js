@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlacesService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
+const courts_service_1 = require("../courts/courts.service");
 let PlacesService = class PlacesService {
-    constructor(prismaService) {
+    constructor(prismaService, courtsService) {
         this.prismaService = prismaService;
+        this.courtsService = courtsService;
     }
     async createPlace(createPlaceDto) {
         const checkAddress = await this.prismaService.place.findUnique({
@@ -31,6 +33,17 @@ let PlacesService = class PlacesService {
                 address: createPlaceDto.address,
             },
         });
+        if (!place) {
+            throw new common_1.HttpException("No place found", common_1.HttpStatus.NOT_FOUND);
+        }
+        const courtsNames = createPlaceDto.courts.split(",");
+        const courts = courtsNames.forEach(async (name) => {
+            const createCourt = await this.courtsService.create({
+                name: name,
+                placeId: place.id,
+            });
+            console.log(createCourt);
+        });
         return place;
     }
     async findAllPlaces() {
@@ -39,6 +52,7 @@ let PlacesService = class PlacesService {
                 id: true,
                 name: true,
                 address: true,
+                courts: true,
             },
         });
     }
@@ -55,6 +69,7 @@ let PlacesService = class PlacesService {
 exports.PlacesService = PlacesService;
 exports.PlacesService = PlacesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        courts_service_1.CourtsService])
 ], PlacesService);
 //# sourceMappingURL=places.service.js.map

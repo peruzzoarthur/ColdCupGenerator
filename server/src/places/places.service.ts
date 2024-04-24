@@ -2,10 +2,14 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreatePlaceDto } from "./dto/create-place.dto";
 import { UpdatePlaceDto } from "./dto/update-place.dto";
 import { PrismaService } from "src/prisma.service";
+import { CourtsService } from "src/courts/courts.service";
 
 @Injectable()
 export class PlacesService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly courtsService: CourtsService
+  ) {}
   async createPlace(createPlaceDto: CreatePlaceDto) {
     const checkAddress = await this.prismaService.place.findUnique({
       where: {
@@ -26,6 +30,19 @@ export class PlacesService {
         address: createPlaceDto.address,
       },
     });
+
+    if (!place) {
+      throw new HttpException("No place found", HttpStatus.NOT_FOUND);
+    }
+
+    const courtsNames = createPlaceDto.courts.split(",");
+    const courts = courtsNames.forEach(async (name) => {
+      const createCourt = await this.courtsService.create({
+        name: name,
+        placeId: place.id,
+      });
+      console.log(createCourt);
+    });
     return place;
   }
 
@@ -35,6 +52,7 @@ export class PlacesService {
         id: true,
         name: true,
         address: true,
+        courts: true,
       },
     });
   }

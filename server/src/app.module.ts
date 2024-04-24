@@ -12,6 +12,7 @@ import { SetsModule } from "./sets/sets.module";
 import { GamesModule } from "./games/games.module";
 import { PlacesModule } from './places/places.module';
 import { MatchDatesModule } from './match-dates/match-dates.module';
+import { CourtsModule } from './courts/courts.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MatchDatesModule } from './match-dates/match-dates.module';
     GamesModule,
     PlacesModule,
     MatchDatesModule,
+    CourtsModule,
   ],
   controllers: [],
   providers: [PrismaService],

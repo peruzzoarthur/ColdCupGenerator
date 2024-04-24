@@ -22,6 +22,7 @@ export declare class SetsController {
             eventId: string;
             type: import(".prisma/client").$Enums.MatchType;
             matchDateId: string;
+            courtId: string;
         };
         result: string;
         id: string;

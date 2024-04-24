@@ -20,6 +20,21 @@ Table Event {
   sets Set [not null]
   matchDates MatchDate [not null]
   eventType EventType [not null, default: 'ALLxALL']
+  courts Court [not null]
+}
+
+Table Court {
+  id String [pk]
+  name String [not null]
+  isAvailable Boolean [not null, default: true]
+  events Event [not null]
+  matches Match [not null]
+  place Place [not null]
+  placeId String [not null]
+
+  indexes {
+    (name, placeId) [unique]
+  }
 }
 
 Table EventDouble {
@@ -66,6 +81,8 @@ Table Match {
   type MatchType [not null, default: 'SUPERSET']
   matchDate MatchDate
   matchDateId String [unique]
+  court Court
+  courtId String
 }
 
 Table MatchDate {
@@ -137,6 +154,7 @@ Table Place {
   name String
   address String [unique]
   events Event [not null]
+  courts Court [not null]
 }
 
 Table CategoryToEvent {
@@ -161,6 +179,11 @@ Table EventToGame {
 
 Table EventToSet {
   setsId String [ref: > Set.id]
+  eventsId String [ref: > Event.id]
+}
+
+Table CourtToEvent {
+  courtsId String [ref: > Court.id]
   eventsId String [ref: > Event.id]
 }
 
@@ -226,6 +249,8 @@ Enum EventType {
   GROUPS
 }
 
+Ref: Court.placeId > Place.id
+
 Ref: EventDouble.eventId > Event.id
 
 Ref: EventDouble.doubleId > Double.id
@@ -237,6 +262,8 @@ Ref: Match.categoryId > Category.id
 Ref: Match.winnerDoublesId > Double.id
 
 Ref: Match.eventId > Event.id
+
+Ref: Match.courtId > Court.id
 
 Ref: MatchDate.eventId > Event.id
 

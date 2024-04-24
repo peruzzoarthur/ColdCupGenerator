@@ -34,15 +34,20 @@ model Event {
   sets                   Set[]
   matchDates             MatchDate[]
   eventType              EventType     @default(ALLxALL) // todo change this default later
-  // courts       Court[]
+  courts                 Court[]
 }
 
-// model Court {
-//   id          String  @id @default(uuid())
-//   name        String
-//   isAvailable Boolean @default(true)
-//   events      Event[]
-// }
+model Court {
+  id          String  @id @default(uuid())
+  name        String
+  isAvailable Boolean @default(true)
+  events      Event[]
+  matches     Match[]
+  place       Place   @relation(fields: [placeId], references: [id])
+  placeId     String
+
+  @@unique([name, placeId])
+}
 
 model EventDouble {
   event      Event    @relation(fields: [eventId], references: [id])
@@ -81,10 +86,11 @@ model Match {
   doubles         Double[]
   event           Event?     @relation(fields: [eventId], references: [id])
   eventId         String?
-  // date            DateTime?
   type            MatchType  @default(SUPERSET)
   matchDate       MatchDate?
   matchDateId     String?    @unique
+  court           Court?     @relation(fields: [courtId], references: [id])
+  courtId         String?
 }
 
 model MatchDate {
@@ -117,8 +123,6 @@ model Game {
   id       String   @id @default(uuid())
   set      Set      @relation(fields: [setId], references: [id])
   setId    String
-  // Double   Double? @relation(fields: [doubleId], references: [id])
-  // doubleId String?
   doubles  Double[] @relation("GamesPlayed") //todo testing
   winner   Double?  @relation("GameWinnerDouble", fields: [winnerId], references: [id])
   winnerId String?
@@ -160,6 +164,7 @@ model Place {
   name    String?
   address String? @unique
   events  Event[]
+  courts  Court[]
 }
 
 enum Role {

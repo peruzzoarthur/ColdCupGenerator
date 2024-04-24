@@ -21,6 +21,7 @@ export declare class MatchDatesService {
             eventId: string;
             type: import(".prisma/client").$Enums.MatchType;
             matchDateId: string;
+            courtId: string;
         };
         id: string;
         eventId: string;
