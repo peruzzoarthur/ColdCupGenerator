@@ -62,8 +62,6 @@ export function EventDashboard({
     toggleEventOff,
     refetchEvents,
 }: EventDashBoardProps) {
-    // const [matches, setMatches] = useState<Match[]>(event.matches)
-
     const [catFilter, setCatFilter] = useState<string>('all')
     const [dayFilter, setDayFilter] = useState('all')
     const {
@@ -88,8 +86,6 @@ export function EventDashboard({
         try {
             const activateEventDto = {
                 id: eventId,
-                // startDate: '2024-06-15T00:00:00Z',
-                // finishDate: '2024-06-15T20:00:00Z', // ! hard-coded
                 startDate: startDate,
                 finishDate: finishDate,
                 timeOfFirstMatch: timeOfFirstMatch,
@@ -234,7 +230,21 @@ export function EventDashboard({
                                     courts or places in order to fit all
                                     matches...{' '}
                                 </Alert>
-                                <CoolButton>Edit</CoolButton>
+                                <div className="flex items-center space-x-2">
+                                    <CoolButton borderClassName="h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-300)_40%,transparent_10%)]">
+                                        Edit
+                                    </CoolButton>
+                                </div>
+                                {/* {theme === 'dark' && (
+                                    <div className="flex items-center space-x-2">
+                                        <CoolButton>Edit</CoolButton>
+                                    </div>
+                                )}
+                                {theme === 'light' && (
+                                    <div className="flex items-center space-x-2">
+                                        <CoolButton>Sheriff</CoolButton>
+                                    </div>
+                                )} */}
                             </div>
                         )}
                     </EventInfoCard>

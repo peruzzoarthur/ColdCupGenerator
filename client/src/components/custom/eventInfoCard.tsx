@@ -24,6 +24,7 @@ export function EventInfoCard({
             <CardHeader>
                 <CardTitle>Event Info</CardTitle>
                 <CardDescription>
+                    <p className="mt-1 mb-2">{`Matchmaking type: ${event.eventType}`}</p>
                     <p>
                         {`Starts at: ${new Date(event.startDate).toDateString()}`}
                     </p>

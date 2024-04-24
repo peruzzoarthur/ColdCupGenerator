@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
 import React from 'react'
 import {
     motion,
@@ -13,6 +12,7 @@ import { cn } from '../../lib/utils'
 
 export function CoolButton({
     borderRadius = '1.75rem',
+    // borderColor = '--green-500',
     children,
     as: Component = 'button',
     containerClassName,
@@ -22,6 +22,7 @@ export function CoolButton({
     ...otherProps
 }: {
     borderRadius?: string
+    borderColor?: string
     children: React.ReactNode
     as?: any
     containerClassName?: string
@@ -48,7 +49,7 @@ export function CoolButton({
                 <MovingBorder duration={duration} rx="30%" ry="30%">
                     <div
                         className={cn(
-                            'h-10 w-60 opacity-[0.4] bg-[radial-gradient(var(--green-300)_40%,transparent_10%)]',
+                            `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--green-500)_40%,transparent_10%)]`,
                             borderClassName
                         )}
                     />
@@ -57,7 +58,7 @@ export function CoolButton({
 
             <div
                 className={cn(
-                    'relative border border-gray-800 backdrop-blur-xl text-white flex items-center justify-center w-full h-full text-sm antialiased',
+                    'relative border border-gray-800 backdrop-blur-xl flex items-center justify-center w-full h-full text-sm antialiased',
                     className
                 )}
                 style={{

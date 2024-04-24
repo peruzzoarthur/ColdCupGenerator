@@ -62,6 +62,7 @@ export type PadelEvent = {
     totalMatches?: number
     availableMatchDates?: number
     suitable?: boolean
+    eventType: string
 }
 
 export type Match = {
