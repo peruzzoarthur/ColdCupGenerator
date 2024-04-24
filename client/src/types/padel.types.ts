@@ -37,6 +37,11 @@ export type Place = {
     address: string
 }
 
+export type Court = {
+    name: string
+    id: string
+}
+
 export type Category = {
     id: string
     type: string

@@ -18,10 +18,12 @@ export type ErrorResponse = {
 type CreatePlace = {
     name: string
     address: string
+    courts: string
 }
 function Places() {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
+    const [courtsState, setCourtsState] = useState<string[]>([])
 
     const { toast } = useToast()
 
@@ -38,6 +40,7 @@ function Places() {
             const requestBody: CreatePlace = {
                 name: input.name,
                 address: input.address,
+                courts: courtsState.join(','),
             }
 
             const data: AxiosResponse<Place> = await axios.post(
@@ -57,11 +60,11 @@ function Places() {
                     setErrorMessage(axiosError.response.data.message)
                 } else {
                     setError(true)
-                    setErrorMessage('Error creating doubles')
+                    setErrorMessage('Error creating place.')
                 }
             } else {
                 setError(true)
-                setErrorMessage('Error creating doubles')
+                setErrorMessage('Error creating place.')
             }
         }
     }
@@ -80,7 +83,10 @@ function Places() {
                             defaultValues={{
                                 name: '',
                                 address: '',
+                                courts: '',
                             }}
+                            courtsState={courtsState}
+                            setCourtsState={setCourtsState}
                         />
                     </div>
 
