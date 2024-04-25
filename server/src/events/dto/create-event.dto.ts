@@ -20,6 +20,10 @@ export class CreateEventDto {
   @ArrayNotEmpty()
   placesIds: string[];
 
+  @IsArray()
+  @ArrayNotEmpty()
+  courtsIds: string[];
+
   @IsDateString()
   @IsNotEmpty()
   startDate: string;

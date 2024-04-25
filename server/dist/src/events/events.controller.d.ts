@@ -250,6 +250,12 @@ export declare class EventsController {
             name: string;
             address: string;
         }[];
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        }[];
     }[]>;
     findOne(id: string): Promise<{
         id: string;

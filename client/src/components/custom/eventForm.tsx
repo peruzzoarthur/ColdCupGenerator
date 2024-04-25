@@ -30,8 +30,9 @@ import { cn } from '@/lib/utils'
 import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '../ui/calendar'
 import { timesForMatches } from '../../util/times'
-import { useGetPlaceCourts } from '@/hooks/useGetPlaceCourts'
 import { CourtsByPlaceCheckbox } from './courtsByPlaceCheckBox'
+import { useGetPlaceWithCourts } from '@/hooks/useGetPlaceWithCourts'
+import { Card, CardFooter, CardHeader } from '../ui/card'
 
 type EventFormProps = {
     onSubmit: SubmitHandler<formObject>
@@ -92,7 +93,9 @@ const EventForm: React.FC<EventFormProps> = ({
     const [selectedPlaceId, setSelectedPlaceId] = useState<string | undefined>(
         undefined
     )
-    const { placeCourts } = useGetPlaceCourts(selectedPlaceId)
+    const [selectCourtsOn, setSelectCourtsOn] = useState<boolean>(false)
+
+    const { placeWithCourts } = useGetPlaceWithCourts(selectedPlaceId)
 
     // !
     const addCategory = (id: string) => {
@@ -171,7 +174,7 @@ const EventForm: React.FC<EventFormProps> = ({
                                     ))}
                                 </SelectGroup>
                             </SelectContent>
-                            <div className="flex justify-center">
+                            <div className="flex items-center justify-center">
                                 <Button
                                     className="flex w-1/3 "
                                     onClick={() => addCategory(field.value)}
@@ -220,22 +223,7 @@ const EventForm: React.FC<EventFormProps> = ({
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                         >
-                            <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a place" />
-                                </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Places</SelectLabel>
-                                    {allPlaces?.map((p, index) => (
-                                        <SelectItem value={p.id} key={index}>
-                                            {p.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                            <div className="flex flex-col justify-center">
+                            {/* <div className="flex flex-col justify-center">
                                 <Button
                                     onClick={() =>
                                         setSelectedPlaceId(field.value)
@@ -243,23 +231,85 @@ const EventForm: React.FC<EventFormProps> = ({
                                 >
                                     Courts
                                 </Button>
-
-                                {placeCourts && (
-                                    <CourtsByPlaceCheckbox
-                                        placeCourts={placeCourts}
-                                        addCourt={addCourt}
-                                        removeCourt={removeCourt}
-                                    />
-                                )}
-                            </div>
-                            <div className="flex justify-center">
-                                <Button
-                                    className="flex justify-center w-1/3 "
-                                    onClick={() => addPlace(field.value)}
-                                >
-                                    Add Place
-                                </Button>
-                                <div className="flex-col justify-center w-1/3">
+                            </div> */}
+                            {selectCourtsOn ? (
+                                <div className="flex flex-col items-center justify-center w-full">
+                                    <Card>
+                                        {placeWithCourts && (
+                                            <CardHeader>
+                                                <div className="flex flex-row">
+                                                    <CourtsByPlaceCheckbox
+                                                        placeCourts={
+                                                            placeWithCourts.courts
+                                                        }
+                                                        addCourt={addCourt}
+                                                        removeCourt={
+                                                            removeCourt
+                                                        }
+                                                        placeName={
+                                                            placeWithCourts.name
+                                                        }
+                                                    />
+                                                    <Button
+                                                        className="w-5 h-5 rounded-full"
+                                                        variant={'destructive'}
+                                                        onClick={() => {
+                                                            setSelectCourtsOn(
+                                                                false
+                                                            )
+                                                        }}
+                                                    >
+                                                        X
+                                                    </Button>
+                                                </div>
+                                            </CardHeader>
+                                        )}
+                                        <CardFooter>
+                                            <Button
+                                                onClick={() => {
+                                                    addPlace(field.value)
+                                                    setSelectCourtsOn(false)
+                                                }}
+                                            >
+                                                Add Place
+                                            </Button>
+                                        </CardFooter>
+                                    </Card>
+                                </div>
+                            ) : (
+                                <div className="flex">
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a place" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Places</SelectLabel>
+                                            {allPlaces?.map((p, index) => (
+                                                <SelectItem
+                                                    value={p.id}
+                                                    key={index}
+                                                >
+                                                    {p.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                    <Button
+                                        className="flex items-center w-1/3 "
+                                        onClick={() => {
+                                            setSelectedPlaceId(field.value)
+                                            setSelectCourtsOn(true)
+                                        }}
+                                    >
+                                        Courts
+                                    </Button>
+                                </div>
+                            )}
+                            <div className="flex justify-center w-full">
+                                <div className="flex flex-col items-center justify-center w-1/3 ">
+                                    {/* <p>Places registered</p> */}
                                     {[...new Set(placesState)].map(
                                         (placeId) => {
                                             const place = allPlaces?.find(

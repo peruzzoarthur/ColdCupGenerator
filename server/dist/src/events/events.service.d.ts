@@ -129,6 +129,12 @@ export declare class EventsService {
             name: string;
             address: string;
         }[];
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        }[];
     }[]>;
     registerDoublesInEvent(registerDoublesInEventDto: RegisterDoublesInEventDto): Promise<{
         event: {

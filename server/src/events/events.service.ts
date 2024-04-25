@@ -29,6 +29,9 @@ export class EventsService {
     const categoriesToConnect = createEventDto.categoriesIds.map((id) => ({
       id,
     }));
+    const courtsToConnect = createEventDto.courtsIds.map((id) => ({
+      id,
+    }));
 
     const event = await this.prismaService.event.create({
       data: {
@@ -38,6 +41,9 @@ export class EventsService {
         },
         places: {
           connect: placesToConnect,
+        },
+        courts: {
+          connect: courtsToConnect,
         },
         startDate: createEventDto.startDate,
         finishDate: createEventDto.finishDate,
@@ -117,6 +123,7 @@ export class EventsService {
         id: true,
         name: true,
         places: true,
+        courts: true,
         startDate: true,
         finishDate: true,
         timeOfFirstMatch: true,

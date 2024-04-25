@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
     Form,
@@ -26,11 +25,13 @@ type CourtsByPlaceCheckboxProps = {
     placeCourts: Court[]
     addCourt: (id: string) => void
     removeCourt: (id: string) => void
+    placeName: string
 }
 export function CourtsByPlaceCheckbox({
     placeCourts,
     addCourt,
     removeCourt,
+    placeName,
 }: CourtsByPlaceCheckboxProps) {
     const courts = placeCourts.map((c) => ({ id: c.id, label: c.name }))
 
@@ -64,7 +65,7 @@ export function CourtsByPlaceCheckbox({
                         <FormItem>
                             <div className="mb-4">
                                 <FormLabel className="text-base">
-                                    Courts
+                                    {placeName}
                                 </FormLabel>
                                 <FormDescription>
                                     Select the courts you want to use for the
@@ -131,7 +132,7 @@ export function CourtsByPlaceCheckbox({
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                {/* <Button type="submit">Submit</Button> */}
             </form>
         </Form>
     )

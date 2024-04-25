@@ -2,11 +2,11 @@ import { Place } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-export const useGetPlaceCourts = (placeId: string | undefined | null) => {
+export const useGetPlaceWithCourts = (placeId: string | undefined | null) => {
     const {
-        data: placeCourts,
-        isFetching: isFetchingPlaceCourts,
-        refetch: refetchPlaceCourts,
+        data: placeWithCourts,
+        isFetching: isFetchingPlaceWithCourts,
+        refetch: refetchPlaceWithCourts,
     } = useQuery({
         queryKey: ['get-courts-byPlaceId', placeId],
         queryFn: async () => {
@@ -20,7 +20,7 @@ export const useGetPlaceCourts = (placeId: string | undefined | null) => {
                 `${import.meta.env.VITE_SERVER_URL}/places/${placeId}`
             )
             if (data) {
-                return data.courts
+                return data
             }
             return
         },
@@ -28,8 +28,8 @@ export const useGetPlaceCourts = (placeId: string | undefined | null) => {
     })
 
     return {
-        placeCourts,
-        isFetchingPlaceCourts,
-        refetchPlaceCourts,
+        placeWithCourts,
+        isFetchingPlaceWithCourts,
+        refetchPlaceWithCourts,
     }
 }

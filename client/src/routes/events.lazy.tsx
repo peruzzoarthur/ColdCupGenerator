@@ -179,29 +179,27 @@ function Events() {
                                     className="w-8 h-8"
                                 />
                             </h1>
-                            <div className="flex flex-col justify-center">
-                                <EventForm
-                                    allPlaces={allPlaces}
-                                    allCategories={allCategories}
-                                    onSubmit={createEventOnSubmit}
-                                    categoriesState={categoriesState}
-                                    setCategoriesState={setCategoriesState}
-                                    placesState={placesState}
-                                    setPlacesState={setPlacesState}
-                                    courtsState={courtsState}
-                                    setCourtsState={setCourtsState}
-                                    defaultValues={{
-                                        eventName: '',
-                                        categoriesIds: '',
-                                        placesIds: '',
-                                        startDate: '' as unknown as Date,
-                                        finishDate: '' as unknown as Date,
-                                        matchDurationInMinutes: '',
-                                        timeOfFirstMatch: '',
-                                        timeOfLastMatch: '',
-                                    }}
-                                />
-                            </div>
+                            <EventForm
+                                allPlaces={allPlaces}
+                                allCategories={allCategories}
+                                onSubmit={createEventOnSubmit}
+                                categoriesState={categoriesState}
+                                setCategoriesState={setCategoriesState}
+                                placesState={placesState}
+                                setPlacesState={setPlacesState}
+                                courtsState={courtsState}
+                                setCourtsState={setCourtsState}
+                                defaultValues={{
+                                    eventName: '',
+                                    categoriesIds: '',
+                                    placesIds: '',
+                                    startDate: '' as unknown as Date,
+                                    finishDate: '' as unknown as Date,
+                                    matchDurationInMinutes: '',
+                                    timeOfFirstMatch: '',
+                                    timeOfLastMatch: '',
+                                }}
+                            />
 
                             {isError && (
                                 <div
