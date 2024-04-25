@@ -31,6 +31,7 @@ import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '../ui/calendar'
 import { timesForMatches } from '../../util/times'
 import { useGetPlaceCourts } from '@/hooks/useGetPlaceCourts'
+import { CourtsByPlaceCheckbox } from './courtsByPlaceCheckBox'
 
 type EventFormProps = {
     onSubmit: SubmitHandler<formObject>
@@ -242,22 +243,14 @@ const EventForm: React.FC<EventFormProps> = ({
                                 >
                                     Courts
                                 </Button>
-                                {placeCourts ? (
-                                    <>
-                                        {placeCourts.map((c) => (
-                                            <p onClick={() => addCourt(c.id)}>
-                                                {c.name}
-                                            </p>
-                                        ))}
-                                        {courtsState ? (
-                                            <>
-                                                {courtsState.map((c) => (
-                                                    <Badge>{c}</Badge>
-                                                ))}{' '}
-                                            </>
-                                        ) : null}
-                                    </>
-                                ) : null}
+
+                                {placeCourts && (
+                                    <CourtsByPlaceCheckbox
+                                        placeCourts={placeCourts}
+                                        addCourt={addCourt}
+                                        removeCourt={removeCourt}
+                                    />
+                                )}
                             </div>
                             <div className="flex justify-center">
                                 <Button

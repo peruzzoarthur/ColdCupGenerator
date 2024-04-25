@@ -96,6 +96,7 @@ function Events() {
                 name: input.eventName,
                 categoriesIds: categoriesState,
                 placesIds: placesState,
+                courtsIds: courtsState,
                 startDate: input.startDate,
                 finishDate: input.finishDate,
                 timeOfFirstMatch: input.timeOfFirstMatch,
