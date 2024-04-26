@@ -216,6 +216,7 @@ let EventsService = class EventsService {
                                 category: true,
                             },
                         },
+                        atRest: true,
                     },
                 },
                 matches: {
@@ -247,6 +248,7 @@ let EventsService = class EventsService {
                                     },
                                 },
                                 doubleId: true,
+                                atRest: true,
                             },
                         },
                     },
@@ -324,12 +326,18 @@ let EventsService = class EventsService {
             return {
                 doublesId: ed.doubleId,
                 catId: ed.double.categoryId,
+                doublesRestState: ed.atRest,
             };
         }));
         const categoriesIds = event.categories.flatMap((cat) => cat.id);
         const matchDatesAvailable = (await this.getEventById({ id: event.id })).matchDates
             .filter((matchDate) => matchDate.match === null)
-            .map((md) => md.id);
+            .map((md) => {
+            return {
+                id: md.id,
+                finish: md.finish,
+            };
+        });
         let count = 0;
         for (let k = 0; k < categoriesIds.length; k++) {
             const filteredDoublesIds = doublesIds.filter((d) => d.catId === categoriesIds[k]);
@@ -344,7 +352,26 @@ let EventsService = class EventsService {
                         ],
                         categoryId: categoriesIds[k],
                         eventId: event.id,
-                        matchDateId: matchDatesAvailable[count],
+                        matchDateId: matchDatesAvailable[count].id,
+                    });
+                    await this.prismaService.eventDouble.updateMany({
+                        where: {
+                            OR: [
+                                {
+                                    eventId: activateEventDto.id,
+                                    doubleId: filteredDoublesIds[i].doublesId,
+                                    categoryId: categoriesIds[k],
+                                },
+                                {
+                                    eventId: activateEventDto.id,
+                                    doubleId: filteredDoublesIds[j].doublesId,
+                                    categoryId: categoriesIds[k],
+                                },
+                            ],
+                        },
+                        data: {
+                            atRest: new Date(matchDatesAvailable[count].finish.valueOf() + 3600000 * 2),
+                        },
                     });
                     count++;
                 }
@@ -446,6 +473,7 @@ let EventsService = class EventsService {
                             },
                         },
                         category: true,
+                        atRest: true,
                     },
                 },
                 isActive: true,

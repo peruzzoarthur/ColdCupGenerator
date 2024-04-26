@@ -51,12 +51,13 @@ model Court {
 }
 
 model EventDouble {
-  event      Event    @relation(fields: [eventId], references: [id])
+  event      Event     @relation(fields: [eventId], references: [id])
   eventId    String
-  double     Double   @relation(fields: [doubleId], references: [id])
+  double     Double    @relation(fields: [doubleId], references: [id])
   doubleId   String
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category  @relation(fields: [categoryId], references: [id])
   categoryId String
+  atRest     DateTime?
 
   @@id([eventId, doubleId, categoryId])
 }

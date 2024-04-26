@@ -182,6 +182,7 @@ export declare class EventsService {
                     categoryId: string;
                 };
                 doubleId: string;
+                atRest: Date;
             }[];
             level: number;
             type: import(".prisma/client").$Enums.CatType;
@@ -238,6 +239,7 @@ export declare class EventsService {
                     type: import(".prisma/client").$Enums.CatType;
                 };
             };
+            atRest: Date;
         }[];
         matchDates: {
             id: string;
@@ -374,6 +376,7 @@ export declare class EventsService {
                     winnerId: string;
                 }[];
             };
+            atRest: Date;
         }[];
         matchDates: {
             id: string;
@@ -398,6 +401,7 @@ export declare class EventsService {
                 eventId: string;
                 doubleId: string;
                 categoryId: string;
+                atRest: Date;
             }[];
             level: number;
             type: import(".prisma/client").$Enums.CatType;

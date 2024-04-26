@@ -32,9 +32,9 @@ export declare class MatchDatesController {
         };
         id: string;
         eventId: string;
-        matchId: string;
         start: Date;
         finish: Date;
+        matchId: string;
     }[]>;
     findOne(id: string): Promise<{
         court: {
@@ -56,9 +56,9 @@ export declare class MatchDatesController {
                 }[];
             }[];
         };
-        matchId: string;
         start: Date;
         finish: Date;
+        matchId: string;
     }[]>;
     update(id: string, updateMatchDateDto: UpdateMatchDateDto): string;
     remove(id: string): string;

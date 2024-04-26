@@ -45,6 +45,7 @@ Table EventDouble {
   doubleId String [not null]
   category Category [not null]
   categoryId String [not null]
+  atRest DateTime
 
   indexes {
     (eventId, doubleId, categoryId) [pk]

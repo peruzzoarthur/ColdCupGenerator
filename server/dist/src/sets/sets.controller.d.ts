@@ -45,8 +45,8 @@ export declare class SetsController {
         isFinished: boolean;
     }[]>;
     findOne(id: string): Promise<{
-        type: import(".prisma/client").$Enums.SetType;
         id: string;
+        type: import(".prisma/client").$Enums.SetType;
         doubles: {
             id: string;
             categoryId: string;

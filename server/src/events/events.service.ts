@@ -240,6 +240,7 @@ export class EventsService {
                 category: true,
               },
             },
+            atRest: true,
             // doubleId: true,
           },
         },
@@ -272,6 +273,7 @@ export class EventsService {
                   },
                 },
                 doubleId: true,
+                atRest: true,
               },
             },
           },
@@ -366,6 +368,7 @@ export class EventsService {
         return {
           doublesId: ed.doubleId,
           catId: ed.double.categoryId,
+          doublesRestState: ed.atRest, //!
         };
       })
     );
@@ -375,7 +378,12 @@ export class EventsService {
       await this.getEventById({ id: event.id })
     ).matchDates
       .filter((matchDate) => matchDate.match === null)
-      .map((md) => md.id);
+      .map((md) => {
+        return {
+          id: md.id,
+          finish: md.finish,
+        };
+      });
 
     let count: number = 0;
     for (let k = 0; k < categoriesIds.length; k++) {
@@ -395,8 +403,61 @@ export class EventsService {
             categoryId: categoriesIds[k],
 
             eventId: event.id,
-            matchDateId: matchDatesAvailable[count],
+            matchDateId: matchDatesAvailable[count].id,
           });
+
+          // await this.prismaService.eventDouble.update({
+          //   where: {
+          //     eventId_doubleId_categoryId: {
+          //       eventId: activateEventDto.id,
+          //       doubleId: filteredDoublesIds[i].doublesId,
+          //       categoryId: categoriesIds[k],
+          //     },
+          //   },
+          //   data: {
+          //     atRest: new Date(
+          //       matchDatesAvailable[count].finish.valueOf() + 3600000 * 2
+          //     ),
+          //   },
+          // });
+
+          // await this.prismaService.eventDouble.update({
+          //   where: {
+          //     eventId_doubleId_categoryId: {
+          //       eventId: activateEventDto.id,
+          //       doubleId: filteredDoublesIds[j].doublesId,
+          //       categoryId: categoriesIds[k],
+          //     },
+          //   },
+          //   data: {
+          //     atRest: new Date(
+          //       matchDatesAvailable[count].finish.valueOf() + 3600000 * 2
+          //     ),
+          //   },
+          // });
+
+          await this.prismaService.eventDouble.updateMany({
+            where: {
+              OR: [
+                {
+                  eventId: activateEventDto.id,
+                  doubleId: filteredDoublesIds[i].doublesId,
+                  categoryId: categoriesIds[k],
+                },
+                {
+                  eventId: activateEventDto.id,
+                  doubleId: filteredDoublesIds[j].doublesId,
+                  categoryId: categoriesIds[k],
+                },
+              ],
+            },
+            data: {
+              atRest: new Date(
+                matchDatesAvailable[count].finish.valueOf() + 3600000 * 2
+              ),
+            },
+          });
+
           count++;
         }
       }
@@ -503,6 +564,7 @@ export class EventsService {
               },
             },
             category: true,
+            atRest: true,
           },
         },
         isActive: true,
