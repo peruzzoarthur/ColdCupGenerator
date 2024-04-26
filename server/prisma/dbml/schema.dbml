@@ -31,6 +31,7 @@ Table Court {
   matches Match [not null]
   place Place [not null]
   placeId String [not null]
+  matchDates MatchDate [not null]
 
   indexes {
     (name, placeId) [unique]
@@ -93,9 +94,11 @@ Table MatchDate {
   matchId String [unique]
   start DateTime [not null]
   finish DateTime [not null]
+  court Court [not null]
+  courtId String [not null]
 
   indexes {
-    (eventId, start, finish) [unique]
+    (eventId, start, finish, courtId) [unique]
   }
 }
 
@@ -268,6 +271,8 @@ Ref: Match.courtId > Court.id
 Ref: MatchDate.eventId > Event.id
 
 Ref: MatchDate.matchId - Match.id
+
+Ref: MatchDate.courtId > Court.id
 
 Ref: Set.setWinnerId > Double.id
 

@@ -5,7 +5,6 @@ import { PrismaService } from "src/prisma.service";
 import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
 import { CategoriesService } from "src/categories/categories.service";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
-import { Category, Double } from "@prisma/client";
 import { MatchesService } from "src/matches/matches.service";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
@@ -322,27 +321,30 @@ export class EventsService {
       });
     }
 
-    for (let i = 0; i < daysArray.length; i++) {
-      console.log(new Date(daysArray[i].date).valueOf());
-      const initialTime =
-        new Date(daysArray[i].date).valueOf() +
-        daysArray[i].timeOfFirstMatch * oneHourInMs;
-      const hoursPlaying =
-        daysArray[i].timeOfLastMatch - daysArray[i].timeOfFirstMatch;
-      const matchDuration = daysArray[i].matchDuration * oneMinInMs;
-      for (
-        let j = initialTime;
-        j <= initialTime + oneHourInMs * hoursPlaying;
-        j += matchDuration
-      ) {
-        console.log(new Date(j)); // todo instead of console.log call for this.prismaServe.matchDates.create
-        await this.prismaService.matchDate.create({
-          data: {
-            start: new Date(j),
-            finish: new Date(j + matchDuration),
-            eventId: createScheduleDto.id,
-          },
-        });
+    for (let c = 0; c < createScheduleDto.courtIds.length; c++) {
+      for (let i = 0; i < daysArray.length; i++) {
+        console.log(new Date(daysArray[i].date).valueOf());
+        const initialTime =
+          new Date(daysArray[i].date).valueOf() +
+          daysArray[i].timeOfFirstMatch * oneHourInMs;
+        const hoursPlaying =
+          daysArray[i].timeOfLastMatch - daysArray[i].timeOfFirstMatch;
+        const matchDuration = daysArray[i].matchDuration * oneMinInMs;
+        for (
+          let j = initialTime;
+          j <= initialTime + oneHourInMs * hoursPlaying;
+          j += matchDuration
+        ) {
+          console.log(new Date(j));
+          await this.prismaService.matchDate.create({
+            data: {
+              start: new Date(j),
+              finish: new Date(j + matchDuration),
+              eventId: createScheduleDto.id,
+              courtId: createScheduleDto.courtIds[c],
+            },
+          });
+        }
       }
     }
     return daysArray;
@@ -356,6 +358,7 @@ export class EventsService {
       timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
       timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
       matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+      courtIds: activateEventDto.courtsIds,
     });
 
     const doublesIds = event.categories.flatMap((cat) =>
@@ -433,6 +436,7 @@ export class EventsService {
         name: true,
         places: true,
         matchDates: true,
+        courts: true,
         matches: {
           select: {
             number: true,
@@ -532,6 +536,7 @@ export class EventsService {
       select: {
         eventType: true,
         startDate: true,
+        courts: true,
         finishDate: true,
         timeOfFirstMatch: true,
         timeOfLastMatch: true,
@@ -560,13 +565,14 @@ export class EventsService {
     const days = 1 + finishDate.getDate() - startDate.getDate();
 
     // console.log(days);
+    const courts = eventInfo.courts.length;
 
     const matchIntervalInHours = eventInfo.matchDurationInMinutes / 60;
     const playtimePerDayInHours =
       eventInfo.timeOfLastMatch - eventInfo.timeOfFirstMatch;
-    const availableMatchDates = Math.round(
-      (playtimePerDayInHours * days) / matchIntervalInHours
-    );
+    const availableMatchDates =
+      Math.round((playtimePerDayInHours * days) / matchIntervalInHours) *
+      courts;
     // console.log(availableMatchDates);
 
     const categoriesWithTotalMatches = categories.map((cat) => {

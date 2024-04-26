@@ -5,4 +5,5 @@ export class ActivateEventDto {
   timeOfFirstMatch: string;
   timeOfLastMatch: string;
   matchDurationInMinutes: string;
+  courtsIds: string[];
 }

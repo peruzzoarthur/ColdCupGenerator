@@ -69,6 +69,8 @@ export type PadelEvent = {
     availableMatchDates?: number
     suitable?: boolean
     eventType: string
+    courts: Court[]
+    isActive: boolean
 }
 
 export type Match = {
@@ -91,6 +93,7 @@ export type MatchDate = {
     finish: string
     matchId: string
     match: Match
+    court: Court
 }
 
 export type Set = {

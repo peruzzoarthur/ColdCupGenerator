@@ -3,4 +3,5 @@ export declare class CreateMatchDateDto {
     finishDate: string;
     eventId: string;
     matchId?: string | null;
+    courtId?: string | null;
 }

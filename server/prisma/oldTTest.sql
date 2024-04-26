@@ -52,11 +52,6 @@ INSERT INTO public."Double" (id, "categoryId") VALUES ('6e149f81-cc00-4c9b-9b52-
 INSERT INTO public."Double" (id, "categoryId") VALUES ('8f080fac-9af9-4a86-87df-fe40d4456757', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
 INSERT INTO public."Double" (id, "categoryId") VALUES ('3ea54404-7c49-412b-af78-651d60a384b7', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
 INSERT INTO public."Double" (id, "categoryId") VALUES ('987ee842-0181-4809-8933-adb3205c24b8', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
-INSERT INTO public."Double" (id, "categoryId") VALUES ('e7ce4603-e8d7-4c13-8404-62265c055498', '4908146f-fa31-4cce-98c2-e62242f05b93');
-INSERT INTO public."Double" (id, "categoryId") VALUES ('fd19c48e-52d1-4933-9505-5b1e085a159a', '4908146f-fa31-4cce-98c2-e62242f05b93');
-INSERT INTO public."Double" (id, "categoryId") VALUES ('ed034668-6175-46fc-afb1-9a803f6ad4b9', '4908146f-fa31-4cce-98c2-e62242f05b93');
-INSERT INTO public."Double" (id, "categoryId") VALUES ('2ce98183-d9af-4278-b1c0-813d2fe00dc5', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
-INSERT INTO public."Double" (id, "categoryId") VALUES ('b7fb8274-3e05-40c6-a8bf-3a5b68eb1130', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
 
 
 --
@@ -76,11 +71,6 @@ INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('
 INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('cb270033-04bc-4424-9628-dc3268a9e6e8', '8f080fac-9af9-4a86-87df-fe40d4456757', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
 INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('cb270033-04bc-4424-9628-dc3268a9e6e8', '3ea54404-7c49-412b-af78-651d60a384b7', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
 INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('cb270033-04bc-4424-9628-dc3268a9e6e8', '987ee842-0181-4809-8933-adb3205c24b8', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
-INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('cb270033-04bc-4424-9628-dc3268a9e6e8', 'e7ce4603-e8d7-4c13-8404-62265c055498', '4908146f-fa31-4cce-98c2-e62242f05b93');
-INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('cb270033-04bc-4424-9628-dc3268a9e6e8', 'fd19c48e-52d1-4933-9505-5b1e085a159a', '4908146f-fa31-4cce-98c2-e62242f05b93');
-INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('cb270033-04bc-4424-9628-dc3268a9e6e8', 'ed034668-6175-46fc-afb1-9a803f6ad4b9', '4908146f-fa31-4cce-98c2-e62242f05b93');
-INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('cb270033-04bc-4424-9628-dc3268a9e6e8', '2ce98183-d9af-4278-b1c0-813d2fe00dc5', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
-INSERT INTO public."EventDouble" ("eventId", "doubleId", "categoryId") VALUES ('cb270033-04bc-4424-9628-dc3268a9e6e8', 'b7fb8274-3e05-40c6-a8bf-3a5b68eb1130', 'b5e3f1fb-c7b0-4353-a18a-4528e44cc5f3');
 
 
 --
@@ -123,16 +113,6 @@ INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position
 INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('d070d6f9-a1f9-4c7d-aa1c-0876d0598e84', 'P10@proton.me', 'P', '10', 'USER', 'DRIVE');
 INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('7f8d241a-baaf-4027-8cd9-ee2bb36fcfe5', 'JogadorA@proton.me', 'Jogador', 'A', 'USER', 'DRIVE');
 INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('fe448ac3-2208-45eb-a662-99111756c308', 'JogadorB@proton.me', 'Jogador', 'B', 'USER', 'DRIVE');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('7de29c21-512f-4f51-b006-b2c883f7a1f6', 'ArthurOzzurep@proton.me', 'Arthur', 'Ozzurep', 'USER', 'REVES');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('fc5c7250-d654-4cbc-b8c8-47ffedfcd026', 'JuJu@proton.me', 'Ju', 'Ju', 'USER', 'DRIVE');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('16324576-c6b5-441c-9ef8-ae5479f7f5f4', 'MariaIj@proton.me', 'Maria', 'Ij', 'USER', 'REVES');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('c9c48abe-d1e9-4bcc-894f-55e70c3f87fb', 'MedusaPluminha@proton.me', 'Medusa', 'Pluminha', 'USER', 'DRIVE');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('79c8a669-ae5c-45a6-9836-4e8dbdcb27ce', 'XoanPlastic@proton.me', 'Xoan', 'Plastic', 'USER', 'DRIVE');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('25fe9b53-e525-49e5-845c-2f8808527b91', 'GueldeDeus@proton.me', 'Guel', 'deDeus', 'USER', 'REVES');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('5f9f516f-9991-4148-8494-e3f328b99885', 'JumaZobrinha@proton.me', 'Juma', 'Zobrinha', 'USER', 'DRIVE');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('0949fb60-a01e-46cc-870a-1e8467164a40', 'MedusinhaArteira@proton.me', 'Medusinha', 'Arteira', 'USER', 'REVES');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('ca7041d1-7ca4-4d65-85d4-45db287d478e', 'MercedesOrquita@proton.me', 'Mercedes', 'Orquita', 'USER', 'REVES');
-INSERT INTO public."Player" (id, email, "firstName", "lastName", role, "position") VALUES ('eb46215b-e8df-4a5f-94d1-2bcb5d2aa9a4', 'MarleyCeva Pra Nos@proton.me', 'Marley', 'Ceva Pra Nos', 'USER', 'DRIVE');
 
 
 --
@@ -159,16 +139,6 @@ INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98
 INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', 'd070d6f9-a1f9-4c7d-aa1c-0876d0598e84');
 INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', '7f8d241a-baaf-4027-8cd9-ee2bb36fcfe5');
 INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', 'fe448ac3-2208-45eb-a662-99111756c308');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', '7de29c21-512f-4f51-b006-b2c883f7a1f6');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', 'fc5c7250-d654-4cbc-b8c8-47ffedfcd026');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', '16324576-c6b5-441c-9ef8-ae5479f7f5f4');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', 'c9c48abe-d1e9-4bcc-894f-55e70c3f87fb');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', '79c8a669-ae5c-45a6-9836-4e8dbdcb27ce');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', '25fe9b53-e525-49e5-845c-2f8808527b91');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', '5f9f516f-9991-4148-8494-e3f328b99885');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', '0949fb60-a01e-46cc-870a-1e8467164a40');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', 'ca7041d1-7ca4-4d65-85d4-45db287d478e');
-INSERT INTO public."_CategoryToPlayer" ("A", "B") VALUES ('4908146f-fa31-4cce-98c2-e62242f05b93', 'eb46215b-e8df-4a5f-94d1-2bcb5d2aa9a4');
 
 
 --
@@ -202,16 +172,6 @@ INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('3ea54404-7c49-412b-af78
 INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('3ea54404-7c49-412b-af78-651d60a384b7', 'd070d6f9-a1f9-4c7d-aa1c-0876d0598e84');
 INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('987ee842-0181-4809-8933-adb3205c24b8', '7f8d241a-baaf-4027-8cd9-ee2bb36fcfe5');
 INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('987ee842-0181-4809-8933-adb3205c24b8', 'fe448ac3-2208-45eb-a662-99111756c308');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('e7ce4603-e8d7-4c13-8404-62265c055498', '7de29c21-512f-4f51-b006-b2c883f7a1f6');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('e7ce4603-e8d7-4c13-8404-62265c055498', 'fc5c7250-d654-4cbc-b8c8-47ffedfcd026');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('fd19c48e-52d1-4933-9505-5b1e085a159a', '16324576-c6b5-441c-9ef8-ae5479f7f5f4');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('fd19c48e-52d1-4933-9505-5b1e085a159a', 'c9c48abe-d1e9-4bcc-894f-55e70c3f87fb');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('ed034668-6175-46fc-afb1-9a803f6ad4b9', '79c8a669-ae5c-45a6-9836-4e8dbdcb27ce');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('ed034668-6175-46fc-afb1-9a803f6ad4b9', '25fe9b53-e525-49e5-845c-2f8808527b91');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('2ce98183-d9af-4278-b1c0-813d2fe00dc5', '5f9f516f-9991-4148-8494-e3f328b99885');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('2ce98183-d9af-4278-b1c0-813d2fe00dc5', '0949fb60-a01e-46cc-870a-1e8467164a40');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('b7fb8274-3e05-40c6-a8bf-3a5b68eb1130', 'ca7041d1-7ca4-4d65-85d4-45db287d478e');
-INSERT INTO public."_DoubleToPlayer" ("A", "B") VALUES ('b7fb8274-3e05-40c6-a8bf-3a5b68eb1130', 'eb46215b-e8df-4a5f-94d1-2bcb5d2aa9a4');
 
 
 --

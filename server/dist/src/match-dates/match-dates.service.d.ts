@@ -10,8 +10,15 @@ export declare class MatchDatesService {
         matchId: string;
         start: Date;
         finish: Date;
+        courtId: string;
     }>;
     findAll(): Promise<{
+        court: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        };
         match: {
             id: string;
             number: number;
@@ -30,6 +37,12 @@ export declare class MatchDatesService {
         finish: Date;
     }[]>;
     findMatchDatesInOrderByEventId(eventId: string): Promise<{
+        court: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        };
         match: {
             number: number;
             doubles: {

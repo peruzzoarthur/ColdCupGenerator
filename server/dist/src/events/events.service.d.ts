@@ -381,6 +381,13 @@ export declare class EventsService {
             matchId: string;
             start: Date;
             finish: Date;
+            courtId: string;
+        }[];
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
         }[];
     }>;
     getEventInfoForGenerateMatches(id: string): Promise<{
@@ -405,6 +412,12 @@ export declare class EventsService {
         timeOfFirstMatch: number;
         timeOfLastMatch: number;
         eventType: import(".prisma/client").$Enums.EventType;
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        }[];
     }>;
 }
 export {};

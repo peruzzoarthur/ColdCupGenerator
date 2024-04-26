@@ -91,12 +91,14 @@ export function EventDashboard({
                 timeOfFirstMatch: timeOfFirstMatch,
                 timeOfLastMatch: timeOfLastMatch,
                 matchDurationInMinutes: matchDurationInMinutes,
+                courtsIds: eventById?.courts.map((c) => c.id),
             }
             const { data: matches }: { data: Match[] } = await axios.post(
                 `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
                 activateEventDto
             )
-            // setActivate(true)
+
+            await refetchEventById()
             return matches
         } catch (error) {
             return error
@@ -158,6 +160,7 @@ export function EventDashboard({
                     matchId: md.matchId,
                     doublesOne: undefined,
                     doublesTwo: undefined,
+                    court: md.court.name,
                 }
             }
             return {
@@ -167,6 +170,7 @@ export function EventDashboard({
                 matchId: md.matchId,
                 doublesOne: `${md.match.doubles[0].players[0].firstName} ${md.match.doubles[0].players[0].lastName} / ${md.match.doubles[0].players[1].firstName} ${md.match.doubles[0].players[1].lastName}`,
                 doublesTwo: `${md.match.doubles[1].players[0].firstName} ${md.match.doubles[1].players[0].lastName} / ${md.match.doubles[1].players[1].firstName} ${md.match.doubles[1].players[1].lastName}`,
+                court: md.court.name,
             }
         })
 
@@ -200,56 +204,47 @@ export function EventDashboard({
                     </div> */}
                 </header>
             </div>
-            <div className="flex justify-center p-10 ">
-                {event.matches.length === 0 && eventMatchesInfoById ? (
-                    <EventInfoCard event={eventMatchesInfoById}>
-                        {eventMatchesInfoById.suitable ? (
-                            <CoolButton
-                                className="items-center justify-center"
-                                onClick={async () =>
-                                    handleActivate(
-                                        event.id,
-                                        event.startDate,
-                                        event.finishDate,
-                                        event.timeOfFirstMatch,
-                                        event.timeOfLastMatch,
-                                        event.matchDurationInMinutes
-                                    )
-                                }
-                            >
-                                Generate matches 🎾
-                            </CoolButton>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center">
-                                <Alert
-                                    variant="destructive"
-                                    className="w-11/12 mb-2"
+            {eventById && eventById.isActive ? null : (
+                <div className="flex justify-center p-10">
+                    {event.matches.length === 0 && eventMatchesInfoById ? (
+                        <EventInfoCard event={eventMatchesInfoById}>
+                            {eventMatchesInfoById.suitable ? (
+                                <CoolButton
+                                    className="items-center justify-center"
+                                    onClick={async () =>
+                                        handleActivate(
+                                            event.id,
+                                            event.startDate,
+                                            event.finishDate,
+                                            event.timeOfFirstMatch,
+                                            event.timeOfLastMatch,
+                                            event.matchDurationInMinutes
+                                        )
+                                    }
                                 >
-                                    {' '}
-                                    You need a bigger period of time, more
-                                    courts or places in order to fit all
-                                    matches...{' '}
-                                </Alert>
-                                <div className="flex items-center space-x-2">
-                                    <CoolButton borderClassName="h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-300)_40%,transparent_10%)]">
-                                        Edit
-                                    </CoolButton>
+                                    Generate matches 🎾
+                                </CoolButton>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center">
+                                    <Alert
+                                        variant="destructive"
+                                        className="w-11/12 mb-2"
+                                    >
+                                        You need a bigger period of time, more
+                                        courts or places in order to fit all
+                                        matches...
+                                    </Alert>
+                                    <div className="flex items-center space-x-2">
+                                        <CoolButton borderClassName="h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-300)_40%,transparent_10%)]">
+                                            Edit
+                                        </CoolButton>
+                                    </div>
                                 </div>
-                                {/* {theme === 'dark' && (
-                                    <div className="flex items-center space-x-2">
-                                        <CoolButton>Edit</CoolButton>
-                                    </div>
-                                )}
-                                {theme === 'light' && (
-                                    <div className="flex items-center space-x-2">
-                                        <CoolButton>Sheriff</CoolButton>
-                                    </div>
-                                )} */}
-                            </div>
-                        )}
-                    </EventInfoCard>
-                ) : null}
-            </div>
+                            )}
+                        </EventInfoCard>
+                    ) : null}
+                </div>
+            )}
             <Tabs defaultValue="all">
                 <div className="flex items-center justify-center w-full">
                     {/* <TabsList>

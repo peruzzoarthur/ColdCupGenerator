@@ -14,4 +14,7 @@ export class CreateMatchDateDto {
 
   @IsString()
   matchId?: string | null;
+
+  @IsString()
+  courtId?: string | null;
 }

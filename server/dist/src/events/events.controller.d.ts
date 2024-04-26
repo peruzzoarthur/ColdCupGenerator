@@ -365,6 +365,13 @@ export declare class EventsController {
             matchId: string;
             start: Date;
             finish: Date;
+            courtId: string;
+        }[];
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
         }[];
     }>;
     getEventInfo(id: string): Promise<{
@@ -389,6 +396,12 @@ export declare class EventsController {
         timeOfFirstMatch: number;
         timeOfLastMatch: number;
         eventType: import(".prisma/client").$Enums.EventType;
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        }[];
     }>;
     update(id: string, updateEventDto: UpdateEventDto): string;
     remove(id: string): string;

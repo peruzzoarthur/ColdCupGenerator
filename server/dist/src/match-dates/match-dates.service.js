@@ -22,6 +22,7 @@ let MatchDatesService = class MatchDatesService {
                 eventId: createMatchDateDto.eventId,
                 start: createMatchDateDto.startDate,
                 finish: createMatchDateDto.finishDate,
+                courtId: createMatchDateDto.courtId,
             },
         });
     }
@@ -34,6 +35,7 @@ let MatchDatesService = class MatchDatesService {
                 finish: true,
                 matchId: true,
                 match: true,
+                court: true,
             },
         });
     }
@@ -48,6 +50,7 @@ let MatchDatesService = class MatchDatesService {
             select: {
                 start: true,
                 finish: true,
+                court: true,
                 matchId: true,
                 match: {
                     select: {

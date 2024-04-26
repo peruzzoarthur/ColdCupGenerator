@@ -287,21 +287,24 @@ let EventsService = class EventsService {
                 matchDuration: createScheduleDto.matchDurationInMinutes,
             });
         }
-        for (let i = 0; i < daysArray.length; i++) {
-            console.log(new Date(daysArray[i].date).valueOf());
-            const initialTime = new Date(daysArray[i].date).valueOf() +
-                daysArray[i].timeOfFirstMatch * oneHourInMs;
-            const hoursPlaying = daysArray[i].timeOfLastMatch - daysArray[i].timeOfFirstMatch;
-            const matchDuration = daysArray[i].matchDuration * oneMinInMs;
-            for (let j = initialTime; j <= initialTime + oneHourInMs * hoursPlaying; j += matchDuration) {
-                console.log(new Date(j));
-                await this.prismaService.matchDate.create({
-                    data: {
-                        start: new Date(j),
-                        finish: new Date(j + matchDuration),
-                        eventId: createScheduleDto.id,
-                    },
-                });
+        for (let c = 0; c < createScheduleDto.courtIds.length; c++) {
+            for (let i = 0; i < daysArray.length; i++) {
+                console.log(new Date(daysArray[i].date).valueOf());
+                const initialTime = new Date(daysArray[i].date).valueOf() +
+                    daysArray[i].timeOfFirstMatch * oneHourInMs;
+                const hoursPlaying = daysArray[i].timeOfLastMatch - daysArray[i].timeOfFirstMatch;
+                const matchDuration = daysArray[i].matchDuration * oneMinInMs;
+                for (let j = initialTime; j <= initialTime + oneHourInMs * hoursPlaying; j += matchDuration) {
+                    console.log(new Date(j));
+                    await this.prismaService.matchDate.create({
+                        data: {
+                            start: new Date(j),
+                            finish: new Date(j + matchDuration),
+                            eventId: createScheduleDto.id,
+                            courtId: createScheduleDto.courtIds[c],
+                        },
+                    });
+                }
             }
         }
         return daysArray;
@@ -315,6 +318,7 @@ let EventsService = class EventsService {
             timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
             timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
             matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+            courtIds: activateEventDto.courtsIds,
         });
         const doublesIds = event.categories.flatMap((cat) => cat.eventDoubles.map((ed) => {
             return {
@@ -375,6 +379,7 @@ let EventsService = class EventsService {
                 name: true,
                 places: true,
                 matchDates: true,
+                courts: true,
                 matches: {
                     select: {
                         number: true,
@@ -473,6 +478,7 @@ let EventsService = class EventsService {
             select: {
                 eventType: true,
                 startDate: true,
+                courts: true,
                 finishDate: true,
                 timeOfFirstMatch: true,
                 timeOfLastMatch: true,
@@ -496,9 +502,11 @@ let EventsService = class EventsService {
         const startDate = new Date(eventInfo.startDate);
         const finishDate = new Date(eventInfo.finishDate);
         const days = 1 + finishDate.getDate() - startDate.getDate();
+        const courts = eventInfo.courts.length;
         const matchIntervalInHours = eventInfo.matchDurationInMinutes / 60;
         const playtimePerDayInHours = eventInfo.timeOfLastMatch - eventInfo.timeOfFirstMatch;
-        const availableMatchDates = Math.round((playtimePerDayInHours * days) / matchIntervalInHours);
+        const availableMatchDates = Math.round((playtimePerDayInHours * days) / matchIntervalInHours) *
+            courts;
         const categoriesWithTotalMatches = categories.map((cat) => {
             const totalDoubles = cat.eventDoubles.length;
             console.log(totalDoubles);

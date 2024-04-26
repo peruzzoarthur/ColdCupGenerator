@@ -37,7 +37,7 @@ export function CourtsByPlaceCheckbox({
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            courts: courts.map((c) => c.id),
+            courts: [],
         },
     })
 

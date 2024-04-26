@@ -15,6 +15,7 @@ export class MatchDatesService {
         // match: {
         //   connect: { id: createMatchDateDto.matchId ?? null },
         // },
+        courtId: createMatchDateDto.courtId,
       },
     });
   }
@@ -28,6 +29,7 @@ export class MatchDatesService {
         finish: true,
         matchId: true,
         match: true,
+        court: true,
       },
     });
   }
@@ -43,6 +45,7 @@ export class MatchDatesService {
       select: {
         start: true,
         finish: true,
+        court: true,
         matchId: true,
         match: {
           select: {
