@@ -1,4 +1,10 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import {
+  IsArray,
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from "class-validator";
 
 export class CreateScheduleDto {
   @IsNotEmpty()
@@ -20,4 +26,8 @@ export class CreateScheduleDto {
   @IsNotEmpty()
   @IsString()
   id: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  courtIds?: string[];
 }

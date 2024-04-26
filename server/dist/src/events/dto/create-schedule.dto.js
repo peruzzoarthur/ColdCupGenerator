@@ -41,4 +41,9 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateScheduleDto.prototype, "id", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsArray)(),
+    __metadata("design:type", Array)
+], CreateScheduleDto.prototype, "courtIds", void 0);
 //# sourceMappingURL=create-schedule.dto.js.map

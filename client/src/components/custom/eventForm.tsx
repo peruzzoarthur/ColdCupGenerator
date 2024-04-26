@@ -33,6 +33,7 @@ import { timesForMatches } from '../../util/times'
 import { CourtsByPlaceCheckbox } from './courtsByPlaceCheckBox'
 import { useGetPlaceWithCourts } from '@/hooks/useGetPlaceWithCourts'
 import { Card, CardFooter, CardHeader } from '../ui/card'
+import { Cross2Icon } from '@radix-ui/react-icons'
 
 type EventFormProps = {
     onSubmit: SubmitHandler<formObject>
@@ -223,15 +224,6 @@ const EventForm: React.FC<EventFormProps> = ({
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                         >
-                            {/* <div className="flex flex-col justify-center">
-                                <Button
-                                    onClick={() =>
-                                        setSelectedPlaceId(field.value)
-                                    }
-                                >
-                                    Courts
-                                </Button>
-                            </div> */}
                             {selectCourtsOn ? (
                                 <div className="flex flex-col items-center justify-center w-full">
                                     <Card>
@@ -250,17 +242,14 @@ const EventForm: React.FC<EventFormProps> = ({
                                                             placeWithCourts.name
                                                         }
                                                     />
-                                                    <Button
-                                                        className="w-5 h-5 rounded-full"
-                                                        variant={'destructive'}
+                                                    <Cross2Icon
+                                                        className="w-5 h-5 cursor-pointer"
                                                         onClick={() => {
                                                             setSelectCourtsOn(
                                                                 false
                                                             )
                                                         }}
-                                                    >
-                                                        X
-                                                    </Button>
+                                                    />
                                                 </div>
                                             </CardHeader>
                                         )}
@@ -297,8 +286,11 @@ const EventForm: React.FC<EventFormProps> = ({
                                         </SelectGroup>
                                     </SelectContent>
                                     <Button
-                                        className="flex items-center w-1/3 "
+                                        className="flex items-center w-1/6 rounded-tl-sm rounded-bl-sm"
                                         onClick={() => {
+                                            if (field.value === '') {
+                                                return
+                                            }
                                             setSelectedPlaceId(field.value)
                                             setSelectCourtsOn(true)
                                         }}

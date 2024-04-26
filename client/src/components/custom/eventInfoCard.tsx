@@ -38,9 +38,9 @@ export function EventInfoCard({
                     <div className="flex-1 space-y-1">
                         <div className="text-sm text-muted-foreground">
                             <p>
-                                {`Available game times: ${event.availableMatchDates}`}
+                                {`Tournament match slots: ${event.availableMatchDates}`}
                             </p>
-                            <p>{`Total matches: ${event.totalMatches}`}</p>
+                            <p>{`Total matches needed: ${event.totalMatches}`}</p>
                         </div>
                     </div>
                 </div>

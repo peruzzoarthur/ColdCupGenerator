@@ -5,4 +5,5 @@ export declare class CreateScheduleDto {
     timeOfLastMatch: number;
     matchDurationInMinutes: number;
     id: string;
+    courtIds?: string[];
 }

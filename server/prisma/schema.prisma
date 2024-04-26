@@ -38,13 +38,14 @@ model Event {
 }
 
 model Court {
-  id          String  @id @default(uuid())
+  id          String      @id @default(uuid())
   name        String
-  isAvailable Boolean @default(true)
+  isAvailable Boolean     @default(true)
   events      Event[]
   matches     Match[]
-  place       Place   @relation(fields: [placeId], references: [id])
+  place       Place       @relation(fields: [placeId], references: [id])
   placeId     String
+  matchDates  MatchDate[]
 
   @@unique([name, placeId])
 }
@@ -101,6 +102,8 @@ model MatchDate {
   matchId String?  @unique
   start   DateTime
   finish  DateTime
+  court   Court    @relation(fields: [courtId], references: [id])
+  courtId String
 
   @@unique([eventId, start, finish]) // todo add courts here when created...
 }
