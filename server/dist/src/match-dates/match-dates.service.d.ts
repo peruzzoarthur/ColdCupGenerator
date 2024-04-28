@@ -32,9 +32,9 @@ export declare class MatchDatesService {
         };
         id: string;
         eventId: string;
+        matchId: string;
         start: Date;
         finish: Date;
-        matchId: string;
     }[]>;
     findMatchDatesInOrderByEventId(eventId: string): Promise<{
         court: {
@@ -56,9 +56,9 @@ export declare class MatchDatesService {
                 }[];
             }[];
         };
+        matchId: string;
         start: Date;
         finish: Date;
-        matchId: string;
     }[]>;
     findOne(id: number): string;
     update(id: number, updateMatchDateDto: UpdateMatchDateDto): string;

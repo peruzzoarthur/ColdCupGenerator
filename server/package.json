@@ -76,7 +76,8 @@
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "jest": "^29.5.0",
+    "jest": "^29.7.0",
+    "msw": "^2.2.14",
     "openai": "^4.28.0",
     "prettier": "^3.0.0",
     "prisma": "^5.10.2",
@@ -96,7 +97,10 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/src/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
