@@ -72,7 +72,8 @@ export function EventDashboard({
         isFetchingEventById,
     } = useGetEventById(event.id)
 
-    const { eventMatchesById } = useGetEventMatchesById(event.id)
+    const { eventMatchesById, refetchEventMatchesById } =
+        useGetEventMatchesById(event.id)
     const { eventMatchesInfoById } = useGetEventMatchesInfoById(event.id)
 
     const handleActivate = async (
@@ -99,6 +100,7 @@ export function EventDashboard({
             )
 
             await refetchEventById()
+            await refetchEventMatchesById()
             return matches
         } catch (error) {
             return error
