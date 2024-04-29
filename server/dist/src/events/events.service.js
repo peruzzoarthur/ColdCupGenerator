@@ -277,10 +277,8 @@ let EventsService = class EventsService {
         const firstDay = new Date(createScheduleDto.startDate);
         const lastDay = new Date(createScheduleDto.finishDate);
         const days = Math.round((lastDay.valueOf() - firstDay.valueOf()) / oneDayInMs);
-        console.log(`Days: ${days}`);
         for (let i = 0; i <= days; i++) {
             const date = new Date(firstDay.valueOf() + i * oneDayInMs);
-            console.log(date);
             daysArray.push({
                 day: i + 1,
                 date: date.toISOString(),
@@ -291,13 +289,11 @@ let EventsService = class EventsService {
         }
         for (let c = 0; c < createScheduleDto.courtIds.length; c++) {
             for (let i = 0; i < daysArray.length; i++) {
-                console.log(new Date(daysArray[i].date).valueOf());
                 const initialTime = new Date(daysArray[i].date).valueOf() +
                     daysArray[i].timeOfFirstMatch * oneHourInMs;
                 const hoursPlaying = daysArray[i].timeOfLastMatch - daysArray[i].timeOfFirstMatch;
                 const matchDuration = daysArray[i].matchDuration * oneMinInMs;
                 for (let j = initialTime; j <= initialTime + oneHourInMs * hoursPlaying; j += matchDuration) {
-                    console.log(new Date(j));
                     await this.prismaService.matchDate.create({
                         data: {
                             start: new Date(j),
@@ -326,15 +322,17 @@ let EventsService = class EventsService {
             return {
                 doublesId: ed.doubleId,
                 catId: ed.double.categoryId,
-                doublesRestState: ed.atRest,
+                doublesRestState: new Date(activateEventDto.startDate),
             };
         }));
+        console.log(doublesIds);
         const categoriesIds = event.categories.flatMap((cat) => cat.id);
         const matchDatesAvailable = (await this.getEventById({ id: event.id })).matchDates
             .filter((matchDate) => matchDate.match === null)
             .map((md) => {
             return {
                 id: md.id,
+                start: md.start,
                 finish: md.finish,
             };
         });
@@ -343,37 +341,46 @@ let EventsService = class EventsService {
             const filteredDoublesIds = doublesIds.filter((d) => d.catId === categoriesIds[k]);
             for (let i = 0; i < filteredDoublesIds.length; i++) {
                 for (let j = i + 1; j < filteredDoublesIds.length; j++) {
-                    console.log(`Variables: k=${k} i=${i} j=${j}. ___calling with 
-          {matchDateId: ${matchDatesAvailable[count]}} for categoryId: ${categoriesIds[k]}`);
-                    await this.matchesService.create({
-                        doublesIds: [
-                            filteredDoublesIds[i].doublesId,
-                            filteredDoublesIds[j].doublesId,
-                        ],
-                        categoryId: categoriesIds[k],
-                        eventId: event.id,
-                        matchDateId: matchDatesAvailable[count].id,
-                    });
-                    await this.prismaService.eventDouble.updateMany({
-                        where: {
-                            OR: [
-                                {
-                                    eventId: activateEventDto.id,
-                                    doubleId: filteredDoublesIds[i].doublesId,
-                                    categoryId: categoriesIds[k],
-                                },
-                                {
-                                    eventId: activateEventDto.id,
-                                    doubleId: filteredDoublesIds[j].doublesId,
-                                    categoryId: categoriesIds[k],
-                                },
+                    if ((filteredDoublesIds[i].doublesRestState === null &&
+                        filteredDoublesIds[j].doublesRestState === null) ||
+                        filteredDoublesIds[i].doublesRestState.valueOf() ||
+                        filteredDoublesIds[j].doublesRestState.valueOf() <=
+                            matchDatesAvailable[count].start.valueOf()) {
+                        await this.matchesService.create({
+                            doublesIds: [
+                                filteredDoublesIds[i].doublesId,
+                                filteredDoublesIds[j].doublesId,
                             ],
-                        },
-                        data: {
-                            atRest: new Date(matchDatesAvailable[count].finish.valueOf() + 3600000 * 2),
-                        },
-                    });
-                    count++;
+                            categoryId: categoriesIds[k],
+                            eventId: event.id,
+                            matchDateId: matchDatesAvailable[count].id,
+                        });
+                        await this.prismaService.eventDouble.updateMany({
+                            where: {
+                                OR: [
+                                    {
+                                        eventId: activateEventDto.id,
+                                        doubleId: filteredDoublesIds[i].doublesId,
+                                        categoryId: categoriesIds[k],
+                                    },
+                                    {
+                                        eventId: activateEventDto.id,
+                                        doubleId: filteredDoublesIds[j].doublesId,
+                                        categoryId: categoriesIds[k],
+                                    },
+                                ],
+                            },
+                            data: {
+                                atRest: new Date(matchDatesAvailable[count].finish.valueOf() + 3600000 * 2),
+                            },
+                        });
+                        count++;
+                    }
+                    if (filteredDoublesIds[i].doublesRestState.valueOf() ||
+                        filteredDoublesIds[j].doublesRestState.valueOf() >
+                            matchDatesAvailable[count].start.valueOf()) {
+                        console.log("Players at rest...");
+                    }
                 }
             }
         }
@@ -537,7 +544,6 @@ let EventsService = class EventsService {
             courts;
         const categoriesWithTotalMatches = categories.map((cat) => {
             const totalDoubles = cat.eventDoubles.length;
-            console.log(totalDoubles);
             if (cat.eventDoubles.length === 0) {
                 return { ...cat, totalMatches: 0 };
             }
