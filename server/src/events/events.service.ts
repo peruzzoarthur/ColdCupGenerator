@@ -367,6 +367,17 @@ export class EventsService {
     // ! get the event that will be activated
     const event = await this.getEventById(activateEventDto);
 
+    // ? THIS IS COMMENTED BECAUSE IM TESTING CREATE MATCHES
+    await this.createSchedule({
+      id: activateEventDto.id,
+      startDate: activateEventDto.startDate,
+      finishDate: activateEventDto.finishDate,
+      timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+      timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+      matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+      courtIds: activateEventDto.courtsIds,
+    });
+
     const matchDatesAvailable = (
       await this.getEventById({ id: event.id })
     ).matchDates
@@ -380,16 +391,6 @@ export class EventsService {
       });
 
     // ! create the schedule for the event
-    // ? THIS IS COMMENTED BECAUSE IM TESTING CREATE MATCHES
-    // await this.createSchedule({
-    //   id: activateEventDto.id,
-    //   startDate: activateEventDto.startDate,
-    //   finishDate: activateEventDto.finishDate,
-    //   timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
-    //   timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
-    //   matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
-    //   courtIds: activateEventDto.courtsIds,
-    // });
 
     // !  get doubles, categories and matchDatesAvailable to use in loop to populate matches
     const doubles = event.categories.flatMap((cat) =>
@@ -435,9 +436,9 @@ export class EventsService {
         }
       }
     }
-    console.log(matchesToAdd);
-    console.log(matchesToAdd.length);
-    console.log(matchDatesAvailable[0]);
+    // console.log(matchesToAdd);
+    // console.log(matchesToAdd.length);
+    // console.log(matchDatesAvailable[0]);
 
     let count: number = 0;
     for (let m = 0; matchesToAdd.length >= 0; m++) {
@@ -445,9 +446,13 @@ export class EventsService {
       if (matchesToAdd.length === 0) {
         return "done";
       }
-      console.log(matchesToAdd);
+      // console.log(matchesToAdd);
       console.log(
-        `Calling with eventId: ${event.id}; categoryId: ${matchesToAdd[0].categoryId}; doublesAId: ${matchesToAdd[0].doublesA.doublesId}; doublesBId: ${matchesToAdd[0].doublesB.doublesId}`
+        `Calling with:
+        eventId: ${event.id};
+        categoryId: ${matchesToAdd[0].categoryId};
+        doublesAId: ${matchesToAdd[0].doublesA.doublesId};
+        doublesBId: ${matchesToAdd[0].doublesB.doublesId};`
       );
       const doublesA = await this.prismaService.eventDouble.findUniqueOrThrow({
         where: {
@@ -460,6 +465,7 @@ export class EventsService {
         select: {
           doubleId: true,
           atRest: true,
+          categoryId: true,
         },
       });
 
@@ -474,13 +480,16 @@ export class EventsService {
         select: {
           doubleId: true,
           atRest: true,
+          categoryId: true,
         },
       });
 
-      // if (doublesA === null || doublesB === null) {
-      //   console.log(matchesToAdd);
-      //   return "donuts";
-      // }
+      if (doublesA === null || doublesB === null) {
+        throw new HttpException(
+          "One of the doubles is null",
+          HttpStatus.BAD_REQUEST
+        );
+      }
 
       console.log("Doubles A:");
       console.log(doublesA);
@@ -488,14 +497,50 @@ export class EventsService {
       console.log(doublesB);
       // console.log("matchestoadd");
       // console.log(matchesToAdd);
+      console.log(
+        `
+        doublesA.atRest: ${doublesA.atRest};
+        doublesB.atRest: ${doublesB.atRest};
+        count: ${count}
+        matchDates[count].start.start: ${matchDatesAvailable[count].start}`
+      );
       if (
-        doublesA.atRest &&
+        doublesA.atRest <= matchDatesAvailable[count].start &&
         doublesB.atRest <= matchDatesAvailable[count].start
       ) {
-        console.log("ready2go");
+        matchesToAdd.shift();
+        await this.prismaService.eventDouble.updateMany({
+          where: {
+            OR: [
+              {
+                eventId: activateEventDto.id,
+                doubleId: doublesA.doubleId,
+                categoryId: doublesA.categoryId,
+              },
+              {
+                eventId: activateEventDto.id,
+                doubleId: doublesB.doubleId,
+                categoryId: doublesB.categoryId,
+              },
+            ],
+          },
+          data: {
+            atRest: new Date(
+              matchDatesAvailable[count].finish.valueOf() + 3600000 * 2
+            ),
+          },
+        });
+        console.log("🌞goSeeTheSun🌞");
       }
-      console.log("goodbyes");
-      matchesToAdd.shift();
+      if (
+        doublesA.atRest > matchDatesAvailable[count].start ||
+        doublesB.atRest > matchDatesAvailable[count].start
+      ) {
+        matchesToAdd.push(matchesToAdd[0]);
+        matchesToAdd.shift();
+        console.log("🌚toTheEnd🌚");
+      }
+
       count++;
     }
 

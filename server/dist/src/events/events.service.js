@@ -319,6 +319,15 @@ let EventsService = class EventsService {
     }
     async activateEvent(activateEventDto) {
         const event = await this.getEventById(activateEventDto);
+        await this.createSchedule({
+            id: activateEventDto.id,
+            startDate: activateEventDto.startDate,
+            finishDate: activateEventDto.finishDate,
+            timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+            timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+            matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+            courtIds: activateEventDto.courtsIds,
+        });
         const matchDatesAvailable = (await this.getEventById({ id: event.id })).matchDates
             .filter((matchDate) => matchDate.match === null)
             .map((md) => {
@@ -358,17 +367,17 @@ let EventsService = class EventsService {
                 }
             }
         }
-        console.log(matchesToAdd);
-        console.log(matchesToAdd.length);
-        console.log(matchDatesAvailable[0]);
         let count = 0;
         for (let m = 0; matchesToAdd.length >= 0; m++) {
             console.log(m);
             if (matchesToAdd.length === 0) {
                 return "done";
             }
-            console.log(matchesToAdd);
-            console.log(`Calling with eventId: ${event.id}; categoryId: ${matchesToAdd[0].categoryId}; doublesAId: ${matchesToAdd[0].doublesA.doublesId}; doublesBId: ${matchesToAdd[0].doublesB.doublesId}`);
+            console.log(`Calling with:
+        eventId: ${event.id};
+        categoryId: ${matchesToAdd[0].categoryId};
+        doublesAId: ${matchesToAdd[0].doublesA.doublesId};
+        doublesBId: ${matchesToAdd[0].doublesB.doublesId};`);
             const doublesA = await this.prismaService.eventDouble.findUniqueOrThrow({
                 where: {
                     eventId_doubleId_categoryId: {
@@ -380,6 +389,7 @@ let EventsService = class EventsService {
                 select: {
                     doubleId: true,
                     atRest: true,
+                    categoryId: true,
                 },
             });
             const doublesB = await this.prismaService.eventDouble.findUniqueOrThrow({
@@ -393,18 +403,52 @@ let EventsService = class EventsService {
                 select: {
                     doubleId: true,
                     atRest: true,
+                    categoryId: true,
                 },
             });
+            if (doublesA === null || doublesB === null) {
+                throw new common_1.HttpException("One of the doubles is null", common_1.HttpStatus.BAD_REQUEST);
+            }
             console.log("Doubles A:");
             console.log(doublesA);
             console.log("Doubles B:");
             console.log(doublesB);
-            if (doublesA.atRest &&
+            console.log(`
+        doublesA.atRest: ${doublesA.atRest};
+        doublesB.atRest: ${doublesB.atRest};
+        count: ${count}
+        matchDates[count].start.start: ${matchDatesAvailable[count].start}`);
+            if (doublesA.atRest <= matchDatesAvailable[count].start &&
                 doublesB.atRest <= matchDatesAvailable[count].start) {
-                console.log("ready2go");
+                matchesToAdd.shift();
+                await this.prismaService.eventDouble.updateMany({
+                    where: {
+                        OR: [
+                            {
+                                eventId: activateEventDto.id,
+                                doubleId: doublesA.doubleId,
+                                categoryId: doublesA.categoryId,
+                            },
+                            {
+                                eventId: activateEventDto.id,
+                                doubleId: doublesB.doubleId,
+                                categoryId: doublesB.categoryId,
+                            },
+                        ],
+                    },
+                    data: {
+                        atRest: new Date(matchDatesAvailable[count].finish.valueOf() + 3600000 * 2),
+                    },
+                });
+                console.log("🌞goSeeTheSun🌞");
             }
-            console.log("goodbyes");
-            matchesToAdd.shift();
+            if (doublesA.atRest > matchDatesAvailable[count].start ||
+                doublesB.atRest > matchDatesAvailable[count].start) {
+                matchesToAdd.push(matchesToAdd[0]);
+                matchesToAdd.shift();
+                console.log("🌚toTheEnd🌚");
+                count--;
+            }
             count++;
         }
         return matchesToAdd;
