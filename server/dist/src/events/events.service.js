@@ -12,12 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
-const categories_service_1 = require("../categories/categories.service");
 const matches_service_1 = require("../matches/matches.service");
 let EventsService = class EventsService {
-    constructor(prismaService, categoriesService, matchesService) {
+    constructor(prismaService, matchesService) {
         this.prismaService = prismaService;
-        this.categoriesService = categoriesService;
         this.matchesService = matchesService;
     }
     async createEvent(createEventDto) {
@@ -139,6 +137,15 @@ let EventsService = class EventsService {
                 },
             },
         });
+        const eventFirstMatchStart = await this.prismaService.event.findUnique({
+            where: {
+                id: registerDoublesInEventDto.eventId,
+            },
+            select: {
+                startDate: true,
+                timeOfFirstMatch: true,
+            },
+        });
         const isDoubleInEvent = await this.prismaService.event.findUnique({
             where: {
                 id: registerDoublesInEventDto.eventId,
@@ -173,11 +180,14 @@ let EventsService = class EventsService {
         if (isPlayerOneInThisCategory) {
             throw new common_1.HttpException("Player one is already registered in this category.", common_1.HttpStatus.BAD_REQUEST);
         }
+        console.log(eventFirstMatchStart);
         const createdEventDouble = await this.prismaService.eventDouble.create({
             data: {
                 eventId: registerDoublesInEventDto.eventId,
                 doubleId: doublesToRegister.id,
                 categoryId: doublesToRegister.categoryId,
+                atRest: new Date(eventFirstMatchStart.startDate.valueOf() +
+                    eventFirstMatchStart.timeOfFirstMatch * 3600000),
             },
             select: {
                 double: {
@@ -309,23 +319,6 @@ let EventsService = class EventsService {
     }
     async activateEvent(activateEventDto) {
         const event = await this.getEventById(activateEventDto);
-        await this.createSchedule({
-            id: activateEventDto.id,
-            startDate: activateEventDto.startDate,
-            finishDate: activateEventDto.finishDate,
-            timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
-            timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
-            matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
-            courtIds: activateEventDto.courtsIds,
-        });
-        const doubles = event.categories.flatMap((cat) => cat.eventDoubles.map((ed) => {
-            return {
-                doublesId: ed.doubleId,
-                catId: ed.double.categoryId,
-                doublesRestState: new Date(activateEventDto.startDate),
-            };
-        }));
-        const categoriesIds = event.categories.flatMap((cat) => cat.id);
         const matchDatesAvailable = (await this.getEventById({ id: event.id })).matchDates
             .filter((matchDate) => matchDate.match === null)
             .map((md) => {
@@ -335,83 +328,86 @@ let EventsService = class EventsService {
                 finish: md.finish,
             };
         });
+        const doubles = event.categories.flatMap((cat) => cat.eventDoubles.map((ed) => {
+            return {
+                doublesId: ed.doubleId,
+                catId: ed.double.categoryId,
+                doublesRestState: matchDatesAvailable[0].start,
+            };
+        }));
+        const categoriesIds = event.categories.flatMap((cat) => cat.id);
         let matchesToAdd = [];
+        let countis = 0;
         for (let c = 0; c < categoriesIds.length; c++) {
             const filteredDoublesByCategory = doubles.filter((d) => d.catId === categoriesIds[c]);
             for (let i = 0; i < filteredDoublesByCategory.length; i++) {
                 for (let j = i + 1; j < filteredDoublesByCategory.length; j++) {
                     matchesToAdd.push({
                         categoryId: categoriesIds[c],
+                        matchId: countis,
                         doublesA: {
-                            doublesId: doubles[i].doublesId,
-                            doublesRestState: doubles[i].doublesRestState,
+                            doublesId: filteredDoublesByCategory[i].doublesId,
+                            doublesRestState: filteredDoublesByCategory[i].doublesRestState,
                         },
                         doublesB: {
-                            doublesId: doubles[j].doublesId,
-                            doublesRestState: doubles[j].doublesRestState,
+                            doublesId: filteredDoublesByCategory[j].doublesId,
+                            doublesRestState: filteredDoublesByCategory[j].doublesRestState,
                         },
                     });
+                    countis++;
                 }
+            }
+        }
+        console.log(matchesToAdd);
+        console.log(matchesToAdd.length);
+        console.log(matchDatesAvailable[0]);
+        let count = 0;
+        for (let m = 0; matchesToAdd.length >= 0; m++) {
+            console.log(m);
+            if (matchesToAdd.length === 0) {
+                return "done";
             }
             console.log(matchesToAdd);
-            let count = 0;
-            for (let k = 0; k < categoriesIds.length; k++) {
-                const filteredDoublesIds = doubles.filter((d) => d.catId === categoriesIds[k]);
-                for (let i = 0; i < filteredDoublesIds.length; i++) {
-                    for (let j = i + 1; j < filteredDoublesIds.length; j++) {
-                        if ((filteredDoublesIds[i].doublesRestState === null &&
-                            filteredDoublesIds[j].doublesRestState === null) ||
-                            filteredDoublesIds[i].doublesRestState.valueOf() ||
-                            filteredDoublesIds[j].doublesRestState.valueOf() <=
-                                matchDatesAvailable[count].start.valueOf()) {
-                            await this.matchesService.create({
-                                doublesIds: [
-                                    filteredDoublesIds[i].doublesId,
-                                    filteredDoublesIds[j].doublesId,
-                                ],
-                                categoryId: categoriesIds[k],
-                                eventId: event.id,
-                                matchDateId: matchDatesAvailable[count].id,
-                            });
-                            await this.prismaService.eventDouble.updateMany({
-                                where: {
-                                    OR: [
-                                        {
-                                            eventId: activateEventDto.id,
-                                            doubleId: filteredDoublesIds[i].doublesId,
-                                            categoryId: categoriesIds[k],
-                                        },
-                                        {
-                                            eventId: activateEventDto.id,
-                                            doubleId: filteredDoublesIds[j].doublesId,
-                                            categoryId: categoriesIds[k],
-                                        },
-                                    ],
-                                },
-                                data: {
-                                    atRest: new Date(matchDatesAvailable[count].finish.valueOf() + 3600000 * 2),
-                                },
-                            });
-                            count++;
-                        }
-                        if (filteredDoublesIds[i].doublesRestState.valueOf() ||
-                            filteredDoublesIds[j].doublesRestState.valueOf() >
-                                matchDatesAvailable[count].start.valueOf()) {
-                            console.log("Players at rest...");
-                        }
-                    }
-                }
-            }
-            await this.prismaService.event.update({
+            console.log(`Calling with eventId: ${event.id}; categoryId: ${matchesToAdd[0].categoryId}; doublesAId: ${matchesToAdd[0].doublesA.doublesId}; doublesBId: ${matchesToAdd[0].doublesB.doublesId}`);
+            const doublesA = await this.prismaService.eventDouble.findUniqueOrThrow({
                 where: {
-                    id: activateEventDto.id,
+                    eventId_doubleId_categoryId: {
+                        eventId: event.id,
+                        categoryId: matchesToAdd[0].categoryId,
+                        doubleId: matchesToAdd[0].doublesA.doublesId,
+                    },
                 },
-                data: {
-                    isActive: true,
+                select: {
+                    doubleId: true,
+                    atRest: true,
                 },
             });
-            return;
+            const doublesB = await this.prismaService.eventDouble.findUniqueOrThrow({
+                where: {
+                    eventId_doubleId_categoryId: {
+                        eventId: event.id,
+                        categoryId: matchesToAdd[0].categoryId,
+                        doubleId: matchesToAdd[0].doublesB.doublesId,
+                    },
+                },
+                select: {
+                    doubleId: true,
+                    atRest: true,
+                },
+            });
+            console.log("Doubles A:");
+            console.log(doublesA);
+            console.log("Doubles B:");
+            console.log(doublesB);
+            if (doublesA.atRest &&
+                doublesB.atRest <= matchDatesAvailable[count].start) {
+                console.log("ready2go");
+            }
+            console.log("goodbyes");
+            matchesToAdd.shift();
+            count++;
         }
+        return matchesToAdd;
     }
     findOne(id) {
         return `This action returns a #${id} event`;
@@ -431,6 +427,8 @@ let EventsService = class EventsService {
                 id: true,
                 name: true,
                 places: true,
+                startDate: true,
+                finishDate: true,
                 matchDates: true,
                 courts: true,
                 matches: {
@@ -684,7 +682,6 @@ exports.EventsService = EventsService;
 exports.EventsService = EventsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        categories_service_1.CategoriesService,
         matches_service_1.MatchesService])
 ], EventsService);
 //# sourceMappingURL=events.service.js.map

@@ -104,7 +104,7 @@ test("test", async ({ page }) => {
   await page.getByLabel("First day").click();
 
   await page.getByLabel("Last day").click();
-  await page.getByText("28").click();
+  await page.getByText("28").last().click();
   await page.getByLabel("Last day").click();
 
   await page.getByLabel("First game").click();

@@ -18,7 +18,7 @@ export const timesForMatches: TimeForMatches[] = [
     },
     {
         value: '9',
-        text: '10:00',
+        text: '09:00',
     },
     {
         value: '10',

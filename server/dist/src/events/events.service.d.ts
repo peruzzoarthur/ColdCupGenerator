@@ -2,7 +2,6 @@ import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import { PrismaService } from "src/prisma.service";
 import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
-import { CategoriesService } from "src/categories/categories.service";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { MatchesService } from "src/matches/matches.service";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
@@ -16,9 +15,8 @@ type Day = {
 };
 export declare class EventsService {
     private readonly prismaService;
-    private readonly categoriesService;
     private readonly matchesService;
-    constructor(prismaService: PrismaService, categoriesService: CategoriesService, matchesService: MatchesService);
+    constructor(prismaService: PrismaService, matchesService: MatchesService);
     createEvent(createEventDto: CreateEventDto): Promise<{
         id: string;
         name: string;
@@ -274,7 +272,18 @@ export declare class EventsService {
         }[];
     }>;
     createSchedule(createScheduleDto: CreateScheduleDto): Promise<Day[]>;
-    activateEvent(activateEventDto: ActivateEventDto): Promise<void>;
+    activateEvent(activateEventDto: ActivateEventDto): Promise<{
+        categoryId: string;
+        matchId: number;
+        doublesA: {
+            doublesId: string;
+            doublesRestState: Date;
+        };
+        doublesB: {
+            doublesId: string;
+            doublesRestState: Date;
+        };
+    }[] | "done">;
     findOne(id: number): string;
     update(id: number, updateEventDto: UpdateEventDto): string;
     remove(id: number): string;
@@ -282,6 +291,8 @@ export declare class EventsService {
         id: string;
         name: string;
         isActive: boolean;
+        startDate: Date;
+        finishDate: Date;
         categories: {
             id: string;
             eventDoubles: {

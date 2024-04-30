@@ -138,7 +138,18 @@ export declare class EventsController {
             id: string;
         }[];
     }>;
-    activateEvent(activateEventDto: ActivateEventDto): Promise<void>;
+    activateEvent(activateEventDto: ActivateEventDto): Promise<"done" | {
+        categoryId: string;
+        matchId: number;
+        doublesA: {
+            doublesId: string;
+            doublesRestState: Date;
+        };
+        doublesB: {
+            doublesId: string;
+            doublesRestState: Date;
+        };
+    }[]>;
     registerDoublesInEvent(registerDoublesInEventDto: RegisterDoublesInEventDto): Promise<{
         event: {
             id: string;
@@ -266,6 +277,8 @@ export declare class EventsController {
         id: string;
         name: string;
         isActive: boolean;
+        startDate: Date;
+        finishDate: Date;
         categories: {
             id: string;
             eventDoubles: {
