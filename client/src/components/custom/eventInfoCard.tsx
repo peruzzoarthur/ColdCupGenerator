@@ -26,11 +26,9 @@ export function EventInfoCard({
                 <CardDescription>
                     <p className="mt-1 mb-2">{`Matchmaking type: ${event.eventType}`}</p>
                     <p>
-                        {`Starts at: ${new Date(event.startDate).toDateString()}`}
+                        {`First match: ${new Date(new Date(event.startDate).valueOf() + event.timeOfFirstMatch * 3600000).toLocaleString()}`}
                     </p>
-                    <p>
-                        {`Finishes at: ${new Date(event.finishDate).toDateString()}`}
-                    </p>
+                    <p>{`Last match: ${new Date(new Date(event.finishDate).valueOf() + event.timeOfLastMatch * 3600000).toLocaleString()}`}</p>
                 </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">

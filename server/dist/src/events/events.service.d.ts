@@ -436,6 +436,5 @@ export declare class EventsService {
             placeId: string;
         }[];
     }>;
-    old_activateEvent(activateEventDto: ActivateEventDto): Promise<void>;
 }
 export {};
