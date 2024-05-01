@@ -279,6 +279,8 @@ export declare class EventsController {
         isActive: boolean;
         startDate: Date;
         finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
         categories: {
             id: string;
             eventDoubles: {

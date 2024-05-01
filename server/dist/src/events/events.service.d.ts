@@ -293,6 +293,8 @@ export declare class EventsService {
         isActive: boolean;
         startDate: Date;
         finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
         categories: {
             id: string;
             eventDoubles: {
