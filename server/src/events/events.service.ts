@@ -665,6 +665,13 @@ export class EventsService {
               select: {
                 level: true,
                 type: true,
+                matches: {
+                  select: {
+                    matchDateId: true,
+                    id: true,
+                    doubles: true,
+                  },
+                },
               },
             },
             categoryId: true,
@@ -727,6 +734,19 @@ export class EventsService {
             eventDoubles: {
               select: {
                 double: {
+                  select: {
+                    players: true,
+                    id: true,
+                  },
+                },
+              },
+            },
+            matches: {
+              select: {
+                number: true,
+                id: true,
+                matchDateId: true,
+                doubles: {
                   select: {
                     players: true,
                     id: true,

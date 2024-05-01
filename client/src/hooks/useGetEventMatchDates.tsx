@@ -2,19 +2,19 @@ import { MatchDate } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-export const useGetEventMatchesById = (eventId: string | undefined) => {
+export const useGetEventMatchDates = (eventId: string | undefined) => {
     const {
-        data: eventMatchesById,
-        isFetching: isFetchingEventMatchesById,
-        refetch: refetchEventMatchesById,
+        data: eventMatchDates,
+        isFetching: isFetchingEventMatchDates,
+        refetch: refetchEventMatchDates,
     } = useQuery({
-        queryKey: ['get-event-matches-byId', eventId],
+        queryKey: ['get-event-matchesDates', eventId],
         queryFn: async () => {
             if (eventId === undefined) {
                 return
             }
             const { data }: { data: MatchDate[] } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/match-dates/${eventId}`
+                `${import.meta.env.VITE_SERVER_URL}/match-dates/by-event/${eventId}`
             )
             if (data) {
                 return data
@@ -24,8 +24,8 @@ export const useGetEventMatchesById = (eventId: string | undefined) => {
     })
 
     return {
-        eventMatchesById,
-        isFetchingEventMatchesById,
-        refetchEventMatchesById,
+        eventMatchDates,
+        isFetchingEventMatchDates,
+        refetchEventMatchDates,
     }
 }

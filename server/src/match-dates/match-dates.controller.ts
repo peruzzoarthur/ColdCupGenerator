@@ -25,9 +25,14 @@ export class MatchDatesController {
     return this.matchDatesService.findAll();
   }
 
-  @Get(":id")
+  @Get("/:id")
   findOne(@Param("id") id: string) {
-    return this.matchDatesService.findMatchDatesInOrderByEventId(id);
+    return this.matchDatesService.findOne(id);
+  }
+
+  @Get("/by-event/:id")
+  findMatchDatesByEventId(@Param("id") eventId: string) {
+    return this.matchDatesService.findMatchDatesInOrderByEventId(eventId);
   }
 
   @Patch(":id")

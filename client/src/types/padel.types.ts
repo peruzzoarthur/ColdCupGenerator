@@ -50,6 +50,7 @@ export type Category = {
     doubles?: Double[]
     eventDoubles?: Double[]
     totalMatches?: number
+    matches?: Match[]
 }
 
 export type PadelEvent = {

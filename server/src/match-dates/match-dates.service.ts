@@ -63,8 +63,17 @@ export class MatchDatesService {
     return matchDates;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} matchDate`;
+  async findOne(id: string) {
+    return await this.prismaService.matchDate.findUniqueOrThrow({
+      where: {
+        id: id,
+      },
+      select: {
+        start: true,
+        finish: true,
+        id: true,
+      },
+    });
   }
 
   update(id: number, updateMatchDateDto: UpdateMatchDateDto) {

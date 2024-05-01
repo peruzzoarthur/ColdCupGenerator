@@ -67,8 +67,17 @@ let MatchDatesService = class MatchDatesService {
         });
         return matchDates;
     }
-    findOne(id) {
-        return `This action returns a #${id} matchDate`;
+    async findOne(id) {
+        return await this.prismaService.matchDate.findUniqueOrThrow({
+            where: {
+                id: id,
+            },
+            select: {
+                start: true,
+                finish: true,
+                id: true,
+            },
+        });
     }
     update(id, updateMatchDateDto) {
         return `This action updates a #${id} matchDate`;

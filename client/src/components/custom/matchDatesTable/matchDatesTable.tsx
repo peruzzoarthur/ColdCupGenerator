@@ -19,6 +19,8 @@ import {
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { PlusCircle } from 'lucide-react'
+import { Category } from '@/types/padel.types'
+import { AvailableMatchesSelect } from '../availableMatchesSelect'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -29,6 +31,7 @@ interface DataTableProps<TData, TValue> {
     >
     matchAssignOn: boolean
     setMatchAssignOn: React.Dispatch<React.SetStateAction<boolean>>
+    categories: Category[] | undefined
 }
 
 export function MatchDatesTable<TData, TValue>({
@@ -38,6 +41,7 @@ export function MatchDatesTable<TData, TValue>({
     setMatchDateIdState,
     matchAssignOn,
     setMatchAssignOn,
+    categories,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const table = useReactTable({
@@ -55,9 +59,18 @@ export function MatchDatesTable<TData, TValue>({
     return (
         <>
             {matchAssignOn ? (
-                <p onClick={() => setMatchAssignOn(false)}>
-                    {matchDateIdState}
-                </p>
+                <div className="flex">
+                    <AvailableMatchesSelect
+                        matchDateId={matchDateIdState}
+                        categories={categories}
+                    />
+                    <Button
+                        variant="destructive"
+                        onClick={() => setMatchAssignOn(false)}
+                    >
+                        close
+                    </Button>
+                </div>
             ) : null}
             <div className="flex w-full mt-2 border rounded-md">
                 <Table>
@@ -83,41 +96,37 @@ export function MatchDatesTable<TData, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <>
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={
-                                            row.getIsSelected() && 'selected'
-                                        }
+                                <TableRow
+                                    key={row.id}
+                                    data-state={
+                                        row.getIsSelected() && 'selected'
+                                    }
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                    <TableCell
+                                        key={`customTableCell_${row.id}`}
+                                        className="mt-2 cursor-pointer"
+                                        onClick={() => {
+                                            console.log(
+                                                row.getValue('matchDateId')
+                                            )
+                                            setMatchDateIdState(
+                                                row.getValue('matchDateId')
+                                            )
+                                            setMatchAssignOn(true)
+                                        }}
                                     >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(
-                                                    cell.column.columnDef.cell,
-                                                    cell.getContext()
-                                                )}
-                                            </TableCell>
-                                        ))}
-                                        <div className="mt-4">
-                                            <PlusCircle
-                                                className="cursor-pointer"
-                                                onClick={() => {
-                                                    console.log(
-                                                        row.getValue(
-                                                            'matchDateId'
-                                                        )
-                                                    )
-                                                    setMatchDateIdState(
-                                                        row.getValue(
-                                                            'matchDateId'
-                                                        )
-                                                    )
-                                                    setMatchAssignOn(true)
-                                                }}
-                                            />
-                                        </div>
-                                    </TableRow>
-                                </>
+                                        {' '}
+                                        <PlusCircle />
+                                    </TableCell>
+                                </TableRow>
                             ))
                         ) : (
                             <TableRow>

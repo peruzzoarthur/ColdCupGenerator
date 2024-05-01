@@ -41,13 +41,13 @@ import {
     MatchDatesTableProps,
     matchDateColumns,
 } from './matchDatesTable/columns'
-import { useGetEventMatchesById } from '@/hooks/useGetEventMatchesByDate'
 import { MatchDatesTable } from './matchDatesTable/matchDatesTable'
 import { getUniqueValuesForDays } from '@/util/getUniqueValuesForDays'
 import { CoolButton } from '../ui/moving-border'
 import { useGetEventMatchesInfoById } from '@/hooks/useGetEventMatchesInfoById'
 import { EventInfoCard } from './eventInfoCard'
 import { Alert } from '../ui/alert'
+import { useGetEventMatchDates } from '@/hooks/useGetEventMatchDates'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -76,8 +76,9 @@ export function EventDashboard({
         isFetchingEventById,
     } = useGetEventById(event.id)
 
-    const { eventMatchesById, refetchEventMatchesById } =
-        useGetEventMatchesById(event.id)
+    const { eventMatchDates, refetchEventMatchDates } = useGetEventMatchDates(
+        event.id
+    )
     const { eventMatchesInfoById } = useGetEventMatchesInfoById(event.id)
 
     const handleActivate = async (
@@ -104,7 +105,7 @@ export function EventDashboard({
             )
 
             await refetchEventById()
-            await refetchEventMatchesById()
+            await refetchEventMatchDates()
             return matches
         } catch (error) {
             return error
@@ -132,15 +133,15 @@ export function EventDashboard({
             }
         })
 
-    const eventDays = eventMatchesById?.map((md) => {
+    const eventDays = eventMatchDates?.map((md) => {
         const date = new Date(md.start)
         return date.getDate()
     })
 
     const uniqueValuesForDays = getUniqueValuesForDays(eventDays)
 
-    const uniqueDates = eventMatchesById
-        ? eventMatchesById
+    const uniqueDates = eventMatchDates
+        ? eventMatchDates
               .map((md) => {
                   return new Date(md.start)
               })
@@ -155,7 +156,7 @@ export function EventDashboard({
     console.log(uniqueDates)
 
     const matchDatesTableData: MatchDatesTableProps[] | undefined =
-        eventMatchesById?.map((md) => {
+        eventMatchDates?.map((md) => {
             const startDate = new Date(md.start)
             const startTime = startDate.toLocaleString()
             if (md.match === null) {
@@ -434,6 +435,7 @@ export function EventDashboard({
                     </div>
                     <div className="flex flex-col justify-center">
                         <MatchDatesTable
+                            categories={eventById?.categories}
                             matchDateIdState={matchDateIdState}
                             setMatchDateIdState={setMatchDateIdState}
                             matchAssignOn={matchAssignOn}
