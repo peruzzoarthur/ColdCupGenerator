@@ -13,12 +13,11 @@ export declare class MatchDatesController {
         courtId: string;
     }>;
     findAll(): Promise<{
-        court: {
-            id: string;
-            name: string;
-            isAvailable: boolean;
-            placeId: string;
-        };
+        id: string;
+        eventId: string;
+        matchId: string;
+        start: Date;
+        finish: Date;
         match: {
             id: string;
             number: number;
@@ -30,19 +29,18 @@ export declare class MatchDatesController {
             matchDateId: string;
             courtId: string;
         };
-        id: string;
-        eventId: string;
-        matchId: string;
-        start: Date;
-        finish: Date;
-    }[]>;
-    findOne(id: string): Promise<{
         court: {
             id: string;
             name: string;
             isAvailable: boolean;
             placeId: string;
         };
+    }[]>;
+    findOne(id: string): Promise<{
+        id: string;
+        matchId: string;
+        start: Date;
+        finish: Date;
         match: {
             number: number;
             doubles: {
@@ -56,9 +54,12 @@ export declare class MatchDatesController {
                 }[];
             }[];
         };
-        matchId: string;
-        start: Date;
-        finish: Date;
+        court: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        };
     }[]>;
     update(id: string, updateMatchDateDto: UpdateMatchDateDto): string;
     remove(id: string): string;

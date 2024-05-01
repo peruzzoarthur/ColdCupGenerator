@@ -10,6 +10,7 @@ export type MatchDatesTableProps = {
     doublesTwo: string | undefined
     number: number | undefined
     court: string | undefined
+    matchDateId: string
 }
 
 export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
@@ -66,29 +67,14 @@ export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
     },
     { accessorKey: 'doublesOne', header: 'Doubles 1' },
     { accessorKey: 'doublesTwo', header: 'Doubles 2' },
-    // {
-    //     accessorKey: 'W',
-    //     header: ({ column }) => {
-    //         return (
-    //             <div className="text-center">
-    //                 <Button
-    //                     variant="ghost"
-    //                     onClick={() =>
-    //                         column.toggleSorting(column.getIsSorted() === 'asc')
-    //                     }
-    //                 >
-    //                     W
-    //                     <ArrowUpDown className="w-4 h-4 ml-2" />
-    //                 </Button>
-    //             </div>
-    //         )
-    //     },
-    //     cell: ({ row }) => {
-    //         return (
-    //             <div className="font-medium text-center">
-    //                 {row.getValue('W')}
-    //             </div>
-    //         )
-    //     },
-    // },
+
+    {
+        accessorKey: 'matchDateId',
+        header: () => {
+            return <div className="text-left"></div>
+        },
+        cell: () => {
+            return <></>
+        },
+    },
 ]

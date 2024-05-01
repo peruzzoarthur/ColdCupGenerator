@@ -47,6 +47,7 @@ export class MatchDatesService {
         finish: true,
         court: true,
         matchId: true,
+        id: true,
         match: {
           select: {
             number: true,

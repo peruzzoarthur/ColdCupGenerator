@@ -64,6 +64,10 @@ export function EventDashboard({
 }: EventDashBoardProps) {
     const [catFilter, setCatFilter] = useState<string>('all')
     const [dayFilter, setDayFilter] = useState('all')
+    const [matchDateIdState, setMatchDateIdState] = useState<
+        string | undefined
+    >()
+    const [matchAssignOn, setMatchAssignOn] = useState<boolean>(false)
     const {
         finishedMatches,
         pendingMatches,
@@ -163,6 +167,7 @@ export function EventDashboard({
                     doublesOne: undefined,
                     doublesTwo: undefined,
                     court: md.court.name,
+                    matchDateId: md.id,
                 }
             }
             return {
@@ -173,6 +178,7 @@ export function EventDashboard({
                 doublesOne: `${md.match.doubles[0].players[0].firstName} ${md.match.doubles[0].players[0].lastName} / ${md.match.doubles[0].players[1].firstName} ${md.match.doubles[0].players[1].lastName}`,
                 doublesTwo: `${md.match.doubles[1].players[0].firstName} ${md.match.doubles[1].players[0].lastName} / ${md.match.doubles[1].players[1].firstName} ${md.match.doubles[1].players[1].lastName}`,
                 court: md.court.name,
+                matchDateId: md.id,
             }
         })
 
@@ -428,6 +434,10 @@ export function EventDashboard({
                     </div>
                     <div className="flex flex-col justify-center">
                         <MatchDatesTable
+                            matchDateIdState={matchDateIdState}
+                            setMatchDateIdState={setMatchDateIdState}
+                            matchAssignOn={matchAssignOn}
+                            setMatchAssignOn={setMatchAssignOn}
                             columns={matchDateColumns}
                             data={matchDatesTableData.filter((md) => {
                                 if (dayFilter === 'all') {

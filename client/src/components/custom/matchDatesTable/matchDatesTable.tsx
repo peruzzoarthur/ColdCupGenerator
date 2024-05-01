@@ -18,15 +18,26 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import React from 'react'
+import { PlusCircle } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    matchDateIdState: string | undefined
+    setMatchDateIdState: React.Dispatch<
+        React.SetStateAction<string | undefined>
+    >
+    matchAssignOn: boolean
+    setMatchAssignOn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function MatchDatesTable<TData, TValue>({
     columns,
     data,
+    matchDateIdState,
+    setMatchDateIdState,
+    matchAssignOn,
+    setMatchAssignOn,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const table = useReactTable({
@@ -43,6 +54,11 @@ export function MatchDatesTable<TData, TValue>({
 
     return (
         <>
+            {matchAssignOn ? (
+                <p onClick={() => setMatchAssignOn(false)}>
+                    {matchDateIdState}
+                </p>
+            ) : null}
             <div className="flex w-full mt-2 border rounded-md">
                 <Table>
                     <TableHeader>
@@ -67,21 +83,41 @@ export function MatchDatesTable<TData, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && 'selected'
-                                    }
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
+                                <>
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={
+                                            row.getIsSelected() && 'selected'
+                                        }
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                        <div className="mt-4">
+                                            <PlusCircle
+                                                className="cursor-pointer"
+                                                onClick={() => {
+                                                    console.log(
+                                                        row.getValue(
+                                                            'matchDateId'
+                                                        )
+                                                    )
+                                                    setMatchDateIdState(
+                                                        row.getValue(
+                                                            'matchDateId'
+                                                        )
+                                                    )
+                                                    setMatchAssignOn(true)
+                                                }}
+                                            />
+                                        </div>
+                                    </TableRow>
+                                </>
                             ))
                         ) : (
                             <TableRow>
