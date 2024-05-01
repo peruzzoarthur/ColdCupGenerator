@@ -1,0 +1,212 @@
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+0
+Calling with:
+        eventId: c917332e-734d-400a-9728-8983d8da1f33;
+        categoryId: e60ee2b2-0cad-4641-95f7-1eb3bf280d20;
+        doublesAId: 91bce05f-b2d3-49f5-8c5e-bef227a5166e;
+        doublesBId: c0f0e854-a316-4900-a5a1-343854dbe09b;
+
+Doubles A:
+{
+  doubleId: '91bce05f-b2d3-49f5-8c5e-bef227a5166e',
+  atRest: 2024-04-27T09:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+Doubles B:
+{
+  doubleId: 'c0f0e854-a316-4900-a5a1-343854dbe09b',
+  atRest: 2024-04-27T09:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+
+        doublesA.atRest: Sat Apr 27 2024 06:00:00 GMT-0300 (Brasilia Standard Time);
+        doublesB.atRest: Sat Apr 27 2024 06:00:00 GMT-0300 (Brasilia Standard Time);
+        count: 0
+        matchDates[count].start.start: Sat Apr 27 2024 06:00:00 GMT-0300 (Brasilia Standard Time)
+🌞goSeeTheSun🌞
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+1
+Calling with:
+        eventId: c917332e-734d-400a-9728-8983d8da1f33;
+        categoryId: e60ee2b2-0cad-4641-95f7-1eb3bf280d20;
+        doublesAId: 91bce05f-b2d3-49f5-8c5e-bef227a5166e;
+        doublesBId: ebbad07b-7163-4d6c-885d-50543844fc9e;
+Doubles A:
+{
+  doubleId: '91bce05f-b2d3-49f5-8c5e-bef227a5166e',
+  atRest: 2024-04-27T12:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+Doubles B:
+{
+  doubleId: 'ebbad07b-7163-4d6c-885d-50543844fc9e',
+  atRest: 2024-04-27T09:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+
+        doublesA.atRest: Sat Apr 27 2024 09:00:00 GMT-0300 (Brasilia Standard Time);
+        doublesB.atRest: Sat Apr 27 2024 06:00:00 GMT-0300 (Brasilia Standard Time);
+        count: 1
+        matchDates[count].start.start: Sat Apr 27 2024 07:00:00 GMT-0300 (Brasilia Standard Time)
+🌚toTheEnd🌚
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+2
+Calling with:
+        eventId: c917332e-734d-400a-9728-8983d8da1f33;
+        categoryId: e60ee2b2-0cad-4641-95f7-1eb3bf280d20;
+        doublesAId: c0f0e854-a316-4900-a5a1-343854dbe09b;
+        doublesBId: ebbad07b-7163-4d6c-885d-50543844fc9e;
+Doubles A:
+{
+  doubleId: 'c0f0e854-a316-4900-a5a1-343854dbe09b',
+  atRest: 2024-04-27T12:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+Doubles B:
+{
+  doubleId: 'ebbad07b-7163-4d6c-885d-50543844fc9e',
+  atRest: 2024-04-27T09:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+
+        doublesA.atRest: Sat Apr 27 2024 09:00:00 GMT-0300 (Brasilia Standard Time);
+        doublesB.atRest: Sat Apr 27 2024 06:00:00 GMT-0300 (Brasilia Standard Time);
+        count: 2
+        matchDates[count].start.start: Sat Apr 27 2024 08:00:00 GMT-0300 (Brasilia Standard Time)
+🌚toTheEnd🌚
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+3
+Calling with:
+        eventId: c917332e-734d-400a-9728-8983d8da1f33;
+        categoryId: 2624ae54-5052-48bc-b73a-f860e3847d51;
+        doublesAId: 09904e4d-804a-4ff4-882a-2e7181f752c1;
+        doublesBId: 3ebfdd27-cc16-47cd-a073-6c54d88f692f;
+Doubles A:
+{
+  doubleId: '09904e4d-804a-4ff4-882a-2e7181f752c1',
+  atRest: 2024-04-27T09:00:00.000Z,
+  categoryId: '2624ae54-5052-48bc-b73a-f860e3847d51'
+}
+Doubles B:
+{
+  doubleId: '3ebfdd27-cc16-47cd-a073-6c54d88f692f',
+  atRest: 2024-04-27T09:00:00.000Z,
+  categoryId: '2624ae54-5052-48bc-b73a-f860e3847d51'
+}
+
+        doublesA.atRest: Sat Apr 27 2024 06:00:00 GMT-0300 (Brasilia Standard Time);
+        doublesB.atRest: Sat Apr 27 2024 06:00:00 GMT-0300 (Brasilia Standard Time);
+        count: 3
+        matchDates[count].start.start: Sat Apr 27 2024 09:00:00 GMT-0300 (Brasilia Standard Time)
+🌞goSeeTheSun🌞
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+4
+Calling with:
+        eventId: c917332e-734d-400a-9728-8983d8da1f33;
+        categoryId: e60ee2b2-0cad-4641-95f7-1eb3bf280d20;
+        doublesAId: 91bce05f-b2d3-49f5-8c5e-bef227a5166e;
+        doublesBId: ebbad07b-7163-4d6c-885d-50543844fc9e;
+Doubles A:
+{
+  doubleId: '91bce05f-b2d3-49f5-8c5e-bef227a5166e',
+  atRest: 2024-04-27T12:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+Doubles B:
+{
+  doubleId: 'ebbad07b-7163-4d6c-885d-50543844fc9e',
+  atRest: 2024-04-27T09:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+
+        doublesA.atRest: Sat Apr 27 2024 09:00:00 GMT-0300 (Brasilia Standard Time);
+        doublesB.atRest: Sat Apr 27 2024 06:00:00 GMT-0300 (Brasilia Standard Time);
+        count: 4
+        matchDates[count].start.start: Sat Apr 27 2024 10:00:00 GMT-0300 (Brasilia Standard Time)
+🌞goSeeTheSun🌞
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+5
+Calling with:
+        eventId: c917332e-734d-400a-9728-8983d8da1f33;
+        categoryId: e60ee2b2-0cad-4641-95f7-1eb3bf280d20;
+        doublesAId: c0f0e854-a316-4900-a5a1-343854dbe09b;
+        doublesBId: ebbad07b-7163-4d6c-885d-50543844fc9e;
+Doubles A:
+{
+  doubleId: 'c0f0e854-a316-4900-a5a1-343854dbe09b',
+  atRest: 2024-04-27T12:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+Doubles B:
+{
+  doubleId: 'ebbad07b-7163-4d6c-885d-50543844fc9e',
+  atRest: 2024-04-27T16:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+
+        doublesA.atRest: Sat Apr 27 2024 09:00:00 GMT-0300 (Brasilia Standard Time);
+        doublesB.atRest: Sat Apr 27 2024 13:00:00 GMT-0300 (Brasilia Standard Time);
+        count: 5
+        matchDates[count].start.start: Sat Apr 27 2024 11:00:00 GMT-0300 (Brasilia Standard Time)
+🌚toTheEnd🌚
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+6
+Calling with:
+        eventId: c917332e-734d-400a-9728-8983d8da1f33;
+        categoryId: e60ee2b2-0cad-4641-95f7-1eb3bf280d20;
+        doublesAId: c0f0e854-a316-4900-a5a1-343854dbe09b;
+        doublesBId: ebbad07b-7163-4d6c-885d-50543844fc9e;
+Doubles A:
+{
+  doubleId: 'c0f0e854-a316-4900-a5a1-343854dbe09b',
+  atRest: 2024-04-27T12:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+Doubles B:
+{
+  doubleId: 'ebbad07b-7163-4d6c-885d-50543844fc9e',
+  atRest: 2024-04-27T16:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+
+        doublesA.atRest: Sat Apr 27 2024 09:00:00 GMT-0300 (Brasilia Standard Time);
+        doublesB.atRest: Sat Apr 27 2024 13:00:00 GMT-0300 (Brasilia Standard Time);
+        count: 6
+        matchDates[count].start.start: Sat Apr 27 2024 12:00:00 GMT-0300 (Brasilia Standard Time)
+🌚toTheEnd🌚
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+7
+Calling with:
+        eventId: c917332e-734d-400a-9728-8983d8da1f33;
+        categoryId: e60ee2b2-0cad-4641-95f7-1eb3bf280d20;
+        doublesAId: c0f0e854-a316-4900-a5a1-343854dbe09b;
+        doublesBId: ebbad07b-7163-4d6c-885d-50543844fc9e;
+Doubles A:
+{
+  doubleId: 'c0f0e854-a316-4900-a5a1-343854dbe09b',
+  atRest: 2024-04-27T12:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+Doubles B:
+{
+  doubleId: 'ebbad07b-7163-4d6c-885d-50543844fc9e',
+  atRest: 2024-04-27T16:00:00.000Z,
+  categoryId: 'e60ee2b2-0cad-4641-95f7-1eb3bf280d20'
+}
+
+        doublesA.atRest: Sat Apr 27 2024 09:00:00 GMT-0300 (Brasilia Standard Time);
+        doublesB.atRest: Sat Apr 27 2024 13:00:00 GMT-0300 (Brasilia Standard Time);
+        count: 7
+        matchDates[count].start.start: Sun Apr 28 2024 06:00:00 GMT-0300 (Brasilia Standard Time)
+🌞goSeeTheSun🌞
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+8

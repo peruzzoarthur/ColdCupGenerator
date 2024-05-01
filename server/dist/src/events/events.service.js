@@ -417,7 +417,7 @@ let EventsService = class EventsService {
         doublesA.atRest: ${doublesA.atRest};
         doublesB.atRest: ${doublesB.atRest};
         count: ${count}
-        matchDates[count].start.start: ${matchDatesAvailable[count].start}`);
+        matchDates[count].start: ${matchDatesAvailable[count].start}`);
             if (doublesA.atRest <= matchDatesAvailable[count].start &&
                 doublesB.atRest <= matchDatesAvailable[count].start) {
                 matchesToAdd.shift();
@@ -447,7 +447,6 @@ let EventsService = class EventsService {
                 matchesToAdd.push(matchesToAdd[0]);
                 matchesToAdd.shift();
                 console.log("🌚toTheEnd🌚");
-                count--;
             }
             count++;
         }

@@ -502,7 +502,7 @@ export class EventsService {
         doublesA.atRest: ${doublesA.atRest};
         doublesB.atRest: ${doublesB.atRest};
         count: ${count}
-        matchDates[count].start.start: ${matchDatesAvailable[count].start}`
+        matchDates[count].start: ${matchDatesAvailable[count].start}`
       );
       if (
         doublesA.atRest <= matchDatesAvailable[count].start &&
