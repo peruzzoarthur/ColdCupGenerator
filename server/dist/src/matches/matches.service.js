@@ -47,7 +47,6 @@ let MatchesService = class MatchesService {
             doublesIds: createMatchDto.doublesIds,
             eventId: createMatchDto.eventId,
         });
-        console.log(superSet);
         return match;
     }
     async findAll() {
@@ -135,6 +134,14 @@ let MatchesService = class MatchesService {
     }
     async update(id, updateMatchDto) {
         return `This action updates a #${id} match`;
+    }
+    async updateMatchDate(id, updateMatchDto) {
+        const match = await this.prismaService.match.findUnique({
+            where: {
+                id: id,
+            },
+        });
+        return match;
     }
     async matchFinished(id, matchFinishedDto) {
         const match = await this.prismaService.match.findUnique({

@@ -82,7 +82,6 @@ Table Match {
   eventId String
   type MatchType [not null, default: 'SUPERSET']
   matchDate MatchDate
-  matchDateId String [unique]
   court Court
   courtId String
 }

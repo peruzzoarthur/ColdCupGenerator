@@ -90,7 +90,6 @@ model Match {
   eventId         String?
   type            MatchType  @default(SUPERSET)
   matchDate       MatchDate?
-  matchDateId     String?    @unique
   court           Court?     @relation(fields: [courtId], references: [id])
   courtId         String?
 }

@@ -36,10 +36,11 @@ export class MatchesController {
     return await this.matchesService.findOne(id);
   }
 
-  @Patch(":id")
+  @Patch("/update-match-date/:id")
   update(@Param("id") id: string, @Body() updateMatchDto: UpdateMatchDto) {
-    return this.matchesService.update(id, updateMatchDto);
+    return this.matchesService.updateMatchDate(id, updateMatchDto);
   }
+
   @Patch("/finish-match/:id")
   async matchFinished(
     @Param("id") id: string,

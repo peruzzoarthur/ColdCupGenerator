@@ -69,7 +69,16 @@ export declare class MatchesController {
         }[];
         isFinished: boolean;
     }>;
-    update(id: string, updateMatchDto: UpdateMatchDto): Promise<string>;
+    update(id: string, updateMatchDto: UpdateMatchDto): Promise<{
+        id: string;
+        number: number;
+        isFinished: boolean;
+        categoryId: string;
+        winnerDoublesId: string;
+        eventId: string;
+        type: import(".prisma/client").$Enums.MatchType;
+        courtId: string;
+    }>;
     matchFinished(id: string, matchFinishedDto: MatchFinishedDto): Promise<{
         id: string;
         number: number;
@@ -78,7 +87,6 @@ export declare class MatchesController {
         winnerDoublesId: string;
         eventId: string;
         type: import(".prisma/client").$Enums.MatchType;
-        matchDateId: string;
         courtId: string;
     }>;
     remove(id: string): string;

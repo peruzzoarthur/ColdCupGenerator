@@ -22,7 +22,7 @@ export class MatchesService {
           connect: {
             id: createMatchDto.matchDateId,
           },
-        }, // ! aaaaaaaaaaaaaa
+        },
       },
       select: {
         id: true,
@@ -42,8 +42,6 @@ export class MatchesService {
       doublesIds: createMatchDto.doublesIds,
       eventId: createMatchDto.eventId,
     });
-
-    console.log(superSet);
 
     return match;
   }
@@ -145,6 +143,16 @@ export class MatchesService {
   }
   async update(id: string, updateMatchDto: UpdateMatchDto) {
     return `This action updates a #${id} match`;
+  }
+
+  async updateMatchDate(id: string, updateMatchDto: UpdateMatchDto) {
+    const match = await this.prismaService.match.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    return match;
   }
 
   async matchFinished(id: string, matchFinishedDto: MatchFinishedDto) {

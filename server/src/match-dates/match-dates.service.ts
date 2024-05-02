@@ -72,6 +72,7 @@ export class MatchDatesService {
         start: true,
         finish: true,
         id: true,
+        court: true,
       },
     });
   }

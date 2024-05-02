@@ -23,7 +23,6 @@ export declare class SetsService {
             winnerDoublesId: string;
             eventId: string;
             type: import(".prisma/client").$Enums.MatchType;
-            matchDateId: string;
             courtId: string;
         };
         result: string;

@@ -126,7 +126,6 @@ export declare class EventsController {
                 winnerDoublesId: string;
                 eventId: string;
                 type: import(".prisma/client").$Enums.MatchType;
-                matchDateId: string;
                 courtId: string;
             };
             id: string;
@@ -231,7 +230,6 @@ export declare class EventsController {
                     winnerDoublesId: string;
                     eventId: string;
                     type: import(".prisma/client").$Enums.MatchType;
-                    matchDateId: string;
                     courtId: string;
                 }[];
             };
@@ -286,7 +284,6 @@ export declare class EventsController {
                         id: string;
                         categoryId: string;
                     }[];
-                    matchDateId: string;
                 }[];
             };
             matchDate: {
@@ -345,7 +342,6 @@ export declare class EventsController {
                     winnerDoublesId: string;
                     eventId: string;
                     type: import(".prisma/client").$Enums.MatchType;
-                    matchDateId: string;
                     courtId: string;
                 }[];
                 gamesWins: {
@@ -374,7 +370,6 @@ export declare class EventsController {
                         position: import(".prisma/client").$Enums.PlayerPosition;
                     }[];
                 }[];
-                matchDateId: string;
             }[];
             eventDoubles: {
                 double: {

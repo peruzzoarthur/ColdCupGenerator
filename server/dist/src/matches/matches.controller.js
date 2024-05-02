@@ -35,7 +35,7 @@ let MatchesController = class MatchesController {
         return await this.matchesService.findOne(id);
     }
     update(id, updateMatchDto) {
-        return this.matchesService.update(id, updateMatchDto);
+        return this.matchesService.updateMatchDate(id, updateMatchDto);
     }
     async matchFinished(id, matchFinishedDto) {
         return await this.matchesService.matchFinished(id, matchFinishedDto);
@@ -73,7 +73,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MatchesController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(":id"),
+    (0, common_1.Patch)("/update-match-date/:id"),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),

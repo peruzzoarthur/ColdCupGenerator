@@ -496,7 +496,6 @@ let EventsService = class EventsService {
                                 type: true,
                                 matches: {
                                     select: {
-                                        matchDateId: true,
                                         id: true,
                                         doubles: true,
                                     },
@@ -574,7 +573,6 @@ let EventsService = class EventsService {
                             select: {
                                 number: true,
                                 id: true,
-                                matchDateId: true,
                                 doubles: {
                                     select: {
                                         players: true,

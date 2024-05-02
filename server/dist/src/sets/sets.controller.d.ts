@@ -21,7 +21,6 @@ export declare class SetsController {
             winnerDoublesId: string;
             eventId: string;
             type: import(".prisma/client").$Enums.MatchType;
-            matchDateId: string;
             courtId: string;
         };
         result: string;
