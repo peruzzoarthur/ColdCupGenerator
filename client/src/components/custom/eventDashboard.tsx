@@ -67,6 +67,7 @@ export function EventDashboard({
     const [matchDateIdState, setMatchDateIdState] = useState<
         string | undefined
     >()
+    const [matchIdState, setMatchIdState] = useState<string | undefined>()
     const [matchAssignOn, setMatchAssignOn] = useState<boolean>(false)
     const {
         finishedMatches,
@@ -438,6 +439,8 @@ export function EventDashboard({
                             categories={eventById?.categories}
                             matchDateIdState={matchDateIdState}
                             setMatchDateIdState={setMatchDateIdState}
+                            matchIdState={matchIdState}
+                            setMatchIdState={setMatchIdState}
                             matchAssignOn={matchAssignOn}
                             setMatchAssignOn={setMatchAssignOn}
                             columns={matchDateColumns}
@@ -452,6 +455,7 @@ export function EventDashboard({
                                     )
                                 }
                             })}
+                            refetchEventMatchDates={refetchEventMatchDates}
                         />
                     </div>
                 </>

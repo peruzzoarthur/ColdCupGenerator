@@ -18,9 +18,10 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import React from 'react'
-import { PlusCircle } from 'lucide-react'
-import { Category } from '@/types/padel.types'
+import { Pencil2Icon } from '@radix-ui/react-icons'
+import { Category, MatchDate } from '@/types/padel.types'
 import { AvailableMatchesSelect } from '../availableMatchesSelect'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -29,9 +30,14 @@ interface DataTableProps<TData, TValue> {
     setMatchDateIdState: React.Dispatch<
         React.SetStateAction<string | undefined>
     >
+    matchIdState: string | undefined
+    setMatchIdState: React.Dispatch<React.SetStateAction<string | undefined>>
     matchAssignOn: boolean
     setMatchAssignOn: React.Dispatch<React.SetStateAction<boolean>>
     categories: Category[] | undefined
+    refetchEventMatchDates: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<MatchDate[] | undefined, Error>>
 }
 
 export function MatchDatesTable<TData, TValue>({
@@ -41,7 +47,10 @@ export function MatchDatesTable<TData, TValue>({
     setMatchDateIdState,
     matchAssignOn,
     setMatchAssignOn,
+    matchIdState,
     categories,
+    setMatchIdState,
+    refetchEventMatchDates,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const table = useReactTable({
@@ -58,21 +67,19 @@ export function MatchDatesTable<TData, TValue>({
 
     return (
         <>
-            {matchAssignOn ? (
-                <div className="flex">
-                    <AvailableMatchesSelect
-                        matchDateId={matchDateIdState}
-                        categories={categories}
-                    />
-                    <Button
-                        variant="destructive"
-                        onClick={() => setMatchAssignOn(false)}
-                    >
-                        close
-                    </Button>
-                </div>
-            ) : null}
-            <div className="flex w-full mt-2 border rounded-md">
+            <div className="flex-col w-full mt-2 border rounded-md">
+                {matchAssignOn ? (
+                    <div className="flex justify-center w-full mt-2 mb-2">
+                        <AvailableMatchesSelect
+                            matchDateIdState={matchDateIdState}
+                            categories={categories}
+                            matchIdState={matchIdState}
+                            setMatchIdState={setMatchIdState}
+                            setMatchAssignOn={setMatchAssignOn}
+                            refetchEventMatchDates={refetchEventMatchDates}
+                        />
+                    </div>
+                ) : null}
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -123,8 +130,7 @@ export function MatchDatesTable<TData, TValue>({
                                             setMatchAssignOn(true)
                                         }}
                                     >
-                                        {' '}
-                                        <PlusCircle />
+                                        <Pencil2Icon />
                                     </TableCell>
                                 </TableRow>
                             ))
