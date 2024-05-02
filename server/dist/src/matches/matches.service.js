@@ -136,11 +136,56 @@ let MatchesService = class MatchesService {
         return `This action updates a #${id} match`;
     }
     async updateMatchDate(id, updateMatchDto) {
-        const match = await this.prismaService.match.findUnique({
+        let match = await this.prismaService.match.findUnique({
             where: {
                 id: id,
             },
+            select: {
+                id: true,
+                matchDate: {
+                    select: {
+                        id: true,
+                        start: true,
+                    },
+                },
+            },
         });
+        console.log(`Before: ${match.matchDate.id}`);
+        if (match.matchDate.id !== null) {
+            await this.prismaService.matchDate.update({
+                where: {
+                    id: match.matchDate.id,
+                },
+                data: {
+                    matchId: null,
+                },
+            });
+        }
+        await this.prismaService.match.update({
+            where: { id: id },
+            data: {
+                matchDate: {
+                    connect: {
+                        id: updateMatchDto.matchDateId,
+                    },
+                },
+            },
+        });
+        match = await this.prismaService.match.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                id: true,
+                matchDate: {
+                    select: {
+                        id: true,
+                        start: true,
+                    },
+                },
+            },
+        });
+        console.log(`After: ${match.matchDate.id}`);
         return match;
     }
     async matchFinished(id, matchFinishedDto) {
