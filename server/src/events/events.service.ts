@@ -668,6 +668,11 @@ export class EventsService {
                 matches: {
                   select: {
                     id: true,
+                    matchDate: {
+                      select: {
+                        id: true,
+                      },
+                    },
                     doubles: true,
                   },
                 },
@@ -744,6 +749,11 @@ export class EventsService {
               select: {
                 number: true,
                 id: true,
+                matchDate: {
+                  select: {
+                    id: true,
+                  },
+                },
                 doubles: {
                   select: {
                     players: true,

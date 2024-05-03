@@ -497,6 +497,11 @@ let EventsService = class EventsService {
                                 matches: {
                                     select: {
                                         id: true,
+                                        matchDate: {
+                                            select: {
+                                                id: true,
+                                            },
+                                        },
                                         doubles: true,
                                     },
                                 },
@@ -573,6 +578,11 @@ let EventsService = class EventsService {
                             select: {
                                 number: true,
                                 id: true,
+                                matchDate: {
+                                    select: {
+                                        id: true,
+                                    },
+                                },
                                 doubles: {
                                     select: {
                                         players: true,

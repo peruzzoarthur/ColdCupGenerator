@@ -10,7 +10,7 @@ export type MatchDatesTableProps = {
     doublesTwo: string | undefined
     number: number | undefined
     court: string | undefined
-    matchDateId: string
+    matchDateId: string | null
 }
 
 export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
@@ -70,6 +70,15 @@ export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
 
     {
         accessorKey: 'matchDateId',
+        header: () => {
+            return <div className="text-left"></div>
+        },
+        cell: () => {
+            return <></>
+        },
+    },
+    {
+        accessorKey: 'matchId',
         header: () => {
             return <div className="text-left"></div>
         },

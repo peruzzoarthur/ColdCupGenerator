@@ -73,6 +73,22 @@ export class MatchDatesService {
         finish: true,
         id: true,
         court: true,
+        match: {
+          select: {
+            number: true,
+            id: true,
+            doubles: {
+              select: {
+                players: {
+                  select: {
+                    firstName: true,
+                    lastName: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }

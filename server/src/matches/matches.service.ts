@@ -146,6 +146,7 @@ export class MatchesService {
   }
 
   async updateMatchDate(id: string, updateMatchDto: UpdateMatchDto) {
+    console.log(id);
     let match = await this.prismaService.match.findUnique({
       where: {
         id: id,
@@ -161,6 +162,21 @@ export class MatchesService {
       },
     });
 
+    console.log(match);
+
+    if (match.matchDate === null) {
+      await this.prismaService.match.update({
+        where: { id: id },
+        data: {
+          matchDate: {
+            connect: {
+              id: updateMatchDto.matchDateId,
+            },
+          },
+        },
+      });
+      return;
+    }
     console.log(`Before: ${match.matchDate.id}`);
 
     if (match.matchDate.id !== null) {

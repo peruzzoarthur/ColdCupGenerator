@@ -18,10 +18,11 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import React from 'react'
-import { Pencil2Icon } from '@radix-ui/react-icons'
+import { CircleIcon, CrossCircledIcon } from '@radix-ui/react-icons'
 import { Category, MatchDate } from '@/types/padel.types'
-import { AvailableMatchesSelect } from '../availableMatchesSelect'
+import { AvailableMatchesSelectCard } from '../availableMatchesSelectCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+// import { useGetMatchDateById } from '@/hooks/useGetMatchDateById'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -38,6 +39,12 @@ interface DataTableProps<TData, TValue> {
     refetchEventMatchDates: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<MatchDate[] | undefined, Error>>
+    matchDates: MatchDate[] | undefined
+    matchDateById: MatchDate | undefined
+    isFetchingMatchDateById: boolean
+    refetchMatchDateById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<MatchDate | undefined, Error>>
 }
 
 export function MatchDatesTable<TData, TValue>({
@@ -51,6 +58,10 @@ export function MatchDatesTable<TData, TValue>({
     categories,
     setMatchIdState,
     refetchEventMatchDates,
+    matchDates,
+    matchDateById,
+    isFetchingMatchDateById,
+    refetchMatchDateById,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const table = useReactTable({
@@ -70,13 +81,18 @@ export function MatchDatesTable<TData, TValue>({
             <div className="flex-col w-full mt-2 border rounded-md">
                 {matchAssignOn ? (
                     <div className="flex justify-center w-full mt-2 mb-2">
-                        <AvailableMatchesSelect
+                        <AvailableMatchesSelectCard
+                            isFetchingMatchDateById={isFetchingMatchDateById}
+                            setMatchDateIdState={setMatchDateIdState}
                             matchDateIdState={matchDateIdState}
                             categories={categories}
                             matchIdState={matchIdState}
                             setMatchIdState={setMatchIdState}
                             setMatchAssignOn={setMatchAssignOn}
                             refetchEventMatchDates={refetchEventMatchDates}
+                            matchDates={matchDates}
+                            matchDateById={matchDateById}
+                            refetchMatchDateById={refetchMatchDateById}
                         />
                     </div>
                 ) : null}
@@ -117,21 +133,31 @@ export function MatchDatesTable<TData, TValue>({
                                             )}
                                         </TableCell>
                                     ))}
-                                    <TableCell
-                                        key={`customTableCell_${row.id}`}
-                                        className="mt-2 cursor-pointer"
-                                        onClick={() => {
-                                            console.log(
-                                                row.getValue('matchDateId')
-                                            )
-                                            setMatchDateIdState(
-                                                row.getValue('matchDateId')
-                                            )
-                                            setMatchAssignOn(true)
-                                        }}
-                                    >
-                                        <Pencil2Icon />
-                                    </TableCell>
+                                    {matchAssignOn &&
+                                        !isFetchingMatchDateById && (
+                                            <TableCell
+                                                key={`customTableCell_${row.id}`}
+                                                className="mt-2 cursor-pointer"
+                                                onClick={async () => {
+                                                    setMatchDateIdState(
+                                                        row.getValue(
+                                                            'matchDateId'
+                                                        )
+                                                    )
+
+                                                    setMatchIdState(
+                                                        row.getValue('matchId')
+                                                    )
+                                                }}
+                                            >
+                                                {matchDateIdState ===
+                                                row.getValue('matchDateId') ? (
+                                                    <CrossCircledIcon />
+                                                ) : (
+                                                    <CircleIcon />
+                                                )}
+                                            </TableCell>
+                                        )}
                                 </TableRow>
                             ))
                         ) : (

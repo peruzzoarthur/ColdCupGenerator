@@ -89,11 +89,11 @@ export type Match = {
 }
 
 export type MatchDate = {
-    id: string
+    id: string | null
     start: string
     finish: string
     matchId: string
-    match: Match
+    match: Match | null
     court: Court
 }
 

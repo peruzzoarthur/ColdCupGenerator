@@ -1,4 +1,4 @@
-import { File, ListFilter } from 'lucide-react'
+import { File, ListFilter, Pencil } from 'lucide-react'
 
 import {
     Breadcrumb,
@@ -48,6 +48,7 @@ import { useGetEventMatchesInfoById } from '@/hooks/useGetEventMatchesInfoById'
 import { EventInfoCard } from './eventInfoCard'
 import { Alert } from '../ui/alert'
 import { useGetEventMatchDates } from '@/hooks/useGetEventMatchDates'
+import { useGetMatchDateById } from '@/hooks/useGetMatchDateById'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -81,6 +82,9 @@ export function EventDashboard({
         event.id
     )
     const { eventMatchesInfoById } = useGetEventMatchesInfoById(event.id)
+    const { matchDateById, isFetchingMatchDateById, refetchMatchDateById } =
+        useGetMatchDateById(matchDateIdState)
+    console.log(matchDateById)
 
     const handleActivate = async (
         eventId: string,
@@ -154,8 +158,6 @@ export function EventDashboard({
               })
         : null
 
-    console.log(uniqueDates)
-
     const matchDatesTableData: MatchDatesTableProps[] | undefined =
         eventMatchDates?.map((md) => {
             const startDate = new Date(md.start)
@@ -165,7 +167,7 @@ export function EventDashboard({
                     number: undefined,
                     start: startTime,
                     finish: md.finish,
-                    matchId: md.matchId,
+                    matchId: undefined,
                     doublesOne: undefined,
                     doublesTwo: undefined,
                     court: md.court.name,
@@ -388,6 +390,23 @@ export function EventDashboard({
                     ) : null}
 
                     <div className="flex items-center gap-2 ml-auto">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1 h-7"
+                            onClick={() => {
+                                if (!matchAssignOn) {
+                                    setMatchAssignOn(true)
+                                } else {
+                                    setMatchAssignOn(false)
+                                }
+                            }}
+                        >
+                            <Pencil className="h-3.5 w-3.5" />
+                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                Edit
+                            </span>
+                        </Button>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -436,6 +455,9 @@ export function EventDashboard({
                     </div>
                     <div className="flex flex-col justify-center">
                         <MatchDatesTable
+                            matchDateById={matchDateById}
+                            isFetchingMatchDateById={isFetchingMatchDateById}
+                            refetchMatchDateById={refetchMatchDateById}
                             categories={eventById?.categories}
                             matchDateIdState={matchDateIdState}
                             setMatchDateIdState={setMatchDateIdState}
@@ -456,6 +478,7 @@ export function EventDashboard({
                                 }
                             })}
                             refetchEventMatchDates={refetchEventMatchDates}
+                            matchDates={eventMatchDates}
                         />
                     </div>
                 </>

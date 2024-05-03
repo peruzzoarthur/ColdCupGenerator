@@ -42,6 +42,16 @@ export declare class MatchDatesController {
             isAvailable: boolean;
             placeId: string;
         };
+        match: {
+            number: number;
+            id: string;
+            doubles: {
+                players: {
+                    firstName: string;
+                    lastName: string;
+                }[];
+            }[];
+        };
         id: string;
         start: Date;
         finish: Date;

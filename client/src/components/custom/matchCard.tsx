@@ -98,8 +98,11 @@ export const MatchCard = ({
         }
     }
 
-    const matchStartDate = new Date(match.matchDate.start)
-    const startTime = matchStartDate.toLocaleString()
+    let startTime = undefined
+    if (match.matchDate) {
+        const matchStartDate = new Date(match.matchDate.start)
+        startTime = matchStartDate.toLocaleString()
+    }
 
     return (
         <>

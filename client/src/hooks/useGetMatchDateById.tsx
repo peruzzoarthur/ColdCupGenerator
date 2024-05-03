@@ -21,6 +21,7 @@ export const useGetMatchDateById = (matchDateId: string | undefined) => {
             }
             return
         },
+        enabled: !!matchDateId,
     })
 
     return {
