@@ -92,7 +92,6 @@ export function EventDashboard({
 
     const { matchById, refetchMatchById, isFetchingMatchById } =
         useGetMatchById(matchIdState)
-    console.log(matchById)
 
     const handleActivate = async (
         eventId: string,
@@ -464,6 +463,9 @@ export function EventDashboard({
                             matchDateById={matchDateById}
                             isFetchingMatchDateById={isFetchingMatchDateById}
                             refetchMatchDateById={refetchMatchDateById}
+                            matchById={matchById}
+                            isFetchingMatchById={isFetchingMatchById}
+                            refetchMatchById={refetchMatchById}
                             categories={eventById?.categories}
                             matchDateIdState={matchDateIdState}
                             setMatchDateIdState={setMatchDateIdState}
