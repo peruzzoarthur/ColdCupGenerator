@@ -1,4 +1,4 @@
-import { File, ListFilter, Pencil } from 'lucide-react'
+import { File, ListFilter, Pencil, Search } from 'lucide-react'
 
 import {
     Breadcrumb,
@@ -49,6 +49,8 @@ import { EventInfoCard } from './eventInfoCard'
 import { Alert } from '../ui/alert'
 import { useGetEventMatchDates } from '@/hooks/useGetEventMatchDates'
 import { useGetMatchDateById } from '@/hooks/useGetMatchDateById'
+import { Input } from '../ui/input'
+import { downloadToExcel } from '@/lib/xlsx'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -164,12 +166,12 @@ export function EventDashboard({
             const startTime = startDate.toLocaleString()
             if (md.match === null) {
                 return {
-                    number: undefined,
+                    number: null,
                     start: startTime,
                     finish: md.finish,
-                    matchId: undefined,
-                    doublesOne: undefined,
-                    doublesTwo: undefined,
+                    matchId: null,
+                    doublesOne: null,
+                    doublesTwo: null,
                     court: md.court.name,
                     matchDateId: md.id,
                 }
@@ -188,9 +190,10 @@ export function EventDashboard({
 
     return (
         <div className="flex flex-col justify-center w-full pl-2 pr-2 align-center">
+            {/* Header && Breadcrumb */}
             <div className="flex">
-                <header className="sticky top-0 z-30 flex items-center gap-4 px-4 h-14 bg-background sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-                    <Breadcrumb className="hidden md:flex">
+                <header className="sticky top-0 z-30 flex items-center gap-4 px-4 h-14 bg-background sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+                    <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <BreadcrumbLink
@@ -206,16 +209,10 @@ export function EventDashboard({
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
-                    {/* <div className="relative flex-1 ml-auto md:grow-0">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                        type="search"
-                        placeholder="Search..."
-                        className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-                        />
-                    </div> */}
                 </header>
             </div>
+
+            {/* Event Info Card */}
             {eventById && eventById.isActive ? null : (
                 <div className="flex justify-center p-10">
                     {event.matches.length === 0 && eventMatchesInfoById ? (
@@ -257,15 +254,10 @@ export function EventDashboard({
                     ) : null}
                 </div>
             )}
+
+            {/* Registered Doubles Table */}
             <Tabs defaultValue="all">
                 <div className="flex items-center justify-center w-full">
-                    {/* <TabsList>
-                                <TabsTrigger value="all">All</TabsTrigger>
-                                <TabsTrigger value="active">Active</TabsTrigger>
-                                <TabsTrigger value="finished">
-                                    Finished
-                                </TabsTrigger>
-                            </TabsList> */}
                     <div className="flex flex-row ml-auto">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -350,9 +342,8 @@ export function EventDashboard({
                     </Card>
                 </TabsContent>
             </Tabs>
-
             <h1 className="text-2xl font-bold">Matches</h1>
-
+            {/* Pending Matches Carousels */}
             {!isFetchingEventById &&
             pendingMatches &&
             pendingMatches.length !== 0 ? (
@@ -367,6 +358,7 @@ export function EventDashboard({
                     </div>
                 </>
             ) : null}
+            {/* Fininished Matches Carousels */}
             {!isFetchingEventById &&
             finishedMatches &&
             finishedMatches.length !== 0 ? (
@@ -381,6 +373,7 @@ export function EventDashboard({
                     </div>
                 </>
             ) : null}
+            {/* Schedule - Matches Data Table */}
             {matchDatesTableData ? (
                 <>
                     <h1 className="text-xl font-bold">Schedule</h1>
@@ -390,6 +383,14 @@ export function EventDashboard({
                     ) : null}
 
                     <div className="flex items-center gap-2 ml-auto">
+                        <div className="relative flex-1 ml-auto md:grow-0">
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                type="search"
+                                placeholder="Search..."
+                                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+                            />
+                        </div>
                         <Button
                             variant="outline"
                             size="sm"
@@ -446,6 +447,11 @@ export function EventDashboard({
                             size="sm"
                             variant="outline"
                             className="gap-1 h-7"
+                            onClick={() =>
+                                console.log(
+                                    downloadToExcel(matchDatesTableData)
+                                )
+                            } //!
                         >
                             <File className="h-3.5 w-3.5" />
                             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
@@ -483,7 +489,6 @@ export function EventDashboard({
                     </div>
                 </>
             ) : null}
-            <div className="flex justify-center"></div>
         </div>
     )
 }

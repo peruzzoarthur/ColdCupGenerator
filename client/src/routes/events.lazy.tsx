@@ -243,45 +243,50 @@ function Events() {
                         )}
                     </div>
                 )}
-                {toggleEvent && (
-                    <div className="flex flex-col items-center w-full">
-                        <div className="flex flex-col items-center w-full ">
-                            <div className="flex flex-col items-center w-2/3 ">
-                                {selectedEvent && (
-                                    <div className="flex flex-col justify-center w-full mt-2 mb-4">
-                                        <h1 className="justify-center mb-4 text-3xl font-medium">
-                                            🏆 {selectedEvent.name} 🏆
-                                        </h1>
-                                        <RegisterDoublesForm
-                                            categoriesState={categoriesState}
-                                            eventCategories={selectedEvent.categories.map(
-                                                (cat) => cat
-                                            )}
-                                            onSubmit={registerDoubleOnSubmit}
-                                            setCategoriesState={
-                                                setCategoriesState
-                                            }
-                                            defaultValues={{
-                                                doublesId: '',
-                                            }}
-                                            allDoubles={allDoubles}
-                                        />
-                                    </div>
-                                )}
-                                {isError && (
-                                    <div
-                                        onClick={() => setError(false)}
-                                        className="mb-4 "
-                                    >
-                                        <ErrorAlert message={errorMessage} />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                )}
+
                 {selectedEvent && toggleEvent && (
                     <div className="flex flex-col">
+                        <div className="flex flex-col items-center w-full">
+                            <div className="flex flex-col items-center w-full ">
+                                <div className="flex flex-col items-center w-2/3 ">
+                                    {selectedEvent && (
+                                        <div className="flex flex-col justify-center w-full mt-2 mb-4">
+                                            <h1 className="justify-center mb-4 text-3xl font-medium">
+                                                🏆 {selectedEvent.name} 🏆
+                                            </h1>
+                                            <RegisterDoublesForm
+                                                categoriesState={
+                                                    categoriesState
+                                                }
+                                                eventCategories={selectedEvent.categories.map(
+                                                    (cat) => cat
+                                                )}
+                                                onSubmit={
+                                                    registerDoubleOnSubmit
+                                                }
+                                                setCategoriesState={
+                                                    setCategoriesState
+                                                }
+                                                defaultValues={{
+                                                    doublesId: '',
+                                                }}
+                                                allDoubles={allDoubles}
+                                            />
+                                        </div>
+                                    )}
+                                    {isError && (
+                                        <div
+                                            onClick={() => setError(false)}
+                                            className="mb-4 "
+                                        >
+                                            <ErrorAlert
+                                                message={errorMessage}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                         <EventDashboard
                             event={selectedEvent}
                             toggleEventOff={toggleEventOff}

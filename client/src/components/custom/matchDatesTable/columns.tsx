@@ -3,13 +3,13 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
 export type MatchDatesTableProps = {
-    start: string | undefined
-    finish: string | undefined
-    matchId: string | undefined
-    doublesOne: string | undefined
-    doublesTwo: string | undefined
-    number: number | undefined
-    court: string | undefined
+    start: string | null
+    finish: string | null
+    matchId: string | null
+    doublesOne: string | null
+    doublesTwo: string | null
+    number: number | null
+    court: string | null
     matchDateId: string | null
 }
 
