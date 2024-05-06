@@ -15,7 +15,7 @@ import { Button } from '../ui/button'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import axios from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
-import { useState } from 'react'
+// import { useState } from 'react'
 
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
@@ -55,12 +55,12 @@ export function AvailableMatchesSelectCard({
     matchDateById,
     isFetchingMatchDateById,
     refetchMatchDateById,
-    matchById,
+    // matchById,
     // isFetchingMatchById,
-    // refetchMatchById,
+    refetchMatchById,
 }: AvailableMatchesSelectProps) {
-    const [matchPlaceholder, setMatchPlaceholder] =
-        useState<string>('Select a match')
+    // const [matchPlaceholder, setMatchPlaceholder] =
+    //     useState<string>('Select a match')
 
     const handleUpdateMatch = async (matchId: string, matchDateId: string) => {
         try {
@@ -144,18 +144,25 @@ export function AvailableMatchesSelectCard({
                     Select match
                     <Select
                         onValueChange={(value) => {
-                            setMatchPlaceholder(
-                                `Match #${matchById?.number} ${matchById?.doubles[0].players[0].firstName} / ${matchById?.doubles[0].players[1].firstName} x ${matchById?.doubles[1].players[0].firstName} / ${matchById?.doubles[1].players[1].firstName} `
-                            )
+                            // setMatchPlaceholder(
+                            //     `Match #${matchById?.number} ${matchById?.doubles[0].players[0].firstName} / ${matchById?.doubles[0].players[1].firstName} x ${matchById?.doubles[1].players[0].firstName} / ${matchById?.doubles[1].players[1].firstName}`
+                            // )
                             setMatchIdState(value)
                             refetchMatchDateById()
                             // refetchMatchById()
                         }}
                     >
-                        {/* `Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName}` */}
                         <SelectTrigger className="items-center justify-center ">
-                            <SelectValue placeholder={matchPlaceholder} />
+                            {currentMatch ? (
+                                <SelectValue
+                                    placeholder={`Match #${currentMatch.number} ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}
+                                    // placeholder=
+                                />
+                            ) : (
+                                <SelectValue placeholder={`Select match`} />
+                            )}
                         </SelectTrigger>
+
                         <SelectContent>
                             {categories?.map((c, index1) => (
                                 <SelectGroup key={index1}>
@@ -189,6 +196,7 @@ export function AvailableMatchesSelectCard({
                                     matchDateIdState
                                 )
                                 refetchMatchDateById()
+                                refetchMatchById()
                             }}
                         >
                             Update
