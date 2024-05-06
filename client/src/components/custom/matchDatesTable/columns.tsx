@@ -7,9 +7,12 @@ export type MatchDatesTableProps = {
     finish: string | null
     matchId: string | null
     doublesOne: string | null
+    doublesOneId: string | null
     doublesTwo: string | null
+    doublesTwoId: string | null
     number: number | null
     court: string | null
+    courtId: string | null
     matchDateId: string | null
 }
 
@@ -66,8 +69,9 @@ export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
         },
     },
     { accessorKey: 'doublesOne', header: 'Doubles 1' },
+    // { accessorKey: 'doublesOneId', header: 'Doubles 1 ID' },
     { accessorKey: 'doublesTwo', header: 'Doubles 2' },
-
+    // { accessorKey: 'doublesTwoId', header: 'Doubles 2 ID' },
     {
         accessorKey: 'matchDateId',
         header: () => {

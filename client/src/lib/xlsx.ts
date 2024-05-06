@@ -1,7 +1,8 @@
+import { RegisteredDoublesTable } from '@/components/custom/eventsTable/columns'
 import { MatchDatesTableProps } from '@/components/custom/matchDatesTable/columns'
 import xlsx, { IJsonSheet } from 'json-as-xlsx'
 
-export function downloadToExcel(schedule: MatchDatesTableProps[]) {
+export function downloadScheduleToExcel(schedule: MatchDatesTableProps[]) {
     const columns: IJsonSheet[] = [
         {
             sheet: 'Schedule',
@@ -18,6 +19,32 @@ export function downloadToExcel(schedule: MatchDatesTableProps[]) {
 
     const settings = {
         fileName: 'Matches_Schedule_Excel',
+    }
+
+    xlsx(columns, settings)
+}
+
+export function downloadRegisteredDoublesToExcel(
+    schedule: RegisteredDoublesTable[]
+) {
+    const columns: IJsonSheet[] = [
+        {
+            sheet: 'Schedule',
+            columns: [
+                { label: 'Player One', value: 'playerOneName' },
+                { label: 'Player Two', value: 'playerTwoName' },
+                { label: 'Matches won', value: 'matchesWon' },
+                { label: 'Games won', value: 'W' },
+                { label: 'Total games played', value: 'T' },
+                { label: 'Level', value: 'categoryLevel' },
+                { label: 'Category Type', value: 'categoryType' },
+            ],
+            content: schedule,
+        },
+    ]
+
+    const settings = {
+        fileName: 'Registered_Doubles_Excel',
     }
 
     xlsx(columns, settings)

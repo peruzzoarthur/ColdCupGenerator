@@ -1,4 +1,4 @@
-import { File, ListFilter, Pencil, Search } from 'lucide-react'
+import { File, ListFilter } from 'lucide-react'
 
 import {
     Breadcrumb,
@@ -49,8 +49,7 @@ import { EventInfoCard } from './eventInfoCard'
 import { Alert } from '../ui/alert'
 import { useGetEventMatchDates } from '@/hooks/useGetEventMatchDates'
 import { useGetMatchDateById } from '@/hooks/useGetMatchDateById'
-import { Input } from '../ui/input'
-import { downloadToExcel } from '@/lib/xlsx'
+import { downloadRegisteredDoublesToExcel } from '@/lib/xlsx'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -67,6 +66,8 @@ export function EventDashboard({
 }: EventDashBoardProps) {
     const [catFilter, setCatFilter] = useState<string>('all')
     const [dayFilter, setDayFilter] = useState('all')
+    const [doublesFilter, setDoublesFilter] = useState<string>('all')
+    const [courtFilter, setCourtFilter] = useState<string>('all')
     const [matchDateIdState, setMatchDateIdState] = useState<
         string | undefined
     >()
@@ -127,15 +128,15 @@ export function EventDashboard({
             const gamesDiff = (winningGames ?? 0) - (lostGames ?? 0)
 
             return {
-                catId: d.double?.categoryId,
+                catId: d.double?.categoryId ?? null,
                 id: d.doubleId,
                 playerOneName: `${d.double?.players[0].firstName} ${d.double?.players[0].lastName}`,
                 playerTwoName: `${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`,
-                categoryLevel: d.category?.level,
-                categoryType: d.category?.type,
-                matchesWon: d.double?.matchesWins.length,
-                W: winningGames,
-                T: totalGames,
+                categoryLevel: d.category?.level || null,
+                categoryType: d.category?.type || null,
+                matchesWon: d.double?.matchesWins.length || null,
+                W: winningGames ?? null,
+                T: totalGames ?? null,
                 gamesDiff: gamesDiff,
             }
         })
@@ -144,6 +145,8 @@ export function EventDashboard({
         const date = new Date(md.start)
         return date.getDate()
     })
+
+    const eventCourts = eventById?.courts
 
     const uniqueValuesForDays = getUniqueValuesForDays(eventDays)
 
@@ -171,8 +174,11 @@ export function EventDashboard({
                     finish: md.finish,
                     matchId: null,
                     doublesOne: null,
+                    doublesOneId: null,
                     doublesTwo: null,
+                    doublesTwoId: null,
                     court: md.court.name,
+                    courtId: md.court.id,
                     matchDateId: md.id,
                 }
             }
@@ -182,11 +188,45 @@ export function EventDashboard({
                 finish: md.finish,
                 matchId: md.matchId,
                 doublesOne: `${md.match.doubles[0].players[0].firstName} ${md.match.doubles[0].players[0].lastName} / ${md.match.doubles[0].players[1].firstName} ${md.match.doubles[0].players[1].lastName}`,
+                doublesOneId: md.match.doubles[0].id,
                 doublesTwo: `${md.match.doubles[1].players[0].firstName} ${md.match.doubles[1].players[0].lastName} / ${md.match.doubles[1].players[1].firstName} ${md.match.doubles[1].players[1].lastName}`,
+                doublesTwoId: md.match.doubles[1].id,
                 court: md.court.name,
+                courtId: md.court.id,
                 matchDateId: md.id,
             }
         })
+
+    const filteredMatchDatesTableData: MatchDatesTableProps[] | undefined =
+        matchDatesTableData
+            ?.filter((md) => {
+                if (dayFilter === 'all') {
+                    return md
+                }
+                if (dayFilter !== 'all' && md.start) {
+                    const mdDate = new Date(md.start)
+                    return mdDate.getDate().toString() == dayFilter
+                }
+            })
+            .filter((md) => {
+                if (doublesFilter === 'all') {
+                    return md
+                }
+                if (doublesFilter !== 'all') {
+                    return (
+                        md.doublesOneId === doublesFilter ||
+                        md.doublesTwoId === doublesFilter
+                    )
+                }
+            })
+            .filter((md) => {
+                if (courtFilter === 'all') {
+                    return md
+                }
+                if (courtFilter !== 'all') {
+                    return md.courtId === courtFilter
+                }
+            })
 
     return (
         <div className="flex flex-col justify-center w-full pl-2 pr-2 align-center">
@@ -256,92 +296,105 @@ export function EventDashboard({
             )}
 
             {/* Registered Doubles Table */}
-            <Tabs defaultValue="all">
-                <div className="flex items-center justify-center w-full">
-                    <div className="flex flex-row ml-auto">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-1 h-7"
-                                >
-                                    <ListFilter className="h-3.5 w-3.5" />
-                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                        Filter
-                                    </span>
-                                </Button>
-                            </DropdownMenuTrigger>
+            {doublesTableData && (
+                <Tabs defaultValue="all">
+                    <div className="flex items-center justify-center w-full">
+                        <div className="flex flex-row ml-auto">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="gap-1 h-7"
+                                    >
+                                        <ListFilter className="h-3.5 w-3.5" />
+                                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                            Filter
+                                        </span>
+                                    </Button>
+                                </DropdownMenuTrigger>
 
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuLabel>
-                                    Categories
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuRadioGroup
-                                    value={catFilter}
-                                    onValueChange={setCatFilter}
-                                >
-                                    <DropdownMenuRadioItem value="all">
-                                        All
-                                    </DropdownMenuRadioItem>
-                                    {event.categories.map((c, index) => (
-                                        <DropdownMenuRadioItem
-                                            key={index}
-                                            value={c.id}
-                                        >
-                                            {c.level} {c.type}
+                                <DropdownMenuContent className="w-56">
+                                    <DropdownMenuLabel>
+                                        Categories
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuRadioGroup
+                                        value={catFilter}
+                                        onValueChange={setCatFilter}
+                                    >
+                                        <DropdownMenuRadioItem value="all">
+                                            All
                                         </DropdownMenuRadioItem>
-                                    ))}
-                                </DropdownMenuRadioGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            className="gap-1 h-7"
-                        >
-                            <File className="h-3.5 w-3.5" />
-                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                Export
-                            </span>
-                        </Button>
+                                        {event.categories.map((c, index) => (
+                                            <DropdownMenuRadioItem
+                                                key={index}
+                                                value={c.id}
+                                            >
+                                                {c.level} {c.type}
+                                            </DropdownMenuRadioItem>
+                                        ))}
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                className="gap-1 h-7"
+                                onClick={() =>
+                                    downloadRegisteredDoublesToExcel(
+                                        doublesTableData
+                                    )
+                                }
+                            >
+                                <File className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                    Export
+                                </span>
+                            </Button>
+                        </div>
                     </div>
-                </div>
-                <TabsContent value="all">
-                    <Card className="flex flex-col w-full">
-                        <CardHeader>
-                            <CardTitle>Doubles Registered</CardTitle>
-                            <CardDescription>
-                                Manage doubles registered in the events and
-                                generate games.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            {doublesTableData ? (
-                                <div className="flex flex-col justify-center">
-                                    <EventDoublesTable
-                                        columns={doublesColumns}
-                                        data={doublesTableData.filter((td) => {
-                                            if (catFilter === 'all') {
-                                                return td
-                                            }
-                                            return td.catId === catFilter
-                                        })}
-                                    />
+                    <TabsContent value="all">
+                        <Card className="flex flex-col w-full">
+                            <CardHeader>
+                                <CardTitle>Doubles Registered</CardTitle>
+                                <CardDescription>
+                                    Manage doubles registered in the events and
+                                    generate games.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {doublesTableData ? (
+                                    <div className="flex flex-col justify-center">
+                                        <EventDoublesTable
+                                            columns={doublesColumns}
+                                            data={doublesTableData.filter(
+                                                (td) => {
+                                                    if (catFilter === 'all') {
+                                                        return td
+                                                    }
+                                                    return (
+                                                        td.catId === catFilter
+                                                    )
+                                                }
+                                            )}
+                                        />
+                                    </div>
+                                ) : null}
+                            </CardContent>
+                            <CardFooter>
+                                <div className="text-xs text-muted-foreground">
+                                    Showing <strong>1-10</strong> of{' '}
+                                    <strong>
+                                        {event.eventDoubles?.length}
+                                    </strong>{' '}
+                                    doubles
                                 </div>
-                            ) : null}
-                        </CardContent>
-                        <CardFooter>
-                            <div className="text-xs text-muted-foreground">
-                                Showing <strong>1-10</strong> of{' '}
-                                <strong>{event.eventDoubles?.length}</strong>{' '}
-                                doubles
-                            </div>
-                        </CardFooter>
-                    </Card>
-                </TabsContent>
-            </Tabs>
+                            </CardFooter>
+                        </Card>
+                    </TabsContent>
+                </Tabs>
+            )}
             <h1 className="text-2xl font-bold">Matches</h1>
             {/* Pending Matches Carousels */}
             {!isFetchingEventById &&
@@ -358,7 +411,7 @@ export function EventDashboard({
                     </div>
                 </>
             ) : null}
-            {/* Fininished Matches Carousels */}
+            {/* Finished Matches Carousels */}
             {!isFetchingEventById &&
             finishedMatches &&
             finishedMatches.length !== 0 ? (
@@ -374,7 +427,7 @@ export function EventDashboard({
                 </>
             ) : null}
             {/* Schedule - Matches Data Table */}
-            {matchDatesTableData ? (
+            {matchDatesTableData && filteredMatchDatesTableData ? (
                 <>
                     <h1 className="text-xl font-bold">Schedule</h1>
                     {dayFilter === 'all' ? <h2>Showing all</h2> : null}
@@ -382,83 +435,6 @@ export function EventDashboard({
                         <h2>{uniqueDates[0].toDateString()}</h2>
                     ) : null}
 
-                    <div className="flex items-center gap-2 ml-auto">
-                        <div className="relative flex-1 ml-auto md:grow-0">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                type="search"
-                                placeholder="Search..."
-                                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-                            />
-                        </div>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-1 h-7"
-                            onClick={() => {
-                                if (!matchAssignOn) {
-                                    setMatchAssignOn(true)
-                                } else {
-                                    setMatchAssignOn(false)
-                                }
-                            }}
-                        >
-                            <Pencil className="h-3.5 w-3.5" />
-                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                Edit
-                            </span>
-                        </Button>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-1 h-7"
-                                >
-                                    <ListFilter className="h-3.5 w-3.5" />
-                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                        Filter
-                                    </span>
-                                </Button>
-                            </DropdownMenuTrigger>
-
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuLabel>Days</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuRadioGroup
-                                    value={dayFilter}
-                                    onValueChange={setDayFilter}
-                                >
-                                    <DropdownMenuRadioItem value="all">
-                                        All
-                                    </DropdownMenuRadioItem>
-                                    {uniqueValuesForDays.map((d, index) => (
-                                        <DropdownMenuRadioItem
-                                            key={index}
-                                            value={d.toString()}
-                                        >
-                                            {d}
-                                        </DropdownMenuRadioItem>
-                                    ))}
-                                </DropdownMenuRadioGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            className="gap-1 h-7"
-                            onClick={() =>
-                                console.log(
-                                    downloadToExcel(matchDatesTableData)
-                                )
-                            } //!
-                        >
-                            <File className="h-3.5 w-3.5" />
-                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                Export
-                            </span>
-                        </Button>
-                    </div>
                     <div className="flex flex-col justify-center">
                         <MatchDatesTable
                             matchDateById={matchDateById}
@@ -472,19 +448,16 @@ export function EventDashboard({
                             matchAssignOn={matchAssignOn}
                             setMatchAssignOn={setMatchAssignOn}
                             columns={matchDateColumns}
-                            data={matchDatesTableData.filter((md) => {
-                                if (dayFilter === 'all') {
-                                    return md
-                                }
-                                if (md.start) {
-                                    const mdDate = new Date(md.start)
-                                    return (
-                                        mdDate.getDate().toString() == dayFilter
-                                    )
-                                }
-                            })}
+                            data={filteredMatchDatesTableData}
                             refetchEventMatchDates={refetchEventMatchDates}
                             matchDates={eventMatchDates}
+                            dayFilter={dayFilter}
+                            matchDatesTableData={matchDatesTableData}
+                            setDayFilter={setDayFilter}
+                            uniqueValuesForDays={uniqueValuesForDays}
+                            setDoublesFilter={setDoublesFilter}
+                            setCourtFilter={setCourtFilter}
+                            eventCourts={eventCourts}
                         />
                     </div>
                 </>

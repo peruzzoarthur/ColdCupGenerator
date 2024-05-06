@@ -3,15 +3,16 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
 export type RegisteredDoublesTable = {
-    catId: string | undefined
+    catId: string | null
     id: string
-    playerOneName: string | undefined
-    playerTwoName: string | undefined
-    categoryLevel: number | undefined
-    categoryType: string | undefined
-    W: number | undefined
-    T: number | undefined
-    gamesDiff: number | undefined
+    matchesWon: number | null
+    playerOneName: string | null
+    playerTwoName: string | null
+    categoryLevel: number | null
+    categoryType: string | null
+    W: number | null
+    T: number | null
+    gamesDiff: number | null
     // status: 'pending' | 'registered'
 }
 
