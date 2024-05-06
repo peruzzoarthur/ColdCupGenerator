@@ -430,9 +430,15 @@ export function EventDashboard({
             {matchDatesTableData && filteredMatchDatesTableData ? (
                 <>
                     <h1 className="text-xl font-bold">Schedule</h1>
-                    {dayFilter === 'all' ? <h2>Showing all</h2> : null}
+                    {dayFilter === 'all' ? (
+                        <h2 className="text-muted-foreground">
+                            Showing all days
+                        </h2>
+                    ) : null}
                     {dayFilter !== 'all' && uniqueDates ? (
-                        <h2>{uniqueDates[0].toDateString()}</h2>
+                        <h2 className="text-muted-foreground">
+                            {uniqueDates[0].toDateString()}
+                        </h2>
                     ) : null}
 
                     <div className="flex flex-col justify-center">

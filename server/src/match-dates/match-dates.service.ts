@@ -53,6 +53,7 @@ export class MatchDatesService {
             number: true,
             doubles: {
               select: {
+                id: true,
                 players: true,
               },
             },

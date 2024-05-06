@@ -58,6 +58,7 @@ let MatchDatesService = class MatchDatesService {
                         number: true,
                         doubles: {
                             select: {
+                                id: true,
                                 players: true,
                             },
                         },
