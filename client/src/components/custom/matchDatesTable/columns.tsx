@@ -14,6 +14,8 @@ export type MatchDatesTableProps = {
     court: string | null
     courtId: string | null
     matchDateId: string | null
+    category: string | null
+    categoryId: string | null
 }
 
 export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
@@ -62,32 +64,31 @@ export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
         },
         cell: ({ row }) => {
             return (
-                <div className="ml-4 font-medium text-left">
+                <div className="ml-4 font-light text-left">
                     {row.getValue('court')}
                 </div>
             )
         },
     },
-    { accessorKey: 'doublesOne', header: 'Doubles 1' },
-    // { accessorKey: 'doublesOneId', header: 'Doubles 1 ID' },
-    { accessorKey: 'doublesTwo', header: 'Doubles 2' },
-    // { accessorKey: 'doublesTwoId', header: 'Doubles 2 ID' },
+    {
+        accessorKey: 'category',
+        header: 'Category',
+        cell: ({ row }) => {
+            return <div>{row.getValue('category')}</div>
+        },
+    },
+    { accessorKey: 'doublesOne', header: 'Doubles 1', enableHiding: false },
+    { accessorKey: 'doublesTwo', header: 'Doubles 2', enableHiding: false },
     {
         accessorKey: 'matchDateId',
-        header: () => {
-            return <div className="text-left"></div>
-        },
-        cell: () => {
-            return <></>
-        },
+        header: () => <></>,
+        cell: () => <></>,
+        enableHiding: false,
     },
     {
         accessorKey: 'matchId',
-        header: () => {
-            return <div className="text-left"></div>
-        },
-        cell: () => {
-            return <></>
-        },
+        header: () => <></>,
+        cell: () => <></>,
+        enableHiding: false,
     },
 ]

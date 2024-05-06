@@ -56,6 +56,8 @@ let MatchDatesService = class MatchDatesService {
                 match: {
                     select: {
                         number: true,
+                        category: true,
+                        categoryId: true,
                         doubles: {
                             select: {
                                 id: true,

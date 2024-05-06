@@ -73,10 +73,15 @@ export class MatchesService {
     const match = this.prismaService.match.findUnique({
       where: { id: id },
       select: {
+        number: true,
         id: true,
         isFinished: true,
         type: true,
-        doubles: true,
+        doubles: {
+          select: {
+            players: true,
+          },
+        },
       },
     });
     if (!match) {

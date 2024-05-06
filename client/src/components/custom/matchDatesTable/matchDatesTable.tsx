@@ -2,6 +2,7 @@ import {
     ColumnDef,
     ColumnFiltersState,
     SortingState,
+    VisibilityState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -21,13 +22,14 @@ import {
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { CircleIcon, CrossCircledIcon } from '@radix-ui/react-icons'
-import { Category, Court, MatchDate } from '@/types/padel.types'
+import { Category, Court, Match, MatchDate } from '@/types/padel.types'
 import { AvailableMatchesSelectCard } from '../availableMatchesSelectCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { Input } from '@/components/ui/input'
 import { File, ListFilter, Pencil, Search } from 'lucide-react'
 import {
     DropdownMenu,
+    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuLabel,
     DropdownMenuRadioGroup,
@@ -39,6 +41,7 @@ import { downloadScheduleToExcel } from '@/lib/xlsx'
 import { MatchDatesTableProps } from './columns'
 import { SelectDoubles } from './selectDoubles'
 import { SelectCourt } from './selectCourt'
+import { SelectCategory } from './selectCategory'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -61,16 +64,22 @@ interface DataTableProps<TData, TValue> {
     refetchMatchDateById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<MatchDate | undefined, Error>>
+    matchById: Match | undefined
+    isFetchingMatchById: boolean
+    refetchMatchById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<Match | undefined, Error>>
     uniqueValuesForDays: number[]
     matchDatesTableData: MatchDatesTableProps[] | undefined
     dayFilter: string
     setDayFilter: React.Dispatch<React.SetStateAction<string>>
-    // doublesFilter: string
     setDoublesFilter: React.Dispatch<React.SetStateAction<string>>
     setCourtFilter: React.Dispatch<React.SetStateAction<string>>
     eventCourts: Court[] | undefined
-}
 
+    setCategoryFilter: React.Dispatch<React.SetStateAction<string>>
+    eventCategories: Category[] | undefined
+}
 export function MatchDatesTable<TData, TValue>({
     columns,
     data,
@@ -93,7 +102,14 @@ export function MatchDatesTable<TData, TValue>({
     setDoublesFilter,
     setCourtFilter,
     eventCourts,
+    eventCategories,
+    setCategoryFilter,
+    matchById,
+    refetchMatchById,
+    isFetchingMatchById,
 }: DataTableProps<TData, TValue>) {
+    const [columnVisibility, setColumnVisibility] =
+        React.useState<VisibilityState>({})
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [globalFilters, setGlobalFilters] = React.useState<string>('')
     const [columnDoublesFilters, setColumnDoublesFilters] =
@@ -109,17 +125,19 @@ export function MatchDatesTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         onGlobalFilterChange: setGlobalFilters,
         onColumnFiltersChange: setColumnDoublesFilters,
+        onColumnVisibilityChange: setColumnVisibility,
 
         state: {
             sorting: sorting,
             globalFilter: globalFilters,
             columnFilters: columnDoublesFilters,
+            columnVisibility: columnVisibility,
         },
     })
 
     return (
         <>
-            {/* Header with table func */}
+            {/* Header with Filters, Export and Edit */}
             <div className="flex items-center gap-2 ml-auto">
                 <Button
                     variant="outline"
@@ -186,6 +204,14 @@ export function MatchDatesTable<TData, TValue>({
                             eventCourts={eventCourts}
                             setCourtFilter={setCourtFilter}
                         />
+
+                        <DropdownMenuSeparator />
+                        <DropdownMenuLabel>Categories</DropdownMenuLabel>
+
+                        <SelectCategory
+                            eventCategories={eventCategories}
+                            setCategoryFilter={setCategoryFilter}
+                        />
                     </DropdownMenuContent>
                 </DropdownMenu>
                 {matchDatesTableData && (
@@ -205,46 +231,74 @@ export function MatchDatesTable<TData, TValue>({
                 )}
             </div>
 
-            <div className="flex flex-row items-start py-1 space-y-1">
-                <div className="flex mt-3 mr-1">
-                    <Search className="w-4 h-4 align-center" />
-                </div>
-                <Input
-                    type="search"
-                    placeholder="Filter by court, dates and number"
-                    value={globalFilters}
-                    onChange={(e) => {
-                        setGlobalFilters(e.target.value)
-                    }}
-                    className="max-w-sm"
-                />
-
-                {/* <SelectDoubles
-                    AORB={AORB.A}
-                    eventCategories={categories}
-                    table={table}
-                    setColumnDoublesFilters={setColumnDoublesFilters}
-                    setGlobalFilters={setGlobalFilters}
-                /> */}
-            </div>
-            <div className="flex-col w-full mt-2 border rounded-md">
-                {matchAssignOn ? (
-                    <div className="flex justify-center w-full mt-2 mb-2">
-                        <AvailableMatchesSelectCard
-                            isFetchingMatchDateById={isFetchingMatchDateById}
-                            setMatchDateIdState={setMatchDateIdState}
-                            matchDateIdState={matchDateIdState}
-                            categories={categories}
-                            matchIdState={matchIdState}
-                            setMatchIdState={setMatchIdState}
-                            setMatchAssignOn={setMatchAssignOn}
-                            refetchEventMatchDates={refetchEventMatchDates}
-                            matchDates={matchDates}
-                            matchDateById={matchDateById}
-                            refetchMatchDateById={refetchMatchDateById}
-                        />
+            {/* Search && Visibility  */}
+            <div className="flex justify-end">
+                <div className="flex flex-row items-start w-full py-1 space-y-1">
+                    <div className="flex mt-3 mr-1">
+                        <Search className="w-4 h-4 align-center" />
                     </div>
-                ) : null}
+                    <Input
+                        type="search"
+                        placeholder="Filter by court, dates and number"
+                        value={globalFilters}
+                        onChange={(e) => {
+                            setGlobalFilters(e.target.value)
+                        }}
+                        className="mr-5"
+                    />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="px-4 border rounded-md shadow-sm h-9 border-input bg-background hover:bg-accent hover:text-accent-foreground">
+                            Columns
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            {table
+                                .getAllColumns()
+                                .filter((column) => column.getCanHide())
+                                .map((column) => {
+                                    return (
+                                        <DropdownMenuCheckboxItem
+                                            key={column.id}
+                                            className="capitalize"
+                                            checked={column.getIsVisible()}
+                                            onCheckedChange={(
+                                                value: boolean
+                                            ) => {
+                                                column.toggleVisibility(!!value)
+                                            }}
+                                        >
+                                            {column.id}
+                                        </DropdownMenuCheckboxItem>
+                                    )
+                                })}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            </div>
+
+            {/* Edit matchDate  */}
+
+            {/* The table  */}
+            {matchAssignOn ? (
+                <div className="flex justify-center w-full mt-2 mb-2">
+                    <AvailableMatchesSelectCard
+                        isFetchingMatchDateById={isFetchingMatchDateById}
+                        setMatchDateIdState={setMatchDateIdState}
+                        matchDateIdState={matchDateIdState}
+                        categories={categories}
+                        matchIdState={matchIdState}
+                        setMatchIdState={setMatchIdState}
+                        setMatchAssignOn={setMatchAssignOn}
+                        refetchEventMatchDates={refetchEventMatchDates}
+                        matchDates={matchDates}
+                        matchDateById={matchDateById}
+                        refetchMatchDateById={refetchMatchDateById}
+                        matchById={matchById}
+                        refetchMatchById={refetchMatchById}
+                        isFetchingMatchById={isFetchingMatchById}
+                    />
+                </div>
+            ) : null}
+            <div className="flex-col w-full mt-2 border rounded-md">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -322,6 +376,8 @@ export function MatchDatesTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
+
+            {/* Previous / Next  */}
             <div className="flex items-center justify-end py-4 space-x-2">
                 <Button
                     variant="outline"

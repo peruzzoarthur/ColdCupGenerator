@@ -50,6 +50,7 @@ import { Alert } from '../ui/alert'
 import { useGetEventMatchDates } from '@/hooks/useGetEventMatchDates'
 import { useGetMatchDateById } from '@/hooks/useGetMatchDateById'
 import { downloadRegisteredDoublesToExcel } from '@/lib/xlsx'
+import { useGetMatchById } from '@/hooks/useGetMatchById'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -68,6 +69,7 @@ export function EventDashboard({
     const [dayFilter, setDayFilter] = useState('all')
     const [doublesFilter, setDoublesFilter] = useState<string>('all')
     const [courtFilter, setCourtFilter] = useState<string>('all')
+    const [categoryFilter, setCategoryFilter] = useState<string>('all')
     const [matchDateIdState, setMatchDateIdState] = useState<
         string | undefined
     >()
@@ -87,7 +89,10 @@ export function EventDashboard({
     const { eventMatchesInfoById } = useGetEventMatchesInfoById(event.id)
     const { matchDateById, isFetchingMatchDateById, refetchMatchDateById } =
         useGetMatchDateById(matchDateIdState)
-    console.log(matchDateById)
+
+    const { matchById, refetchMatchById, isFetchingMatchById } =
+        useGetMatchById(matchIdState)
+    console.log(matchById)
 
     const handleActivate = async (
         eventId: string,
@@ -147,6 +152,7 @@ export function EventDashboard({
     })
 
     const eventCourts = eventById?.courts
+    const eventCategories = eventById?.categories
 
     const uniqueValuesForDays = getUniqueValuesForDays(eventDays)
 
@@ -180,6 +186,8 @@ export function EventDashboard({
                     court: md.court.name,
                     courtId: md.court.id,
                     matchDateId: md.id,
+                    category: null,
+                    categoryId: null,
                 }
             }
             return {
@@ -194,6 +202,8 @@ export function EventDashboard({
                 court: md.court.name,
                 courtId: md.court.id,
                 matchDateId: md.id,
+                category: `${md.match.category.level} ${md.match.category.type}`,
+                categoryId: md.match.category.id,
             }
         })
 
@@ -225,6 +235,14 @@ export function EventDashboard({
                 }
                 if (courtFilter !== 'all') {
                     return md.courtId === courtFilter
+                }
+            })
+            .filter((md) => {
+                if (categoryFilter === 'all') {
+                    return md
+                }
+                if (categoryFilter !== 'all') {
+                    return md.categoryId === categoryFilter
                 }
             })
 
@@ -464,6 +482,8 @@ export function EventDashboard({
                             setDoublesFilter={setDoublesFilter}
                             setCourtFilter={setCourtFilter}
                             eventCourts={eventCourts}
+                            eventCategories={eventCategories}
+                            setCategoryFilter={setCategoryFilter}
                         />
                     </div>
                 </>

@@ -2,16 +2,17 @@ import {
     Select,
     SelectContent,
     SelectGroup,
+    SelectItem,
     SelectLabel,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
 import { Category, Match, MatchDate } from '@/types/padel.types'
 // import { useGetById } from '@/hooks/useGetMatchDateById'
-import { Card, CardDescription } from '../ui/card'
+import { Card, CardDescription, CardHeader } from '../ui/card'
 import { Button } from '../ui/button'
 // import { useState } from 'react'
-import { ArrowRightIcon, Cross2Icon } from '@radix-ui/react-icons'
+import { Cross2Icon } from '@radix-ui/react-icons'
 import axios from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -36,6 +37,11 @@ type AvailableMatchesSelectProps = {
     refetchMatchDateById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<MatchDate | undefined, Error>>
+    matchById: Match | undefined
+    isFetchingMatchById: boolean
+    refetchMatchById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<Match | undefined, Error>>
 }
 export function AvailableMatchesSelectCard({
     matchDates,
@@ -46,13 +52,12 @@ export function AvailableMatchesSelectCard({
     setMatchIdState,
     setMatchAssignOn,
     refetchEventMatchDates,
-    // matchDatePlaceholderState,
-    // setMatchDatePlaceholderState,
-    // matchPlaceholderState,
-    // setMatchPlaceholderState,
     matchDateById,
     isFetchingMatchDateById,
     refetchMatchDateById,
+    matchById,
+    // isFetchingMatchById,
+    // refetchMatchById,
 }: AvailableMatchesSelectProps) {
     const [matchPlaceholder, setMatchPlaceholder] =
         useState<string>('Select a match')
@@ -73,269 +78,124 @@ export function AvailableMatchesSelectCard({
             return error
         }
     }
+
+    const currentMatch = matchDateById?.match
+
     return (
         <>
-            {isFetchingMatchDateById ? null : (
-                <>
-                    {matchDateById ? (
-                        <Card className="w-[380px] p-2">
-                            <div className="flex justify-end">
-                                <Cross2Icon
-                                    className="items-end cursor-pointer"
-                                    onClick={() => setMatchAssignOn(false)}
-                                ></Cross2Icon>
-                            </div>
+            <Card className="w-[380px] p-2">
+                <div className="flex justify-end">
+                    <Cross2Icon
+                        className="items-end cursor-pointer"
+                        onClick={() => setMatchAssignOn(false)}
+                    ></Cross2Icon>
+                </div>
+                {currentMatch && !isFetchingMatchDateById ? (
+                    <CardHeader>
+                        {' '}
+                        {`Current match: Match #${currentMatch.number} - ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}{' '}
+                    </CardHeader>
+                ) : null}
 
-                            <CardDescription>
-                                Select date:
-                                <Select>
-                                    <SelectTrigger className="items-center justify-center ">
-                                        <SelectValue
-                                            placeholder={`
+                <CardDescription>
+                    Select date:
+                    <Select
+                        onValueChange={(value) => {
+                            setMatchDateIdState(value ?? undefined)
+                        }}
+                    >
+                        <SelectTrigger className="items-center justify-center ">
+                            {matchDateById ? (
+                                <SelectValue
+                                    placeholder={`
                                                     ${new Date(
                                                         matchDateById.start
                                                     ).toLocaleString()}
                                                     ${matchDateById.court.name}
                                                     `}
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {matchDates?.map((md, index) => (
-                                            <SelectGroup key={index}>
-                                                <div
-                                                    className="flex flex-col"
-                                                    key={index}
-                                                >
-                                                    <Button
-                                                        className="items-start justify-start text-white bg-black text-start bg-opacity-70 hover:text-black"
-                                                        onClick={() => {
-                                                            setMatchDateIdState(
-                                                                md.id ??
-                                                                    undefined
-                                                            )
-                                                        }}
-                                                        value={
-                                                            md.id ?? undefined
-                                                        }
-                                                    >
-                                                        {new Date(
-                                                            md.start
-                                                        ).toLocaleString()}{' '}
-                                                        {md.court.name}
-                                                    </Button>
-                                                </div>
-                                            </SelectGroup>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </CardDescription>
+                                />
+                            ) : (
+                                <SelectValue
+                                    placeholder={`Select match date`}
+                                />
+                            )}
+                        </SelectTrigger>
+                        {matchDates && (
+                            <SelectContent>
+                                {matchDates.map((md, index) => (
+                                    <SelectGroup key={index}>
+                                        <SelectItem
+                                            className="items-start justify-start text-white bg-black text-start bg-opacity-70 hover:text-black"
+                                            value={md.id as string}
+                                        >
+                                            {new Date(
+                                                md.start
+                                            ).toLocaleString()}{' '}
+                                            {md.court.name}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                ))}
+                            </SelectContent>
+                        )}
+                    </Select>
+                </CardDescription>
 
-                            <CardDescription>
-                                Select match
-                                <Select>
-                                    <SelectTrigger className="items-center justify-center ">
-                                        <SelectValue
-                                            placeholder={matchPlaceholder}
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {categories?.map((c, index1) => (
-                                            <SelectGroup key={index1}>
-                                                <SelectLabel>
-                                                    {c.level} {c.type}
-                                                </SelectLabel>
-                                                {c.matches?.map((m, index2) => (
-                                                    <div
-                                                        className="flex flex-col"
-                                                        key={index2}
-                                                    >
-                                                        {m.matchDate !== null &&
-                                                        m.matchDate.id ===
-                                                            matchDateById.id ? (
-                                                            <>
-                                                                <div className="flex flex-row">
-                                                                    <ArrowRightIcon className="mt-3" />
-                                                                    <Button
-                                                                        className="items-start justify-start font-bold text-white bg-black text-start bg-opacity-20 hover:text-black"
-                                                                        onClick={() => {
-                                                                            setMatchPlaceholder(
-                                                                                `Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `
-                                                                            )
-                                                                            setMatchIdState(
-                                                                                m.id
-                                                                            )
-                                                                            refetchMatchDateById()
-                                                                        }}
-                                                                        value={
-                                                                            m.id
-                                                                        }
-                                                                    >
-                                                                        {`Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `}
-                                                                    </Button>
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <Button
-                                                                className="items-start justify-start text-white bg-black text-start bg-opacity-70 hover:text-black"
-                                                                onClick={() => {
-                                                                    setMatchPlaceholder(
-                                                                        `Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `
-                                                                    )
-                                                                    setMatchIdState(
-                                                                        m.id
-                                                                    )
-                                                                    refetchMatchDateById()
-                                                                }}
-                                                                value={m.id}
-                                                            >
-                                                                {`Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `}
-                                                            </Button>
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </SelectGroup>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </CardDescription>
-                            <div className="flex justify-center mt-2">
-                                {matchIdState && matchDateIdState && (
-                                    <Button
-                                        onClick={() => {
-                                            console.log(
-                                                `Calling for matchDate: ${matchDateIdState} && match: ${matchIdState}`
-                                            )
-                                            handleUpdateMatch(
-                                                matchIdState,
-                                                matchDateIdState
-                                            )
-                                            // setMatchAssignOn(false)
-                                        }}
-                                    >
-                                        Update
-                                    </Button>
-                                )}
-                            </div>
-                        </Card>
-                    ) : (
-                        <Card className="w-[380px] p-2">
-                            <div className="flex justify-end">
-                                <Cross2Icon
-                                    className="items-end cursor-pointer"
-                                    onClick={() => setMatchAssignOn(false)}
-                                ></Cross2Icon>
-                            </div>
-
-                            <CardDescription>
-                                Select date:
-                                <Select>
-                                    <SelectTrigger className="items-center justify-center ">
-                                        <SelectValue
-                                            placeholder={`
-                                                  Select date
-                                                    `}
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {matchDates?.map((md, index) => (
-                                            <SelectGroup key={index}>
-                                                <div
-                                                    className="flex flex-col"
-                                                    key={index}
-                                                >
-                                                    <Button
-                                                        className="items-start justify-start text-white bg-black text-start bg-opacity-70 hover:text-black"
-                                                        onClick={() => {
-                                                            console.log(md.id)
-                                                            // setMatchDatePlaceholderState(
-                                                            //     `${new Date(md.start).toLocaleString()} ${md.court.name}`
-                                                            // )
-                                                            setMatchDateIdState(
-                                                                md.id ??
-                                                                    undefined
-                                                            )
-                                                        }}
-                                                        value={
-                                                            md.id ?? undefined
-                                                        }
-                                                    >
-                                                        {new Date(
-                                                            md.start
-                                                        ).toLocaleString()}{' '}
-                                                        {md.court.name}
-                                                    </Button>
-                                                </div>
-                                            </SelectGroup>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </CardDescription>
-
-                            <CardDescription>
-                                Select match
-                                <Select>
-                                    <SelectTrigger className="items-center justify-center ">
-                                        <SelectValue
-                                            placeholder={'Select a match'}
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {categories?.map((c, index1) => (
-                                            <SelectGroup key={index1}>
-                                                <SelectLabel>
-                                                    {c.level} {c.type}
-                                                </SelectLabel>
-                                                {c.matches?.map((m, index2) => (
-                                                    <div
-                                                        className="flex flex-col"
-                                                        key={index2}
-                                                    >
-                                                        <Button
-                                                            className="items-start justify-start text-white bg-black text-start bg-opacity-70 hover:text-black"
-                                                            onClick={() => {
-                                                                console.log(
-                                                                    m.id
-                                                                )
-                                                                // setMatchPlaceholderState(
-                                                                //     `Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `
-                                                                // )
-                                                                setMatchIdState(
-                                                                    m.id
-                                                                )
-                                                            }}
-                                                            value={m.id}
-                                                        >
-                                                            {`Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `}
-                                                        </Button>
-                                                    </div>
-                                                ))}
-                                            </SelectGroup>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </CardDescription>
-                            <div className="flex justify-center mt-2">
-                                {matchIdState && matchDateIdState && (
-                                    <Button
-                                        onClick={() => {
-                                            console.log(
-                                                `Calling for matchDate: ${matchDateIdState} && match: ${matchIdState}`
-                                            )
-                                            handleUpdateMatch(
-                                                matchIdState,
-                                                matchDateIdState
-                                            )
-                                            // setMatchAssignOn(false)
-                                        }}
-                                    >
-                                        Update
-                                    </Button>
-                                )}
-                            </div>
-                        </Card>
+                <CardDescription>
+                    Select match
+                    <Select
+                        onValueChange={(value) => {
+                            setMatchPlaceholder(
+                                `Match #${matchById?.number} ${matchById?.doubles[0].players[0].firstName} / ${matchById?.doubles[0].players[1].firstName} x ${matchById?.doubles[1].players[0].firstName} / ${matchById?.doubles[1].players[1].firstName} `
+                            )
+                            setMatchIdState(value)
+                            refetchMatchDateById()
+                            // refetchMatchById()
+                        }}
+                    >
+                        {/* `Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName}` */}
+                        <SelectTrigger className="items-center justify-center ">
+                            <SelectValue placeholder={matchPlaceholder} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {categories?.map((c, index1) => (
+                                <SelectGroup key={index1}>
+                                    <SelectLabel>
+                                        {c.level} {c.type}
+                                    </SelectLabel>
+                                    {c.matches?.map((m, index2) => (
+                                        <div
+                                            className="flex flex-col"
+                                            key={index2}
+                                        >
+                                            <SelectItem value={m.id}>
+                                                {`Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `}
+                                            </SelectItem>
+                                        </div>
+                                    ))}
+                                </SelectGroup>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </CardDescription>
+                <div className="flex justify-center mt-2">
+                    {matchIdState && matchDateIdState && (
+                        <Button
+                            onClick={() => {
+                                console.log(
+                                    `Calling for matchDate: ${matchDateIdState} && match: ${matchIdState}`
+                                )
+                                handleUpdateMatch(
+                                    matchIdState,
+                                    matchDateIdState
+                                )
+                                refetchMatchDateById()
+                            }}
+                        >
+                            Update
+                        </Button>
                     )}
-                </>
-            )}
+                </div>
+            </Card>
         </>
     )
 }

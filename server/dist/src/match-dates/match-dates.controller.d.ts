@@ -63,6 +63,12 @@ export declare class MatchDatesController {
         finish: Date;
         match: {
             number: number;
+            categoryId: string;
+            category: {
+                id: string;
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+            };
             doubles: {
                 id: string;
                 players: {

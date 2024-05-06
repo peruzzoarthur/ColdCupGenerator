@@ -44,7 +44,6 @@ export function SelectDoubles({
                                     return (
                                         <SelectItem
                                             key={index2}
-                                            className="text-white"
                                             value={d.double?.id || 'all'}
                                         >
                                             {`${d.double?.players[0].firstName} ${d.double?.players[0].lastName} / ${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`}
