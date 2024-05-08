@@ -1,4 +1,4 @@
-import { File, ListFilter } from 'lucide-react'
+import { File, ListFilter, Grid3X3 } from 'lucide-react'
 
 import {
     Breadcrumb,
@@ -51,6 +51,7 @@ import { useGetEventMatchDates } from '@/hooks/useGetEventMatchDates'
 import { useGetMatchDateById } from '@/hooks/useGetMatchDateById'
 import { downloadRegisteredDoublesToExcel } from '@/lib/xlsx'
 import { useGetMatchById } from '@/hooks/useGetMatchById'
+import { MatchesGrid } from './matchesGrid'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -65,6 +66,7 @@ export function EventDashboard({
     toggleEventOff,
     refetchEvents,
 }: EventDashBoardProps) {
+    const [toggleMatchesGrid, setToggleMatchesGrid] = useState<boolean>(false)
     const [catFilter, setCatFilter] = useState<string>('all')
     const [dayFilter, setDayFilter] = useState('all')
     const [doublesFilter, setDoublesFilter] = useState<string>('all')
@@ -246,250 +248,298 @@ export function EventDashboard({
             })
 
     return (
-        <div className="flex flex-col justify-center w-full pl-2 pr-2 align-center">
-            {/* Header && Breadcrumb */}
-            <div className="flex">
-                <header className="sticky top-0 z-30 flex items-center gap-4 px-4 h-14 bg-background sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink
-                                    asChild
-                                    onClick={toggleEventOff}
-                                >
-                                    <p className="cursor-pointer">All events</p>
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>{event.name}</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </header>
-            </div>
-
-            {/* Event Info Card */}
-            {eventById && eventById.isActive ? null : (
-                <div className="flex justify-center p-10">
-                    {event.matches.length === 0 && eventMatchesInfoById ? (
-                        <EventInfoCard event={eventMatchesInfoById}>
-                            {eventMatchesInfoById.suitable ? (
-                                <CoolButton
-                                    className="items-center justify-center"
-                                    onClick={async () =>
-                                        handleActivate(
-                                            event.id,
-                                            event.startDate,
-                                            event.finishDate,
-                                            event.timeOfFirstMatch,
-                                            event.timeOfLastMatch,
-                                            event.matchDurationInMinutes
-                                        )
-                                    }
-                                >
-                                    Generate matches 🎾
-                                </CoolButton>
-                            ) : (
-                                <div className="flex flex-col items-center justify-center">
-                                    <Alert
-                                        variant="destructive"
-                                        className="w-11/12 mb-2"
+        <div>
+            <div className="flex flex-col justify-center w-full pl-2 pr-2 ">
+                {/* Header && Breadcrumb */}
+                <div className="flex">
+                    <header className="sticky top-0 z-30 flex items-center gap-4 px-4 h-14 bg-background sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink
+                                        asChild
+                                        onClick={toggleEventOff}
                                     >
-                                        You need a bigger period of time, more
-                                        courts or places in order to fit all
-                                        matches...
-                                    </Alert>
-                                    <div className="flex items-center space-x-2">
-                                        <CoolButton borderClassName="h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-300)_40%,transparent_10%)]">
-                                            Edit
-                                        </CoolButton>
-                                    </div>
-                                </div>
-                            )}
-                        </EventInfoCard>
-                    ) : null}
+                                        <p className="cursor-pointer">
+                                            All events
+                                        </p>
+                                    </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>
+                                        {event.name}
+                                    </BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </header>
                 </div>
-            )}
 
-            {/* Registered Doubles Table */}
-            {doublesTableData && (
-                <Tabs defaultValue="all">
-                    <div className="flex items-center justify-center w-full">
-                        <div className="flex flex-row ml-auto">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
+                <div>
+                    {/* Event Info Card */}
+                    {eventById && eventById.isActive ? null : (
+                        <div className="flex justify-center p-10">
+                            {event.matches.length === 0 &&
+                            eventMatchesInfoById ? (
+                                <EventInfoCard event={eventMatchesInfoById}>
+                                    {eventMatchesInfoById.suitable ? (
+                                        <CoolButton
+                                            className="items-center justify-center"
+                                            onClick={async () =>
+                                                handleActivate(
+                                                    event.id,
+                                                    event.startDate,
+                                                    event.finishDate,
+                                                    event.timeOfFirstMatch,
+                                                    event.timeOfLastMatch,
+                                                    event.matchDurationInMinutes
+                                                )
+                                            }
+                                        >
+                                            Generate matches 🎾
+                                        </CoolButton>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center">
+                                            <Alert
+                                                variant="destructive"
+                                                className="w-11/12 mb-2"
+                                            >
+                                                You need a bigger period of
+                                                time, more courts or places in
+                                                order to fit all matches...
+                                            </Alert>
+                                            <div className="flex items-center space-x-2">
+                                                <CoolButton borderClassName="h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-300)_40%,transparent_10%)]">
+                                                    Edit
+                                                </CoolButton>
+                                            </div>
+                                        </div>
+                                    )}
+                                </EventInfoCard>
+                            ) : null}
+                        </div>
+                    )}
+                </div>
+
+                <div>
+                    {/* Registered Doubles Table */}
+                    {doublesTableData && (
+                        <Tabs defaultValue="all">
+                            <div className="flex items-center justify-center w-full">
+                                <div className="flex flex-row ml-auto">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="gap-1 h-7"
+                                            >
+                                                <ListFilter className="h-3.5 w-3.5" />
+                                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                                    Filter
+                                                </span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+
+                                        <DropdownMenuContent className="w-56">
+                                            <DropdownMenuLabel>
+                                                Categories
+                                            </DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuRadioGroup
+                                                value={catFilter}
+                                                onValueChange={setCatFilter}
+                                            >
+                                                <DropdownMenuRadioItem value="all">
+                                                    All
+                                                </DropdownMenuRadioItem>
+                                                {event.categories.map(
+                                                    (c, index) => (
+                                                        <DropdownMenuRadioItem
+                                                            key={index}
+                                                            value={c.id}
+                                                        >
+                                                            {c.level} {c.type}
+                                                        </DropdownMenuRadioItem>
+                                                    )
+                                                )}
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                     <Button
-                                        variant="outline"
                                         size="sm"
+                                        variant="outline"
                                         className="gap-1 h-7"
+                                        onClick={() =>
+                                            downloadRegisteredDoublesToExcel(
+                                                doublesTableData
+                                            )
+                                        }
                                     >
-                                        <ListFilter className="h-3.5 w-3.5" />
+                                        <File className="h-3.5 w-3.5" />
                                         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                            Filter
+                                            Export
                                         </span>
                                     </Button>
-                                </DropdownMenuTrigger>
-
-                                <DropdownMenuContent className="w-56">
-                                    <DropdownMenuLabel>
-                                        Categories
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuRadioGroup
-                                        value={catFilter}
-                                        onValueChange={setCatFilter}
-                                    >
-                                        <DropdownMenuRadioItem value="all">
-                                            All
-                                        </DropdownMenuRadioItem>
-                                        {event.categories.map((c, index) => (
-                                            <DropdownMenuRadioItem
-                                                key={index}
-                                                value={c.id}
-                                            >
-                                                {c.level} {c.type}
-                                            </DropdownMenuRadioItem>
-                                        ))}
-                                    </DropdownMenuRadioGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                className="gap-1 h-7"
-                                onClick={() =>
-                                    downloadRegisteredDoublesToExcel(
-                                        doublesTableData
-                                    )
-                                }
-                            >
-                                <File className="h-3.5 w-3.5" />
-                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                    Export
-                                </span>
-                            </Button>
-                        </div>
-                    </div>
-                    <TabsContent value="all">
-                        <Card className="flex flex-col w-full">
-                            <CardHeader>
-                                <CardTitle>Doubles Registered</CardTitle>
-                                <CardDescription>
-                                    Manage doubles registered in the events and
-                                    generate games.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {doublesTableData ? (
-                                    <div className="flex flex-col justify-center">
-                                        <EventDoublesTable
-                                            columns={doublesColumns}
-                                            data={doublesTableData.filter(
-                                                (td) => {
-                                                    if (catFilter === 'all') {
-                                                        return td
-                                                    }
-                                                    return (
-                                                        td.catId === catFilter
-                                                    )
-                                                }
-                                            )}
-                                        />
-                                    </div>
-                                ) : null}
-                            </CardContent>
-                            <CardFooter>
-                                <div className="text-xs text-muted-foreground">
-                                    Showing <strong>1-10</strong> of{' '}
-                                    <strong>
-                                        {event.eventDoubles?.length}
-                                    </strong>{' '}
-                                    doubles
                                 </div>
-                            </CardFooter>
-                        </Card>
-                    </TabsContent>
-                </Tabs>
-            )}
-            <h1 className="text-2xl font-bold">Matches</h1>
-            {/* Pending Matches Carousels */}
-            {!isFetchingEventById &&
-            pendingMatches &&
-            pendingMatches.length !== 0 ? (
-                <>
-                    <h1 className="text-xl font-bold">Pending matches</h1>
-                    <div className="flex flex-col items-center justify-center">
-                        <MatchesCarousel
-                            matches={pendingMatches}
-                            refetchEvents={refetchEvents}
-                            refetchEventById={refetchEventById}
-                        />
-                    </div>
-                </>
-            ) : null}
-            {/* Finished Matches Carousels */}
-            {!isFetchingEventById &&
-            finishedMatches &&
-            finishedMatches.length !== 0 ? (
-                <>
-                    <h1 className="text-xl font-bold">Finished matches</h1>
-                    <div className="flex flex-col items-center justify-center">
-                        <MatchesCarousel
-                            matches={finishedMatches}
-                            refetchEvents={refetchEvents}
-                            refetchEventById={refetchEventById}
-                        />
-                    </div>
-                </>
-            ) : null}
-            {/* Schedule - Matches Data Table */}
-            {matchDatesTableData && filteredMatchDatesTableData ? (
-                <>
-                    <h1 className="text-xl font-bold">Schedule</h1>
-                    {dayFilter === 'all' ? (
-                        <h2 className="text-muted-foreground">
-                            Showing all days
-                        </h2>
-                    ) : null}
-                    {dayFilter !== 'all' && uniqueDates ? (
-                        <h2 className="text-muted-foreground">
-                            {uniqueDates[0].toDateString()}
-                        </h2>
-                    ) : null}
+                            </div>
+                            <TabsContent value="all">
+                                <Card className="flex flex-col w-full">
+                                    <CardHeader>
+                                        <CardTitle>
+                                            Doubles Registered
+                                        </CardTitle>
+                                        <CardDescription>
+                                            Manage doubles registered in the
+                                            events and generate games.
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {doublesTableData ? (
+                                            <div className="flex flex-col justify-center">
+                                                <EventDoublesTable
+                                                    columns={doublesColumns}
+                                                    data={doublesTableData.filter(
+                                                        (td) => {
+                                                            if (
+                                                                catFilter ===
+                                                                'all'
+                                                            ) {
+                                                                return td
+                                                            }
+                                                            return (
+                                                                td.catId ===
+                                                                catFilter
+                                                            )
+                                                        }
+                                                    )}
+                                                />
+                                            </div>
+                                        ) : null}
+                                    </CardContent>
+                                    <CardFooter>
+                                        <div className="text-xs text-muted-foreground">
+                                            Showing <strong>1-10</strong> of{' '}
+                                            <strong>
+                                                {event.eventDoubles?.length}
+                                            </strong>{' '}
+                                            doubles
+                                        </div>
+                                    </CardFooter>
+                                </Card>
+                            </TabsContent>
+                        </Tabs>
+                    )}
+                </div>
+            </div>
 
-                    <div className="flex flex-col justify-center">
-                        <MatchDatesTable
-                            matchDateById={matchDateById}
-                            isFetchingMatchDateById={isFetchingMatchDateById}
-                            refetchMatchDateById={refetchMatchDateById}
-                            matchById={matchById}
-                            isFetchingMatchById={isFetchingMatchById}
-                            refetchMatchById={refetchMatchById}
-                            categories={eventById?.categories}
-                            matchDateIdState={matchDateIdState}
-                            setMatchDateIdState={setMatchDateIdState}
-                            matchIdState={matchIdState}
-                            setMatchIdState={setMatchIdState}
-                            matchAssignOn={matchAssignOn}
-                            setMatchAssignOn={setMatchAssignOn}
-                            columns={matchDateColumns}
-                            data={filteredMatchDatesTableData}
-                            refetchEventMatchDates={refetchEventMatchDates}
-                            matchDates={eventMatchDates}
-                            dayFilter={dayFilter}
-                            matchDatesTableData={matchDatesTableData}
-                            setDayFilter={setDayFilter}
-                            uniqueValuesForDays={uniqueValuesForDays}
-                            setDoublesFilter={setDoublesFilter}
-                            setCourtFilter={setCourtFilter}
-                            eventCourts={eventCourts}
-                            eventCategories={eventCategories}
-                            setCategoryFilter={setCategoryFilter}
+            <div className="items-center space-y-5">
+                {/* Matches */}
+
+                <h1 className="text-2xl font-bold">Matches</h1>
+
+                {toggleMatchesGrid ? (
+                    <MatchesGrid
+                        matches={pendingMatches}
+                        refetchEventById={refetchEventById}
+                        setToggleMatchesGrid={setToggleMatchesGrid}
+                    />
+                ) : (
+                    <>
+                        <Grid3X3
+                            className="cursor-pointer"
+                            onClick={() => setToggleMatchesGrid(true)}
                         />
-                    </div>
-                </>
-            ) : null}
+                        {/* Pending Matches Carousels */}
+                        {!isFetchingEventById &&
+                        pendingMatches &&
+                        pendingMatches.length !== 0 ? (
+                            <>
+                                <h1 className="text-xl font-bold">
+                                    Pending matches
+                                </h1>
+                                <div className="flex flex-col items-center justify-center">
+                                    <MatchesCarousel
+                                        matches={pendingMatches}
+                                        refetchEvents={refetchEvents}
+                                        refetchEventById={refetchEventById}
+                                    />
+                                </div>
+                            </>
+                        ) : null}
+                        {/* Finished Matches Carousels */}
+                        {!isFetchingEventById &&
+                        finishedMatches &&
+                        finishedMatches.length !== 0 ? (
+                            <>
+                                <h1 className="text-xl font-bold">
+                                    Finished matches
+                                </h1>
+                                <div className="flex flex-col items-center justify-center">
+                                    <MatchesCarousel
+                                        matches={finishedMatches}
+                                        refetchEvents={refetchEvents}
+                                        refetchEventById={refetchEventById}
+                                    />
+                                </div>
+                            </>
+                        ) : null}
+                    </>
+                )}
+            </div>
+
+            <div>
+                {/* Schedule - Matches Data Table */}
+                {matchDatesTableData && filteredMatchDatesTableData ? (
+                    <>
+                        <h1 className="text-xl font-bold">Schedule</h1>
+                        {dayFilter === 'all' ? (
+                            <h2 className="text-muted-foreground">
+                                Showing all days
+                            </h2>
+                        ) : null}
+                        {dayFilter !== 'all' && uniqueDates ? (
+                            <h2 className="text-muted-foreground">
+                                {uniqueDates[0].toDateString()}
+                            </h2>
+                        ) : null}
+
+                        <div className="flex flex-col justify-center">
+                            <MatchDatesTable
+                                matchDateById={matchDateById}
+                                isFetchingMatchDateById={
+                                    isFetchingMatchDateById
+                                }
+                                refetchMatchDateById={refetchMatchDateById}
+                                matchById={matchById}
+                                isFetchingMatchById={isFetchingMatchById}
+                                refetchMatchById={refetchMatchById}
+                                categories={eventById?.categories}
+                                matchDateIdState={matchDateIdState}
+                                setMatchDateIdState={setMatchDateIdState}
+                                matchIdState={matchIdState}
+                                setMatchIdState={setMatchIdState}
+                                matchAssignOn={matchAssignOn}
+                                setMatchAssignOn={setMatchAssignOn}
+                                columns={matchDateColumns}
+                                data={filteredMatchDatesTableData}
+                                refetchEventMatchDates={refetchEventMatchDates}
+                                matchDates={eventMatchDates}
+                                dayFilter={dayFilter}
+                                matchDatesTableData={matchDatesTableData}
+                                setDayFilter={setDayFilter}
+                                uniqueValuesForDays={uniqueValuesForDays}
+                                setDoublesFilter={setDoublesFilter}
+                                setCourtFilter={setCourtFilter}
+                                eventCourts={eventCourts}
+                                eventCategories={eventCategories}
+                                setCategoryFilter={setCategoryFilter}
+                            />
+                        </div>
+                    </>
+                ) : null}
+            </div>
         </div>
     )
 }
