@@ -37,11 +37,11 @@ export class SetsController {
   }
 
   @Patch("/finish-set/:id")
-  async matchFinished(
+  async finishSet(
     @Param("id") id: string,
     @Body() setFinishedDto: SetFinishedDto
   ) {
-    return await this.setsService.setFinished(id, setFinishedDto);
+    return await this.setsService.finishSet(id, setFinishedDto);
   }
 
   @Delete(":id")

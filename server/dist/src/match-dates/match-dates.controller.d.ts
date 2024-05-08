@@ -13,11 +13,12 @@ export declare class MatchDatesController {
         courtId: string;
     }>;
     findAll(): Promise<{
-        id: string;
-        eventId: string;
-        matchId: string;
-        start: Date;
-        finish: Date;
+        court: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        };
         match: {
             id: string;
             number: number;
@@ -28,17 +29,19 @@ export declare class MatchDatesController {
             type: import(".prisma/client").$Enums.MatchType;
             courtId: string;
         };
+        id: string;
+        eventId: string;
+        matchId: string;
+        start: Date;
+        finish: Date;
+    }[]>;
+    findOne(id: string): Promise<{
         court: {
             id: string;
             name: string;
             isAvailable: boolean;
             placeId: string;
         };
-    }[]>;
-    findOne(id: string): Promise<{
-        id: string;
-        start: Date;
-        finish: Date;
         match: {
             number: number;
             id: string;
@@ -49,26 +52,25 @@ export declare class MatchDatesController {
                 }[];
             }[];
         };
+        id: string;
+        start: Date;
+        finish: Date;
+    }>;
+    findMatchDatesByEventId(eventId: string): Promise<{
         court: {
             id: string;
             name: string;
             isAvailable: boolean;
             placeId: string;
         };
-    }>;
-    findMatchDatesByEventId(eventId: string): Promise<{
-        id: string;
-        matchId: string;
-        start: Date;
-        finish: Date;
         match: {
             number: number;
-            categoryId: string;
             category: {
                 id: string;
                 level: number;
                 type: import(".prisma/client").$Enums.CatType;
             };
+            categoryId: string;
             doubles: {
                 id: string;
                 players: {
@@ -81,12 +83,10 @@ export declare class MatchDatesController {
                 }[];
             }[];
         };
-        court: {
-            id: string;
-            name: string;
-            isAvailable: boolean;
-            placeId: string;
-        };
+        id: string;
+        matchId: string;
+        start: Date;
+        finish: Date;
     }[]>;
     update(id: string, updateMatchDateDto: UpdateMatchDateDto): string;
     remove(id: string): string;

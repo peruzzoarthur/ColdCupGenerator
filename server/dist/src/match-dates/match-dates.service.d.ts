@@ -13,11 +13,12 @@ export declare class MatchDatesService {
         courtId: string;
     }>;
     findAll(): Promise<{
-        id: string;
-        eventId: string;
-        matchId: string;
-        start: Date;
-        finish: Date;
+        court: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        };
         match: {
             id: string;
             number: number;
@@ -28,26 +29,27 @@ export declare class MatchDatesService {
             type: import(".prisma/client").$Enums.MatchType;
             courtId: string;
         };
+        id: string;
+        eventId: string;
+        matchId: string;
+        start: Date;
+        finish: Date;
+    }[]>;
+    findMatchDatesInOrderByEventId(eventId: string): Promise<{
         court: {
             id: string;
             name: string;
             isAvailable: boolean;
             placeId: string;
         };
-    }[]>;
-    findMatchDatesInOrderByEventId(eventId: string): Promise<{
-        id: string;
-        matchId: string;
-        start: Date;
-        finish: Date;
         match: {
             number: number;
-            categoryId: string;
             category: {
                 id: string;
                 level: number;
                 type: import(".prisma/client").$Enums.CatType;
             };
+            categoryId: string;
             doubles: {
                 id: string;
                 players: {
@@ -60,17 +62,18 @@ export declare class MatchDatesService {
                 }[];
             }[];
         };
+        id: string;
+        matchId: string;
+        start: Date;
+        finish: Date;
+    }[]>;
+    findOne(id: string): Promise<{
         court: {
             id: string;
             name: string;
             isAvailable: boolean;
             placeId: string;
         };
-    }[]>;
-    findOne(id: string): Promise<{
-        id: string;
-        start: Date;
-        finish: Date;
         match: {
             number: number;
             id: string;
@@ -81,12 +84,9 @@ export declare class MatchDatesService {
                 }[];
             }[];
         };
-        court: {
-            id: string;
-            name: string;
-            isAvailable: boolean;
-            placeId: string;
-        };
+        id: string;
+        start: Date;
+        finish: Date;
     }>;
     update(id: number, updateMatchDateDto: UpdateMatchDateDto): string;
     remove(id: number): string;

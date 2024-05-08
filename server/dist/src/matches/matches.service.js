@@ -92,7 +92,7 @@ let MatchesService = class MatchesService {
         return match;
     }
     async findResult(id) {
-        const match = this.prismaService.match.findUnique({
+        const match = await this.prismaService.match.findUnique({
             where: { id: id },
             select: {
                 id: true,
@@ -115,26 +115,23 @@ let MatchesService = class MatchesService {
         if (!match) {
             throw new common_1.HttpException("Match not found", common_1.HttpStatus.NOT_FOUND);
         }
-        if ((await match).isFinished === null) {
+        if (match.isFinished === null) {
             return;
         }
-        const querySet = await match.sets({
-            select: {
-                games: {
-                    select: { winner: true },
-                },
-            },
-        });
-        const games = querySet.flatMap((s) => s.games);
-        const doubles = await match.doubles();
-        const doublesOneId = doubles[0].id;
-        const doublesTwoId = doubles[1].id;
-        const doublesOneGames = games.filter((game) => game.winner.id === doublesOneId);
-        console.log(doublesOneGames.length);
-        const doublesTwoGames = games.filter((game) => game.winner.id === doublesTwoId);
+        const set = match.sets;
+        const doublesAID = match.doubles[0].id;
+        const doublesBID = match.doubles[1].id;
+        const doublesOne = {
+            id: doublesAID,
+            gamesWon: set[0].games.filter((g) => g.winnerId === doublesAID).length,
+        };
+        const doublesTwo = {
+            id: doublesBID,
+            gamesWon: set[0].games.filter((g) => g.winnerId === doublesBID).length,
+        };
         return {
-            doublesOneGames: doublesOneGames.length,
-            doublesTwoGames: doublesTwoGames.length,
+            doublesOneGames: doublesOne.gamesWon,
+            doublesTwoGames: doublesTwo.gamesWon,
         };
     }
     async update(id, updateMatchDto) {
@@ -156,7 +153,6 @@ let MatchesService = class MatchesService {
                 },
             },
         });
-        console.log(match);
         if (match.matchDate === null) {
             await this.prismaService.match.update({
                 where: { id: id },
@@ -170,7 +166,6 @@ let MatchesService = class MatchesService {
             });
             return;
         }
-        console.log(`Before: ${match.matchDate.id}`);
         if (match.matchDate.id !== null) {
             await this.prismaService.matchDate.update({
                 where: {
@@ -205,10 +200,9 @@ let MatchesService = class MatchesService {
                 },
             },
         });
-        console.log(`After: ${match.matchDate.id}`);
         return match;
     }
-    async matchFinished(id, matchFinishedDto) {
+    async finishMatch(id, matchFinishedDto) {
         const match = await this.prismaService.match.findUnique({
             where: {
                 id: id,
@@ -219,12 +213,12 @@ let MatchesService = class MatchesService {
                 sets: true,
             },
         });
-        console.log(match);
         if (!match) {
             throw new common_1.HttpException("Match not found", common_1.HttpStatus.NOT_FOUND);
         }
-        const setFinished = await this.setsService.setFinished(match.sets[0].id, matchFinishedDto);
-        console.log(setFinished);
+        for (let i = 0; i < match.sets.length; i++) {
+            await this.setsService.finishSet(match.sets[i].id, matchFinishedDto);
+        }
         const updatedMatch = await this.prismaService.match.update({
             where: {
                 id: id,

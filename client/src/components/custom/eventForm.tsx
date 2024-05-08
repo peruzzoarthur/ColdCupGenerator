@@ -332,7 +332,7 @@ const EventForm: React.FC<EventFormProps> = ({
                     </FormItem>
                 )}
             />
-            <div className="flex justify-center mt-6 gap-x-6">
+            <div className="flex justify-center mt-6 mb-6 gap-x-6">
                 <FormField
                     control={form.control}
                     name="startDate"

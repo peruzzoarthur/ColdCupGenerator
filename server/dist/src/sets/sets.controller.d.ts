@@ -53,7 +53,7 @@ export declare class SetsController {
         isFinished: boolean;
     }>;
     update(id: string, updateSetDto: UpdateSetDto): string;
-    matchFinished(id: string, setFinishedDto: SetFinishedDto): Promise<{
+    finishSet(id: string, setFinishedDto: SetFinishedDto): Promise<{
         id: string;
         type: import(".prisma/client").$Enums.SetType;
         setWinnerId: string;

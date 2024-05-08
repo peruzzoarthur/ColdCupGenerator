@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-type MatchGamesResponse = {
+export type MatchGamesResponse = {
     doublesOneGames: number
     doublesTwoGames: number
 }

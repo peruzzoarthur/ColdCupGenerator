@@ -91,7 +91,7 @@ export class MatchesService {
   }
 
   async findResult(id: string) {
-    const match = this.prismaService.match.findUnique({
+    const match = await this.prismaService.match.findUnique({
       where: { id: id },
       select: {
         id: true,
@@ -116,35 +116,55 @@ export class MatchesService {
       throw new HttpException("Match not found", HttpStatus.NOT_FOUND);
     }
 
-    if ((await match).isFinished === null) {
+    if (match.isFinished === null) {
       return;
     }
 
-    const querySet = await match.sets({
-      select: {
-        games: {
-          select: { winner: true },
-        },
-      },
-    });
+    //! here im handling only one set games... SUPERSET type...
 
-    const games = querySet.flatMap((s) => s.games);
+    const set = match.sets;
+    const doublesAID = match.doubles[0].id;
+    const doublesBID = match.doubles[1].id;
 
-    const doubles = await match.doubles();
-
-    const doublesOneId = doubles[0].id;
-    const doublesTwoId = doubles[1].id;
-    const doublesOneGames = games.filter(
-      (game) => game.winner.id === doublesOneId
-    );
-    console.log(doublesOneGames.length);
-    const doublesTwoGames = games.filter(
-      (game) => game.winner.id === doublesTwoId
-    );
-    return {
-      doublesOneGames: doublesOneGames.length,
-      doublesTwoGames: doublesTwoGames.length,
+    const doublesOne = {
+      id: doublesAID,
+      gamesWon: set[0].games.filter((g) => g.winnerId === doublesAID).length,
     };
+
+    const doublesTwo = {
+      id: doublesBID,
+      gamesWon: set[0].games.filter((g) => g.winnerId === doublesBID).length,
+    };
+    return {
+      doublesOneGames: doublesOne.gamesWon,
+      doublesTwoGames: doublesTwo.gamesWon,
+    };
+
+    // const querySet = match.sets({
+    //   select: {
+    //     games: {
+    //       select: { winner: true },
+    //     },
+    //   },
+    // });
+
+    // const games = querySet.flatMap((s) => s.games);
+
+    // const doubles = await match.doubles();
+
+    // const doublesOneId = doubles[0].id;
+    // const doublesTwoId = doubles[1].id;
+    // const doublesOneGames = games.filter(
+    //   (game) => game.winner.id === doublesOneId
+    // );
+    // console.log(doublesOneGames.length);
+    // const doublesTwoGames = games.filter(
+    //   (game) => game.winner.id === doublesTwoId
+    // );
+    // return {
+    //   doublesOneGames: doublesOneGames.length,
+    //   doublesTwoGames: doublesTwoGames.length,
+    // };
   }
   async update(id: string, updateMatchDto: UpdateMatchDto) {
     return `This action updates a #${id} match`;
@@ -167,8 +187,6 @@ export class MatchesService {
       },
     });
 
-    console.log(match);
-
     if (match.matchDate === null) {
       await this.prismaService.match.update({
         where: { id: id },
@@ -182,7 +200,7 @@ export class MatchesService {
       });
       return;
     }
-    console.log(`Before: ${match.matchDate.id}`);
+    // console.log(`Before: ${match.matchDate.id}`);
 
     if (match.matchDate.id !== null) {
       await this.prismaService.matchDate.update({
@@ -221,12 +239,12 @@ export class MatchesService {
       },
     });
 
-    console.log(`After: ${match.matchDate.id}`);
+    // console.log(`After: ${match.matchDate.id}`);
 
     return match;
   }
 
-  async matchFinished(id: string, matchFinishedDto: MatchFinishedDto) {
+  async finishMatch(id: string, matchFinishedDto: MatchFinishedDto) {
     const match = await this.prismaService.match.findUnique({
       where: {
         id: id,
@@ -237,17 +255,16 @@ export class MatchesService {
         sets: true,
       },
     });
-    console.log(match);
+    // console.log(match);
 
     if (!match) {
       throw new HttpException("Match not found", HttpStatus.NOT_FOUND);
     }
 
-    const setFinished = await this.setsService.setFinished(
-      match.sets[0].id,
-      matchFinishedDto
-    );
-    console.log(setFinished);
+    //! need to test this loop for matches that require more sets... the dto will have to receive data for different sets
+    for (let i = 0; i < match.sets.length; i++) {
+      await this.setsService.finishSet(match.sets[i].id, matchFinishedDto);
+    }
 
     const updatedMatch = await this.prismaService.match.update({
       where: {

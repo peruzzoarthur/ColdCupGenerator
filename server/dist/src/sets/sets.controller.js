@@ -34,8 +34,8 @@ let SetsController = class SetsController {
     update(id, updateSetDto) {
         return this.setsService.update(+id, updateSetDto);
     }
-    async matchFinished(id, setFinishedDto) {
-        return await this.setsService.setFinished(id, setFinishedDto);
+    async finishSet(id, setFinishedDto) {
+        return await this.setsService.finishSet(id, setFinishedDto);
     }
     remove(id) {
         return this.setsService.remove(+id);
@@ -77,7 +77,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, set_finished_dto_1.SetFinishedDto]),
     __metadata("design:returntype", Promise)
-], SetsController.prototype, "matchFinished", null);
+], SetsController.prototype, "finishSet", null);
 __decorate([
     (0, common_1.Delete)(":id"),
     __param(0, (0, common_1.Param)("id")),

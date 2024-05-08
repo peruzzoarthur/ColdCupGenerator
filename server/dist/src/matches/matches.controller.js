@@ -37,8 +37,8 @@ let MatchesController = class MatchesController {
     update(id, updateMatchDto) {
         return this.matchesService.updateMatchDate(id, updateMatchDto);
     }
-    async matchFinished(id, matchFinishedDto) {
-        return await this.matchesService.matchFinished(id, matchFinishedDto);
+    async finishMatch(id, matchFinishedDto) {
+        return await this.matchesService.finishMatch(id, matchFinishedDto);
     }
     remove(id) {
         return this.matchesService.remove(+id);
@@ -87,7 +87,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, match_finished_dto_1.MatchFinishedDto]),
     __metadata("design:returntype", Promise)
-], MatchesController.prototype, "matchFinished", null);
+], MatchesController.prototype, "finishMatch", null);
 __decorate([
     (0, common_1.Delete)(":id"),
     __param(0, (0, common_1.Param)("id")),

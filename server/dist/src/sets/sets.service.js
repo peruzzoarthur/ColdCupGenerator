@@ -69,7 +69,7 @@ let SetsService = class SetsService {
     update(id, updateSetDto) {
         return `This action updates a #${id} set`;
     }
-    async setFinished(id, setFinishedDto) {
+    async finishSet(id, setFinishedDto) {
         const set = await this.prismaService.set.findUnique({
             where: {
                 id: id,

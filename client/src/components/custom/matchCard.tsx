@@ -17,6 +17,7 @@ import { Pencil1Icon } from '@radix-ui/react-icons'
 import { useToast } from '../ui/use-toast'
 import { ErrorAlert } from './errorAlert'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { MatchResult } from './matchCard/styledMatchResult'
 
 type ErrorResponse = {
     message: string
@@ -106,7 +107,6 @@ export const MatchCard = ({
 
     return (
         <>
-            {/* {showCard ? ( */}
             <Card className={cn('w-[380px]', className)}>
                 <CardHeader>
                     <CardTitle>{`Match #${match.number}`}</CardTitle>
@@ -118,122 +118,12 @@ export const MatchCard = ({
                     <CardDescription>{startTime}</CardDescription>
                 </CardHeader>
 
-                <CardContent className="grid gap-2">
+                <CardContent>
                     <div className="flex flex-col">
-                        {match.isFinished &&
-                        match.winner.id === match.doubles[0].id ? (
-                            <div className="flex items-center p-4 space-x-4 bg-green-400 border rounded-md bg-opacity-20">
-                                <div className="flex-1 space-y-1">
-                                    <div className="flex flex-row justify-between">
-                                        <div className="text-sm text-muted-foreground">
-                                            {match.doubles[0].players?.map(
-                                                (p, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >{`${p.firstName} ${p.lastName}`}</p>
-                                                )
-                                            )}
-                                        </div>
-                                        <div className="justify-end text-sm text-muted-foreground">
-                                            {match.isFinished && matchGames ? (
-                                                <p className="items-end align-end">
-                                                    {matchGames.doublesOneGames}
-                                                </p>
-                                            ) : (
-                                                <p className="items-end justify-end">
-                                                    0
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex items-center p-4 space-x-4 border rounded-md ">
-                                <div className="flex-1 space-y-1">
-                                    <div className="flex flex-row justify-between">
-                                        <div className="text-sm text-muted-foreground">
-                                            {match.doubles[0].players?.map(
-                                                (p, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >{`${p.firstName} ${p.lastName}`}</p>
-                                                )
-                                            )}
-                                        </div>
-                                        <div className="justify-end text-sm text-muted-foreground">
-                                            {match.isFinished && matchGames ? (
-                                                <p className="items-end align-end">
-                                                    {matchGames.doublesOneGames}
-                                                </p>
-                                            ) : (
-                                                <p className="items-end justify-end">
-                                                    0
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {match.isFinished &&
-                        match.winner.id === match.doubles[1].id ? (
-                            <div className="flex items-center p-4 space-x-4 bg-green-800 border rounded-md bg-opacity-30">
-                                <div className="flex-1 space-y-1">
-                                    <div className="flex flex-row justify-between">
-                                        <div className="text-sm text-muted-foreground">
-                                            {match.doubles[1].players?.map(
-                                                (p, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >{`${p.firstName} ${p.lastName}`}</p>
-                                                )
-                                            )}
-                                        </div>
-                                        <div className="justify-end text-sm text-muted-foreground">
-                                            {match.isFinished && matchGames ? (
-                                                <p className="items-end align-end">
-                                                    {matchGames.doublesTwoGames}
-                                                </p>
-                                            ) : (
-                                                <p className="items-end justify-end">
-                                                    0
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex items-center p-4 space-x-4 border rounded-md ">
-                                <div className="flex-1 space-y-1">
-                                    <div className="flex flex-row justify-between">
-                                        <div className="text-sm text-muted-foreground">
-                                            {match.doubles[1].players?.map(
-                                                (p, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >{`${p.firstName} ${p.lastName}`}</p>
-                                                )
-                                            )}
-                                        </div>
-                                        <div className="justify-end text-sm text-muted-foreground">
-                                            {match.isFinished && matchGames ? (
-                                                <p className="items-end align-end">
-                                                    {matchGames.doublesTwoGames}
-                                                </p>
-                                            ) : (
-                                                <p className="items-end justify-end">
-                                                    0
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        <MatchResult match={match} matchGames={matchGames} />
                     </div>
+
+                    {/* Footer */}
                     {match.isFinished ? null : (
                         <CardFooter className="justify-center">
                             <div className="w-2/3">
@@ -274,13 +164,7 @@ export const MatchCard = ({
                     )}
                 </CardContent>
             </Card>
-            {/* ) : (
-                <div className="flex items-center align-middle justify-evenly">
-                    <h2>Match finished</h2>
-                </div>
-            )} */}
 
-            {/* <Button onClick={handleReloadCard}>Reload Card</Button> */}
             {isError && (
                 <div onClick={() => setError(false)} className="mt-4">
                     <ErrorAlert message={errorMessage} />

@@ -42,11 +42,11 @@ export class MatchesController {
   }
 
   @Patch("/finish-match/:id")
-  async matchFinished(
+  async finishMatch(
     @Param("id") id: string,
     @Body() matchFinishedDto: MatchFinishedDto
   ) {
-    return await this.matchesService.matchFinished(id, matchFinishedDto);
+    return await this.matchesService.finishMatch(id, matchFinishedDto);
   }
 
   @Delete(":id")

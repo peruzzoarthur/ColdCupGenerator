@@ -43,7 +43,7 @@ import {
 } from './matchDatesTable/columns'
 import { MatchDatesTable } from './matchDatesTable/matchDatesTable'
 import { getUniqueValuesForDays } from '@/util/getUniqueValuesForDays'
-import { CoolButton } from '../ui/moving-border'
+import { CoolButton } from './coolButton'
 import { useGetEventMatchesInfoById } from '@/hooks/useGetEventMatchesInfoById'
 import { EventInfoCard } from './eventInfoCard'
 import { Alert } from '../ui/alert'

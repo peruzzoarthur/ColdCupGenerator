@@ -83,7 +83,7 @@ export declare class MatchesController {
             start: Date;
         };
     }>;
-    matchFinished(id: string, matchFinishedDto: MatchFinishedDto): Promise<{
+    finishMatch(id: string, matchFinishedDto: MatchFinishedDto): Promise<{
         id: string;
         number: number;
         isFinished: boolean;
