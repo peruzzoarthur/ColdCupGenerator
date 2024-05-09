@@ -102,6 +102,7 @@ export function EventDashboard({
         timeOfFirstMatch: number,
         timeOfLastMatch: number,
         matchDurationInMinutes: number
+        // autoPopulate: boolean
     ) => {
         try {
             const activateEventDto = {
@@ -112,9 +113,12 @@ export function EventDashboard({
                 timeOfLastMatch: timeOfLastMatch,
                 matchDurationInMinutes: matchDurationInMinutes,
                 courtsIds: eventById?.courts.map((c) => c.id),
+                autoPopulate: false, //!!!!!!!!!!!!!!!!!!!!!!
             }
             const { data: matches }: { data: Match[] } = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // `${import.meta.env.VITE_SERVER_URL}/events/activate-event-auto-populate`,
+                `${import.meta.env.VITE_SERVER_URL}/events/activate-event-no-populate`,
                 activateEventDto
             )
 
@@ -250,7 +254,7 @@ export function EventDashboard({
     return (
         <div>
             <div className="flex flex-col justify-center w-full pl-2 pr-2 ">
-                {/* Header && Breadcrumb */}
+                {/* Header && Breadcrumb && EventInfo / Create Matches*/}
                 <div className="flex">
                     <header className="sticky top-0 z-30 flex items-center gap-4 px-4 h-14 bg-background sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
                         <Breadcrumb>

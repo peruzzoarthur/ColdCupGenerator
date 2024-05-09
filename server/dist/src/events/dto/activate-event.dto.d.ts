@@ -6,4 +6,5 @@ export declare class ActivateEventDto {
     timeOfLastMatch: number;
     matchDurationInMinutes: number;
     courtsIds: string[];
+    autoPopulate?: boolean;
 }

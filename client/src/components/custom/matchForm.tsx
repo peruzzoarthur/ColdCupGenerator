@@ -35,8 +35,8 @@ export type matchFormObject = {
 }
 
 const formSchema = z.object({
-    doublesOneGames: z.string(),
-    doublesTwoGames: z.string(),
+    doublesOneGames: z.string(), //?
+    doublesTwoGames: z.string(), //?
     winnerDoublesId: z.string(),
 })
 
@@ -66,8 +66,9 @@ export const MatchForm: React.FC<MatchFormProps> = ({
                             {`${doublesPlaying[0].players[1].firstName} ${doublesPlaying[0].players[1].lastName}`}
                         </FormLabel>
                         <FormControl>
-                            <Input placeholder="0" {...field} />
+                            <Input type="number" placeholder="0" {...field} />
                         </FormControl>
+                        <FormMessage />
                     </FormItem>
                 )}
             />
@@ -83,8 +84,9 @@ export const MatchForm: React.FC<MatchFormProps> = ({
                             {`${doublesPlaying[1].players[1].firstName} ${doublesPlaying[1].players[1].lastName}`}
                         </FormLabel>
                         <FormControl>
-                            <Input placeholder="0" {...field} />
+                            <Input type="number" placeholder="0" {...field} />
                         </FormControl>
+                        <FormMessage />
                     </FormItem>
                 )}
             />

@@ -30,8 +30,11 @@ let EventsController = class EventsController {
     async getEventById(getEventByIdDto) {
         return await this.eventsService.getEventById(getEventByIdDto);
     }
-    async activateEvent(activateEventDto) {
-        return await this.eventsService.activateEvent(activateEventDto);
+    async activateEventAutoPop(activateEventDto) {
+        return await this.eventsService.activateEventWithAutoPopulate(activateEventDto);
+    }
+    async activateEventNoPop(activateEventDto) {
+        return await this.eventsService.activateEventWithoutAutoPopulate(activateEventDto);
     }
     async registerDoublesInEvent(registerDoublesInEventDto) {
         console.log("registering");
@@ -69,12 +72,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "getEventById", null);
 __decorate([
-    (0, common_1.Post)("activate-event"),
+    (0, common_1.Post)("activate-event-auto-populate"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [activate_event_dto_1.ActivateEventDto]),
     __metadata("design:returntype", Promise)
-], EventsController.prototype, "activateEvent", null);
+], EventsController.prototype, "activateEventAutoPop", null);
+__decorate([
+    (0, common_1.Post)("activate-event-no-populate"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [activate_event_dto_1.ActivateEventDto]),
+    __metadata("design:returntype", Promise)
+], EventsController.prototype, "activateEventNoPop", null);
 __decorate([
     (0, common_1.Post)("register"),
     __param(0, (0, common_1.Body)()),

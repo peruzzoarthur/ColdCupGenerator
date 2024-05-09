@@ -19,6 +19,34 @@ let MatchesService = class MatchesService {
         this.setsService = setsService;
     }
     async create(createMatchDto) {
+        if (createMatchDto.matchDateId === undefined) {
+            console.log("calling without matchDateId");
+            const match = await this.prismaService.match.create({
+                data: {
+                    doubles: { connect: createMatchDto.doublesIds.map((id) => ({ id })) },
+                    eventId: createMatchDto.eventId,
+                    categoryId: createMatchDto.categoryId,
+                },
+                select: {
+                    id: true,
+                    isFinished: true,
+                    category: true,
+                    categoryId: true,
+                    doubles: true,
+                    type: true,
+                    sets: true,
+                },
+            });
+            const superSet = await this.setsService.create({
+                doublesOneGames: 0,
+                doublesTwoGames: 0,
+                matchId: match.id,
+                doublesIds: createMatchDto.doublesIds,
+                eventId: createMatchDto.eventId,
+            });
+            return match;
+        }
+        console.log("calling without matchDateId");
         const match = await this.prismaService.match.create({
             data: {
                 doubles: { connect: createMatchDto.doublesIds.map((id) => ({ id })) },
@@ -26,7 +54,7 @@ let MatchesService = class MatchesService {
                 categoryId: createMatchDto.categoryId,
                 matchDate: {
                     connect: {
-                        id: createMatchDto.matchDateId,
+                        id: createMatchDto.matchDateId ? createMatchDto.matchDateId : null,
                     },
                 },
             },

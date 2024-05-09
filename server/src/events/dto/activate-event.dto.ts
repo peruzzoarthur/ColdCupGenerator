@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsISO8601,
   IsNotEmpty,
   IsNumber,
@@ -34,4 +35,7 @@ export class ActivateEventDto {
   @IsNotEmpty()
   @IsArray()
   courtsIds: string[];
+
+  @IsBoolean()
+  autoPopulate?: boolean;
 }

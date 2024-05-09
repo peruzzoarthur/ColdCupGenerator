@@ -5,5 +5,5 @@ export class CreateMatchDto {
   eventId: string;
   categoryId: string;
   type?: MatchType;
-  matchDateId?: string;
+  matchDateId: string | undefined;
 }

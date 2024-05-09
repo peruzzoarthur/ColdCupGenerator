@@ -317,7 +317,7 @@ let EventsService = class EventsService {
         }
         return daysArray;
     }
-    async activateEvent(activateEventDto) {
+    async activateEventWithAutoPopulate(activateEventDto) {
         const event = await this.getEventById(activateEventDto);
         await this.createSchedule({
             id: activateEventDto.id,
@@ -453,6 +453,70 @@ let EventsService = class EventsService {
             }
         }
         return matchesToAdd;
+    }
+    async activateEventWithoutAutoPopulate(activateEventDto) {
+        const event = await this.getEventById(activateEventDto);
+        await this.createSchedule({
+            id: activateEventDto.id,
+            startDate: activateEventDto.startDate,
+            finishDate: activateEventDto.finishDate,
+            timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+            timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+            matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+            courtIds: activateEventDto.courtsIds,
+        });
+        let matchDatesAvailable = (await this.getEventById({ id: event.id })).matchDates
+            .filter((matchDate) => matchDate.match === null)
+            .map((md) => {
+            return {
+                id: md.id,
+                start: md.start,
+                finish: md.finish,
+            };
+        });
+        const doubles = event.categories.flatMap((cat) => cat.eventDoubles.map((ed) => {
+            return {
+                doublesId: ed.doubleId,
+                catId: ed.double.categoryId,
+                doublesRestState: matchDatesAvailable[0].start,
+            };
+        }));
+        const categoriesIds = event.categories.flatMap((cat) => cat.id);
+        let matchesToAdd = [];
+        let matchCount = 0;
+        for (let c = 0; c < categoriesIds.length; c++) {
+            const filteredDoublesByCategory = doubles.filter((d) => d.catId === categoriesIds[c]);
+            for (let i = 0; i < filteredDoublesByCategory.length; i++) {
+                for (let j = i + 1; j < filteredDoublesByCategory.length; j++) {
+                    matchesToAdd.push({
+                        categoryId: categoriesIds[c],
+                        matchId: matchCount,
+                        doublesA: {
+                            doublesId: filteredDoublesByCategory[i].doublesId,
+                            doublesRestState: filteredDoublesByCategory[i].doublesRestState,
+                        },
+                        doublesB: {
+                            doublesId: filteredDoublesByCategory[j].doublesId,
+                            doublesRestState: filteredDoublesByCategory[j].doublesRestState,
+                        },
+                    });
+                    matchCount++;
+                }
+            }
+        }
+        for (let m = 0; m < matchesToAdd.length; m++) {
+            await this.matchesService.create({
+                categoryId: matchesToAdd[m].categoryId,
+                doublesIds: [
+                    matchesToAdd[m].doublesA.doublesId,
+                    matchesToAdd[m].doublesB.doublesId,
+                ],
+                eventId: event.id,
+                type: "SUPERSET",
+                matchDateId: undefined,
+            });
+        }
+        return;
     }
     findOne(id) {
         return `This action returns a #${id} event`;

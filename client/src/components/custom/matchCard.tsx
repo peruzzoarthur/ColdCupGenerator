@@ -72,7 +72,6 @@ export const MatchCard = ({
                 requestBody
             )
 
-            console.log(data)
             sendResultToast(match, input)
             // setShowCard(false)
             await refetchMatchGames()

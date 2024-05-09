@@ -34,9 +34,18 @@ export class EventsController {
     return await this.eventsService.getEventById(getEventByIdDto);
   }
 
-  @Post("activate-event")
-  async activateEvent(@Body() activateEventDto: ActivateEventDto) {
-    return await this.eventsService.activateEvent(activateEventDto);
+  @Post("activate-event-auto-populate")
+  async activateEventAutoPop(@Body() activateEventDto: ActivateEventDto) {
+    return await this.eventsService.activateEventWithAutoPopulate(
+      activateEventDto
+    );
+  }
+
+  @Post("activate-event-no-populate")
+  async activateEventNoPop(@Body() activateEventDto: ActivateEventDto) {
+    return await this.eventsService.activateEventWithoutAutoPopulate(
+      activateEventDto
+    );
   }
 
   @Post("register")

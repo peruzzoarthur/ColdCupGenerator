@@ -49,4 +49,8 @@ __decorate([
     (0, class_validator_1.IsArray)(),
     __metadata("design:type", Array)
 ], ActivateEventDto.prototype, "courtsIds", void 0);
+__decorate([
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], ActivateEventDto.prototype, "autoPopulate", void 0);
 //# sourceMappingURL=activate-event.dto.js.map

@@ -363,11 +363,12 @@ export class EventsService {
     }
     return daysArray;
   }
-  async activateEvent(activateEventDto: ActivateEventDto) {
+  async activateEventWithAutoPopulate(activateEventDto: ActivateEventDto) {
     // ! get the event that will be activated
     const event = await this.getEventById(activateEventDto);
 
     // ? THIS IS COMMENTED BECAUSE IM TESTING CREATE MATCHES
+    // ! create the schedule for the event
     await this.createSchedule({
       id: activateEventDto.id,
       startDate: activateEventDto.startDate,
@@ -389,8 +390,6 @@ export class EventsService {
           finish: md.finish,
         };
       });
-
-    // ! create the schedule for the event
 
     // !  get doubles, categories and matchDatesAvailable to use in loop to populate matches
     const doubles = event.categories.flatMap((cat) =>
@@ -543,84 +542,90 @@ export class EventsService {
         }
       }
     }
-
-    // // ! POPULATE MATCHES LOOP k for categories
-
-    // let count: number = 0;
-    // for (let k = 0; k < categoriesIds.length; k++) {
-    //   const filteredDoublesIds = doubles.filter(
-    //     (d) => d.catId === categoriesIds[k]
-    //   ); // filter doubles based on it's category.
-    //   for (let i = 0; i < filteredDoublesIds.length; i++) {
-    //     for (let j = i + 1; j < filteredDoublesIds.length; j++) {
-    //       // console.log(`Variables: k=${k} i=${i} j=${j}. ___calling with
-    //       // {matchDateId: ${matchDatesAvailable[count]}} for categoryId: ${categoriesIds[k]}`);
-    //       // ! inside this loop i will have to handle i++ and j++ differently... or i have to somehow push the doubles that will play against each other to the end of the filtered array... there is the issue of loosing the match pair because of atRestTime...
-    //       //!
-    //       if (
-    //         (filteredDoublesIds[i].doublesRestState === null &&
-    //           filteredDoublesIds[j].doublesRestState === null) ||
-    //         filteredDoublesIds[i].doublesRestState.valueOf() ||
-    //         filteredDoublesIds[j].doublesRestState.valueOf() <=
-    //           matchDatesAvailable[count].start.valueOf()
-    //       ) {
-    //         await this.matchesService.create({
-    //           doublesIds: [
-    //             filteredDoublesIds[i].doublesId,
-    //             filteredDoublesIds[j].doublesId,
-    //           ],
-    //           categoryId: categoriesIds[k],
-
-    //           eventId: event.id,
-    //           matchDateId: matchDatesAvailable[count].id,
-    //         });
-
-    //         await this.prismaService.eventDouble.updateMany({
-    //           where: {
-    //             OR: [
-    //               {
-    //                 eventId: activateEventDto.id,
-    //                 doubleId: filteredDoublesIds[i].doublesId,
-    //                 categoryId: categoriesIds[k],
-    //               },
-    //               {
-    //                 eventId: activateEventDto.id,
-    //                 doubleId: filteredDoublesIds[j].doublesId,
-    //                 categoryId: categoriesIds[k],
-    //               },
-    //             ],
-    //           },
-    //           data: {
-    //             atRest: new Date(
-    //               matchDatesAvailable[count].finish.valueOf() + 3600000 * 2
-    //             ),
-    //           },
-    //         });
-    //         count++;
-    //       }
-
-    //       // ! check if one of the doubles are at rest... if so skip to next match...
-    //       if (
-    //         filteredDoublesIds[i].doublesRestState.valueOf() ||
-    //         filteredDoublesIds[j].doublesRestState.valueOf() >
-    //           matchDatesAvailable[count].start.valueOf()
-    //       ) {
-    //         console.log("Players at rest...");
-    //       }
-    // }
-    // }
-    // }
-
-    // await this.prismaService.event.update({
-    //   where: {
-    //     id: activateEventDto.id,
-    //   },
-    //   data: {
-    //     isActive: true,
-    //   },
-    // });
-
     return matchesToAdd;
+  }
+
+  async activateEventWithoutAutoPopulate(activateEventDto: ActivateEventDto) {
+    const event = await this.getEventById(activateEventDto);
+
+    await this.createSchedule({
+      id: activateEventDto.id,
+      startDate: activateEventDto.startDate,
+      finishDate: activateEventDto.finishDate,
+      timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+      timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+      matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+      courtIds: activateEventDto.courtsIds,
+    });
+
+    let matchDatesAvailable = (
+      await this.getEventById({ id: event.id })
+    ).matchDates
+      .filter((matchDate) => matchDate.match === null)
+      .map((md) => {
+        return {
+          id: md.id,
+          start: md.start,
+          finish: md.finish,
+        };
+      });
+
+    const doubles = event.categories.flatMap((cat) =>
+      cat.eventDoubles.map((ed) => {
+        return {
+          doublesId: ed.doubleId,
+          catId: ed.double.categoryId,
+          doublesRestState: matchDatesAvailable[0].start, //!
+        };
+      })
+    );
+    const categoriesIds = event.categories.flatMap((cat) => cat.id);
+
+    let matchesToAdd: {
+      categoryId: string;
+      matchId: number;
+      doublesA: { doublesId: string; doublesRestState: Date };
+      doublesB: { doublesId: string; doublesRestState: Date };
+    }[] = [];
+
+    let matchCount: number = 0;
+
+    for (let c = 0; c < categoriesIds.length; c++) {
+      const filteredDoublesByCategory = doubles.filter(
+        (d) => d.catId === categoriesIds[c]
+      );
+
+      for (let i = 0; i < filteredDoublesByCategory.length; i++) {
+        for (let j = i + 1; j < filteredDoublesByCategory.length; j++) {
+          matchesToAdd.push({
+            categoryId: categoriesIds[c],
+            matchId: matchCount,
+            doublesA: {
+              doublesId: filteredDoublesByCategory[i].doublesId,
+              doublesRestState: filteredDoublesByCategory[i].doublesRestState,
+            },
+            doublesB: {
+              doublesId: filteredDoublesByCategory[j].doublesId,
+              doublesRestState: filteredDoublesByCategory[j].doublesRestState,
+            },
+          });
+          matchCount++;
+        }
+      }
+    }
+    for (let m = 0; m < matchesToAdd.length; m++) {
+      await this.matchesService.create({
+        categoryId: matchesToAdd[m].categoryId,
+        doublesIds: [
+          matchesToAdd[m].doublesA.doublesId,
+          matchesToAdd[m].doublesB.doublesId,
+        ],
+        eventId: event.id,
+        type: "SUPERSET",
+        matchDateId: undefined,
+      });
+    }
+    return;
   }
   findOne(id: number) {
     return `This action returns a #${id} event`;
