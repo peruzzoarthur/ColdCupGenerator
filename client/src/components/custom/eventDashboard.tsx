@@ -1,4 +1,4 @@
-import { File, ListFilter, Grid3X3 } from 'lucide-react'
+import { File, ListFilter, Grid3X3, Square, Calendar } from 'lucide-react'
 
 import {
     Breadcrumb,
@@ -438,71 +438,88 @@ export function EventDashboard({
                 </div>
             </div>
 
-            <div className="flex flex-col items-center w-full ">
-                {/* Matches */}
-
-                <h1 className="text-2xl font-bold">Matches</h1>
-
+            {/* Matches */}
+            <div className="flex flex-col items-center justify-center w-full">
                 {toggleMatchesGrid ? (
                     <>
-                        <Button
-                            className=""
-                            onClick={() => setToggleMatchesGrid(false)}
-                        >
-                            Back
-                        </Button>
-                        <h2 className="text-xl">Pending matches</h2>
-                        <MatchesGrid
-                            matches={pendingMatches}
-                            refetchEventById={refetchEventById}
-                        />
+                        <div className="flex flex-col items-center mt-6">
+                            <div className="flex flex-row justify-center">
+                                <h1 className="text-3xl font-bold">Matches</h1>
+                                <div className="flex items-end ml-2">
+                                    <Square
+                                        className="flex cursor-pointer"
+                                        onClick={() =>
+                                            setToggleMatchesGrid(false)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <h2 className="py-4 text-xl font-bold">
+                                Pending matches
+                            </h2>
+                            <MatchesGrid
+                                matches={pendingMatches}
+                                refetchEventById={refetchEventById}
+                            />
 
-                        <h2 className="text-xl">Finished matches</h2>
-                        <MatchesGrid
-                            matches={finishedMatches}
-                            refetchEventById={refetchEventById}
-                        />
+                            <h2 className="pt-10 pb-4 text-xl font-bold">
+                                Finished matches
+                            </h2>
+                            <MatchesGrid
+                                matches={finishedMatches}
+                                refetchEventById={refetchEventById}
+                            />
+                        </div>
                     </>
                 ) : (
                     <>
-                        <Grid3X3
-                            className="cursor-pointer"
-                            onClick={() => setToggleMatchesGrid(true)}
-                        />
-                        {/* Pending Matches Carousels */}
-                        {!isFetchingEventById &&
-                        pendingMatches &&
-                        pendingMatches.length !== 0 ? (
-                            <>
-                                <h1 className="text-xl font-bold">
-                                    Pending matches
-                                </h1>
-                                <div className="flex flex-col items-center justify-center">
-                                    <MatchesCarousel
-                                        matches={pendingMatches}
-                                        refetchEvents={refetchEvents}
-                                        refetchEventById={refetchEventById}
+                        <div className="flex flex-col mt-6 ">
+                            <div className="flex flex-row justify-center">
+                                <h1 className="text-3xl font-bold">Matches</h1>
+                                <div className="flex items-center ml-2">
+                                    <Grid3X3
+                                        className="flex cursor-pointer"
+                                        onClick={() =>
+                                            setToggleMatchesGrid(true)
+                                        }
                                     />
                                 </div>
-                            </>
-                        ) : null}
-                        {/* Finished Matches Carousels */}
-                        {!isFetchingEventById &&
-                        finishedMatches &&
-                        finishedMatches.length !== 0 ? (
-                            <>
-                                <h1 className="text-xl font-bold">
-                                    Finished matches
-                                </h1>
-                                <div className="flex flex-col items-center justify-center">
-                                    <MatchesCarousel
-                                        matches={finishedMatches}
-                                        refetchEvents={refetchEvents}
-                                        refetchEventById={refetchEventById}
-                                    />
-                                </div>
-                            </>
-                        ) : null}
+                            </div>
+                            {/* Pending Matches Carousels */}
+                            {!isFetchingEventById &&
+                            pendingMatches &&
+                            pendingMatches.length !== 0 ? (
+                                <>
+                                    <div className="flex flex-col items-center justify-center">
+                                        <h1 className="py-2 text-xl font-bold">
+                                            Pending matches
+                                        </h1>
+                                        <MatchesCarousel
+                                            matches={pendingMatches}
+                                            refetchEvents={refetchEvents}
+                                            refetchEventById={refetchEventById}
+                                        />
+                                    </div>
+                                </>
+                            ) : null}
+                            {/* Finished Matches Carousels */}
+                            {!isFetchingEventById &&
+                            finishedMatches &&
+                            finishedMatches.length !== 0 ? (
+                                <>
+                                    <div className="flex flex-col items-center justify-center">
+                                        <h1 className="py-2 text-xl font-bold">
+                                            Finished matches
+                                        </h1>
+                                        <MatchesCarousel
+                                            matches={finishedMatches}
+                                            refetchEvents={refetchEvents}
+                                            refetchEventById={refetchEventById}
+                                        />
+                                    </div>
+                                </>
+                            ) : null}
+                        </div>
                     </>
                 )}
             </div>
@@ -511,19 +528,27 @@ export function EventDashboard({
                 {/* Schedule - Matches Data Table */}
                 {matchDatesTableData && filteredMatchDatesTableData ? (
                     <>
-                        <h1 className="text-xl font-bold">Schedule</h1>
-                        {dayFilter === 'all' ? (
-                            <h2 className="text-muted-foreground">
-                                Showing all days
-                            </h2>
-                        ) : null}
-                        {dayFilter !== 'all' && uniqueDates ? (
-                            <h2 className="text-muted-foreground">
-                                {uniqueDates[0].toDateString()}
-                            </h2>
-                        ) : null}
+                        <div className="flex flex-col items-center justify-center">
+                            <div className="flex flex-row pt-10">
+                                <h1 className="text-3xl font-bold ">
+                                    Schedule
+                                </h1>
+                                <div className="flex items-center ml-2">
+                                    <Calendar className="flex cursor-pointer" />
+                                </div>
+                            </div>
 
-                        <div className="flex flex-col justify-center">
+                            {dayFilter === 'all' ? (
+                                <h2 className="text-muted-foreground">
+                                    Showing all days
+                                </h2>
+                            ) : null}
+                            {dayFilter !== 'all' && uniqueDates ? (
+                                <h2 className="text-muted-foreground">
+                                    {uniqueDates[0].toDateString()}
+                                </h2>
+                            ) : null}
+
                             <MatchDatesTable
                                 matchDateById={matchDateById}
                                 isFetchingMatchDateById={
