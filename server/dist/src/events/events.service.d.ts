@@ -193,6 +193,7 @@ export declare class EventsService {
             type: import(".prisma/client").$Enums.CatType;
         }[];
         matches: {
+            number: number;
             id: string;
             players: {
                 id: string;
@@ -289,6 +290,7 @@ export declare class EventsService {
     createSchedule(createScheduleDto: CreateScheduleDto): Promise<Day[]>;
     activateEventWithAutoPopulate(activateEventDto: ActivateEventDto): Promise<{
         matches: {
+            number: number;
             id: string;
             players: {
                 id: string;

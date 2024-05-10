@@ -52,6 +52,7 @@ export declare class EventsController {
             type: import(".prisma/client").$Enums.CatType;
         }[];
         matches: {
+            number: number;
             id: string;
             players: {
                 id: string;
@@ -147,6 +148,7 @@ export declare class EventsController {
     }>;
     activateEventAutoPop(activateEventDto: ActivateEventDto): Promise<{
         matches: {
+            number: number;
             id: string;
             players: {
                 id: string;

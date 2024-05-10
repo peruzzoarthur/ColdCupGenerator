@@ -242,6 +242,7 @@ let EventsService = class EventsService {
                 matches: {
                     select: {
                         id: true,
+                        number: true,
                         categoryId: true,
                         doubles: true,
                         eventId: true,
@@ -381,10 +382,10 @@ let EventsService = class EventsService {
             };
         });
         const firstTimeStamp = matchDatesAvailable[0].start.valueOf();
-        for (let i = 0; matches.length > 0; i++) {
-            console.log(matches.length);
-            console.log(matchDatesAvailable.length);
+        for (let i = 0; matches.length > 0;) {
             const match = matches[0];
+            console.log(`Calling for Match: #${matches[0].number}`);
+            console.log(`👽My name is i, my number is: ${i}👽`);
             const matchDate = matchDatesAvailable[i];
             const doublesA = await this.prismaService.eventDouble.findUniqueOrThrow({
                 where: {
@@ -449,8 +450,14 @@ let EventsService = class EventsService {
                         atRestId: matchDatesAvailable[i + 2].id,
                     },
                 });
+                console.log("🌞🌞 Calling from null - null");
+                console.log(` ** Before: matches.length = ${matches.length}`);
                 matches = matches.filter((m) => m.id !== match.id);
+                console.log(` ** After: matches.length = ${matches.length}`);
+                console.log(` ## Before: matchDates.length = ${matchDatesAvailable.length}`);
                 matchDatesAvailable = matchDatesAvailable.filter((md) => md.id !== matchDate.id);
+                console.log(` ## After: matchDates.length = ${matchDatesAvailable.length}`);
+                i = 0;
             }
             else {
                 let doublesAState;
@@ -499,18 +506,19 @@ let EventsService = class EventsService {
                             atRestId: matchDatesAvailable[i + 2].id,
                         },
                     });
-                    console.log(`Before: matches.length = ${matches.length}`);
+                    console.log("🌞🌚Calling from oneNull or two not null");
+                    console.log(` ** Before: matches.length = ${matches.length}`);
                     matches = matches.filter((m) => m.id !== match.id);
-                    console.log(`After: matches.length = ${matches.length}`);
-                    console.log(`Before: matchDates.length = ${matches.length}`);
+                    console.log(` ** After: matches.length = ${matches.length}`);
+                    console.log(` ## Before: matchDates.length = ${matchDatesAvailable.length}`);
                     matchDatesAvailable = matchDatesAvailable.filter((md) => md.id !== matchDate.id);
-                    console.log(`After: matchDates.length = ${matches.length}`);
+                    console.log(` ## After: matchDates.length = ${matchDatesAvailable.length}`);
+                    i = 0;
                 }
                 if (doublesAState > matchDate.start.valueOf() ||
                     doublesBState > matchDate.start.valueOf()) {
-                    console.log("lastcall");
-                    matches.push(match);
-                    matches.shift();
+                    console.log("🌚🌚 At least one of them doubles are at rest... lets i++ 🌚🌚");
+                    i++;
                 }
             }
         }
