@@ -35,8 +35,16 @@ export type matchFormObject = {
 }
 
 const formSchema = z.object({
-    doublesOneGames: z.string(), //?
-    doublesTwoGames: z.string(), //?
+    doublesOneGames: z
+        .string()
+        .regex(/^\d+$/)
+        .min(0, { message: 'Values range from 0 to 9.' })
+        .max(1, { message: 'Values range from 0 to 9.' }),
+
+    doublesTwoGames: z
+        .string()
+        .regex(/^\d+$/)
+        .max(1, { message: 'Values range from 0 to 9.' }), //?
     winnerDoublesId: z.string(),
 })
 
@@ -59,15 +67,28 @@ export const MatchForm: React.FC<MatchFormProps> = ({
                 control={form.control}
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>
-                            {' '}
-                            {`${doublesPlaying[0].players[0].firstName} ${doublesPlaying[0].players[0].lastName}`}
-                            {' / '}
-                            {`${doublesPlaying[0].players[1].firstName} ${doublesPlaying[0].players[1].lastName}`}
-                        </FormLabel>
-                        <FormControl>
-                            <Input type="number" placeholder="0" {...field} />
-                        </FormControl>
+                        <div className="flex items-center p-4 mt-1 space-x-4 border">
+                            <div className="flex-1 space-y-1">
+                                <div className="flex flex-row justify-between">
+                                    <div className="text-sm text-muted-foreground ">
+                                        {' '}
+                                        {`${doublesPlaying[0].players[0].firstName} ${doublesPlaying[0].players[0].lastName}`}
+                                        {' / '}
+                                        {`${doublesPlaying[0].players[1].firstName} ${doublesPlaying[0].players[1].lastName}`}
+                                    </div>
+                                    <div className="flex justify-end text-sm text-muted-foreground">
+                                        <FormControl>
+                                            <Input
+                                                className="items-end justify-end w-[54px]"
+                                                type="number"
+                                                placeholder="0"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <FormMessage />
                     </FormItem>
                 )}
@@ -77,15 +98,28 @@ export const MatchForm: React.FC<MatchFormProps> = ({
                 control={form.control}
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>
-                            {' '}
-                            {`${doublesPlaying[1].players[0].firstName} ${doublesPlaying[1].players[0].lastName}`}
-                            {' / '}
-                            {`${doublesPlaying[1].players[1].firstName} ${doublesPlaying[1].players[1].lastName}`}
-                        </FormLabel>
-                        <FormControl>
-                            <Input type="number" placeholder="0" {...field} />
-                        </FormControl>
+                        <div className="flex items-center p-4 mt-1 space-x-4 border">
+                            <div className="flex-1 space-y-1">
+                                <div className="flex flex-row justify-between">
+                                    <div className="text-sm text-muted-foreground ">
+                                        {' '}
+                                        {`${doublesPlaying[1].players[0].firstName} ${doublesPlaying[1].players[0].lastName}`}
+                                        {' / '}
+                                        {`${doublesPlaying[1].players[1].firstName} ${doublesPlaying[1].players[1].lastName}`}
+                                    </div>
+                                    <div className="flex justify-end text-sm text-muted-foreground">
+                                        <FormControl>
+                                            <Input
+                                                className="items-end justify-end w-[54px]"
+                                                type="number"
+                                                placeholder="0"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <FormMessage />
                     </FormItem>
                 )}
@@ -125,9 +159,9 @@ export const MatchForm: React.FC<MatchFormProps> = ({
                 )}
             />
 
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-5">
                 <Button
-                    className="w-3/6 bg-opacity-65"
+                    className="w-2/6"
                     onClick={handleSubmit(onSubmit)}
                     type="button"
                 >

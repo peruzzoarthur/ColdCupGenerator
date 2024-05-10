@@ -3,7 +3,6 @@ import {
     Card,
     CardContent,
     CardDescription,
-    // CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
@@ -44,7 +43,6 @@ export const MatchCard = ({
             description: `Sent result:\n
             ${match.doubles[0].players[0].firstName} ${match.doubles[0].players[0].lastName} / ${match.doubles[0].players[1].firstName} ${match.doubles[0].players[1].lastName}: ${form.doublesOneGames} ---
             ${match.doubles[1].players[0].firstName} ${match.doubles[1].players[0].lastName} / ${match.doubles[1].players[1].firstName} ${match.doubles[1].players[1].lastName}: ${form.doublesTwoGames}`,
-            // className: 'bg-emerald-600 bg-opacity-60 text-white',
         })
     }
     const [editOn, setEditOn] = useState<boolean>(false)
@@ -53,8 +51,6 @@ export const MatchCard = ({
         match.id,
         match.isFinished
     )
-
-    // const [showCard, setShowCard] = useState<boolean>(true)
 
     const onSubmit = async (input: matchFormObject) => {
         try {
@@ -73,7 +69,6 @@ export const MatchCard = ({
             )
 
             sendResultToast(match, input)
-            // setShowCard(false)
             await refetchMatchGames()
             await refetchEventById()
 
@@ -106,7 +101,7 @@ export const MatchCard = ({
 
     return (
         <>
-            <Card className={cn('w-[380px]', className)}>
+            <Card className={cn('w-[380px] min-h-[354px] ', className)}>
                 <CardHeader>
                     <CardTitle>{`Match #${match.number}`}</CardTitle>
                     <CardDescription>
@@ -116,38 +111,40 @@ export const MatchCard = ({
                     {match.isFinished ? <p>🟢</p> : <p>🟡</p>}
                     <CardDescription>{startTime}</CardDescription>
                 </CardHeader>
-
                 <CardContent>
-                    <div className="flex flex-col">
-                        <MatchResult match={match} matchGames={matchGames} />
-                    </div>
-
-                    {/* Footer */}
+                    {editOn ? (
+                        <div className="flex flex-col">
+                            <MatchForm
+                                onSubmit={onSubmit}
+                                defaultValues={{
+                                    doublesOneGames: '',
+                                    doublesTwoGames: '',
+                                    winnerDoublesId: '',
+                                }}
+                                doublesPlaying={match.doubles}
+                            />
+                        </div>
+                    ) : (
+                        <div className="flex flex-col">
+                            <MatchResult
+                                match={match}
+                                matchGames={matchGames}
+                            />
+                        </div>
+                    )}
+                    {/* Footer (Pencil icon to to toggle on and off editMode) */}
                     {match.isFinished ? null : (
                         <CardFooter className="justify-center">
                             <div className="w-2/3">
                                 {editOn ? (
-                                    <>
-                                        <div className="flex flex-col justify-center mt-2">
-                                            <MatchForm
-                                                onSubmit={onSubmit}
-                                                defaultValues={{
-                                                    doublesOneGames: '',
-                                                    doublesTwoGames: '',
-                                                    winnerDoublesId: '',
-                                                }}
-                                                doublesPlaying={match.doubles}
-                                            />
-                                            <div className="flex justify-center mt-2">
-                                                <Pencil1Icon
-                                                    onClick={() => {
-                                                        setEditOn(false)
-                                                    }}
-                                                    className="w-4 h-4 mr-2 hover:cursor-pointer"
-                                                />
-                                            </div>
-                                        </div>
-                                    </>
+                                    <div className="flex justify-center mt-2">
+                                        <Pencil1Icon
+                                            onClick={() => {
+                                                setEditOn(false)
+                                            }}
+                                            className="w-4 h-4 mr-2 hover:cursor-pointer"
+                                        />
+                                    </div>
                                 ) : (
                                     <div className="flex justify-center mt-2">
                                         <Pencil1Icon

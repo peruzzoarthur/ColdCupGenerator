@@ -252,7 +252,7 @@ export function EventDashboard({
             })
 
     return (
-        <div>
+        <div className="flex flex-col">
             <div className="flex flex-col justify-center w-full pl-2 pr-2 ">
                 {/* Header && Breadcrumb && EventInfo / Create Matches*/}
                 <div className="flex">
@@ -438,17 +438,31 @@ export function EventDashboard({
                 </div>
             </div>
 
-            <div className="items-center space-y-5">
+            <div className="flex flex-col items-center w-full ">
                 {/* Matches */}
 
                 <h1 className="text-2xl font-bold">Matches</h1>
 
                 {toggleMatchesGrid ? (
-                    <MatchesGrid
-                        matches={pendingMatches}
-                        refetchEventById={refetchEventById}
-                        setToggleMatchesGrid={setToggleMatchesGrid}
-                    />
+                    <>
+                        <Button
+                            className=""
+                            onClick={() => setToggleMatchesGrid(false)}
+                        >
+                            Back
+                        </Button>
+                        <h2 className="text-xl">Pending matches</h2>
+                        <MatchesGrid
+                            matches={pendingMatches}
+                            refetchEventById={refetchEventById}
+                        />
+
+                        <h2 className="text-xl">Finished matches</h2>
+                        <MatchesGrid
+                            matches={finishedMatches}
+                            refetchEventById={refetchEventById}
+                        />
+                    </>
                 ) : (
                     <>
                         <Grid3X3
