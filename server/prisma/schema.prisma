@@ -51,13 +51,14 @@ model Court {
 }
 
 model EventDouble {
-  event      Event     @relation(fields: [eventId], references: [id])
+  event      Event      @relation(fields: [eventId], references: [id])
   eventId    String
-  double     Double    @relation(fields: [doubleId], references: [id])
+  double     Double     @relation(fields: [doubleId], references: [id])
   doubleId   String
-  category   Category  @relation(fields: [categoryId], references: [id])
+  category   Category   @relation(fields: [categoryId], references: [id])
   categoryId String
-  atRest     DateTime?
+  atRest     MatchDate? @relation(fields: [atRestId], references: [id])
+  atRestId   String?
 
   @@id([eventId, doubleId, categoryId])
 }
@@ -95,15 +96,16 @@ model Match {
 }
 
 model MatchDate {
-  id      String   @id @unique @default(uuid())
-  event   Event    @relation(fields: [eventId], references: [id])
+  id      String        @id @unique @default(uuid())
+  event   Event         @relation(fields: [eventId], references: [id])
   eventId String
-  match   Match?   @relation(fields: [matchId], references: [id])
-  matchId String?  @unique
+  match   Match?        @relation(fields: [matchId], references: [id])
+  matchId String?       @unique
   start   DateTime
   finish  DateTime
-  court   Court    @relation(fields: [courtId], references: [id])
+  court   Court         @relation(fields: [courtId], references: [id])
   courtId String
+  atRest  EventDouble[]
 
   @@unique([eventId, start, finish, courtId]) // todo add courts here when created...
 }
@@ -158,6 +160,7 @@ model Double {
   matchesWins Match[]  @relation("MatchWinnerDouble")
   setsWins    Set[]    @relation("SetWinnerDouble")
   gamesWins   Game[]   @relation("GameWinnerDouble")
+  // atRest      MatchDate[]
 
   eventDouble EventDouble[]
 }

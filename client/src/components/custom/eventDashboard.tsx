@@ -117,8 +117,8 @@ export function EventDashboard({
             }
             const { data: matches }: { data: Match[] } = await axios.post(
                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // `${import.meta.env.VITE_SERVER_URL}/events/activate-event-auto-populate`,
-                `${import.meta.env.VITE_SERVER_URL}/events/activate-event-no-populate`,
+                `${import.meta.env.VITE_SERVER_URL}/events/activate-event-auto-populate`,
+                // `${import.meta.env.VITE_SERVER_URL}/events/activate-event-no-populate`,
                 activateEventDto
             )
 

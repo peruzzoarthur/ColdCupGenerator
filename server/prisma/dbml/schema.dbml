@@ -45,7 +45,8 @@ Table EventDouble {
   doubleId String [not null]
   category Category [not null]
   categoryId String [not null]
-  atRest DateTime
+  atRest MatchDate
+  atRestId String
 
   indexes {
     (eventId, doubleId, categoryId) [pk]
@@ -96,6 +97,7 @@ Table MatchDate {
   finish DateTime [not null]
   court Court [not null]
   courtId String [not null]
+  atRest EventDouble [not null]
 
   indexes {
     (eventId, start, finish, courtId) [unique]
@@ -259,6 +261,8 @@ Ref: EventDouble.eventId > Event.id
 Ref: EventDouble.doubleId > Double.id
 
 Ref: EventDouble.categoryId > Category.id
+
+Ref: EventDouble.atRestId > MatchDate.id
 
 Ref: Match.categoryId > Category.id
 
