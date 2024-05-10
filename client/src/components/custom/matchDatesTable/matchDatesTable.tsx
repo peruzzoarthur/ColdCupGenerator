@@ -232,7 +232,7 @@ export function MatchDatesTable<TData, TValue>({
             </div>
 
             {/* Search && Visibility  */}
-            <div className="flex justify-end w-1/3">
+            <div className="flex justify-end w-5/6">
                 <div className="flex flex-row items-start w-full py-1 space-y-1">
                     <div className="flex mt-3 mr-1">
                         <Search className="w-4 h-4 align-center" />
