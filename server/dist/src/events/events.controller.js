@@ -20,6 +20,7 @@ const update_event_dto_1 = require("./dto/update-event.dto");
 const register_doubles_event_dto_1 = require("./dto/register-doubles-event.dto");
 const get_event_by_id_dto_1 = require("./dto/get-event-by-id.dto");
 const activate_event_dto_1 = require("./dto/activate-event.dto");
+const delete_doubles_dto_1 = require("./dto/delete-doubles.dto");
 let EventsController = class EventsController {
     constructor(eventsService) {
         this.eventsService = eventsService;
@@ -31,28 +32,27 @@ let EventsController = class EventsController {
         return await this.eventsService.getEventById(getEventByIdDto);
     }
     async activateEventAutoPop(activateEventDto) {
-        return await this.eventsService.activateEventWithAutoPopulate(activateEventDto);
-    }
-    async activateEventNoPop(activateEventDto) {
-        return await this.eventsService.activateEventWithoutAutoPopulate(activateEventDto);
+        return await this.eventsService.activateEvent(activateEventDto);
     }
     async registerDoublesInEvent(registerDoublesInEventDto) {
-        console.log("registering");
         return await this.eventsService.registerDoublesInEvent(registerDoublesInEventDto);
+    }
+    async deleteDoublesInEvent(deleteDoublesInEventDto) {
+        return await this.eventsService.deleteDoublesInEvent(deleteDoublesInEventDto);
     }
     async findAllEvents() {
         return await this.eventsService.findAllEvents();
     }
-    findOne(id) {
+    async findOne(id) {
         return this.eventsService.getEventByIdParam(id);
     }
-    getEventInfo(id) {
+    async getEventInfo(id) {
         return this.eventsService.getEventInfoForGenerateMatches(id);
     }
-    update(id, updateEventDto) {
+    async update(id, updateEventDto) {
         return this.eventsService.update(+id, updateEventDto);
     }
-    remove(id) {
+    async remove(id) {
         return this.eventsService.remove(+id);
     }
 };
@@ -72,19 +72,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "getEventById", null);
 __decorate([
-    (0, common_1.Post)("activate-event-auto-populate"),
+    (0, common_1.Post)("activate-event"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [activate_event_dto_1.ActivateEventDto]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "activateEventAutoPop", null);
-__decorate([
-    (0, common_1.Post)("activate-event-no-populate"),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [activate_event_dto_1.ActivateEventDto]),
-    __metadata("design:returntype", Promise)
-], EventsController.prototype, "activateEventNoPop", null);
 __decorate([
     (0, common_1.Post)("register"),
     __param(0, (0, common_1.Body)()),
@@ -92,6 +85,13 @@ __decorate([
     __metadata("design:paramtypes", [register_doubles_event_dto_1.RegisterDoublesInEventDto]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "registerDoublesInEvent", null);
+__decorate([
+    (0, common_1.Post)("delete-doubles"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [delete_doubles_dto_1.DeleteDoublesInEventDto]),
+    __metadata("design:returntype", Promise)
+], EventsController.prototype, "deleteDoublesInEvent", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
@@ -103,14 +103,14 @@ __decorate([
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], EventsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Get)("/event-info/:id"),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], EventsController.prototype, "getEventInfo", null);
 __decorate([
     (0, common_1.Patch)(":id"),
@@ -118,14 +118,14 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_event_dto_1.UpdateEventDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], EventsController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(":id"),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], EventsController.prototype, "remove", null);
 exports.EventsController = EventsController = __decorate([
     (0, common_1.Controller)("events"),

@@ -88,7 +88,8 @@ export function EventDashboard({
     const { eventMatchDates, refetchEventMatchDates } = useGetEventMatchDates(
         event.id
     )
-    const { eventMatchesInfoById } = useGetEventMatchesInfoById(event.id)
+    const { eventMatchesInfoById, refetchEventMatchesInfoById } =
+        useGetEventMatchesInfoById(event.id)
     const { matchDateById, isFetchingMatchDateById, refetchMatchDateById } =
         useGetMatchDateById(matchDateIdState)
 
@@ -113,17 +114,16 @@ export function EventDashboard({
                 timeOfLastMatch: timeOfLastMatch,
                 matchDurationInMinutes: matchDurationInMinutes,
                 courtsIds: eventById?.courts.map((c) => c.id),
-                autoPopulate: false, //!!!!!!!!!!!!!!!!!!!!!!
+                autoPopulate: true,
             }
             const { data: matches }: { data: Match[] } = await axios.post(
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                `${import.meta.env.VITE_SERVER_URL}/events/activate-event-auto-populate`,
-                // `${import.meta.env.VITE_SERVER_URL}/events/activate-event-no-populate`,
+                `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
                 activateEventDto
             )
 
             await refetchEventById()
             await refetchEventMatchDates()
+            await refetchEventMatchesInfoById()
             return matches
         } catch (error) {
             return error
@@ -138,8 +138,9 @@ export function EventDashboard({
             const gamesDiff = (winningGames ?? 0) - (lostGames ?? 0)
 
             return {
+                eventId: eventById.id ?? null,
                 catId: d.double?.categoryId ?? null,
-                id: d.doubleId,
+                id: d.double?.id ?? null,
                 playerOneName: `${d.double?.players[0].firstName} ${d.double?.players[0].lastName}`,
                 playerTwoName: `${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`,
                 categoryLevel: d.category?.level || null,
@@ -301,7 +302,7 @@ export function EventDashboard({
                                                 )
                                             }
                                         >
-                                            Generate matches 🎾
+                                            Activate Event 🎾
                                         </CoolButton>
                                     ) : (
                                         <div className="flex flex-col items-center justify-center">
@@ -403,6 +404,10 @@ export function EventDashboard({
                                         {doublesTableData ? (
                                             <div className="flex flex-col justify-center">
                                                 <EventDoublesTable
+                                                    refetchEventById={
+                                                        refetchEventById
+                                                    }
+                                                    eventId={eventById?.id}
                                                     columns={doublesColumns}
                                                     data={doublesTableData.filter(
                                                         (td) => {

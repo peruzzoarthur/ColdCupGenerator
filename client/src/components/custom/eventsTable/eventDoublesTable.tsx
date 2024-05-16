@@ -18,15 +18,32 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import React from 'react'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { MoreHorizontal } from 'lucide-react'
+import { EventDouble, PadelEvent } from '@/types/padel.types'
+import axios from 'axios'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    eventId: string | undefined
+    refetchEventById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
 
 export function EventDoublesTable<TData, TValue>({
     columns,
     data,
+    eventId,
+    refetchEventById,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const table = useReactTable({
@@ -40,6 +57,30 @@ export function EventDoublesTable<TData, TValue>({
             sorting,
         },
     })
+
+    const handleDeleteDoublesFromEvent = async (
+        eventId: string,
+        doublesId: string,
+        categoryId: string
+
+        // autoPopulate: boolean
+    ) => {
+        try {
+            const handleDeleteDoublesInEventDto = {
+                eventId: eventId,
+                doublesId: doublesId,
+                categoryId: categoryId,
+            }
+            const { data: doubles }: { data: EventDouble } = await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/events/delete-doubles`,
+                handleDeleteDoublesInEventDto
+            )
+            await refetchEventById()
+            return doubles
+        } catch (error) {
+            return error
+        }
+    }
 
     return (
         <>
@@ -81,6 +122,56 @@ export function EventDoublesTable<TData, TValue>({
                                             )}
                                         </TableCell>
                                     ))}
+                                    <TableCell>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button
+                                                    className="w-8 h-8 p-0"
+                                                    variant="ghost"
+                                                >
+                                                    <MoreHorizontal className="w-4 h-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <DropdownMenuLabel>
+                                                    Actions
+                                                </DropdownMenuLabel>
+                                                <DropdownMenuItem
+                                                    onClick={() => {
+                                                        const doublesId =
+                                                            row.getValue(
+                                                                'id'
+                                                            ) as string
+
+                                                        const categoryId =
+                                                            row.getValue(
+                                                                'catId'
+                                                            ) as string
+                                                        {
+                                                            if (
+                                                                eventId &&
+                                                                doublesId &&
+                                                                categoryId
+                                                            ) {
+                                                                handleDeleteDoublesFromEvent(
+                                                                    eventId,
+                                                                    doublesId,
+                                                                    categoryId
+                                                                )
+                                                            } else {
+                                                                console.log(
+                                                                    'im an error'
+                                                                )
+                                                                return
+                                                            }
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete doubles from event
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
                                 </TableRow>
                             ))
                         ) : (

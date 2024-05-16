@@ -209,6 +209,30 @@ let EventsService = class EventsService {
         });
         return createdEventDouble;
     }
+    async deleteDoublesInEvent(deleteDoublesInEventDto) {
+        const eventDoubles = await this.prismaService.eventDouble.findUnique({
+            where: {
+                eventId_doubleId_categoryId: {
+                    doubleId: deleteDoublesInEventDto.doublesId,
+                    categoryId: deleteDoublesInEventDto.categoryId,
+                    eventId: deleteDoublesInEventDto.eventId,
+                },
+            },
+        });
+        if (!eventDoubles) {
+            throw new common_1.HttpException("Doubles is not registered in this event.", common_1.HttpStatus.NOT_FOUND);
+        }
+        const removedDoubles = await this.prismaService.eventDouble.delete({
+            where: {
+                eventId_doubleId_categoryId: {
+                    doubleId: eventDoubles.doubleId,
+                    categoryId: eventDoubles.categoryId,
+                    eventId: eventDoubles.eventId,
+                },
+            },
+        });
+        return removedDoubles;
+    }
     async getEventById(getEventByIdDto) {
         const event = await this.prismaService.event.findUnique({
             where: {
@@ -328,49 +352,8 @@ let EventsService = class EventsService {
         }
         return daysArray;
     }
-    async activateEventWithAutoPopulate(activateEventDto) {
+    async autoPopulate(activateEventDto) {
         const event = await this.getEventById(activateEventDto);
-        await this.createSchedule({
-            id: activateEventDto.id,
-            startDate: activateEventDto.startDate,
-            finishDate: activateEventDto.finishDate,
-            timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
-            timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
-            matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
-            courtIds: activateEventDto.courtsIds,
-        });
-        const doubles = event.categories.flatMap((cat) => cat.eventDoubles.map((ed) => {
-            return {
-                doublesId: ed.doubleId,
-                catId: ed.double.categoryId,
-            };
-        }));
-        const categoriesIds = event.categories.flatMap((cat) => cat.id);
-        let matchesToAdd = [];
-        let matchCount = 0;
-        for (let c = 0; c < categoriesIds.length; c++) {
-            const filteredDoublesByCategory = doubles.filter((d) => d.catId === categoriesIds[c]);
-            for (let i = 0; i < filteredDoublesByCategory.length; i++) {
-                for (let j = i + 1; j < filteredDoublesByCategory.length; j++) {
-                    matchesToAdd.push({
-                        categoryId: categoriesIds[c],
-                        matchId: matchCount,
-                        doublesAID: filteredDoublesByCategory[i].doublesId,
-                        doublesBID: filteredDoublesByCategory[j].doublesId,
-                    });
-                    matchCount++;
-                }
-            }
-        }
-        for (let m = 0; m < matchesToAdd.length; m++) {
-            await this.matchesService.create({
-                categoryId: matchesToAdd[m].categoryId,
-                doublesIds: [matchesToAdd[m].doublesAID, matchesToAdd[m].doublesBID],
-                eventId: event.id,
-                type: "SUPERSET",
-                matchDateId: undefined,
-            });
-        }
         let matches = (await this.getEventById({ id: event.id })).matches;
         let matchDatesAvailable = (await this.getEventById({ id: event.id })).matchDates
             .filter((matchDate) => matchDate.match === null)
@@ -524,7 +507,7 @@ let EventsService = class EventsService {
         }
         return { matches: matches };
     }
-    async activateEventWithoutAutoPopulate(activateEventDto) {
+    async activateEvent(activateEventDto) {
         const event = await this.getEventById(activateEventDto);
         await this.createSchedule({
             id: activateEventDto.id,
@@ -566,6 +549,9 @@ let EventsService = class EventsService {
                 type: "SUPERSET",
                 matchDateId: undefined,
             });
+        }
+        if (activateEventDto.autoPopulate) {
+            await this.autoPopulate(activateEventDto);
         }
         return;
     }

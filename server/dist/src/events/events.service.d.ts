@@ -6,6 +6,7 @@ import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { MatchesService } from "src/matches/matches.service";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
+import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 type Day = {
     day: number;
     timeOfFirstMatch: number;
@@ -164,6 +165,12 @@ export declare class EventsService {
             }[];
         };
     }>;
+    deleteDoublesInEvent(deleteDoublesInEventDto: DeleteDoublesInEventDto): Promise<{
+        eventId: string;
+        doubleId: string;
+        categoryId: string;
+        atRestId: string;
+    }>;
     getEventById(getEventByIdDto: GetEventByIdDto): Promise<{
         id: string;
         isActive: boolean;
@@ -288,7 +295,7 @@ export declare class EventsService {
         }[];
     }>;
     createSchedule(createScheduleDto: CreateScheduleDto): Promise<Day[]>;
-    activateEventWithAutoPopulate(activateEventDto: ActivateEventDto): Promise<{
+    autoPopulate(activateEventDto: ActivateEventDto): Promise<{
         matches: {
             number: number;
             id: string;
@@ -322,7 +329,7 @@ export declare class EventsService {
             };
         }[];
     }>;
-    activateEventWithoutAutoPopulate(activateEventDto: ActivateEventDto): Promise<void>;
+    activateEvent(activateEventDto: ActivateEventDto): Promise<void>;
     getEventByIdParam(id: string): Promise<{
         id: string;
         name: string;

@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button'
+
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
 export type RegisteredDoublesTable = {
+    // eventId: string | null
     catId: string | null
-    id: string
+    id: string | null
     matchesWon: number | null
     playerOneName: string | null
     playerTwoName: string | null
@@ -126,4 +128,55 @@ export const doublesColumns: ColumnDef<RegisteredDoublesTable>[] = [
             )
         },
     },
+    {
+        accessorKey: 'id',
+        header: () => <></>,
+        cell: () => <></>, //!  maybe i don't need to instantiate this two columns
+        enableHiding: false,
+    },
+
+    {
+        accessorKey: 'catId',
+        header: () => <></>,
+        cell: () => <></>, //!  maybe i don't need to instantiate this two columns
+        enableHiding: false,
+    },
+    // {
+    //     id: 'actions',
+    //     cell: ({ row }) => {
+    //         const doublesId = row.original.id
+    //         const eventId = row.original.eventId
+    //         const categoryId = row.original.catId
+    //         return (
+    //             <DropdownMenu>
+    //                 <DropdownMenuTrigger asChild>
+    //                     <Button variant="ghost" className="w-8 h-8 p-0">
+    //                         <MoreHorizontal className="w-4 h-4" />
+    //                     </Button>
+    //                 </DropdownMenuTrigger>
+    //                 <DropdownMenuContent>
+    //                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
+    //                     <DropdownMenuItem
+    //                         onClick={() => {
+    //                             if (doublesId && eventId && categoryId) {
+    //                                 handleDeleteDoublesFromEvent(
+    //                                     eventId,
+    //                                     doublesId,
+    //                                     categoryId
+    //                                 )
+    //                             } else {
+    //                                 console.log(
+    //                                     `EventId: ${eventId}\nCategoryId: ${categoryId}\n DoublesId: ${doublesId}`
+    //                                 )
+    //                                 return
+    //                             }
+    //                         }}
+    //                     >
+    //                         Delete doubles from event
+    //                     </DropdownMenuItem>
+    //                 </DropdownMenuContent>
+    //             </DropdownMenu>
+    //         )
+    //     },
+    // },
 ]

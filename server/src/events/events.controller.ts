@@ -14,6 +14,7 @@ import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
+import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 
 @Controller("events")
 export class EventsController {
@@ -34,27 +35,33 @@ export class EventsController {
     return await this.eventsService.getEventById(getEventByIdDto);
   }
 
-  @Post("activate-event-auto-populate")
+  @Post("activate-event")
   async activateEventAutoPop(@Body() activateEventDto: ActivateEventDto) {
-    return await this.eventsService.activateEventWithAutoPopulate(
-      activateEventDto
-    );
+    return await this.eventsService.activateEvent(activateEventDto);
   }
 
-  @Post("activate-event-no-populate")
-  async activateEventNoPop(@Body() activateEventDto: ActivateEventDto) {
-    return await this.eventsService.activateEventWithoutAutoPopulate(
-      activateEventDto
-    );
-  }
+  // @Post("activate-event-no-populate")
+  // async activateEventNoPop(@Body() activateEventDto: ActivateEventDto) {
+  //   return await this.eventsService.activateEventWithoutAutoPopulate(
+  //     activateEventDto
+  //   );
+  // }
 
   @Post("register")
   async registerDoublesInEvent(
     @Body() registerDoublesInEventDto: RegisterDoublesInEventDto
   ) {
-    console.log("registering");
     return await this.eventsService.registerDoublesInEvent(
       registerDoublesInEventDto
+    );
+  }
+
+  @Post("delete-doubles")
+  async deleteDoublesInEvent(
+    @Body() deleteDoublesInEventDto: DeleteDoublesInEventDto
+  ) {
+    return await this.eventsService.deleteDoublesInEvent(
+      deleteDoublesInEventDto
     );
   }
 
@@ -64,22 +71,25 @@ export class EventsController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
+  async findOne(@Param("id") id: string) {
     return this.eventsService.getEventByIdParam(id);
   }
 
   @Get("/event-info/:id")
-  getEventInfo(@Param("id") id: string) {
+  async getEventInfo(@Param("id") id: string) {
     return this.eventsService.getEventInfoForGenerateMatches(id);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateEventDto: UpdateEventDto) {
+  async update(
+    @Param("id") id: string,
+    @Body() updateEventDto: UpdateEventDto
+  ) {
     return this.eventsService.update(+id, updateEventDto);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
+  async remove(@Param("id") id: string) {
     return this.eventsService.remove(+id);
   }
 }

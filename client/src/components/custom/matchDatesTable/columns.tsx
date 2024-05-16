@@ -82,13 +82,13 @@ export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
     {
         accessorKey: 'matchDateId',
         header: () => <></>,
-        cell: () => <></>,
+        cell: () => <></>, //!  maybe i don't need to instantiate this two columns
         enableHiding: false,
     },
     {
         accessorKey: 'matchId',
         header: () => <></>,
-        cell: () => <></>,
+        cell: () => <></>, //!  maybe i don't need to instantiate this two columns
         enableHiding: false,
     },
 ]
