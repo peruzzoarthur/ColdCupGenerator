@@ -65,6 +65,46 @@ export class EventsService {
     return event;
   }
 
+  async updateEvent(updateEventDto: UpdateEventDto) {
+    const event = await this.prismaService.event.findUniqueOrThrow({
+      where: {
+        id: updateEventDto.eventId,
+      },
+    });
+
+    const placesToConnect = updateEventDto.placesIds.map((id) => ({ id }));
+    const categoriesToConnect = updateEventDto.categoriesIds.map((id) => ({
+      id,
+    }));
+    const courtsToConnect = updateEventDto.courtsIds.map((id) => ({
+      id,
+    }));
+
+    const updated = await this.prismaService.event.update({
+      where: {
+        id: event.id,
+      },
+      data: {
+        name: updateEventDto.name,
+        categories: {
+          connect: categoriesToConnect,
+        },
+        places: {
+          connect: placesToConnect,
+        },
+        courts: {
+          connect: courtsToConnect,
+        },
+        startDate: updateEventDto.startDate,
+        finishDate: updateEventDto.finishDate,
+        timeOfFirstMatch: Number(updateEventDto.timeOfFirstMatch),
+        timeOfLastMatch: Number(updateEventDto.timeOfLastMatch),
+        matchDurationInMinutes: Number(updateEventDto.matchDurationInMinutes),
+      },
+    });
+    return updated;
+  }
+
   async findAllEvents() {
     return await this.prismaService.event.findMany({
       select: {
@@ -673,6 +713,15 @@ export class EventsService {
     if (activateEventDto.autoPopulate) {
       await this.autoPopulate(activateEventDto);
     }
+
+    await this.prismaService.event.update({
+      where: {
+        id: event.id,
+      },
+      data: {
+        isActive: true,
+      },
+    });
     return;
   }
 

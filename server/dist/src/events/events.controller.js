@@ -28,6 +28,9 @@ let EventsController = class EventsController {
     async create(createEventDto) {
         return await this.eventsService.createEvent(createEventDto);
     }
+    async update(updateEventDto) {
+        return await this.eventsService.updateEvent(updateEventDto);
+    }
     async getEventById(getEventByIdDto) {
         return await this.eventsService.getEventById(getEventByIdDto);
     }
@@ -49,9 +52,6 @@ let EventsController = class EventsController {
     async getEventInfo(id) {
         return this.eventsService.getEventInfoForGenerateMatches(id);
     }
-    async update(id, updateEventDto) {
-        return this.eventsService.update(+id, updateEventDto);
-    }
     async remove(id) {
         return this.eventsService.remove(+id);
     }
@@ -64,6 +64,13 @@ __decorate([
     __metadata("design:paramtypes", [create_event_dto_1.CreateEventDto]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Patch)("update-event"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_event_dto_1.UpdateEventDto]),
+    __metadata("design:returntype", Promise)
+], EventsController.prototype, "update", null);
 __decorate([
     (0, common_1.Post)("event-by-id"),
     __param(0, (0, common_1.Body)()),
@@ -112,14 +119,6 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "getEventInfo", null);
-__decorate([
-    (0, common_1.Patch)(":id"),
-    __param(0, (0, common_1.Param)("id")),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_event_dto_1.UpdateEventDto]),
-    __metadata("design:returntype", Promise)
-], EventsController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(":id"),
     __param(0, (0, common_1.Param)("id")),

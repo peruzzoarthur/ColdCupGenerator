@@ -132,7 +132,7 @@ function Events() {
     const { refetchEventMatchesInfoById } = useGetEventMatchesInfoById(
         selectedEvent?.id
     )
-    const { refetchEventById } = useGetEventById(selectedEvent?.id)
+    const { eventById, refetchEventById } = useGetEventById(selectedEvent?.id)
 
     const registerDoubleOnSubmit = async (input: registerDoublesFormObject) => {
         try {
@@ -252,7 +252,7 @@ function Events() {
                                     {selectedEvent && (
                                         <div className="flex flex-col justify-center w-full mt-2 mb-4">
                                             <h1 className="justify-center mb-4 text-3xl font-medium">
-                                                🏆 {selectedEvent.name} 🏆
+                                                🏆 {eventById?.name} 🏆
                                             </h1>
                                             <RegisterDoublesForm
                                                 categoriesState={

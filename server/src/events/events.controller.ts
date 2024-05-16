@@ -25,6 +25,11 @@ export class EventsController {
     return await this.eventsService.createEvent(createEventDto);
   }
 
+  @Patch("update-event")
+  async update(@Body() updateEventDto: UpdateEventDto) {
+    return await this.eventsService.updateEvent(updateEventDto);
+  }
+
   // @Post("test")
   // async createScheduleTest(@Body() createScheduleDto: CreateScheduleDto) {
   //   return await this.eventsService.createScheduleTest(createScheduleDto);
@@ -78,14 +83,6 @@ export class EventsController {
   @Get("/event-info/:id")
   async getEventInfo(@Param("id") id: string) {
     return this.eventsService.getEventInfoForGenerateMatches(id);
-  }
-
-  @Patch(":id")
-  async update(
-    @Param("id") id: string,
-    @Body() updateEventDto: UpdateEventDto
-  ) {
-    return this.eventsService.update(+id, updateEventDto);
   }
 
   @Delete(":id")

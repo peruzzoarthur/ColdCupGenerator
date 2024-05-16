@@ -34,6 +34,17 @@ export declare class EventsService {
             address: string;
         }[];
     }>;
+    updateEvent(updateEventDto: UpdateEventDto): Promise<{
+        id: string;
+        name: string;
+        isActive: boolean;
+        startDate: Date;
+        finishDate: Date;
+        matchDurationInMinutes: number;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
+        eventType: import(".prisma/client").$Enums.EventType;
+    }>;
     findAllEvents(): Promise<{
         id: string;
         name: string;

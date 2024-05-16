@@ -34,7 +34,11 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     eventId: string | undefined
+    isActive: boolean | undefined
     refetchEventById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
+    refetchEventMatchesInfoById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
@@ -44,6 +48,8 @@ export function EventDoublesTable<TData, TValue>({
     data,
     eventId,
     refetchEventById,
+    refetchEventMatchesInfoById,
+    isActive,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const table = useReactTable({
@@ -76,6 +82,7 @@ export function EventDoublesTable<TData, TValue>({
                 handleDeleteDoublesInEventDto
             )
             await refetchEventById()
+            await refetchEventMatchesInfoById()
             return doubles
         } catch (error) {
             return error
@@ -122,56 +129,59 @@ export function EventDoublesTable<TData, TValue>({
                                             )}
                                         </TableCell>
                                     ))}
-                                    <TableCell>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    className="w-8 h-8 p-0"
-                                                    variant="ghost"
-                                                >
-                                                    <MoreHorizontal className="w-4 h-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuLabel>
-                                                    Actions
-                                                </DropdownMenuLabel>
-                                                <DropdownMenuItem
-                                                    onClick={() => {
-                                                        const doublesId =
-                                                            row.getValue(
-                                                                'id'
-                                                            ) as string
+                                    {isActive ? null : (
+                                        <TableCell>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        className="w-8 h-8 p-0"
+                                                        variant="ghost"
+                                                    >
+                                                        <MoreHorizontal className="w-4 h-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuLabel>
+                                                        Actions
+                                                    </DropdownMenuLabel>
+                                                    <DropdownMenuItem
+                                                        onClick={() => {
+                                                            const doublesId =
+                                                                row.getValue(
+                                                                    'id'
+                                                                ) as string
 
-                                                        const categoryId =
-                                                            row.getValue(
-                                                                'catId'
-                                                            ) as string
-                                                        {
-                                                            if (
-                                                                eventId &&
-                                                                doublesId &&
-                                                                categoryId
-                                                            ) {
-                                                                handleDeleteDoublesFromEvent(
-                                                                    eventId,
-                                                                    doublesId,
+                                                            const categoryId =
+                                                                row.getValue(
+                                                                    'catId'
+                                                                ) as string
+                                                            {
+                                                                if (
+                                                                    eventId &&
+                                                                    doublesId &&
                                                                     categoryId
-                                                                )
-                                                            } else {
-                                                                console.log(
-                                                                    'im an error'
-                                                                )
-                                                                return
+                                                                ) {
+                                                                    handleDeleteDoublesFromEvent(
+                                                                        eventId,
+                                                                        doublesId,
+                                                                        categoryId
+                                                                    )
+                                                                } else {
+                                                                    console.log(
+                                                                        'im an error'
+                                                                    )
+                                                                    return
+                                                                }
                                                             }
-                                                        }
-                                                    }}
-                                                >
-                                                    Delete doubles from event
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
+                                                        }}
+                                                    >
+                                                        Delete doubles from
+                                                        event
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    )}
                                 </TableRow>
                             ))
                         ) : (
