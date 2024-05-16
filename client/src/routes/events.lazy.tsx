@@ -9,7 +9,6 @@ import { EventCard } from '@/components/custom/eventCard'
 import { Button } from '@/components/ui/button'
 import ball from '../styles/png/ball.png'
 import { Double, EventDouble, PadelEvent } from '@/types/padel.types'
-// import { ExtendedEventCard } from '@/components/custom/expandedEventCard'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import RegisterDoublesForm, {
     registerDoublesFormObject,

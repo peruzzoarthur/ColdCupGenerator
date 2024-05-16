@@ -38,6 +38,7 @@ import { useGetPlaces } from '@/hooks/useGetPlaces'
 import { PadelEvent } from '@/types/padel.types'
 import axios, { AxiosResponse } from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { useToast } from '../ui/use-toast'
 
 type UpdateEventFormProps = {
     onSubmit: SubmitHandler<formObject>
@@ -75,6 +76,17 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
     event,
     refetchEventById,
 }) => {
+    const { toast } = useToast()
+
+    const toasted = (event: PadelEvent) => {
+        toast({
+            title: 'Success! 🙌',
+
+            description: `Updated ${event.name}.`,
+            // className: 'bg-emerald-600 bg-opacity-60 text-white',
+        })
+    }
+
     const categories = event?.categories.flatMap((cat) => cat.id)
     const places = event?.places.flatMap((p) => p.id)
     const courts = event?.courts.flatMap((c) => c.id)
@@ -165,7 +177,7 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
                 `${import.meta.env.VITE_SERVER_URL}/events/update-event`,
                 requestBody
             )
-
+            toasted(data.data)
             await refetchEventById()
             return data
         } catch (error) {
@@ -187,375 +199,390 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
     }
 
     return (
-        <Form {...form}>
-            <FormField
-                name="eventName"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Event Name</FormLabel>
-                        <FormControl>
-                            <Input placeholder="Event Name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-
-            <FormField
-                control={form.control}
-                name="categoriesIds"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Categories</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                        >
+        <div className="p-10 border rounded-lg">
+            <h1 className="text-2xl font-bold">Edit Event</h1>
+            <Form {...form}>
+                <FormField
+                    name="eventName"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Event Name</FormLabel>
                             <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a category" />
-                                </SelectTrigger>
+                                <Input placeholder="Event Name" {...field} />
                             </FormControl>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>ALL</SelectLabel>
-                                    {allCategories?.map((c, index) => (
-                                        <SelectItem value={c.id} key={index}>
-                                            {c.level}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                            <div className="flex items-center justify-center">
-                                <Button
-                                    className="flex w-1/3 "
-                                    onClick={() => addCategory(field.value)}
-                                >
-                                    Add Category
-                                </Button>
-                                <div className="flex-col justify-center w-1/3">
-                                    {[...new Set(categoriesState)].map(
-                                        (categoryId) => {
-                                            const category =
-                                                allCategories?.find(
-                                                    (cat) =>
-                                                        cat.id === categoryId
-                                                )
-                                            if (category) {
-                                                return (
-                                                    <Badge
-                                                        onClick={() =>
-                                                            removeCategory(
-                                                                category.id
-                                                            )
-                                                        }
-                                                        key={category.id}
-                                                        className="justify-center w-5 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
-                                                    >{`${category.level}`}</Badge>
-                                                )
-                                            } else {
-                                                return null
-                                            }
-                                        }
-                                    )}
-                                </div>
-                            </div>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="placesIds"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Places</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                        >
-                            {selectCourtsOn ? (
-                                <div className="flex flex-col items-center justify-center w-full">
-                                    <Card>
-                                        {placeWithCourts && (
-                                            <CardHeader>
-                                                <div className="flex flex-row">
-                                                    <CourtsByPlaceCheckbox
-                                                        placeCourts={
-                                                            placeWithCourts.courts
-                                                        }
-                                                        addCourt={addCourt}
-                                                        removeCourt={
-                                                            removeCourt
-                                                        }
-                                                        placeName={
-                                                            placeWithCourts.name
-                                                        }
-                                                    />
-                                                    <Cross2Icon
-                                                        className="w-5 h-5 cursor-pointer"
-                                                        onClick={() => {
-                                                            setSelectCourtsOn(
-                                                                false
-                                                            )
-                                                        }}
-                                                    />
-                                                </div>
-                                            </CardHeader>
-                                        )}
-                                        <CardFooter>
-                                            <Button
-                                                onClick={() => {
-                                                    addPlace(field.value)
-                                                    setSelectCourtsOn(false)
-                                                }}
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="categoriesIds"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Categories</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a category" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>ALL</SelectLabel>
+                                        {allCategories?.map((c, index) => (
+                                            <SelectItem
+                                                value={c.id}
+                                                key={index}
                                             >
-                                                Add Place
-                                            </Button>
-                                        </CardFooter>
-                                    </Card>
-                                </div>
-                            ) : (
-                                <div className="flex">
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a place" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Places</SelectLabel>
-                                            {allPlaces?.map((p, index) => (
-                                                <SelectItem
-                                                    value={p.id}
-                                                    key={index}
-                                                >
-                                                    {p.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
+                                                {c.level}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                                <div className="flex items-center justify-center">
                                     <Button
-                                        className="flex items-center w-1/6 rounded-tl-sm rounded-bl-sm"
-                                        onClick={() => {
-                                            if (field.value === '') {
-                                                return
-                                            }
-                                            setSelectedPlaceId(field.value)
-                                            setSelectCourtsOn(true)
-                                        }}
+                                        className="flex w-1/3 "
+                                        onClick={() => addCategory(field.value)}
                                     >
-                                        Courts
+                                        Add Category
                                     </Button>
-                                </div>
-                            )}
-                            <div className="flex justify-center w-full">
-                                <div className="flex flex-col items-center justify-center w-1/3 ">
-                                    {/* <p>Places registered</p> */}
-                                    {[...new Set(placesState)].map(
-                                        (placeId) => {
-                                            const place = allPlaces?.find(
-                                                (p) => p.id === placeId
-                                            )
-                                            if (place) {
-                                                return (
-                                                    <Badge
-                                                        onClick={() =>
-                                                            removePlace(
-                                                                place.id
-                                                            )
-                                                        }
-                                                        key={place.id}
-                                                        className="justify-center bg-slate-400 w-32 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
-                                                    >{`${place.name}`}</Badge>
-                                                )
-                                            } else {
-                                                // Handle the case where the category is not found
-                                                return null // or you can render a default badge
+                                    <div className="flex-col justify-center w-1/3">
+                                        {[...new Set(categoriesState)].map(
+                                            (categoryId) => {
+                                                const category =
+                                                    allCategories?.find(
+                                                        (cat) =>
+                                                            cat.id ===
+                                                            categoryId
+                                                    )
+                                                if (category) {
+                                                    return (
+                                                        <Badge
+                                                            onClick={() =>
+                                                                removeCategory(
+                                                                    category.id
+                                                                )
+                                                            }
+                                                            key={category.id}
+                                                            className="justify-center w-5 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
+                                                        >{`${category.level}`}</Badge>
+                                                    )
+                                                } else {
+                                                    return null
+                                                }
                                             }
-                                        }
-                                    )}
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <div className="flex justify-center mt-6 mb-6 gap-x-6">
-                <FormField
-                    control={form.control}
-                    name="startDate"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>First day</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={'outline'}
-                                            className={cn(
-                                                'w-[240px] pl-3 text-left font-normal',
-                                                !field.value &&
-                                                    'text-muted-foreground'
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, 'PPP')
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                >
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                            </Select>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
+                <FormField
+                    control={form.control}
+                    name="placesIds"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Places</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                {selectCourtsOn ? (
+                                    <div className="flex flex-col items-center justify-center w-full">
+                                        <Card>
+                                            {placeWithCourts && (
+                                                <CardHeader>
+                                                    <div className="flex flex-row">
+                                                        <CourtsByPlaceCheckbox
+                                                            placeCourts={
+                                                                placeWithCourts.courts
+                                                            }
+                                                            addCourt={addCourt}
+                                                            removeCourt={
+                                                                removeCourt
+                                                            }
+                                                            placeName={
+                                                                placeWithCourts.name
+                                                            }
+                                                        />
+                                                        <Cross2Icon
+                                                            className="w-5 h-5 cursor-pointer"
+                                                            onClick={() => {
+                                                                setSelectCourtsOn(
+                                                                    false
+                                                                )
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </CardHeader>
+                                            )}
+                                            <CardFooter>
+                                                <Button
+                                                    onClick={() => {
+                                                        addPlace(field.value)
+                                                        setSelectCourtsOn(false)
+                                                    }}
+                                                >
+                                                    Add Place
+                                                </Button>
+                                            </CardFooter>
+                                        </Card>
+                                    </div>
+                                ) : (
+                                    <div className="flex">
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a place" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>
+                                                    Places
+                                                </SelectLabel>
+                                                {allPlaces?.map((p, index) => (
+                                                    <SelectItem
+                                                        value={p.id}
+                                                        key={index}
+                                                    >
+                                                        {p.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                        <Button
+                                            className="flex items-center w-1/6 rounded-tl-sm rounded-bl-sm"
+                                            onClick={() => {
+                                                if (field.value === '') {
+                                                    return
+                                                }
+                                                setSelectedPlaceId(field.value)
+                                                setSelectCourtsOn(true)
+                                            }}
+                                        >
+                                            Courts
+                                        </Button>
+                                    </div>
+                                )}
+                                <div className="flex justify-center w-full">
+                                    <div className="flex flex-col items-center justify-center w-1/3 ">
+                                        {/* <p>Places registered</p> */}
+                                        {[...new Set(placesState)].map(
+                                            (placeId) => {
+                                                const place = allPlaces?.find(
+                                                    (p) => p.id === placeId
+                                                )
+                                                if (place) {
+                                                    return (
+                                                        <Badge
+                                                            onClick={() =>
+                                                                removePlace(
+                                                                    place.id
+                                                                )
+                                                            }
+                                                            key={place.id}
+                                                            className="justify-center bg-slate-400 w-32 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
+                                                        >{`${place.name}`}</Badge>
+                                                    )
+                                                } else {
+                                                    // Handle the case where the category is not found
+                                                    return null // or you can render a default badge
+                                                }
+                                            }
+                                        )}
+                                    </div>
+                                </div>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <div className="flex justify-center mt-6 mb-6 gap-x-6">
+                    <FormField
+                        control={form.control}
+                        name="startDate"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>First day</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'w-[240px] pl-3 text-left font-normal',
+                                                    !field.value &&
+                                                        'text-muted-foreground'
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, 'PPP')
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
+                    <FormField
+                        control={form.control}
+                        name="finishDate"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Last day</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'w-[240px] pl-3 text-left font-normal',
+                                                    !field.value &&
+                                                        'text-muted-foreground'
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, 'PPP')
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
                 <FormField
+                    name="timeOfFirstMatch"
                     control={form.control}
-                    name="finishDate"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Last day</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={'outline'}
-                                            className={cn(
-                                                'w-[240px] pl-3 text-left font-normal',
-                                                !field.value &&
-                                                    'text-muted-foreground'
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, 'PPP')
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                >
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                        <FormItem>
+                            <FormLabel>First game</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select time" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>
+                                            Select time for first match
+                                        </SelectLabel>
+                                        {timesForMatches.map((t, index) => (
+                                            <SelectItem
+                                                value={t.value}
+                                                key={index}
+                                            >
+                                                {t.text}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-            </div>
-            <FormField
-                name="timeOfFirstMatch"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>First game</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                        >
+                <FormField
+                    name="timeOfLastMatch"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Last game</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select time" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Select time</SelectLabel>
+                                        {timesForMatches.map((t, index) => (
+                                            <SelectItem
+                                                value={t.value}
+                                                key={index}
+                                            >
+                                                {t.text}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    name="matchDurationInMinutes"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Match duration in minutes</FormLabel>
                             <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select time" />
-                                </SelectTrigger>
+                                <Input placeholder="60" {...field} />
                             </FormControl>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>
-                                        Select time for first match
-                                    </SelectLabel>
-                                    {timesForMatches.map((t, index) => (
-                                        <SelectItem value={t.value} key={index}>
-                                            {t.text}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                name="timeOfLastMatch"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Last game</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                        >
-                            <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select time" />
-                                </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Select time</SelectLabel>
-                                    {timesForMatches.map((t, index) => (
-                                        <SelectItem value={t.value} key={index}>
-                                            {t.text}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                name="matchDurationInMinutes"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Match duration in minutes</FormLabel>
-                        <FormControl>
-                            <Input placeholder="60" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <div className="flex justify-center mt-4">
-                <Button
-                    className="w-1/6 bg-opacity-65"
-                    onClick={handleSubmit(updateEventOnSubmit)}
-                    type="button"
-                >
-                    Submit
-                </Button>
-            </div>
-        </Form>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <div className="flex justify-center mt-4">
+                    <Button
+                        className="w-1/6 bg-opacity-65"
+                        onClick={handleSubmit(updateEventOnSubmit)}
+                        type="button"
+                    >
+                        Submit
+                    </Button>
+                </div>
+            </Form>
+        </div>
     )
 }
 
