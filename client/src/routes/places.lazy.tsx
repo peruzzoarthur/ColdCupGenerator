@@ -48,7 +48,6 @@ function Places() {
                 requestBody
             )
             toasted(data.data)
-            console.log(data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>

@@ -1,7 +1,14 @@
-export type Player = {
+export type User = {
     firstName: string
     lastName: string
     email: string
+    id: string
+    dob: string
+}
+
+export type Player = {
+    firstName: string
+    lastName: string
     categoryId: string
     position: Position
     id: string
@@ -119,4 +126,8 @@ export enum CatType {
 export enum Position {
     REVES = 'REVES',
     DRIVE = 'DRIVE',
+}
+
+export type ErrorResponse = {
+    message: string
 }

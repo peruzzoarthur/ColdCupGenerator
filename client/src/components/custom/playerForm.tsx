@@ -34,7 +34,7 @@ type PlayerFormProps = {
 export type playerFormObject = {
     firstName: string
     lastName: string
-    email: string
+    // email: string
     categoryId: string
     position: string
 }
@@ -42,7 +42,7 @@ export type playerFormObject = {
 const formSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
-    email: z.string(),
+    // email: z.string(),
     categoryId: z.string(),
     position: z.string(),
 })
@@ -89,8 +89,8 @@ const PlayerForm: React.FC<PlayerFormProps> = ({
                 )}
             />
 
-            <FormField
-                name="email"
+            {/* <FormField */}
+            {/* name="email"
                 control={form.control}
                 render={({ field }) => (
                     <FormItem>
@@ -101,7 +101,7 @@ const PlayerForm: React.FC<PlayerFormProps> = ({
                         <FormMessage />
                     </FormItem>
                 )}
-            />
+            /> */}
 
             <FormField
                 control={form.control}

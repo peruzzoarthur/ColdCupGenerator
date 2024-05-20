@@ -28,17 +28,22 @@ import { useForm } from 'react-hook-form'
 import { registerSchema } from '@/components/validators/register'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import { ErrorResponse, User } from '@/types/padel.types'
+import { ErrorAlert } from './errorAlert'
 
-type Input = z.infer<typeof registerSchema>
+type RegisterInput = z.infer<typeof registerSchema>
 
 export default function RegisterLoginForm() {
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
     const [formStep, setFormStep] = React.useState(0)
-    const form = useForm<Input>({
+    const form = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
             firstName: '',
@@ -50,16 +55,51 @@ export default function RegisterLoginForm() {
         },
     })
 
-    function onSubmit(data: Input) {
-        if (data.confirmPassword !== data.password) {
+    const onSubmit = async (input: RegisterInput) => {
+        try {
+            const requestBody: Partial<RegisterInput> = {
+                firstName: input.firstName,
+                lastName: input.lastName,
+                email: input.email,
+                dob: input.dob,
+                password: input.password,
+                confirmPassword: input.confirmPassword,
+            }
+
+            if (input.confirmPassword !== input.password) {
+                toast({
+                    title: 'Passwords do not match',
+                    variant: 'destructive',
+                })
+                return
+            }
+            alert(JSON.stringify(input, null, 4))
+
+            const data: AxiosResponse<User> = await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/users/`,
+                requestBody
+            )
             toast({
-                title: 'Passwords do not match',
-                variant: 'destructive',
+                title: 'Success',
             })
-            return
+            console.log(data)
+            return data.data
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response && axiosError.response.status === 409) {
+                    setError(true)
+                    setErrorMessage('Email already in use.')
+                }
+                //  else {
+                //     setError(true)
+                //     setErrorMessage('Error creating user.')
+                // }
+            } else {
+                setError(true)
+                setErrorMessage('Error creating user.')
+            }
         }
-        alert(JSON.stringify(data, null, 4))
-        console.log(data)
     }
 
     return (
@@ -296,15 +336,11 @@ export default function RegisterLoginForm() {
                     </Form>
                 </CardContent>
             </Card>
+            {isError && (
+                <div onClick={() => setError(false)} className="mt-4">
+                    <ErrorAlert message={errorMessage} />
+                </div>
+            )}
         </div>
     )
-}
-
-{
-    /* <div className="mt-4 text-sm text-center">
-                    Already have an account?{' '}
-                    <Link to="/login" href="#" className="underline">
-                        Sign in
-                    </Link>
-                </div> */
 }
