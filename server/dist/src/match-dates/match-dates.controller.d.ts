@@ -31,9 +31,9 @@ export declare class MatchDatesController {
         };
         id: string;
         eventId: string;
-        matchId: string;
         start: Date;
         finish: Date;
+        matchId: string;
     }[]>;
     findOne(id: string): Promise<{
         court: {
@@ -70,23 +70,21 @@ export declare class MatchDatesController {
                 level: number;
                 type: import(".prisma/client").$Enums.CatType;
             };
-            categoryId: string;
             doubles: {
                 id: string;
                 players: {
                     id: string;
-                    email: string;
                     firstName: string;
                     lastName: string;
-                    role: import(".prisma/client").$Enums.Role;
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
             }[];
+            categoryId: string;
         };
         id: string;
-        matchId: string;
         start: Date;
         finish: Date;
+        matchId: string;
     }[]>;
     update(id: string, updateMatchDateDto: UpdateMatchDateDto): string;
     remove(id: string): string;

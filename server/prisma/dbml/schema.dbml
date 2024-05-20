@@ -127,17 +127,30 @@ Table Game {
   events Event [not null]
 }
 
-Table Player {
+Table User {
   id String [pk]
-  email String [unique]
   firstName String
   lastName String
+  email String [unique, not null]
+  password String [not null]
+  dob DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  player Player
+  playerId String [unique]
   role Role [not null, default: 'USER']
+}
+
+Table Player {
+  id String [pk]
+  firstName String
+  lastName String
   categories Category [not null]
   position PlayerPosition
   matches Match [not null]
   doubles Double [not null]
   events Event [not null]
+  user User
 }
 
 Table Double {
@@ -285,5 +298,7 @@ Ref: Set.id > Match.id
 Ref: Game.setId > Set.id
 
 Ref: Game.winnerId > Double.id
+
+Ref: User.playerId - Player.id
 
 Ref: Double.categoryId > Category.id

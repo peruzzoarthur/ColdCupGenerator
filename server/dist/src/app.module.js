@@ -21,6 +21,8 @@ const games_module_1 = require("./games/games.module");
 const places_module_1 = require("./places/places.module");
 const match_dates_module_1 = require("./match-dates/match-dates.module");
 const courts_module_1 = require("./courts/courts.module");
+const auth_module_1 = require("./auth/auth.module");
+const users_module_1 = require("./users/users.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,6 +32,7 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 validationSchema: Joi.object({
                     DATABASE_URL: Joi.string().required(),
+                    JWT_SECRET_KEY: Joi.string().required(),
                 }),
             }),
             player_module_1.PlayerModule,
@@ -42,6 +45,8 @@ exports.AppModule = AppModule = __decorate([
             places_module_1.PlacesModule,
             match_dates_module_1.MatchDatesModule,
             courts_module_1.CourtsModule,
+            users_module_1.UsersModule,
+            auth_module_1.AuthModule,
         ],
         controllers: [],
         providers: [prisma_service_1.PrismaService],

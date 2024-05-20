@@ -9,10 +9,8 @@ export declare class DoublesController {
         id: string;
         players: {
             id: string;
-            email: string;
             firstName: string;
             lastName: string;
-            role: import(".prisma/client").$Enums.Role;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }>;
@@ -25,10 +23,8 @@ export declare class DoublesController {
         id: string;
         players: {
             id: string;
-            email: string;
             firstName: string;
             lastName: string;
-            role: import(".prisma/client").$Enums.Role;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }[]>;
@@ -36,10 +32,8 @@ export declare class DoublesController {
         id: string;
         players: {
             id: string;
-            email: string;
             firstName: string;
             lastName: string;
-            role: import(".prisma/client").$Enums.Role;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }>;

@@ -18,9 +18,9 @@ export class CreatePlayerDto {
   @IsString()
   @IsNotEmpty()
   lastName: string;
-  @IsString()
-  @IsNotEmpty()
-  email: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // email: string;
 
   categoryLevel?: number;
   categoryType?: CatType;

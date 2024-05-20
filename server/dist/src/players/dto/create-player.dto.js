@@ -37,11 +37,6 @@ __decorate([
 ], CreatePlayerDto.prototype, "lastName", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreatePlayerDto.prototype, "email", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)({ message: "select a category" }),
     __metadata("design:type", String)
 ], CreatePlayerDto.prototype, "categoryId", void 0);

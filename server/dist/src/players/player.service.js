@@ -25,7 +25,6 @@ let PlayerService = class PlayerService {
             const newPlayer = await this.prismaService.player.create({
                 data: {
                     position: createPlayerDto.position,
-                    email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
                     firstName: createPlayerDto.firstName,
                     lastName: createPlayerDto.lastName,
                     categories: {

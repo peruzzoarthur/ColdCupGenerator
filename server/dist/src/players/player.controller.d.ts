@@ -7,10 +7,10 @@ export declare class PlayerController {
     getPlayersByCategory({ id }: {
         id: string;
     }): Promise<{
+        id: string;
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
-        id: string;
         categories: {
             id: string;
             level: number;
@@ -18,10 +18,10 @@ export declare class PlayerController {
         }[];
     }[]>;
     getAllPlayers(): Promise<{
+        id: string;
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
-        id: string;
         categories: {
             id: string;
             level: number;
@@ -30,10 +30,8 @@ export declare class PlayerController {
     }[]>;
     createPost(createPlayerDto: CreatePlayerDto): Promise<{
         id: string;
-        email: string;
         firstName: string;
         lastName: string;
-        role: import(".prisma/client").$Enums.Role;
         position: import(".prisma/client").$Enums.PlayerPosition;
     }>;
     publishPlayer({ id }: {
@@ -43,10 +41,8 @@ export declare class PlayerController {
         id: string;
     }): Promise<{
         id: string;
-        email: string;
         firstName: string;
         lastName: string;
-        role: import(".prisma/client").$Enums.Role;
         position: import(".prisma/client").$Enums.PlayerPosition;
     }>;
 }

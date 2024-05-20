@@ -10,7 +10,6 @@ declare enum Position {
 export declare class CreatePlayerDto {
     firstName: string;
     lastName: string;
-    email: string;
     categoryLevel?: number;
     categoryType?: CatType;
     categoryId: string;

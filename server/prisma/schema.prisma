@@ -134,19 +134,30 @@ model Game {
   events   Event[]
 }
 
+model User {
+  id        String    @id @default(uuid())
+  firstName String?
+  lastName  String?
+  email     String    @unique
+  password  String
+  dob       DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  player    Player?   @relation(fields: [playerId], references: [id])
+  playerId  String?   @unique
+  role      Role      @default(USER)
+}
+
 model Player {
   id         String          @id @default(uuid())
-  email      String?         @unique
   firstName  String?
   lastName   String?
-  role       Role            @default(USER)
   categories Category[]
   position   PlayerPosition?
   matches    Match[]
   doubles    Double[]
   events     Event[]
-  // sets       Set[]
-  // games      Game[]
+  user       User?
 }
 
 model Double {
