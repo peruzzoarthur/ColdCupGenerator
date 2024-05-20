@@ -6,17 +6,18 @@ import { JwtModule } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt.strategy";
 import { UsersModule } from "src/users/users.module";
 import { PrismaModule } from "prisma/prisma.module";
+import { LocalStrategy } from "./local.strategy";
+import { RefreshJwtStrategy } from "./refreshToken.strategy";
 
-// export const jwtSecret = "nxuiahiuxoh721";
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, LocalStrategy, RefreshJwtStrategy],
   imports: [
     PrismaModule,
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: "5m" },
+      signOptions: { expiresIn: "1m" },
     }),
     UsersModule,
   ],

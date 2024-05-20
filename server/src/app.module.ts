@@ -15,6 +15,8 @@ import { MatchDatesModule } from "./match-dates/match-dates.module";
 import { CourtsModule } from "./courts/courts.module";
 import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
+import { JwtAuthGuard } from "./auth/jwt-auth.guard";
+import { RefreshJwtGuard } from "./auth/refresh-jwt-auth.guard";
 
 @Module({
   imports: [

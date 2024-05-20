@@ -7,6 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { AuthEntity } from "./entity/auth.entity";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "src/prisma.service";
+import { UserEntity } from "src/users/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async login(email: string, password: string): Promise<AuthEntity> {
+  async validateUser(email: string, password: string): Promise<UserEntity> {
     const user = await this.prisma.user.findUnique({
       where: {
         email: email,
@@ -23,17 +24,52 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new NotFoundException(`No user found for email: ${email}`);
+      return null;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid password");
+      return null;
     }
 
+    return user;
+  }
+
+  async login(user: UserEntity) {
+    const payload = { username: user.email, sub: user.id };
     return {
-      accessToken: this.jwtService.sign({ userId: user.id }),
+      access_token: this.jwtService.sign(payload),
+      refreshToken: this.jwtService.sign(payload, { expiresIn: "7d" }),
+    };
+  }
+
+  async refreshToken(user: UserEntity) {
+    const payload = { username: user.email, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
     };
   }
 }
+
+// async login(email: string, password: string): Promise<AuthEntity> {
+//   const user = await this.prisma.user.findUnique({
+//     where: {
+//       email: email,
+//     },
+//   });
+
+//   if (!user) {
+//     throw new NotFoundException(`No user found for email: ${email}`);
+//   }
+
+//   const isPasswordValid = await bcrypt.compare(password, user.password);
+
+//   if (!isPasswordValid) {
+//     throw new UnauthorizedException("Invalid password");
+//   }
+
+//   return {
+//     accessToken: this.jwtService.sign({ userId: user.id }),
+//   };
+// }

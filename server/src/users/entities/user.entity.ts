@@ -17,7 +17,10 @@ export class UserEntity implements Partial<User> {
   updatedAt: Date;
 
   @ApiProperty()
-  name: string;
+  firstName: string;
+
+  @ApiProperty()
+  lastName: string;
 
   @ApiProperty()
   email: string;

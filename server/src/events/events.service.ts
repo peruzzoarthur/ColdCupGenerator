@@ -8,7 +8,6 @@ import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { MatchesService } from "src/matches/matches.service";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
-import { log } from "console";
 import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 
 type Day = {

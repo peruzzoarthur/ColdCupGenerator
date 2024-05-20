@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { EventsService } from "./events.service";
 import { CreateEventDto } from "./dto/create-event.dto";
@@ -15,6 +16,9 @@ import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
 import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { RolesGuard } from "src/auth/roles.guard";
+import { Roles } from "src/auth/roles.decorator";
 
 @Controller("events")
 export class EventsController {
@@ -70,6 +74,9 @@ export class EventsController {
     );
   }
 
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Get()
   async findAllEvents() {
     return await this.eventsService.findAllEvents();

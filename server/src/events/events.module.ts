@@ -6,6 +6,7 @@ import { CategoriesService } from "src/categories/categories.service";
 import { MatchesService } from "src/matches/matches.service";
 import { SetsService } from "src/sets/sets.service";
 import { GamesService } from "src/games/games.service";
+import { JwtService } from "@nestjs/jwt";
 
 @Module({
   controllers: [EventsController],
@@ -16,6 +17,7 @@ import { GamesService } from "src/games/games.service";
     MatchesService,
     SetsService,
     GamesService,
+    JwtService,
   ],
 })
 export class EventsModule {}

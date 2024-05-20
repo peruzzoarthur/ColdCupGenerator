@@ -12,10 +12,10 @@ export declare class PlayerService {
         position: import(".prisma/client").$Enums.PlayerPosition;
     }>;
     getAllPlayers(): Promise<{
-        id: string;
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
+        id: string;
         categories: {
             id: string;
             level: number;
@@ -23,10 +23,10 @@ export declare class PlayerService {
         }[];
     }[]>;
     getPlayersByCategory(categoryId: string): Promise<{
-        id: string;
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
+        id: string;
         categories: {
             id: string;
             level: number;

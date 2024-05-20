@@ -15,6 +15,7 @@ const categories_service_1 = require("../categories/categories.service");
 const matches_service_1 = require("../matches/matches.service");
 const sets_service_1 = require("../sets/sets.service");
 const games_service_1 = require("../games/games.service");
+const jwt_1 = require("@nestjs/jwt");
 let EventsModule = class EventsModule {
 };
 exports.EventsModule = EventsModule;
@@ -28,6 +29,7 @@ exports.EventsModule = EventsModule = __decorate([
             matches_service_1.MatchesService,
             sets_service_1.SetsService,
             games_service_1.GamesService,
+            jwt_1.JwtService,
         ],
     })
 ], EventsModule);
