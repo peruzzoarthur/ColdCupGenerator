@@ -121,7 +121,13 @@ export function EventDashboard({
             }
             const { data: matches }: { data: Match[] } = await axios.post(
                 `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
-                activateEventDto
+                activateEventDto,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                }
             )
 
             await refetchEventById()

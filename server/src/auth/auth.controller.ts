@@ -6,6 +6,7 @@ import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { AuthEntity } from "./entity/auth.entity";
 import { LocalAuthGuard } from "./local-auth.guard";
 import { RefreshJwtGuard } from "./refresh-jwt-auth.guard";
+import { RefreshDto } from "./dto/refresh.dto";
 
 @Controller("auth")
 @ApiTags("auth")
@@ -19,9 +20,13 @@ export class AuthController {
     return this.authService.login(req.user);
   }
   @UseGuards(RefreshJwtGuard)
+  // @UseGuards(LocalAuthGuard)
   @Post("refresh")
   @ApiOkResponse({ type: AuthEntity })
-  async refreshToken(@Request() req) {
-    return this.authService.refreshToken(req.user);
+  async refreshToken(@Body() refreshDto: RefreshDto) {
+    return this.authService.refreshToken({
+      email: refreshDto.email,
+      id: refreshDto.id,
+    });
   }
 }

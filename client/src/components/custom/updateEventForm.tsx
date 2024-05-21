@@ -35,10 +35,11 @@ import { Card, CardFooter, CardHeader } from '../ui/card'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { useGetCategories } from '@/hooks/useGetCategories'
 import { useGetPlaces } from '@/hooks/useGetPlaces'
-import { PadelEvent } from '@/types/padel.types'
-import axios, { AxiosResponse } from 'axios'
+import { ErrorResponse, PadelEvent } from '@/types/padel.types'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useToast } from '../ui/use-toast'
+import { ErrorAlert } from './errorAlert'
 
 type UpdateEventFormProps = {
     onSubmit: SubmitHandler<formObject>
@@ -111,6 +112,9 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
 
     const { placeWithCourts } = useGetPlaceWithCourts(selectedPlaceId)
 
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
+
     const addCategory = (id: string) => {
         const stringArray: string[] = categoriesState.concat(id)
         setCategoriesState(stringArray)
@@ -175,26 +179,31 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
 
             const data: AxiosResponse<PadelEvent> = await axios.patch(
                 `${import.meta.env.VITE_SERVER_URL}/events/update-event`,
-                requestBody
+                requestBody,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                }
             )
             toasted(data.data)
             await refetchEventById()
             return data
         } catch (error) {
-            return error
-            // if (axios.isAxiosError(error)) {
-            //     const axiosError = error as AxiosError<ErrorResponse>
-            //     if (axiosError.response && axiosError.response.status === 400) {
-            //         setError(true)
-            //         setErrorMessage(axiosError.response.data.message)
-            //     } else {
-            //         setError(true)
-            //         setErrorMessage('Error creating doubles')
-            //     }
-            // } else {
-            //     setError(true)
-            //     setErrorMessage('Error creating doubles')
-            // }
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response && axiosError.response.status === 400) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                } else {
+                    setError(true)
+                    setErrorMessage('Error updating doubles')
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error updating doubles')
+            }
         }
     }
 
@@ -582,6 +591,11 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
                     </Button>
                 </div>
             </Form>
+            {isError && (
+                <div onClick={() => setError(false)} className="mt-4">
+                    <ErrorAlert message={errorMessage} />
+                </div>
+            )}
         </div>
     )
 }

@@ -18,6 +18,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { EventDashboard } from '@/components/custom/eventDashboard'
 import { useGetEventMatchesInfoById } from '@/hooks/useGetEventMatchesInfoById'
 import { useGetEventById } from '@/hooks/useGetEventById'
+import { axiosInstance } from '@/axiosInstance'
 
 export type createEventFormObject = {
     eventName: string
@@ -102,11 +103,17 @@ function Events() {
                 timeOfLastMatch: input.timeOfLastMatch,
                 matchDurationInMinutes: input.matchDurationInMinutes,
             }
-
-            const data: AxiosResponse<PadelEvent> = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/events/`,
+            const data: AxiosResponse<PadelEvent> = await axiosInstance.post(
+                '/events/',
                 requestBody
+                // {
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                //     },
+                // }
             )
+            console.log(data)
 
             createEventToast(data.data)
 
@@ -119,11 +126,14 @@ function Events() {
                     setErrorMessage(axiosError.response.data.message)
                 } else {
                     setError(true)
-                    setErrorMessage('Error creating doubles')
+                    console.error(error)
+                    setErrorMessage('Error creating event')
                 }
             } else {
                 setError(true)
-                setErrorMessage('Error creating doubles')
+                console.error(error)
+
+                setErrorMessage('Error creating event')
             }
         }
     }
@@ -142,7 +152,13 @@ function Events() {
 
             const data: AxiosResponse<EventDouble> = await axios.post(
                 `${import.meta.env.VITE_SERVER_URL}/events/register`,
-                requestBody
+                requestBody,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                }
             )
             registerDoublesToast(data.data.double, data.data.event)
             await refetchEventMatchesInfoById()

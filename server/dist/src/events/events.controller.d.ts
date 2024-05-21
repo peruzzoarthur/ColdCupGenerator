@@ -10,14 +10,14 @@ export declare class EventsController {
     constructor(eventsService: EventsService);
     create(createEventDto: CreateEventDto): Promise<{
         id: string;
-        name: string;
-        startDate: Date;
-        finishDate: Date;
         categories: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         }[];
+        name: string;
+        startDate: Date;
+        finishDate: Date;
         places: {
             id: string;
             name: string;
@@ -37,39 +37,20 @@ export declare class EventsController {
     }>;
     getEventById(getEventByIdDto: GetEventByIdDto): Promise<{
         id: string;
-        isActive: boolean;
-        startDate: Date;
-        finishDate: Date;
-        matchDurationInMinutes: number;
-        timeOfFirstMatch: number;
-        timeOfLastMatch: number;
-        categories: {
-            id: string;
-            type: import(".prisma/client").$Enums.CatType;
-            eventDoubles: {
-                doubleId: string;
-                double: {
-                    id: string;
-                    players: {
-                        id: string;
-                        firstName: string;
-                        lastName: string;
-                        position: import(".prisma/client").$Enums.PlayerPosition;
-                    }[];
-                    categoryId: string;
-                };
-            }[];
-            level: number;
-        }[];
         matches: {
             number: number;
-            id: string;
+            categoryId: string;
             type: import(".prisma/client").$Enums.MatchType;
+            id: string;
             players: {
                 id: string;
                 firstName: string;
                 lastName: string;
                 position: import(".prisma/client").$Enums.PlayerPosition;
+            }[];
+            doubles: {
+                id: string;
+                categoryId: string;
             }[];
             sets: {
                 id: string;
@@ -78,22 +59,26 @@ export declare class EventsController {
                 result: string;
                 isFinished: boolean;
             }[];
-            doubles: {
-                id: string;
-                categoryId: string;
-            }[];
             eventId: string;
-            categoryId: string;
-            isFinished: boolean;
             winnerDoublesId: string;
             winner: {
                 id: string;
                 categoryId: string;
             };
+            isFinished: boolean;
         }[];
         eventDoubles: {
-            atRestId: string;
+            category: {
+                id: string;
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+            };
             double: {
+                category: {
+                    id: string;
+                    level: number;
+                    type: import(".prisma/client").$Enums.CatType;
+                };
                 id: string;
                 players: {
                     id: string;
@@ -101,16 +86,6 @@ export declare class EventsController {
                     lastName: string;
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
-                category: {
-                    id: string;
-                    level: number;
-                    type: import(".prisma/client").$Enums.CatType;
-                };
-            };
-            category: {
-                id: string;
-                level: number;
-                type: import(".prisma/client").$Enums.CatType;
             };
             atRest: {
                 id: string;
@@ -120,7 +95,32 @@ export declare class EventsController {
                 finish: Date;
                 courtId: string;
             };
+            atRestId: string;
         }[];
+        categories: {
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+            id: string;
+            eventDoubles: {
+                double: {
+                    categoryId: string;
+                    id: string;
+                    players: {
+                        id: string;
+                        firstName: string;
+                        lastName: string;
+                        position: import(".prisma/client").$Enums.PlayerPosition;
+                    }[];
+                };
+                doubleId: string;
+            }[];
+        }[];
+        startDate: Date;
+        finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
+        matchDurationInMinutes: number;
+        isActive: boolean;
         matchDates: {
             event: {
                 id: string;
@@ -133,8 +133,6 @@ export declare class EventsController {
                 timeOfLastMatch: number;
                 eventType: import(".prisma/client").$Enums.EventType;
             };
-            id: string;
-            eventId: string;
             match: {
                 id: string;
                 number: number;
@@ -145,6 +143,8 @@ export declare class EventsController {
                 type: import(".prisma/client").$Enums.MatchType;
                 courtId: string;
             };
+            id: string;
+            eventId: string;
             start: Date;
             finish: Date;
         }[];
@@ -182,39 +182,14 @@ export declare class EventsController {
     }>;
     findAllEvents(): Promise<{
         id: string;
-        name: string;
-        isActive: boolean;
-        startDate: Date;
-        finishDate: Date;
-        matchDurationInMinutes: number;
-        timeOfFirstMatch: number;
-        timeOfLastMatch: number;
-        categories: {
-            id: string;
-            type: import(".prisma/client").$Enums.CatType;
-            eventDoubles: {
-                double: {
-                    id: string;
-                    players: {
-                        id: string;
-                        firstName: string;
-                        lastName: string;
-                        position: import(".prisma/client").$Enums.PlayerPosition;
-                    }[];
-                };
-            }[];
-            level: number;
-        }[];
         matches: {
             number: number;
+            category: {
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+            };
+            categoryId: string;
             id: string;
-            sets: {
-                id: string;
-                type: import(".prisma/client").$Enums.SetType;
-                setWinnerId: string;
-                result: string;
-                isFinished: boolean;
-            }[];
             doubles: {
                 id: string;
                 players: {
@@ -224,25 +199,26 @@ export declare class EventsController {
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
             }[];
+            sets: {
+                id: string;
+                type: import(".prisma/client").$Enums.SetType;
+                setWinnerId: string;
+                result: string;
+                isFinished: boolean;
+            }[];
             eventId: string;
-            categoryId: string;
-            category: {
-                type: import(".prisma/client").$Enums.CatType;
-                level: number;
-            };
-            isFinished: boolean;
             winner: {
                 id: string;
                 categoryId: string;
             };
-        }[];
-        places: {
-            id: string;
-            name: string;
-            address: string;
+            isFinished: boolean;
         }[];
         eventDoubles: {
-            atRestId: string;
+            category: {
+                id: string;
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+            };
             double: {
                 players: {
                     id: string;
@@ -261,11 +237,6 @@ export declare class EventsController {
                     courtId: string;
                 }[];
             };
-            category: {
-                id: string;
-                level: number;
-                type: import(".prisma/client").$Enums.CatType;
-            };
             atRest: {
                 id: string;
                 eventId: string;
@@ -274,41 +245,12 @@ export declare class EventsController {
                 finish: Date;
                 courtId: string;
             };
+            atRestId: string;
         }[];
-        courts: {
-            id: string;
-            name: string;
-            isAvailable: boolean;
-            placeId: string;
-        }[];
-    }[]>;
-    findOne(id: string): Promise<{
-        id: string;
-        name: string;
-        isActive: boolean;
-        startDate: Date;
-        finishDate: Date;
-        timeOfFirstMatch: number;
-        timeOfLastMatch: number;
         categories: {
-            id: string;
+            level: number;
             type: import(".prisma/client").$Enums.CatType;
-            matches: {
-                number: number;
-                id: string;
-                doubles: {
-                    id: string;
-                    players: {
-                        id: string;
-                        firstName: string;
-                        lastName: string;
-                        position: import(".prisma/client").$Enums.PlayerPosition;
-                    }[];
-                }[];
-                matchDate: {
-                    id: string;
-                };
-            }[];
+            id: string;
             eventDoubles: {
                 double: {
                     id: string;
@@ -320,12 +262,53 @@ export declare class EventsController {
                     }[];
                 };
             }[];
-            level: number;
         }[];
+        name: string;
+        startDate: Date;
+        finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
+        matchDurationInMinutes: number;
+        isActive: boolean;
+        places: {
+            id: string;
+            name: string;
+            address: string;
+        }[];
+        courts: {
+            id: string;
+            name: string;
+            isAvailable: boolean;
+            placeId: string;
+        }[];
+    }[]>;
+    findOne(id: string): Promise<{
+        id: string;
         matches: {
             number: number;
+            category: {
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+                matches: {
+                    matchDate: {
+                        id: string;
+                    };
+                    id: string;
+                    doubles: {
+                        id: string;
+                        categoryId: string;
+                    }[];
+                }[];
+            };
+            matchDate: {
+                id: string;
+                start: Date;
+                finish: Date;
+            };
+            categoryId: string;
             id: string;
             doubles: {
+                categoryId: string;
                 id: string;
                 players: {
                     id: string;
@@ -333,42 +316,22 @@ export declare class EventsController {
                     lastName: string;
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
-                categoryId: string;
             }[];
             eventId: string;
-            categoryId: string;
-            category: {
-                type: import(".prisma/client").$Enums.CatType;
-                matches: {
-                    id: string;
-                    doubles: {
-                        id: string;
-                        categoryId: string;
-                    }[];
-                    matchDate: {
-                        id: string;
-                    };
-                }[];
-                level: number;
-            };
-            isFinished: boolean;
             winner: {
                 id: string;
                 categoryId: string;
             };
-            matchDate: {
-                id: string;
-                start: Date;
-                finish: Date;
-            };
-        }[];
-        places: {
-            id: string;
-            name: string;
-            address: string;
+            isFinished: boolean;
         }[];
         eventDoubles: {
+            category: {
+                id: string;
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+            };
             double: {
+                categoryId: string;
                 id: string;
                 players: {
                     id: string;
@@ -381,7 +344,6 @@ export declare class EventsController {
                     setId: string;
                     winnerId: string;
                 }[];
-                categoryId: string;
                 matchesWins: {
                     id: string;
                     number: number;
@@ -398,11 +360,6 @@ export declare class EventsController {
                     winnerId: string;
                 }[];
             };
-            category: {
-                id: string;
-                level: number;
-                type: import(".prisma/client").$Enums.CatType;
-            };
             atRest: {
                 id: string;
                 eventId: string;
@@ -411,6 +368,49 @@ export declare class EventsController {
                 finish: Date;
                 courtId: string;
             };
+        }[];
+        categories: {
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+            id: string;
+            matches: {
+                number: number;
+                matchDate: {
+                    id: string;
+                };
+                id: string;
+                doubles: {
+                    id: string;
+                    players: {
+                        id: string;
+                        firstName: string;
+                        lastName: string;
+                        position: import(".prisma/client").$Enums.PlayerPosition;
+                    }[];
+                }[];
+            }[];
+            eventDoubles: {
+                double: {
+                    id: string;
+                    players: {
+                        id: string;
+                        firstName: string;
+                        lastName: string;
+                        position: import(".prisma/client").$Enums.PlayerPosition;
+                    }[];
+                };
+            }[];
+        }[];
+        name: string;
+        startDate: Date;
+        finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
+        isActive: boolean;
+        places: {
+            id: string;
+            name: string;
+            address: string;
         }[];
         matchDates: {
             id: string;
@@ -430,25 +430,25 @@ export declare class EventsController {
     getEventInfo(id: string): Promise<{
         categories: {
             totalMatches: number;
-            id: string;
+            level: number;
             type: import(".prisma/client").$Enums.CatType;
+            id: string;
             eventDoubles: {
                 eventId: string;
                 doubleId: string;
                 categoryId: string;
                 atRestId: string;
             }[];
-            level: number;
         }[];
         totalMatches: number;
         availableMatchDates: number;
         suitable: boolean;
-        isActive: boolean;
         startDate: Date;
         finishDate: Date;
-        matchDurationInMinutes: number;
         timeOfFirstMatch: number;
         timeOfLastMatch: number;
+        matchDurationInMinutes: number;
+        isActive: boolean;
         eventType: import(".prisma/client").$Enums.EventType;
         courts: {
             id: string;

@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { useToast } from '../ui/use-toast'
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { ErrorResponse } from '@/types/padel.types'
+import { ErrorResponse, User } from '@/types/padel.types'
 import { ErrorAlert } from './errorAlert'
 
 const loginSchema = z.object({
@@ -52,15 +52,23 @@ export function LoginForm() {
                 password: input.password,
             }
 
-            const data: AxiosResponse<{ accessToken: string }> =
-                await axios.post(
-                    `${import.meta.env.VITE_SERVER_URL}/auth/login/`,
-                    requestBody
-                )
+            const data: AxiosResponse<{
+                user: User
+                accessToken: string
+                refreshToken: string
+            }> = await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/auth/login/`,
+                requestBody
+            )
+            console.log(data)
+            localStorage.setItem('accessToken', data.data.accessToken)
+            localStorage.setItem('refreshToken', data.data.refreshToken)
+            localStorage.setItem('user', JSON.stringify(data.data.user))
             toast({
                 title: 'Success',
             })
-            return data //! remove this return
+
+            return data //! remove this return?
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>
@@ -146,9 +154,7 @@ export function LoginForm() {
                                         )}
                                     />
                                 </div>
-                                {/* <div className="flex gap-2">
-                            <Button type="submit">Submit</Button>
-                        </div> */}
+
                                 <Button type="submit" className="w-full">
                                     Login
                                 </Button>

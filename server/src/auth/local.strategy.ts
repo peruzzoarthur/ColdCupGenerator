@@ -6,9 +6,6 @@ import {
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
 import { AuthService } from "./auth.service";
-import { AuthEntity } from "./entity/auth.entity";
-import * as bcrypt from "bcrypt";
-import { PrismaService } from "src/prisma.service";
 import { UserEntity } from "src/users/entities/user.entity";
 
 @Injectable()
