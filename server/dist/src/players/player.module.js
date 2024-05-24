@@ -12,13 +12,14 @@ const prisma_service_1 = require("../prisma.service");
 const player_service_1 = require("./player.service");
 const player_controller_1 = require("./player.controller");
 const categories_service_1 = require("../categories/categories.service");
+const jwt_1 = require("@nestjs/jwt");
 let PlayerModule = class PlayerModule {
 };
 exports.PlayerModule = PlayerModule;
 exports.PlayerModule = PlayerModule = __decorate([
     (0, common_1.Module)({
         controllers: [player_controller_1.PlayerController],
-        providers: [player_service_1.PlayerService, prisma_service_1.PrismaService, categories_service_1.CategoriesService],
+        providers: [player_service_1.PlayerService, prisma_service_1.PrismaService, categories_service_1.CategoriesService, jwt_1.JwtService],
     })
 ], PlayerModule);
 //# sourceMappingURL=player.module.js.map

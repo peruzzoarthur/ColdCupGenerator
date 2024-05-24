@@ -17,13 +17,14 @@ let CategoriesService = class CategoriesService {
         this.prismaService = prismaService;
     }
     async create(createCategoryDto) {
+        console.log(createCategoryDto);
         const newCat = await this.prismaService.category.create({
             data: {
                 level: createCategoryDto.level,
                 type: createCategoryDto.type,
             },
         });
-        return newCat;
+        return;
     }
     async findAll() {
         return await this.prismaService.category.findMany();

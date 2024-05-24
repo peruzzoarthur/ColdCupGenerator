@@ -18,6 +18,10 @@ const matches_service_1 = require("./matches.service");
 const create_match_dto_1 = require("./dto/create-match.dto");
 const update_match_dto_1 = require("./dto/update-match.dto");
 const match_finished_dto_1 = require("./dto/match-finished.dto");
+const swagger_1 = require("@nestjs/swagger");
+const roles_decorator_1 = require("../auth/roles.decorator");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const roles_guard_1 = require("../auth/roles.guard");
 let MatchesController = class MatchesController {
     constructor(matchesService) {
         this.matchesService = matchesService;
@@ -47,6 +51,12 @@ let MatchesController = class MatchesController {
 exports.MatchesController = MatchesController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, swagger_1.ApiCreatedResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_match_dto_1.CreateMatchDto]),
@@ -54,12 +64,24 @@ __decorate([
 ], MatchesController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], MatchesController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)("/result/:id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -67,6 +89,12 @@ __decorate([
 ], MatchesController.prototype, "findResult", null);
 __decorate([
     (0, common_1.Get)(":id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -74,6 +102,12 @@ __decorate([
 ], MatchesController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)("/update-match-date/:id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -82,6 +116,12 @@ __decorate([
 ], MatchesController.prototype, "update", null);
 __decorate([
     (0, common_1.Patch)("/finish-match/:id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -90,6 +130,12 @@ __decorate([
 ], MatchesController.prototype, "finishMatch", null);
 __decorate([
     (0, common_1.Delete)(":id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -97,6 +143,7 @@ __decorate([
 ], MatchesController.prototype, "remove", null);
 exports.MatchesController = MatchesController = __decorate([
     (0, common_1.Controller)("matches"),
+    (0, swagger_1.ApiTags)("matches"),
     __metadata("design:paramtypes", [matches_service_1.MatchesService])
 ], MatchesController);
 //# sourceMappingURL=matches.controller.js.map

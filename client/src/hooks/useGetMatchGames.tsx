@@ -1,5 +1,5 @@
+import { axiosInstance } from '@/axiosInstance'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
 export type MatchGamesResponse = {
     doublesOneGames: number
@@ -14,9 +14,8 @@ export const useGetMatchGames = (matchId: string, isFinished: boolean) => {
     } = useQuery({
         queryKey: ['get-match-games', matchId, isFinished],
         queryFn: async () => {
-            const { data }: { data: MatchGamesResponse } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/matches/result/${matchId}`
-            )
+            const { data }: { data: MatchGamesResponse } =
+                await axiosInstance.get(`/matches/result/${matchId}`)
             if (data) {
                 return data
             }

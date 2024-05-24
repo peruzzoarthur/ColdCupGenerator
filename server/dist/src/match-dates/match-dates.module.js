@@ -11,13 +11,14 @@ const common_1 = require("@nestjs/common");
 const match_dates_service_1 = require("./match-dates.service");
 const match_dates_controller_1 = require("./match-dates.controller");
 const prisma_service_1 = require("../prisma.service");
+const jwt_1 = require("@nestjs/jwt");
 let MatchDatesModule = class MatchDatesModule {
 };
 exports.MatchDatesModule = MatchDatesModule;
 exports.MatchDatesModule = MatchDatesModule = __decorate([
     (0, common_1.Module)({
         controllers: [match_dates_controller_1.MatchDatesController],
-        providers: [match_dates_service_1.MatchDatesService, prisma_service_1.PrismaService],
+        providers: [match_dates_service_1.MatchDatesService, prisma_service_1.PrismaService, jwt_1.JwtService],
     })
 ], MatchDatesModule);
 //# sourceMappingURL=match-dates.module.js.map

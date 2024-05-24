@@ -139,6 +139,7 @@ Table User {
   player Player
   playerId String [unique]
   role Role [not null, default: 'USER']
+  hashedRt String
 }
 
 Table Player {

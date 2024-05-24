@@ -9,13 +9,14 @@ import { GetCategoryByIdDto } from "./dto/get-category-by-id.dto";
 export class CategoriesService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(createCategoryDto: CreateCategoryDto) {
+    console.log(createCategoryDto);
     const newCat = await this.prismaService.category.create({
       data: {
         level: createCategoryDto.level,
-        type: createCategoryDto.type,
+        type: createCategoryDto.type as CatType,
       },
     });
-    return newCat;
+    return;
   }
 
   async findAll() {

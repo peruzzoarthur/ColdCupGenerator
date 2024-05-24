@@ -5,7 +5,21 @@ import { GetDoublesByIdDto } from "./dto/get-doubles-by-id.dto";
 export declare class DoublesController {
     private readonly doublesService;
     constructor(doublesService: DoublesService);
-    create(createDoubleDto: CreateDoubleDto): Promise<{
+    findAll(): Promise<{
+        id: string;
+        players: {
+            id: string;
+            firstName: string;
+            lastName: string;
+            position: import(".prisma/client").$Enums.PlayerPosition;
+        }[];
+        category: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        };
+    }[]>;
+    getDoublesById(getDoublesByIdDto: GetDoublesByIdDto): Promise<{
         id: string;
         players: {
             id: string;
@@ -14,21 +28,7 @@ export declare class DoublesController {
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }>;
-    findAll(): Promise<{
-        category: {
-            id: string;
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-        };
-        id: string;
-        players: {
-            id: string;
-            firstName: string;
-            lastName: string;
-            position: import(".prisma/client").$Enums.PlayerPosition;
-        }[];
-    }[]>;
-    getDoublesById(getDoublesByIdDto: GetDoublesByIdDto): Promise<{
+    create(createDoubleDto: CreateDoubleDto): Promise<{
         id: string;
         players: {
             id: string;

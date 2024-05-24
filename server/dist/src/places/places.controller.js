@@ -17,6 +17,10 @@ const common_1 = require("@nestjs/common");
 const places_service_1 = require("./places.service");
 const create_place_dto_1 = require("./dto/create-place.dto");
 const update_place_dto_1 = require("./dto/update-place.dto");
+const swagger_1 = require("@nestjs/swagger");
+const roles_decorator_1 = require("../auth/roles.decorator");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const roles_guard_1 = require("../auth/roles.guard");
 let PlacesController = class PlacesController {
     constructor(placesService) {
         this.placesService = placesService;
@@ -40,6 +44,12 @@ let PlacesController = class PlacesController {
 exports.PlacesController = PlacesController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, swagger_1.ApiCreatedResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_place_dto_1.CreatePlaceDto]),
@@ -47,12 +57,24 @@ __decorate([
 ], PlacesController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], PlacesController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(":id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -60,6 +82,12 @@ __decorate([
 ], PlacesController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(":id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -68,6 +96,12 @@ __decorate([
 ], PlacesController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(":id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -75,6 +109,7 @@ __decorate([
 ], PlacesController.prototype, "remove", null);
 exports.PlacesController = PlacesController = __decorate([
     (0, common_1.Controller)("places"),
+    (0, swagger_1.ApiTags)("places"),
     __metadata("design:paramtypes", [places_service_1.PlacesService])
 ], PlacesController);
 //# sourceMappingURL=places.controller.js.map

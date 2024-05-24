@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpStatus,
+  HttpCode,
 } from "@nestjs/common";
 import { EventsService } from "./events.service";
 import { CreateEventDto } from "./dto/create-event.dto";
@@ -18,7 +20,12 @@ import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { RolesGuard } from "src/auth/roles.guard";
 import { Roles } from "src/auth/roles.decorator";
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 
 @Controller("events")
 @ApiTags("events")
@@ -26,40 +33,56 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @ApiCreatedResponse()
-  @Roles(["USER", "ADMIN"])
+  @Roles(["ADMIN"])
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async create(@Body() createEventDto: CreateEventDto) {
     return await this.eventsService.createEvent(createEventDto);
   }
 
   @Patch("update-event")
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async update(@Body() updateEventDto: UpdateEventDto) {
     return await this.eventsService.updateEvent(updateEventDto);
   }
 
   @Post("event-by-id")
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async getEventById(@Body() getEventByIdDto: GetEventByIdDto) {
     return await this.eventsService.getEventById(getEventByIdDto);
   }
 
   @Post("activate-event")
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
-  @Roles(["USER", "ADMIN"])
+  @Roles(["ADMIN"])
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async activateEventAutoPop(@Body() activateEventDto: ActivateEventDto) {
     return await this.eventsService.activateEvent(activateEventDto);
   }
 
   @Post("register")
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
-  @Roles(["USER", "ADMIN"])
+  @Roles(["ADMIN"])
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async registerDoublesInEvent(
     @Body() registerDoublesInEventDto: RegisterDoublesInEventDto
   ) {
@@ -69,10 +92,12 @@ export class EventsController {
   }
 
   @Post("delete-doubles")
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
-  @Roles(["USER", "ADMIN"])
+  @Roles(["ADMIN"])
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async deleteDoublesInEvent(
     @Body() deleteDoublesInEventDto: DeleteDoublesInEventDto
   ) {
@@ -82,24 +107,45 @@ export class EventsController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async findAllEvents() {
     return await this.eventsService.findAllEvents();
   }
 
   @Get(":id")
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async findOne(@Param("id") id: string) {
     return this.eventsService.getEventByIdParam(id);
   }
 
   @Get("/event-info/:id")
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async getEventInfo(@Param("id") id: string) {
     return this.eventsService.getEventInfoForGenerateMatches(id);
   }
 
   @Delete(":id")
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async remove(@Param("id") id: string) {
     return this.eventsService.remove(+id);
   }

@@ -11,13 +11,14 @@ const common_1 = require("@nestjs/common");
 const courts_service_1 = require("./courts.service");
 const courts_controller_1 = require("./courts.controller");
 const prisma_service_1 = require("../prisma.service");
+const jwt_1 = require("@nestjs/jwt");
 let CourtsModule = class CourtsModule {
 };
 exports.CourtsModule = CourtsModule;
 exports.CourtsModule = CourtsModule = __decorate([
     (0, common_1.Module)({
         controllers: [courts_controller_1.CourtsController],
-        providers: [courts_service_1.CourtsService, prisma_service_1.PrismaService],
+        providers: [courts_service_1.CourtsService, prisma_service_1.PrismaService, jwt_1.JwtService],
     })
 ], CourtsModule);
 //# sourceMappingURL=courts.module.js.map

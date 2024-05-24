@@ -11,13 +11,14 @@ const common_1 = require("@nestjs/common");
 const doubles_service_1 = require("./doubles.service");
 const doubles_controller_1 = require("./doubles.controller");
 const prisma_service_1 = require("../prisma.service");
+const jwt_1 = require("@nestjs/jwt");
 let DoublesModule = class DoublesModule {
 };
 exports.DoublesModule = DoublesModule;
 exports.DoublesModule = DoublesModule = __decorate([
     (0, common_1.Module)({
         controllers: [doubles_controller_1.DoublesController],
-        providers: [doubles_service_1.DoublesService, prisma_service_1.PrismaService],
+        providers: [doubles_service_1.DoublesService, prisma_service_1.PrismaService, jwt_1.JwtService],
     })
 ], DoublesModule);
 //# sourceMappingURL=doubles.module.js.map

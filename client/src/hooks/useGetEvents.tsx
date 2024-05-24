@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import { PadelEvent } from '@/types/padel.types'
+import { axiosInstance } from '@/axiosInstance'
 
 export const useGetEvents = () => {
     const {
@@ -10,9 +10,8 @@ export const useGetEvents = () => {
     } = useQuery({
         queryKey: ['get-all-events'],
         queryFn: async () => {
-            const { data }: { data: PadelEvent[] } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/events`
-            )
+            const { data }: { data: PadelEvent[] } =
+                await axiosInstance.get('/events')
             if (data) {
                 return data
             }

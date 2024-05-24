@@ -1,14 +1,13 @@
+import { axiosInstance } from '@/axiosInstance'
 import { Player } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
 export const useGetPlayers = () => {
     const { data: allPlayers, isFetching } = useQuery({
         queryKey: ['get-all-players'],
         queryFn: async () => {
-            const { data }: { data: Player[] } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/player`
-            )
+            const { data }: { data: Player[] } =
+                await axiosInstance.get('/player')
             if (data) {
                 return data
             }

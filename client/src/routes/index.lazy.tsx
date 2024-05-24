@@ -1,7 +1,8 @@
+import { axiosInstance } from '@/axiosInstance'
 import { Button } from '@/components/ui/button'
 import { CatType, Category } from '@/types/padel.types'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import axios, { AxiosResponse } from 'axios'
+import { AxiosResponse } from 'axios'
 
 export const Route = createLazyFileRoute('/')({
     component: Index,
@@ -18,8 +19,8 @@ const onPopulate = async (level: number) => {
         type: 'ALL' as CatType,
     }
 
-    const data: AxiosResponse<Category> = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/categories/`,
+    const data: AxiosResponse<Category> = await axiosInstance.post(
+        '/categories/',
         requestBody
     )
 

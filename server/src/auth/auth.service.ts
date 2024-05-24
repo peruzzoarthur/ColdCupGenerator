@@ -4,8 +4,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { AuthEntity } from "./entity/auth.entity";
-import * as bcrypt from "bcrypt";
+import * as argon from "argon2";
 import { PrismaService } from "src/prisma.service";
 import { UserEntity } from "src/users/entities/user.entity";
 
@@ -27,7 +26,7 @@ export class AuthService {
       return null;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await argon.verify(user.password, password);
 
     if (!isPasswordValid) {
       return null;
@@ -36,15 +35,21 @@ export class AuthService {
     return user;
   }
 
-  async login(user: UserEntity) {
-    const payload = { username: user.email, sub: user.id };
-    console.log("Login Payload:", payload);
-
+  async login(
+    user: UserEntity
+  ): Promise<{ user: UserEntity; accessToken: string; refreshToken: string }> {
+    const payload = { username: user.email, sub: user.id, role: user.role };
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, { expiresIn: "7d" });
-
-    console.log("Access Token:", accessToken);
-    console.log("Refresh Token:", refreshToken);
+    const hashedRefreshToken = await argon.hash(refreshToken);
+    await this.prisma.user.update({
+      where: {
+        email: user.email,
+      },
+      data: {
+        hashedRt: hashedRefreshToken,
+      },
+    });
 
     return {
       user: user,
@@ -53,36 +58,30 @@ export class AuthService {
     };
   }
 
-  async refreshToken({ email, id }: { email: string; id: string }) {
-    const payload = { username: email, sub: id };
-    console.log("Login Payload:", payload);
-    const accessToken = this.jwtService.sign(payload);
-    console.log("Access Token:", accessToken);
+  async refreshToken(refresh: string): Promise<{ accessToken: string }> {
+    const tokenPayload = await this.jwtService.verifyAsync(refresh, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: {
+        email: tokenPayload.username,
+      },
+    });
+    const dbHashedRt = user.hashedRt;
+    const isRtTokenValid = await argon.verify(dbHashedRt, refresh);
 
-    return {
-      accessToken: accessToken,
-    };
+    if (isRtTokenValid) {
+      const accessToken = this.jwtService.sign({
+        username: tokenPayload.username,
+        sub: tokenPayload.sub,
+        role: tokenPayload.role,
+      });
+
+      return {
+        accessToken: accessToken,
+      };
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 }
-
-// async login(email: string, password: string): Promise<AuthEntity> {
-//   const user = await this.prisma.user.findUnique({
-//     where: {
-//       email: email,
-//     },
-//   });
-
-//   if (!user) {
-//     throw new NotFoundException(`No user found for email: ${email}`);
-//   }
-
-//   const isPasswordValid = await bcrypt.compare(password, user.password);
-
-//   if (!isPasswordValid) {
-//     throw new UnauthorizedException("Invalid password");
-//   }
-
-//   return {
-//     accessToken: this.jwtService.sign({ userId: user.id }),
-//   };
-// }

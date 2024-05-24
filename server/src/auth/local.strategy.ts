@@ -14,13 +14,17 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: "email" });
   }
 
-  async validate(email: string, password: string): Promise<UserEntity> {
+  async validate(
+    email: string,
+    password: string
+  ): Promise<Partial<UserEntity>> {
     const user = await this.authService.validateUser(email, password);
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new NotFoundException();
     }
 
-    return { ...user, password: null };
+    const { password: pw, hashedRt, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }

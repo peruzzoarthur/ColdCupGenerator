@@ -1,5 +1,5 @@
+import { axiosInstance } from '@/axiosInstance'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
 enum CatType {
     ALL = 'ALL',
@@ -17,9 +17,8 @@ export const useGetCategories = () => {
     const { data: allCategories, isFetching } = useQuery({
         queryKey: ['get-all-categories'],
         queryFn: async () => {
-            const { data }: { data: Category[] } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/categories`
-            )
+            const { data }: { data: Category[] } =
+                await axiosInstance.get('/categories')
             if (data) {
                 return data
             }

@@ -30,7 +30,6 @@ import {
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { Match, PadelEvent } from '@/types/padel.types'
 // import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
-import axios from 'axios'
 import { EventDoublesTable } from './eventsTable/eventDoublesTable'
 import { RegisteredDoublesTable, doublesColumns } from './eventsTable/columns'
 import { MatchesCarousel } from './matchesCarousel'
@@ -53,6 +52,7 @@ import { downloadRegisteredDoublesToExcel } from '@/lib/xlsx'
 import { useGetMatchById } from '@/hooks/useGetMatchById'
 import { MatchesGrid } from './matchesGrid'
 import UpdateEventForm from './updateEventForm'
+import { axiosInstance } from '@/axiosInstance'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -119,16 +119,17 @@ export function EventDashboard({
                 courtsIds: eventById?.courts.map((c) => c.id),
                 autoPopulate: isAutoPopulateOn,
             }
-            const { data: matches }: { data: Match[] } = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
-                activateEventDto,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                    },
-                }
-            )
+            const { data: matches }: { data: Match[] } =
+                await axiosInstance.post(
+                    '/events/activate-event',
+                    activateEventDto
+                    // {
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    //     },
+                    // }
+                )
 
             await refetchEventById()
             await refetchEventMatchDates()

@@ -23,6 +23,7 @@ const match_dates_module_1 = require("./match-dates/match-dates.module");
 const courts_module_1 = require("./courts/courts.module");
 const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./users/users.module");
+const devtools_integration_1 = require("@nestjs/devtools-integration");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,6 +35,9 @@ exports.AppModule = AppModule = __decorate([
                     DATABASE_URL: Joi.string().required(),
                     JWT_SECRET_KEY: Joi.string().required(),
                 }),
+            }),
+            devtools_integration_1.DevtoolsModule.register({
+                http: process.env.NODE_ENV !== "production",
             }),
             player_module_1.PlayerModule,
             doubles_module_1.DoublesModule,

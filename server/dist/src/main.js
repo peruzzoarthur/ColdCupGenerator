@@ -7,12 +7,12 @@ const common_1 = require("@nestjs/common");
 const prisma_client_exception_filter_1 = require("../prisma/prisma-client-exception.filter");
 const swagger_1 = require("@nestjs/swagger");
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const app = await core_1.NestFactory.create(app_module_1.AppModule, { snapshot: true });
     app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true }));
     app.useGlobalInterceptors(new common_1.ClassSerializerInterceptor(app.get(core_1.Reflector)));
     const config = new swagger_1.DocumentBuilder()
-        .setTitle("Median")
-        .setDescription("The Median API description")
+        .setTitle("ColdCup Padel API")
+        .setDescription("A Cold API description")
         .setVersion("0.1")
         .addBearerAuth()
         .build();

@@ -1,6 +1,6 @@
+import { axiosInstance } from '@/axiosInstance'
 import { Category, Double, PadelEvent } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import { useState } from 'react'
 // import { useState } from 'react'
 
@@ -20,10 +20,11 @@ export const useGetDoublesInEvent = (eventId: string) => {
             const requestEventByIdDto = {
                 id: eventId,
             }
-            const { data: fetchEvent }: { data: PadelEvent } = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/events/event-by-id`,
-                requestEventByIdDto
-            )
+            const { data: fetchEvent }: { data: PadelEvent } =
+                await axiosInstance.post(
+                    '/events/event-by-id',
+                    requestEventByIdDto
+                )
             setEventById(fetchEvent)
 
             if (!fetchEvent || !fetchEvent.eventDoubles) {

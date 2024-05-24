@@ -7,14 +7,14 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 // import { ExcludeNullInterceptor } from './utils/excludeNull.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { snapshot: true });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   // app.useGlobalInterceptors(new ExcludeNullInterceptor());
 
   const config = new DocumentBuilder()
-    .setTitle("Median")
-    .setDescription("The Median API description")
+    .setTitle("ColdCup Padel API")
+    .setDescription("A Cold API description")
     .setVersion("0.1")
     .addBearerAuth()
     .build();

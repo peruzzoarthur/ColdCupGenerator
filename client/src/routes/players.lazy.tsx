@@ -10,6 +10,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { Button } from '@/components/ui/button'
 import { useGetPlayers } from '@/hooks/useGetPlayers'
 import { PlayerCard } from '@/components/custom/playerCard'
+import { axiosInstance } from '@/axiosInstance'
 
 export const Route = createLazyFileRoute('/players')({
     component: Players,
@@ -53,13 +54,12 @@ function Players() {
             const requestBody: CreatePlayer = {
                 firstName: input.firstName,
                 lastName: input.lastName,
-                email: input.email,
                 categoryId: input.categoryId,
                 position: input.position as Position,
             }
 
-            const data: AxiosResponse<Player> = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/player/create-player`,
+            const data: AxiosResponse<Player> = await axiosInstance.post(
+                '/player/create-player',
                 requestBody
             )
 
@@ -102,7 +102,7 @@ function Players() {
                             defaultValues={{
                                 firstName: '',
                                 lastName: '',
-                                email: '',
+                                // email: '',
                                 categoryId: '',
                                 position: '',
                             }}

@@ -11,13 +11,14 @@ const common_1 = require("@nestjs/common");
 const categories_service_1 = require("./categories.service");
 const categories_controller_1 = require("./categories.controller");
 const prisma_service_1 = require("../prisma.service");
+const jwt_1 = require("@nestjs/jwt");
 let CategoriesModule = class CategoriesModule {
 };
 exports.CategoriesModule = CategoriesModule;
 exports.CategoriesModule = CategoriesModule = __decorate([
     (0, common_1.Module)({
         controllers: [categories_controller_1.CategoriesController],
-        providers: [categories_service_1.CategoriesService, prisma_service_1.PrismaService],
+        providers: [categories_service_1.CategoriesService, prisma_service_1.PrismaService, jwt_1.JwtService],
     })
 ], CategoriesModule);
 //# sourceMappingURL=categories.module.js.map

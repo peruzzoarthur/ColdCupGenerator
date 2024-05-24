@@ -146,6 +146,7 @@ model User {
   player    Player?   @relation(fields: [playerId], references: [id])
   playerId  String?   @unique
   role      Role      @default(USER)
+  hashedRt  String?
 }
 
 model Player {

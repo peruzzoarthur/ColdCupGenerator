@@ -38,11 +38,11 @@ export class RolesGuard implements CanActivate {
         where: { email: request.user.username },
       });
       const role = user.role;
-      if (roles.includes(role)) {
+      if (roles.includes(role) && role === user.role) {
         return true;
       }
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("Access denied.");
     }
 
     return false;

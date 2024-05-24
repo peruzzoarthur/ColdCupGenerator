@@ -1,6 +1,6 @@
+import { axiosInstance } from '@/axiosInstance'
 import { Double } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
 export const useGetDoubles = () => {
     const {
@@ -10,9 +10,8 @@ export const useGetDoubles = () => {
     } = useQuery({
         queryKey: ['get-all-doubles'],
         queryFn: async () => {
-            const { data }: { data: Double[] } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/doubles`
-            )
+            const { data }: { data: Double[] } =
+                await axiosInstance.get('/doubles')
             if (data) {
                 return data
             }

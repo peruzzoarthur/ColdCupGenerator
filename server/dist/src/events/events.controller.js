@@ -63,10 +63,12 @@ let EventsController = class EventsController {
 exports.EventsController = EventsController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, swagger_1.ApiCreatedResponse)(),
-    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_event_dto_1.CreateEventDto]),
@@ -74,7 +76,12 @@ __decorate([
 ], EventsController.prototype, "create", null);
 __decorate([
     (0, common_1.Patch)("update-event"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [update_event_dto_1.UpdateEventDto]),
@@ -82,7 +89,12 @@ __decorate([
 ], EventsController.prototype, "update", null);
 __decorate([
     (0, common_1.Post)("event-by-id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_event_by_id_dto_1.GetEventByIdDto]),
@@ -90,10 +102,12 @@ __decorate([
 ], EventsController.prototype, "getEventById", null);
 __decorate([
     (0, common_1.Post)("activate-event"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOkResponse)(),
-    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [activate_event_dto_1.ActivateEventDto]),
@@ -101,10 +115,12 @@ __decorate([
 ], EventsController.prototype, "activateEventAutoPop", null);
 __decorate([
     (0, common_1.Post)("register"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOkResponse)(),
-    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [register_doubles_event_dto_1.RegisterDoublesInEventDto]),
@@ -112,10 +128,12 @@ __decorate([
 ], EventsController.prototype, "registerDoublesInEvent", null);
 __decorate([
     (0, common_1.Post)("delete-doubles"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOkResponse)(),
-    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [delete_doubles_dto_1.DeleteDoublesInEventDto]),
@@ -123,13 +141,24 @@ __decorate([
 ], EventsController.prototype, "deleteDoublesInEvent", null);
 __decorate([
     (0, common_1.Get)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "findAllEvents", null);
 __decorate([
     (0, common_1.Get)(":id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -137,7 +166,12 @@ __decorate([
 ], EventsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Get)("/event-info/:id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -145,7 +179,12 @@ __decorate([
 ], EventsController.prototype, "getEventInfo", null);
 __decorate([
     (0, common_1.Delete)(":id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

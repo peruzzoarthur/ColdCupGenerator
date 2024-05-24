@@ -57,25 +57,18 @@ axiosInstance.interceptors.response.use(
                     id: user.id,
                 } ?? ''
             )
-            console.log(response.data.accessToken)
+            // console.log(response.data.accessToken)
             localStorage.setItem('accessToken', '')
 
             const accessToken = response.data.accessToken
 
-            if (
-                !accessToken
-                // ||
-                //  !refreshToken
-            ) {
+            if (!accessToken) {
                 throw new Error(
                     'Something went wrong while refreshing your access token'
                 )
             }
 
             localStorage.setItem('accessToken', accessToken)
-            // localStorage.setItem('refreshToken')
-            // refreshToken
-            // )
 
             failedRequests.forEach(({ resolve, reject, config }) => {
                 axiosInstance(config)

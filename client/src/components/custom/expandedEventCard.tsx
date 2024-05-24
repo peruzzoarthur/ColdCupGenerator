@@ -11,8 +11,7 @@ import {
 } from '@/components/ui/card'
 import { Double, PadelEvent } from '@/types/padel.types'
 import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
-import axios from 'axios'
-// import { useState } from 'react'
+import { axiosInstance } from '@/axiosInstance'
 
 type ExtendedEventCardProps = React.ComponentProps<typeof Card> & {
     event: PadelEvent
@@ -44,10 +43,11 @@ export function ExtendedEventCard({
             const requestEventByIdDto = {
                 id: eventId,
             }
-            const { data: matches }: { data: Match[] } = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/events/activate-event`,
-                requestEventByIdDto
-            )
+            const { data: matches }: { data: Match[] } =
+                await axiosInstance.post(
+                    '/events/activate-event',
+                    requestEventByIdDto
+                )
             // setActivate(true)
             return matches
         } catch (error) {

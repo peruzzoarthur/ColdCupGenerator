@@ -6,11 +6,7 @@ import { GetCategoryByIdDto } from "./dto/get-category-by-id.dto";
 export declare class CategoriesService {
     private readonly prismaService;
     constructor(prismaService: PrismaService);
-    create(createCategoryDto: CreateCategoryDto): Promise<{
-        id: string;
-        level: number;
-        type: import(".prisma/client").$Enums.CatType;
-    }>;
+    create(createCategoryDto: CreateCategoryDto): Promise<void>;
     findAll(): Promise<{
         id: string;
         level: number;

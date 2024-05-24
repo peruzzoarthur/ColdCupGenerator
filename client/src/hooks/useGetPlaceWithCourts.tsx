@@ -1,6 +1,6 @@
+import { axiosInstance } from '@/axiosInstance'
 import { Place } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
 export const useGetPlaceWithCourts = (placeId: string | undefined | null) => {
     const {
@@ -16,8 +16,8 @@ export const useGetPlaceWithCourts = (placeId: string | undefined | null) => {
             if (placeId === null) {
                 return
             }
-            const { data }: { data: Place } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/places/${placeId}`
+            const { data }: { data: Place } = await axiosInstance.get(
+                `/places/${placeId}`
             )
             if (data) {
                 return data

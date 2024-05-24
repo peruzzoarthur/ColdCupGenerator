@@ -12,20 +12,16 @@ export declare class CategoriesController {
         type: import(".prisma/client").$Enums.CatType;
     }[]>;
     getCategoryById(getCategoryByIdDto: GetCategoryByIdDto): Promise<{
+        id: string;
         level: number;
         type: import(".prisma/client").$Enums.CatType;
-        id: string;
     }>;
     getCategoryByQuery(level: number, type: CatType): Promise<{
         id: string;
         level: number;
         type: import(".prisma/client").$Enums.CatType;
     }>;
-    create(createCategoryDto: CreateCategoryDto): Promise<{
-        id: string;
-        level: number;
-        type: import(".prisma/client").$Enums.CatType;
-    }>;
+    create(createCategoryDto: CreateCategoryDto): Promise<void>;
     update(id: string, updateCategoryDto: UpdateCategoryDto): string;
     remove(id: string): string;
 }

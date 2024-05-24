@@ -17,6 +17,7 @@ import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
 import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { RefreshJwtGuard } from "./auth/refresh-jwt-auth.guard";
+import { DevtoolsModule } from "@nestjs/devtools-integration";
 
 @Module({
   imports: [
@@ -25,6 +26,9 @@ import { RefreshJwtGuard } from "./auth/refresh-jwt-auth.guard";
         DATABASE_URL: Joi.string().required(),
         JWT_SECRET_KEY: Joi.string().required(),
       }),
+    }),
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV !== "production",
     }),
     PlayerModule,
     DoublesModule,

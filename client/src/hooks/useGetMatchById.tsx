@@ -1,6 +1,6 @@
+import { axiosInstance } from '@/axiosInstance'
 import { Match } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
 export const useGetMatchById = (matchId: string | undefined) => {
     const {
@@ -13,8 +13,8 @@ export const useGetMatchById = (matchId: string | undefined) => {
             if (matchId === undefined) {
                 return
             }
-            const { data }: { data: Match } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/matches/${matchId}`
+            const { data }: { data: Match } = await axiosInstance.get(
+                `/matches/${matchId}`
             )
             if (data) {
                 return data

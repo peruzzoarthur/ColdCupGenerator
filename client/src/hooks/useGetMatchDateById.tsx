@@ -1,6 +1,6 @@
+import { axiosInstance } from '@/axiosInstance'
 import { MatchDate } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 
 export const useGetMatchDateById = (matchDateId: string | undefined) => {
     const {
@@ -13,8 +13,8 @@ export const useGetMatchDateById = (matchDateId: string | undefined) => {
             if (matchDateId === undefined) {
                 return
             }
-            const { data }: { data: MatchDate } = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/match-dates/${matchDateId}`
+            const { data }: { data: MatchDate } = await axiosInstance.get(
+                `/match-dates/${matchDateId}`
             )
             if (data) {
                 return data

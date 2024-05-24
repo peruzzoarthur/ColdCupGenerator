@@ -1,8 +1,21 @@
 //src/auth/auth.controller.ts
 
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBasicAuth,
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiTags,
+} from "@nestjs/swagger";
 import { AuthEntity } from "./entity/auth.entity";
 import { LocalAuthGuard } from "./local-auth.guard";
 import { RefreshJwtGuard } from "./refresh-jwt-auth.guard";
@@ -15,18 +28,19 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post("login")
+  @HttpCode(HttpStatus.OK)
+  @ApiBasicAuth()
   @ApiOkResponse({ type: AuthEntity })
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
+
   @UseGuards(RefreshJwtGuard)
-  // @UseGuards(LocalAuthGuard)
   @Post("refresh")
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: AuthEntity })
   async refreshToken(@Body() refreshDto: RefreshDto) {
-    return this.authService.refreshToken({
-      email: refreshDto.email,
-      id: refreshDto.id,
-    });
+    return this.authService.refreshToken(refreshDto.refresh);
   }
 }

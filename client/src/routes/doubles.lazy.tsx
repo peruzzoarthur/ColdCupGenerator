@@ -1,7 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios from 'axios'
-// import { useState } from 'react'
 import ball from '../styles/png/ball.png'
 import DoublesForm, { doublesFormObject } from '@/components/custom/doublesForm'
 import { useGetPlayers } from '@/hooks/useGetPlayers'
@@ -13,6 +12,7 @@ import { useGetCategories } from '@/hooks/useGetCategories'
 import { Button } from '@/components/ui/button'
 import { useGetDoubles } from '@/hooks/useGetDoubles'
 import { DoublesCard } from '@/components/custom/doublesCard'
+import { axiosInstance } from '@/axiosInstance'
 
 export const Route = createLazyFileRoute('/doubles')({
     component: Doubles,
@@ -58,12 +58,11 @@ function Doubles() {
                 categoryId: input.categoryId,
             }
 
-            const data: AxiosResponse<Double> = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/doubles`,
+            const data: AxiosResponse<Double> = await axiosInstance.post(
+                '/doubles',
                 requestBody
             )
 
-            console.log(data)
             toasted(data.data)
         } catch (error) {
             if (axios.isAxiosError(error)) {

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import ball from '../styles/png/ball.png'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import PlaceForm, { placeFormObject } from '@/components/custom/placeForm'
+import { axiosInstance } from '@/axiosInstance'
 
 export const Route = createLazyFileRoute('/places')({
     component: Places,
@@ -43,8 +44,8 @@ function Places() {
                 courts: courtsState.join(','),
             }
 
-            const data: AxiosResponse<Place> = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/places/`,
+            const data: AxiosResponse<Place> = await axiosInstance.post(
+                '/places/',
                 requestBody
             )
             toasted(data.data)

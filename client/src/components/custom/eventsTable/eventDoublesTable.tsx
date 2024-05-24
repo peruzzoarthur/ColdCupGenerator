@@ -29,6 +29,7 @@ import { MoreHorizontal } from 'lucide-react'
 import { EventDouble, PadelEvent } from '@/types/padel.types'
 import axios from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { axiosInstance } from '@/axiosInstance'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -77,10 +78,11 @@ export function EventDoublesTable<TData, TValue>({
                 doublesId: doublesId,
                 categoryId: categoryId,
             }
-            const { data: doubles }: { data: EventDouble } = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/events/delete-doubles`,
-                handleDeleteDoublesInEventDto
-            )
+            const { data: doubles }: { data: EventDouble } =
+                await axiosInstance.post(
+                    '/events/delete-doubles',
+                    handleDeleteDoublesInEventDto
+                )
             await refetchEventById()
             await refetchEventMatchesInfoById()
             return doubles

@@ -113,7 +113,6 @@ function Events() {
                 //     },
                 // }
             )
-            console.log(data)
 
             createEventToast(data.data)
 
@@ -150,15 +149,15 @@ function Events() {
                 eventId: selectedEvent?.id,
             }
 
-            const data: AxiosResponse<EventDouble> = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/events/register`,
-                requestBody,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                    },
-                }
+            const data: AxiosResponse<EventDouble> = await axiosInstance.post(
+                '/events/register',
+                requestBody
+                // {
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                //     },
+                // }
             )
             registerDoublesToast(data.data.double, data.data.event)
             await refetchEventMatchesInfoById()
