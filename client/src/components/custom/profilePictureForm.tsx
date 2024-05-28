@@ -94,16 +94,16 @@ export function ProfilePictureForm({ refetchUser }: ProfilePictureFormProps) {
         <div className="flex mt-6">
             <Card className="max-w-sm mx-auto min-w-[320px]">
                 <CardHeader>
-                    <CardTitle className="text-2xl">Edit Profile</CardTitle>
-                    <CardDescription>...</CardDescription>
+                    <CardTitle className="text-xl">
+                        Upload profile picture 📷
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div>
                         <form onSubmit={handleSubmit}>
-                            <div className="flex flex-col space-y-2">
-                                <Label>Upload profile image</Label>
+                            <div className="flex flex-col items-end space-y-2">
                                 <Input
-                                    className="bg-white bg-opacity-10"
+                                    className="bg-white cursor-pointer bg-opacity-40"
                                     type="file"
                                     accept="image/jpeg"
                                     onChange={handleFileChange}
