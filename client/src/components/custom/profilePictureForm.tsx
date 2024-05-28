@@ -15,6 +15,7 @@ import { axiosInstance } from '@/axiosInstance'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Button } from '../ui/button'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 // const profileSchema = z.object({
 //     file: z.string(),
@@ -23,7 +24,12 @@ import { Button } from '../ui/button'
 
 // type ProfileInput = z.infer<typeof profileSchema>
 
-export function ProfileForm() {
+type ProfilePictureFormProps = {
+    refetchUser: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<User | null, Error>>
+}
+export function ProfilePictureForm({ refetchUser }: ProfilePictureFormProps) {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
@@ -57,9 +63,10 @@ export function ProfileForm() {
             })
 
             toast({
-                title: 'Success',
+                title: 'Success uploading photo',
             })
 
+            await refetchUser()
             return data
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -84,7 +91,7 @@ export function ProfileForm() {
     }
 
     return (
-        <div className="flex translate-y-1/2 ">
+        <div className="flex mt-6">
             <Card className="max-w-sm mx-auto min-w-[320px]">
                 <CardHeader>
                     <CardTitle className="text-2xl">Edit Profile</CardTitle>

@@ -1,4 +1,4 @@
-import { ProfileForm } from '@/components/custom/profileForm'
+import { ProfilePictureForm } from '@/components/custom/profilePictureForm'
 import { useGetUserById } from '@/hooks/useGetUser'
 import { createLazyFileRoute } from '@tanstack/react-router'
 
@@ -7,7 +7,7 @@ export const Route = createLazyFileRoute('/profile')({
 })
 
 function Profile() {
-    const { user } = useGetUserById()
+    const { user, refetchUser } = useGetUserById()
 
     return (
         <>
@@ -17,11 +17,11 @@ function Profile() {
                 </div>
                 {user && (
                     <img
-                        className="w-1/3 rounded-full"
+                        className="w-56 h-56 rounded-full"
                         src={user.profileImage}
                     />
                 )}
-                <ProfileForm />
+                <ProfilePictureForm refetchUser={refetchUser} />
             </div>
         </>
     )
