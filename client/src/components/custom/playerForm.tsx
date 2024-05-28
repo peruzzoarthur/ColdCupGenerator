@@ -27,14 +27,11 @@ type PlayerFormProps = {
     onSubmit: SubmitHandler<playerFormObject>
     defaultValues: playerFormObject
     allCategories: Category[] | undefined
-    categoriesState: string[]
-    setCategoriesState: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export type playerFormObject = {
     firstName: string
     lastName: string
-    // email: string
     categoryId: string
     position: string
 }
@@ -42,7 +39,6 @@ export type playerFormObject = {
 const formSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
-    // email: z.string(),
     categoryId: z.string(),
     position: z.string(),
 })
@@ -88,21 +84,6 @@ const PlayerForm: React.FC<PlayerFormProps> = ({
                     </FormItem>
                 )}
             />
-
-            {/* <FormField */}
-            {/* name="email"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                            <Input placeholder="Email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            /> */}
-
             <FormField
                 control={form.control}
                 name="categoryId"

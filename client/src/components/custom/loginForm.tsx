@@ -29,7 +29,6 @@ import { useAuth } from '@/hooks/useAuth'
 const loginSchema = z.object({
     email: z.string().email(),
     password: z.string().min(7).max(66),
-    // role: z.enum(['USER', 'ADMIN']),
 })
 
 type LoginInput = z.infer<typeof loginSchema>

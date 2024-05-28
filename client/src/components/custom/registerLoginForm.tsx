@@ -82,7 +82,6 @@ export default function RegisterLoginForm() {
             toast({
                 title: 'Success',
             })
-            console.log(data)
             return data.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -91,10 +90,6 @@ export default function RegisterLoginForm() {
                     setError(true)
                     setErrorMessage('Email already in use.')
                 }
-                //  else {
-                //     setError(true)
-                //     setErrorMessage('Error creating user.')
-                // }
             } else {
                 setError(true)
                 setErrorMessage('Error creating user.')

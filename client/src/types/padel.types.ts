@@ -4,6 +4,7 @@ export type User = {
     email: string
     id: string
     dob: string
+    playerId: string
     profileImage: string
 }
 

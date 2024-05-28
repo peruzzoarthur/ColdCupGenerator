@@ -18,7 +18,6 @@ export const useGetUserById = () => {
 
             return data
         },
-        // enabled: !!email,
     })
 
     return { user, isFetchingUser, refetchUser }

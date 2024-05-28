@@ -1,6 +1,5 @@
 import { axiosInstance } from '@/axiosInstance'
 import { Button } from '@/components/ui/button'
-import { useGetRole } from '@/hooks/useGetRole'
 import { CatType, Category } from '@/types/padel.types'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { AxiosResponse } from 'axios'
@@ -25,7 +24,6 @@ const onPopulate = async (level: number) => {
         requestBody
     )
 
-    console.log(data)
     return data
 }
 
@@ -37,9 +35,6 @@ const handlePopulate = async () => {
 }
 
 function Categories() {
-    const { refetchRole } = useGetRole()
-    refetchRole()
-
     return (
         <>
             <div className="flex flex-col items-center justify-center">

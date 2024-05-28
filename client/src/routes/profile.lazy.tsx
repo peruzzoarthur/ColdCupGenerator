@@ -1,4 +1,8 @@
+import { CoolButton } from '@/components/custom/coolButton'
+import { ProfileDashboard } from '@/components/custom/profileDashboard'
 import { ProfilePictureForm } from '@/components/custom/profilePictureForm'
+import { SignInAsPlayerForm } from '@/components/custom/signInAsPlayerForm'
+import { Button } from '@/components/ui/button'
 import { useGetUserById } from '@/hooks/useGetUser'
 import { Pencil1Icon } from '@radix-ui/react-icons'
 import { createLazyFileRoute } from '@tanstack/react-router'
@@ -10,7 +14,8 @@ export const Route = createLazyFileRoute('/profile')({
 
 function Profile() {
     const { user, refetchUser } = useGetUserById()
-    const [editOn, setEditOn] = useState<boolean>(false)
+    const [editPicture, setEditPicture] = useState<boolean>(false)
+    const [editPlayerForm, setEditPlayerForm] = useState<boolean>(false)
 
     return (
         <>
@@ -22,19 +27,53 @@ function Profile() {
                     <>
                         <div className="flex flex-row space-x-8">
                             <div className="flex flex-col items-center">
-                                <img
-                                    className="w-56 h-56 rounded-full"
-                                    src={user.profileImage}
-                                />
-                                <Pencil1Icon
-                                    className="mt-2 cursor-pointer"
-                                    onClick={() => setEditOn(!editOn)}
-                                />
+                                {user.profileImage ? (
+                                    <img
+                                        className="w-56 h-56 rounded-full"
+                                        src={user.profileImage}
+                                    />
+                                ) : (
+                                    <img /> // add avatar here
+                                )}
+                                <Button
+                                    variant="ghost"
+                                    className="w-12 h-12 mt-2 rounded-full cursor-pointer"
+                                    onClick={() => setEditPicture(!editPicture)}
+                                >
+                                    <Pencil1Icon />
+                                </Button>
                             </div>
-                            {editOn ? (
-                                <ProfilePictureForm refetchUser={refetchUser} />
+                            {editPicture ? (
+                                <ProfilePictureForm
+                                    refetchUser={refetchUser}
+                                    setEditPicture={setEditPicture}
+                                />
                             ) : null}
                         </div>
+                        {!editPlayerForm ? (
+                            !user.playerId && (
+                                <CoolButton
+                                    containerClassName="w-1/3"
+                                    borderClassName="bg-[radial-gradient(var(--green-200)_40%,transparent_10%)]"
+                                    onClick={() => setEditPlayerForm(true)}
+                                >
+                                    Sign in as Player
+                                </CoolButton>
+                            )
+                        ) : (
+                            <SignInAsPlayerForm
+                                user={user}
+                                defaultValues={{
+                                    categoryId: '',
+                                    position: '',
+                                    firstName: `${user.firstName}`,
+                                    lastName: `${user.lastName}`,
+                                }}
+                                setEditPlayerForm={setEditPlayerForm}
+                                refetchUser={refetchUser}
+                            />
+                        )}
+                        {user.playerId && <ProfileDashboard />}
                     </>
                 )}
             </div>

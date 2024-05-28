@@ -25,7 +25,6 @@ export type CreatePlayer = Omit<Player, 'id'>
 function Players() {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
-    const [categoriesState, setCategoriesState] = useState<string[]>([])
     const { allCategories } = useGetCategories()
     const [showAllPlayers, setShowAllPlayers] = useState<boolean>(false)
     const { allPlayers } = useGetPlayers()
@@ -97,8 +96,6 @@ function Players() {
                         <PlayerForm
                             allCategories={allCategories}
                             onSubmit={onSubmit}
-                            categoriesState={categoriesState}
-                            setCategoriesState={setCategoriesState}
                             defaultValues={{
                                 firstName: '',
                                 lastName: '',
