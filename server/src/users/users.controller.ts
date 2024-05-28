@@ -8,6 +8,11 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  HttpStatus,
+  Request,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -22,6 +27,8 @@ import {
 
 import { UserEntity } from "./entities/user.entity";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { JwtPayload } from "src/auth/types/auth.types";
 
 @Controller("users")
 @ApiTags("users")
@@ -44,23 +51,61 @@ export class UsersController {
     return users.map((user) => new UserEntity(user));
   }
 
+  @Get("profile")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async getProfile(@Request() req: JwtPayload) {
+    return new UserEntity(await this.usersService.findOne(req.user.username));
+  }
   @Get(":id")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
-  async findOne(@Param("id", ParseIntPipe) id: string) {
-    return new UserEntity(await this.usersService.findOne(id));
+  async findOne(@Param("id") email: string) {
+    return new UserEntity(await this.usersService.findOne(email));
   }
 
-  @Patch(":id")
+  @Patch("update-password/:id")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserEntity })
-  async update(
-    @Param("id", ParseIntPipe) id: string,
+  async updatePassword(
+    @Param("id") id: string,
     @Body() updateUserDto: UpdateUserDto
   ) {
-    return new UserEntity(await this.usersService.update(id, updateUserDto));
+    return new UserEntity(
+      await this.usersService.updatePassword(id, updateUserDto)
+    );
+  }
+  @Patch("upload")
+  @UseInterceptors(FileInterceptor("file"))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log("hellofile");
+    console.log(file.buffer);
+  }
+
+  @Patch("profile-image")
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor("file"))
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ type: UserEntity })
+  async updateProfileImage(
+    @Request() req: JwtPayload,
+    // @Param("id") id: string,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: "jpeg",
+        })
+        .addMaxSizeValidator({ maxSize: 1000000 })
+        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY })
+    )
+    profileImage: Express.Multer.File
+  ) {
+    return new UserEntity(
+      await this.usersService.updateProfileImage(req.user.id, profileImage)
+    );
   }
 
   @Delete(":id")

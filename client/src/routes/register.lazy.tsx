@@ -6,11 +6,5 @@ export const Route = createLazyFileRoute('/register')({
 })
 
 function Register() {
-    return (
-        <>
-            <div className="flex flex-col items-center justify-center mt-6">
-                <RegisterLoginForm />
-            </div>
-        </>
-    )
+    return <RegisterLoginForm />
 }

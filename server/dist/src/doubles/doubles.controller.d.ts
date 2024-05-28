@@ -6,6 +6,11 @@ export declare class DoublesController {
     private readonly doublesService;
     constructor(doublesService: DoublesService);
     findAll(): Promise<{
+        category: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        };
         id: string;
         players: {
             id: string;
@@ -13,11 +18,6 @@ export declare class DoublesController {
             lastName: string;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
-        category: {
-            id: string;
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-        };
     }[]>;
     getDoublesById(getDoublesByIdDto: GetDoublesByIdDto): Promise<{
         id: string;

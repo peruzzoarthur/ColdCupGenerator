@@ -3,12 +3,12 @@ import { Place } from '@/types/padel.types'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useState } from 'react'
-import ball from '../styles/png/ball.png'
+import ball from '../../styles/png/ball.png'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import PlaceForm, { placeFormObject } from '@/components/custom/placeForm'
 import { axiosInstance } from '@/axiosInstance'
 
-export const Route = createLazyFileRoute('/places')({
+export const Route = createLazyFileRoute('/_admin/places')({
     component: Places,
 })
 

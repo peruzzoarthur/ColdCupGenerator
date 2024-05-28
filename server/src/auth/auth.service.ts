@@ -1,4 +1,6 @@
 import {
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -7,6 +9,8 @@ import { JwtService } from "@nestjs/jwt";
 import * as argon from "argon2";
 import { PrismaService } from "src/prisma.service";
 import { UserEntity } from "src/users/entities/user.entity";
+import { JwtPayload } from "./types/auth.types";
+import { Role } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -62,11 +66,17 @@ export class AuthService {
     const tokenPayload = await this.jwtService.verifyAsync(refresh, {
       secret: process.env.JWT_SECRET_KEY,
     });
+    if (!tokenPayload) {
+      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+    }
     const user = await this.prisma.user.findUniqueOrThrow({
       where: {
         email: tokenPayload.username,
       },
     });
+    if (!user) {
+      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+    }
     const dbHashedRt = user.hashedRt;
     const isRtTokenValid = await argon.verify(dbHashedRt, refresh);
 
@@ -83,5 +93,42 @@ export class AuthService {
     } else {
       throw new UnauthorizedException();
     }
+  }
+
+  async logOut(email: string): Promise<boolean> {
+    // console.log(email);
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: {
+        email: email,
+      },
+    });
+    if (!user) {
+      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+    }
+    if (!user.hashedRt) {
+      return false;
+    } else {
+      await this.prisma.user.update({
+        where: {
+          email: user.email,
+        },
+        data: {
+          hashedRt: null,
+        },
+      });
+      return true;
+    }
+  }
+
+  async getRole(email: string): Promise<string> {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: {
+        email: email,
+      },
+    });
+    if (!user) {
+      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+    }
+    return user.role.toString();
   }
 }

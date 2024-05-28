@@ -3,7 +3,7 @@ import { useGetCategories } from '@/hooks/useGetCategories'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useState } from 'react'
-import ball from '../styles/png/ball.png'
+import ball from '../../styles/png/ball.png'
 import { Player, Position } from '@/types/padel.types'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import { useToast } from '@/components/ui/use-toast'
@@ -12,7 +12,7 @@ import { useGetPlayers } from '@/hooks/useGetPlayers'
 import { PlayerCard } from '@/components/custom/playerCard'
 import { axiosInstance } from '@/axiosInstance'
 
-export const Route = createLazyFileRoute('/players')({
+export const Route = createLazyFileRoute('/_admin/players')({
     component: Players,
 })
 
@@ -102,7 +102,6 @@ function Players() {
                             defaultValues={{
                                 firstName: '',
                                 lastName: '',
-                                // email: '',
                                 categoryId: '',
                                 position: '',
                             }}

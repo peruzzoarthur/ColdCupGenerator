@@ -140,6 +140,7 @@ Table User {
   playerId String [unique]
   role Role [not null, default: 'USER']
   hashedRt String
+  profileImage String
 }
 
 Table Player {

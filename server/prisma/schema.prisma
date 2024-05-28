@@ -135,18 +135,19 @@ model Game {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  firstName String?
-  lastName  String?
-  email     String    @unique
-  password  String
-  dob       DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  player    Player?   @relation(fields: [playerId], references: [id])
-  playerId  String?   @unique
-  role      Role      @default(USER)
-  hashedRt  String?
+  id           String    @id @default(uuid())
+  firstName    String?
+  lastName     String?
+  email        String    @unique
+  password     String
+  dob          DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  player       Player?   @relation(fields: [playerId], references: [id])
+  playerId     String?   @unique
+  role         Role      @default(USER)
+  hashedRt     String?
+  profileImage String?
 }
 
 model Player {

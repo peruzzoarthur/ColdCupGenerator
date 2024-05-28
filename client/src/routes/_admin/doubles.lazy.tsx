@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios from 'axios'
-import ball from '../styles/png/ball.png'
+import ball from '../../styles/png/ball.png'
 import DoublesForm, { doublesFormObject } from '@/components/custom/doublesForm'
 import { useGetPlayers } from '@/hooks/useGetPlayers'
 import { useState } from 'react'
@@ -14,7 +14,7 @@ import { useGetDoubles } from '@/hooks/useGetDoubles'
 import { DoublesCard } from '@/components/custom/doublesCard'
 import { axiosInstance } from '@/axiosInstance'
 
-export const Route = createLazyFileRoute('/doubles')({
+export const Route = createLazyFileRoute('/_admin/doubles')({
     component: Doubles,
 })
 

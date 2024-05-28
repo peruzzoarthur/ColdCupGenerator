@@ -13,17 +13,20 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AdminImport } from './routes/_admin'
 
 // Create Virtual Routes
 
 const RegisterLazyImport = createFileRoute('/register')()
-const PlayersLazyImport = createFileRoute('/players')()
-const PlacesLazyImport = createFileRoute('/places')()
+const ProfileLazyImport = createFileRoute('/profile')()
 const LoginLazyImport = createFileRoute('/login')()
-const EventsLazyImport = createFileRoute('/events')()
-const DoublesLazyImport = createFileRoute('/doubles')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
+const AdminPlayersLazyImport = createFileRoute('/_admin/players')()
+const AdminPlacesLazyImport = createFileRoute('/_admin/places')()
+const AdminEventsLazyImport = createFileRoute('/_admin/events')()
+const AdminDoublesLazyImport = createFileRoute('/_admin/doubles')()
+const AdminCategoriesLazyImport = createFileRoute('/_admin/categories')()
 
 // Create/Update Routes
 
@@ -32,40 +35,61 @@ const RegisterLazyRoute = RegisterLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/register.lazy').then((d) => d.Route))
 
-const PlayersLazyRoute = PlayersLazyImport.update({
-  path: '/players',
+const ProfileLazyRoute = ProfileLazyImport.update({
+  path: '/profile',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/players.lazy').then((d) => d.Route))
-
-const PlacesLazyRoute = PlacesLazyImport.update({
-  path: '/places',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/places.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/profile.lazy').then((d) => d.Route))
 
 const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 
-const EventsLazyRoute = EventsLazyImport.update({
-  path: '/events',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/events.lazy').then((d) => d.Route))
-
-const DoublesLazyRoute = DoublesLazyImport.update({
-  path: '/doubles',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/doubles.lazy').then((d) => d.Route))
-
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
+const AdminRoute = AdminImport.update({
+  id: '/_admin',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const AdminPlayersLazyRoute = AdminPlayersLazyImport.update({
+  path: '/players',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/_admin/players.lazy').then((d) => d.Route),
+)
+
+const AdminPlacesLazyRoute = AdminPlacesLazyImport.update({
+  path: '/places',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/_admin/places.lazy').then((d) => d.Route))
+
+const AdminEventsLazyRoute = AdminEventsLazyImport.update({
+  path: '/events',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/_admin/events.lazy').then((d) => d.Route))
+
+const AdminDoublesLazyRoute = AdminDoublesLazyImport.update({
+  path: '/doubles',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/_admin/doubles.lazy').then((d) => d.Route),
+)
+
+const AdminCategoriesLazyRoute = AdminCategoriesLazyImport.update({
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/_admin/categories.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -75,33 +99,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_admin': {
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       preLoaderRoute: typeof AboutLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/doubles': {
-      preLoaderRoute: typeof DoublesLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/events': {
-      preLoaderRoute: typeof EventsLazyImport
       parentRoute: typeof rootRoute
     }
     '/login': {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
-    '/places': {
-      preLoaderRoute: typeof PlacesLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/players': {
-      preLoaderRoute: typeof PlayersLazyImport
+    '/profile': {
+      preLoaderRoute: typeof ProfileLazyImport
       parentRoute: typeof rootRoute
     }
     '/register': {
       preLoaderRoute: typeof RegisterLazyImport
       parentRoute: typeof rootRoute
+    }
+    '/_admin/categories': {
+      preLoaderRoute: typeof AdminCategoriesLazyImport
+      parentRoute: typeof AdminImport
+    }
+    '/_admin/doubles': {
+      preLoaderRoute: typeof AdminDoublesLazyImport
+      parentRoute: typeof AdminImport
+    }
+    '/_admin/events': {
+      preLoaderRoute: typeof AdminEventsLazyImport
+      parentRoute: typeof AdminImport
+    }
+    '/_admin/places': {
+      preLoaderRoute: typeof AdminPlacesLazyImport
+      parentRoute: typeof AdminImport
+    }
+    '/_admin/players': {
+      preLoaderRoute: typeof AdminPlayersLazyImport
+      parentRoute: typeof AdminImport
     }
   }
 }
@@ -110,12 +146,16 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  AdminRoute.addChildren([
+    AdminCategoriesLazyRoute,
+    AdminDoublesLazyRoute,
+    AdminEventsLazyRoute,
+    AdminPlacesLazyRoute,
+    AdminPlayersLazyRoute,
+  ]),
   AboutLazyRoute,
-  DoublesLazyRoute,
-  EventsLazyRoute,
   LoginLazyRoute,
-  PlacesLazyRoute,
-  PlayersLazyRoute,
+  ProfileLazyRoute,
   RegisterLazyRoute,
 ])
 

@@ -11,7 +11,25 @@ import {
 import { useTheme } from '@/components/themeProvider'
 import { Switch } from '../ui/switch'
 import { Label } from '../ui/label'
+import { AxiosResponse } from 'axios'
+import { axiosInstance } from '@/axiosInstance'
+import { useAuth } from '@/hooks/useAuth'
+import { useNavigate } from '@tanstack/react-router'
+
 export const UserDropDown = () => {
+    const navigate = useNavigate()
+
+    const authentication = useAuth()
+
+    const logoutHandler = async () => {
+        const data: AxiosResponse<boolean> =
+            await axiosInstance.get('auth/logout/')
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        authentication.signOut()
+        navigate({ to: '/login' })
+        return data
+    }
     const { theme, setTheme } = useTheme()
 
     return (
@@ -31,7 +49,9 @@ export const UserDropDown = () => {
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={logoutHandler}>
+                    Logout
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <DropdownMenuLabel>Set theme</DropdownMenuLabel>

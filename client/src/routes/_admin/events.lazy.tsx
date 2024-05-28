@@ -7,7 +7,7 @@ import { useGetPlaces } from '@/hooks/useGetPlaces'
 import { useGetEvents } from '@/hooks/useGetEvents'
 import { EventCard } from '@/components/custom/eventCard'
 import { Button } from '@/components/ui/button'
-import ball from '../styles/png/ball.png'
+import ball from '../../styles/png/ball.png'
 import { Double, EventDouble, PadelEvent } from '@/types/padel.types'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import RegisterDoublesForm, {
@@ -35,7 +35,7 @@ export type ErrorResponse = {
     message: string
 }
 
-export const Route = createLazyFileRoute('/events')({
+export const Route = createLazyFileRoute('/_admin/events')({
     component: Events,
 })
 

@@ -101,7 +101,7 @@ export const MatchCard = ({
 
     return (
         <>
-            <Card className={cn('w-[380px] min-h-[354px] ', className)}>
+            <Card className={cn('w-[380px] min-h-[354px]', className)}>
                 <CardHeader>
                     <CardTitle>{`Match #${match.number}`}</CardTitle>
                     <CardDescription>

@@ -7,7 +7,7 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
     Form,
     FormControl,
@@ -24,6 +24,7 @@ import { useToast } from '../ui/use-toast'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { ErrorResponse, User } from '@/types/padel.types'
 import { ErrorAlert } from './errorAlert'
+import { useAuth } from '@/hooks/useAuth'
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -37,6 +38,9 @@ export function LoginForm() {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
+    const authentication = useAuth()
+    // const { refetchRole } = useGetRole()
+    const navigate = useNavigate()
 
     const form = useForm<LoginInput>({
         resolver: zodResolver(loginSchema),
@@ -61,10 +65,11 @@ export function LoginForm() {
                 `${import.meta.env.VITE_SERVER_URL}/auth/login/`,
                 requestBody
             )
-            console.log(data)
             localStorage.setItem('accessToken', data.data.accessToken)
             localStorage.setItem('refreshToken', data.data.refreshToken)
             localStorage.setItem('user', JSON.stringify(data.data.user))
+            authentication.signIn()
+            navigate({ to: '/' })
             toast({
                 title: 'Success',
             })
@@ -92,8 +97,8 @@ export function LoginForm() {
         }
     }
     return (
-        <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-            <Card className="max-w-sm mx-auto">
+        <div className="flex translate-y-1/2 ">
+            <Card className="max-w-sm mx-auto min-w-[320px]">
                 <CardHeader>
                     <CardTitle className="text-2xl">Login</CardTitle>
                     <CardDescription>
