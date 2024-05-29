@@ -27,7 +27,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { MoreHorizontal } from 'lucide-react'
 import { EventDouble, PadelEvent } from '@/types/padel.types'
-import axios from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { axiosInstance } from '@/axiosInstance'
 
