@@ -202,10 +202,10 @@ export function RootSheet() {
                             <CalendarDays className="w-5 h-5" />
                             Events
                         </Link>
-                        <hr />
-                        <p>Admin</p>
                         {role === 'ADMIN' && (
                             <>
+                                <hr />
+                                <p>Admin</p>
                                 <Link
                                     to="/categories"
                                     className="flex items-center gap-4 px-2.5 [&.active]:bg-accent rounded-sm p-2  text-foreground"

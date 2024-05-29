@@ -5,10 +5,16 @@ import { SignInAsPlayerForm } from '@/components/custom/signInAsPlayerForm'
 import { Button } from '@/components/ui/button'
 import { useGetUserById } from '@/hooks/useGetUser'
 import { Pencil1Icon } from '@radix-ui/react-icons'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState } from 'react'
 
-export const Route = createLazyFileRoute('/profile')({
+export const Route = createFileRoute('/profile')({
+    beforeLoad: async ({ context }) => {
+        const { isLogged } = context.authentication
+        if (!isLogged()) {
+            throw redirect({ to: '/login' })
+        }
+    },
     component: Profile,
 })
 
