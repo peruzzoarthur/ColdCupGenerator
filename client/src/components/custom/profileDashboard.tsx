@@ -3,21 +3,11 @@ import {
     ChevronRight,
     Copy,
     CreditCard,
-    File,
-    Home,
-    LineChart,
     ListFilter,
     MoreVertical,
-    Package,
-    Package2,
-    PanelLeft,
-    Search,
-    ShoppingCart,
     Truck,
-    Users2,
 } from 'lucide-react'
 
-import { Badge } from '@/components/ui/badge'
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -44,7 +34,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
 import {
     Pagination,
     PaginationContent,
@@ -52,136 +41,70 @@ import {
 } from '@/components/ui/pagination'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { Link } from '@tanstack/react-router'
+import { User } from '@/types/padel.types'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { ProfilePictureDrawerDialog } from './profilePictureDrawer'
+import { useState } from 'react'
+import { CheckedState } from '@radix-ui/react-checkbox'
 
-export function ProfileDashboard() {
+type ProfileDashboardProps = {
+    user: User
+    refetchUser: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<User | null, Error>>
+}
+
+export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
+    const [matchesPeriod, setMatchesPeriod] = useState<string>('week')
+    const [showPendingMatches, setShowPendingMatches] =
+        useState<CheckedState>(true)
+    const [showFinishedMatches, setShowFinishedMatches] =
+        useState<CheckedState>(true)
+
     return (
-        <div className="flex flex-col w-full min-h-screen bg-muted/40">
-            <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-                <header className="sticky top-0 z-30 flex items-center gap-4 px-4 border-b h-14 bg-background sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button
-                                size="icon"
-                                variant="outline"
-                                className="sm:hidden"
-                            >
-                                <PanelLeft className="w-5 h-5" />
-                                <span className="sr-only">Toggle Menu</span>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" className="sm:max-w-xs">
-                            <nav className="grid gap-6 text-lg font-medium">
-                                <Link
-                                    to="/"
-                                    className="flex items-center justify-center w-10 h-10 gap-2 text-lg font-semibold rounded-full group shrink-0 bg-primary text-primary-foreground md:text-base"
-                                >
-                                    <Package2 className="w-5 h-5 transition-all group-hover:scale-110" />
-                                    <span className="sr-only">Acme Inc</span>
-                                </Link>
-                                <Link
-                                    to="/"
-                                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                                >
-                                    <Home className="w-5 h-5" />
-                                    Dashboard
-                                </Link>
-                                <Link
-                                    to="/"
-                                    className="flex items-center gap-4 px-2.5 text-foreground"
-                                >
-                                    <ShoppingCart className="w-5 h-5" />
-                                    Orders
-                                </Link>
-                                <Link
-                                    to="/"
-                                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                                >
-                                    <Package className="w-5 h-5" />
-                                    Products
-                                </Link>
-                                <Link
-                                    to="/"
-                                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                                >
-                                    <Users2 className="w-5 h-5" />
-                                    Customers
-                                </Link>
-                                <Link
-                                    to="/"
-                                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                                >
-                                    <LineChart className="w-5 h-5" />
-                                    Settings
-                                </Link>
-                            </nav>
-                        </SheetContent>
-                    </Sheet>
-                    <Breadcrumb className="hidden md:flex">
+        <div className="flex flex-col w-full min-h-screen ">
+            <div className="flex flex-col gap-2 py-4 pl-14">
+                <header className="static top-0 flex flex-col items-start h-auto gap-4 px-4 py-4 bg-transparent border-0">
+                    <Breadcrumb className="flex">
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
-                                    <Link to="/">Dashboard</Link>
+                                    <Link to="/">Home</Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link to="/">Orders</Link>
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Recent Orders</BreadcrumbPage>
+                                <BreadcrumbPage>Profile</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <div className="relative flex-1 ml-auto md:grow-0">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            type="search"
-                            placeholder="Search..."
-                            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-                        />
-                    </div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="overflow-hidden rounded-full"
-                            >
-                                <img
-                                    src="/placeholder-user.jpg"
-                                    width={36}
-                                    height={36}
-                                    alt="Avatar"
-                                    className="overflow-hidden rounded-full"
+                    <Card className="flex w-full">
+                        <div className="flex space-x-8">
+                            <div className="flex flex-col items-center mt-5 ml-5">
+                                <div className="p-2 mt-2 text-4xl">
+                                    Hello {user.firstName}!
+                                </div>
+                                {user.profileImage ? (
+                                    <img
+                                        className="rounded-full min-w-52 h-52"
+                                        src={user.profileImage}
+                                    />
+                                ) : (
+                                    <img /> // add avatar here
+                                )}
+                                <ProfilePictureDrawerDialog
+                                    refetchUser={refetchUser}
                                 />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuItem>Support</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Logout</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            </div>
+                        </div>
+                    </Card>
                 </header>
-                <main className="grid items-start flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+
+                <main className="grid items-start flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
                     <div className="grid items-start gap-4 auto-rows-max md:gap-8 lg:col-span-2">
                         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
                             <Card
@@ -189,48 +112,49 @@ export function ProfileDashboard() {
                                 x-chunk="dashboard-05-chunk-0"
                             >
                                 <CardHeader className="pb-3">
-                                    <CardTitle>Your Orders</CardTitle>
+                                    <CardTitle>Your Doubles</CardTitle>
                                     <CardDescription className="max-w-lg leading-relaxed text-balance">
-                                        Introducing Our Dynamic Orders Dashboard
-                                        for Seamless Management and Insightful
-                                        Analysis.
+                                        Manage your doubles and invite friends
+                                        to play together here.
                                     </CardDescription>
                                 </CardHeader>
                                 <CardFooter>
-                                    <Button>Create New Order</Button>
+                                    <Button>Invite player</Button>
                                 </CardFooter>
                             </Card>
-                            <Card x-chunk="dashboard-05-chunk-1">
+                            <Card>
                                 <CardHeader className="pb-2">
-                                    <CardDescription>This Week</CardDescription>
+                                    <CardDescription>
+                                        Matches won
+                                    </CardDescription>
                                     <CardTitle className="text-4xl">
-                                        $1,329
+                                        1
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="text-xs text-muted-foreground">
-                                        +25% from last week
+                                        played 2 matches.
                                     </div>
                                 </CardContent>
                                 <CardFooter>
                                     <Progress
-                                        value={25}
-                                        aria-label="25% increase"
+                                        value={50}
+                                        aria-label="win/matches"
                                     />
                                 </CardFooter>
                             </Card>
-                            <Card x-chunk="dashboard-05-chunk-2">
+                            <Card>
                                 <CardHeader className="pb-2">
                                     <CardDescription>
-                                        This Month
+                                        Events attended
                                     </CardDescription>
                                     <CardTitle className="text-4xl">
-                                        $5,329
+                                        1
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="text-xs text-muted-foreground">
-                                        +10% from last month
+                                        +10% more than average players
                                     </div>
                                 </CardContent>
                                 <CardFooter>
@@ -241,7 +165,10 @@ export function ProfileDashboard() {
                                 </CardFooter>
                             </Card>
                         </div>
-                        <Tabs defaultValue="week">
+                        <Tabs
+                            defaultValue={matchesPeriod}
+                            onValueChange={(value) => setMatchesPeriod(value)}
+                        >
                             <div className="flex items-center">
                                 <TabsList>
                                     <TabsTrigger value="week">Week</TabsTrigger>
@@ -249,6 +176,7 @@ export function ProfileDashboard() {
                                         Month
                                     </TabsTrigger>
                                     <TabsTrigger value="year">Year</TabsTrigger>
+                                    <TabsTrigger value="all">All</TabsTrigger>
                                 </TabsList>
                                 <div className="flex items-center gap-2 ml-auto">
                                     <DropdownMenu>
@@ -269,284 +197,46 @@ export function ProfileDashboard() {
                                                 Filter by
                                             </DropdownMenuLabel>
                                             <DropdownMenuSeparator />
-                                            <DropdownMenuCheckboxItem checked>
-                                                Fulfilled
+
+                                            <DropdownMenuCheckboxItem
+                                                checked={showFinishedMatches}
+                                                onCheckedChange={
+                                                    setShowFinishedMatches
+                                                }
+                                            >
+                                                Finished
                                             </DropdownMenuCheckboxItem>
-                                            <DropdownMenuCheckboxItem>
-                                                Declined
-                                            </DropdownMenuCheckboxItem>
-                                            <DropdownMenuCheckboxItem>
-                                                Refunded
+                                            <DropdownMenuCheckboxItem
+                                                checked={showPendingMatches}
+                                                onCheckedChange={
+                                                    setShowPendingMatches
+                                                }
+                                            >
+                                                Pending
                                             </DropdownMenuCheckboxItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="gap-1 text-sm h-7"
-                                    >
-                                        <File className="h-3.5 w-3.5" />
-                                        <span className="sr-only sm:not-sr-only">
-                                            Export
-                                        </span>
-                                    </Button>
                                 </div>
                             </div>
-                            <TabsContent value="week">
-                                <Card x-chunk="dashboard-05-chunk-3">
-                                    <CardHeader className="px-7">
-                                        <CardTitle>Orders</CardTitle>
-                                        <CardDescription>
-                                            Recent orders from your store.
-                                        </CardDescription>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <Table>
-                                            <TableHeader>
-                                                <TableRow>
-                                                    <TableHead>
-                                                        Customer
-                                                    </TableHead>
-                                                    <TableHead className="hidden sm:table-cell">
-                                                        Type
-                                                    </TableHead>
-                                                    <TableHead className="hidden sm:table-cell">
-                                                        Status
-                                                    </TableHead>
-                                                    <TableHead className="hidden md:table-cell">
-                                                        Date
-                                                    </TableHead>
-                                                    <TableHead className="text-right">
-                                                        Amount
-                                                    </TableHead>
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody>
-                                                <TableRow className="bg-accent">
-                                                    <TableCell>
-                                                        <div className="font-medium">
-                                                            Liam Johnson
-                                                        </div>
-                                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                                            liam@example.com
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        Sale
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <Badge
-                                                            className="text-xs"
-                                                            variant="secondary"
-                                                        >
-                                                            Fulfilled
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        2023-06-23
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        $250.00
-                                                    </TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        <div className="font-medium">
-                                                            Olivia Smith
-                                                        </div>
-                                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                                            olivia@example.com
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        Refund
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <Badge
-                                                            className="text-xs"
-                                                            variant="outline"
-                                                        >
-                                                            Declined
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        2023-06-24
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        $150.00
-                                                    </TableCell>
-                                                </TableRow>
-                                                {/* <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow> */}
-                                                <TableRow>
-                                                    <TableCell>
-                                                        <div className="font-medium">
-                                                            Noah Williams
-                                                        </div>
-                                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                                            noah@example.com
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        Subscription
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <Badge
-                                                            className="text-xs"
-                                                            variant="secondary"
-                                                        >
-                                                            Fulfilled
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        2023-06-25
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        $350.00
-                                                    </TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        <div className="font-medium">
-                                                            Emma Brown
-                                                        </div>
-                                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                                            emma@example.com
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        Sale
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <Badge
-                                                            className="text-xs"
-                                                            variant="secondary"
-                                                        >
-                                                            Fulfilled
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        2023-06-26
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        $450.00
-                                                    </TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        <div className="font-medium">
-                                                            Liam Johnson
-                                                        </div>
-                                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                                            liam@example.com
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        Sale
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <Badge
-                                                            className="text-xs"
-                                                            variant="secondary"
-                                                        >
-                                                            Fulfilled
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        2023-06-23
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        $250.00
-                                                    </TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        <div className="font-medium">
-                                                            Olivia Smith
-                                                        </div>
-                                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                                            olivia@example.com
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        Refund
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <Badge
-                                                            className="text-xs"
-                                                            variant="outline"
-                                                        >
-                                                            Declined
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        2023-06-24
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        $150.00
-                                                    </TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>
-                                                        <div className="font-medium">
-                                                            Emma Brown
-                                                        </div>
-                                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                                            emma@example.com
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        Sale
-                                                    </TableCell>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <Badge
-                                                            className="text-xs"
-                                                            variant="secondary"
-                                                        >
-                                                            Fulfilled
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        2023-06-26
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        $450.00
-                                                    </TableCell>
-                                                </TableRow>
-                                            </TableBody>
-                                        </Table>
-                                    </CardContent>
-                                </Card>
-                            </TabsContent>
                         </Tabs>
+
+                        <Card>
+                            <CardHeader className="p-7">
+                                <CardTitle>Matches</CardTitle>
+                                <CardDescription>
+                                    Your matches list.
+                                </CardDescription>
+                                <p>{matchesPeriod}</p>
+                            </CardHeader>
+                            <CardContent>Add the table here.</CardContent>
+                        </Card>
                     </div>
                     <div>
-                        <Card
-                            className="overflow-hidden"
-                            x-chunk="dashboard-05-chunk-4"
-                        >
+                        <Card className="overflow-hidden">
                             <CardHeader className="flex flex-row items-start bg-muted/50">
                                 <div className="grid gap-0.5">
                                     <CardTitle className="flex items-center gap-2 text-lg group">
-                                        Order Oe31b70H
+                                        Invites
                                         <Button
                                             size="icon"
                                             variant="outline"
@@ -559,172 +249,41 @@ export function ProfileDashboard() {
                                         </Button>
                                     </CardTitle>
                                     <CardDescription>
-                                        Date: November 23, 2023
+                                        your invitations
                                     </CardDescription>
-                                </div>
-                                <div className="flex items-center gap-1 ml-auto">
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="h-8 gap-1"
-                                    >
-                                        <Truck className="h-3.5 w-3.5" />
-                                        <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                                            Track Order
-                                        </span>
-                                    </Button>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                size="icon"
-                                                variant="outline"
-                                                className="w-8 h-8"
-                                            >
-                                                <MoreVertical className="h-3.5 w-3.5" />
-                                                <span className="sr-only">
-                                                    More
-                                                </span>
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem>
-                                                Edit
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem>
-                                                Export
-                                            </DropdownMenuItem>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem>
-                                                Trash
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
                                 </div>
                             </CardHeader>
                             <CardContent className="p-6 text-sm">
                                 <div className="grid gap-3">
                                     <div className="font-semibold">
-                                        Order Details
+                                        Invite type: event, doubles, friends?
                                     </div>
-                                    <ul className="grid gap-3">
-                                        <li className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">
-                                                Glimmer Lamps x <span>2</span>
-                                            </span>
-                                            <span>$250.00</span>
-                                        </li>
-                                        <li className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">
-                                                Aqua Filters x <span>1</span>
-                                            </span>
-                                            <span>$49.00</span>
-                                        </li>
-                                    </ul>
+                                    <div> invite</div>
                                     <Separator className="my-2" />
-                                    <ul className="grid gap-3">
-                                        <li className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">
-                                                Subtotal
-                                            </span>
-                                            <span>$299.00</span>
-                                        </li>
-                                        <li className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">
-                                                Shipping
-                                            </span>
-                                            <span>$5.00</span>
-                                        </li>
-                                        <li className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">
-                                                Tax
-                                            </span>
-                                            <span>$25.00</span>
-                                        </li>
-                                        <li className="flex items-center justify-between font-semibold">
-                                            <span className="text-muted-foreground">
-                                                Total
-                                            </span>
-                                            <span>$329.00</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <Separator className="my-4" />
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="grid gap-3">
-                                        <div className="font-semibold">
-                                            Shipping Information
-                                        </div>
-                                        <address className="grid gap-0.5 not-italic text-muted-foreground">
-                                            <span>Liam Johnson</span>
-                                            <span>1234 Main St.</span>
-                                            <span>Anytown, CA 12345</span>
-                                        </address>
-                                    </div>
-                                    <div className="grid gap-3 auto-rows-max">
-                                        <div className="font-semibold">
-                                            Billing Information
-                                        </div>
-                                        <div className="text-muted-foreground">
-                                            Same as shipping address
-                                        </div>
-                                    </div>
-                                </div>
-                                <Separator className="my-4" />
-                                <div className="grid gap-3">
                                     <div className="font-semibold">
-                                        Customer Information
+                                        Invite type: event, doubles, friends?
                                     </div>
-                                    <dl className="grid gap-3">
-                                        <div className="flex items-center justify-between">
-                                            <dt className="text-muted-foreground">
-                                                Customer
-                                            </dt>
-                                            <dd>Liam Johnson</dd>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <dt className="text-muted-foreground">
-                                                Email
-                                            </dt>
-                                            <dd>
-                                                <a href="mailto:">
-                                                    liam@acme.com
-                                                </a>
-                                            </dd>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <dt className="text-muted-foreground">
-                                                Phone
-                                            </dt>
-                                            <dd>
-                                                <a href="tel:">
-                                                    +1 234 567 890
-                                                </a>
-                                            </dd>
-                                        </div>
-                                    </dl>
+                                    <div> invite</div>
                                 </div>
                                 <Separator className="my-4" />
-                                <div className="grid gap-3">
-                                    <div className="font-semibold">
-                                        Payment Information
-                                    </div>
-                                    <dl className="grid gap-3">
-                                        <div className="flex items-center justify-between">
-                                            <dt className="flex items-center gap-1 text-muted-foreground">
-                                                <CreditCard className="w-4 h-4" />
-                                                Visa
-                                            </dt>
-                                            <dd>**** **** **** 4532</dd>
-                                        </div>
-                                    </dl>
+                                <div className="font-semibold">
+                                    Invite type: event, doubles, friends?
                                 </div>
+                                <div> invite</div>
+                                <Separator className="my-4" />
+                                <div className="font-semibold">
+                                    Invite type: event, doubles, friends?
+                                </div>
+                                <div> invite</div>
+                                <Separator className="my-4" />
+                                <div className="font-semibold">
+                                    Invite type: event, doubles, friends?
+                                </div>
+                                <div> invite</div>
                             </CardContent>
                             <CardFooter className="flex flex-row items-center px-6 py-3 border-t bg-muted/50">
                                 <div className="text-xs text-muted-foreground">
-                                    Updated{' '}
-                                    <time dateTime="2023-11-23">
-                                        November 23, 2023
-                                    </time>
+                                    Not sure what to show here yet.
                                 </div>
                                 <Pagination className="w-auto ml-auto mr-0">
                                     <PaginationContent>

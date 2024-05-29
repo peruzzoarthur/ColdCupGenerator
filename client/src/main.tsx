@@ -9,25 +9,6 @@ import { Toaster } from './components/ui/toaster'
 import { StrictMode } from 'react'
 import { ThemeProvider } from './components/themeProvider'
 import App from './App'
-// import { useAuth } from './hooks/useAuth'
-
-// const queryClient = new QueryClient()
-// const authentication = useAuth()
-
-// const router = createRouter({
-//     routeTree,
-//     context: {
-//         queryClient,
-//     },
-//     defaultPreload: 'intent',
-//     defaultPreloadStaleTime: 0,
-// })
-
-// declare module '@tanstack/react-router' {
-//     interface Register {
-//         router: typeof router
-//     }
-// }
 
 const rootElement = document.getElementById('root')!
 

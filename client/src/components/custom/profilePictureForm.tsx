@@ -1,5 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
 import { useState } from 'react'
 import { useToast } from '../ui/use-toast'
 import axios, { AxiosError, AxiosResponse } from 'axios'
@@ -9,7 +7,6 @@ import { axiosInstance } from '@/axiosInstance'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
-import { XIcon } from 'lucide-react'
 
 // const profileSchema = z.object({
 //     file: z.string(),
@@ -22,12 +19,8 @@ type ProfilePictureFormProps = {
     refetchUser: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<User | null, Error>>
-    setEditPicture: (value: React.SetStateAction<boolean>) => void
 }
-export function ProfilePictureForm({
-    refetchUser,
-    setEditPicture,
-}: ProfilePictureFormProps) {
+export function ProfilePictureForm({ refetchUser }: ProfilePictureFormProps) {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
@@ -82,39 +75,20 @@ export function ProfilePictureForm({
 
     return (
         <div className="flex mt-6">
-            <Card className="max-w-sm mx-auto min-w-[320px]">
-                <div className="flex justify-end">
-                    <Button
-                        variant="ghost"
-                        className="justify-center mt-2 rounded-full cursor-pointer h-11 w-11"
-                        onClick={() => setEditPicture(false)}
-                    >
-                        <XIcon />
+            <form onSubmit={handleSubmit}>
+                <div className="flex flex-col items-end space-y-2">
+                    <Input
+                        className="bg-white cursor-pointer bg-opacity-40"
+                        type="file"
+                        accept="image/jpeg"
+                        onChange={handleFileChange}
+                    />
+                    <Button className="w-1/3" type="submit">
+                        Upload
                     </Button>
                 </div>
-                <CardHeader>
-                    <CardTitle className="text-xl">
-                        Upload profile picture 📷
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div>
-                        <form onSubmit={handleSubmit}>
-                            <div className="flex flex-col items-end space-y-2">
-                                <Input
-                                    className="bg-white cursor-pointer bg-opacity-40"
-                                    type="file"
-                                    accept="image/jpeg"
-                                    onChange={handleFileChange}
-                                />
-                                <Button className="w-1/3" type="submit">
-                                    Upload
-                                </Button>
-                            </div>
-                        </form>
-                    </div>
-                </CardContent>
-            </Card>
+            </form>
+
             {isError && (
                 <div onClick={() => setError(false)} className="mt-4">
                     <ErrorAlert message={errorMessage} />

@@ -3,6 +3,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { PrismaService } from "src/prisma.service";
 import * as argon from "argon2";
+import { ConnectToPlayerDto } from "./dto/connect-to-player.dto";
 
 @Injectable()
 export class UsersService {
@@ -73,6 +74,46 @@ export class UsersService {
     });
   }
 
+  async connectToPlayer(
+    connectToPlayerDto: ConnectToPlayerDto,
+    userId: string
+  ) {
+    let user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new HttpException("No user", HttpStatus.NOT_FOUND);
+    }
+    if (user.playerId) {
+      throw new HttpException(
+        "This user is already linked as Player",
+        HttpStatus.CONFLICT
+      );
+    }
+    const newPlayer = await this.prisma.player.create({
+      data: {
+        firstName: connectToPlayerDto.firstName,
+        lastName: connectToPlayerDto.lastName,
+        categories: {
+          connect: {
+            id: connectToPlayerDto.categoryId,
+          },
+        },
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+      select: {
+        user: true,
+      },
+    });
+    user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: newPlayer.user.id },
+    });
+    return user;
+  }
   async remove(id: string) {
     return await this.prisma.user.delete({ where: { id: id } });
   }

@@ -20,11 +20,11 @@ function Profile() {
     return (
         <>
             <div className="flex flex-col items-center justify-center">
-                <div className="p-2 mt-10 text-4xl">
-                    Hello {user?.firstName}!
-                </div>
-                {user && (
+                {user && !user.playerId && (
                     <>
+                        <div className="p-2 mt-10 text-4xl">
+                            Hello {user.firstName}!
+                        </div>
                         <div className="flex flex-row space-x-8">
                             <div className="flex flex-col items-center">
                                 {user.profileImage ? (
@@ -44,10 +44,7 @@ function Profile() {
                                 </Button>
                             </div>
                             {editPicture ? (
-                                <ProfilePictureForm
-                                    refetchUser={refetchUser}
-                                    setEditPicture={setEditPicture}
-                                />
+                                <ProfilePictureForm refetchUser={refetchUser} />
                             ) : null}
                         </div>
                         {!editPlayerForm ? (
@@ -73,8 +70,10 @@ function Profile() {
                                 refetchUser={refetchUser}
                             />
                         )}
-                        {user.playerId && <ProfileDashboard />}
                     </>
+                )}
+                {user && user.playerId && (
+                    <ProfileDashboard refetchUser={refetchUser} user={user} />
                 )}
             </div>
         </>

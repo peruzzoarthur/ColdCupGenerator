@@ -29,6 +29,7 @@ import { UserEntity } from "./entities/user.entity";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { JwtPayload } from "src/auth/types/auth.types";
+import { ConnectToPlayerDto } from "./dto/connect-to-player.dto";
 
 @Controller("users")
 @ApiTags("users")
@@ -41,6 +42,18 @@ export class UsersController {
     return new UserEntity(await this.usersService.create(createUserDto));
   }
 
+  @Post("connect-to-player")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ type: UserEntity })
+  async connectToPlayer(
+    @Body() connectToPlayerDto: ConnectToPlayerDto,
+    @Request() req: JwtPayload
+  ) {
+    return new UserEntity(
+      await this.usersService.connectToPlayer(connectToPlayerDto, req.user.id)
+    );
+  }
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -56,7 +69,7 @@ export class UsersController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   async getProfile(@Request() req: JwtPayload) {
-    return new UserEntity(await this.usersService.findOne(req.user.username));
+    return await this.usersService.findOne(req.user.username);
   }
   @Get(":id")
   @UseGuards(JwtAuthGuard)

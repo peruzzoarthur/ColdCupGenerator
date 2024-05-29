@@ -32,4 +32,7 @@ export class UserEntity implements Partial<User> {
 
   @Exclude()
   hashedRt?: string;
+
+  @Exclude()
+  profileImage?: string;
 }
