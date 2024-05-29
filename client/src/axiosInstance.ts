@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: import.meta.env.VITE_SERVER_URL,
 })
 
 interface FailedRequests {
