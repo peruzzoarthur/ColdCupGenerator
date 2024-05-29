@@ -1,12 +1,4 @@
-import {
-    ChevronLeft,
-    ChevronRight,
-    Copy,
-    CreditCard,
-    ListFilter,
-    MoreVertical,
-    Truck,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight, Copy, ListFilter } from 'lucide-react'
 
 import {
     Breadcrumb,
@@ -29,7 +21,6 @@ import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
