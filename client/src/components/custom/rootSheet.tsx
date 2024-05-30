@@ -17,7 +17,7 @@ import {
     Users2,
 } from 'lucide-react'
 import { useGetRole } from '@/hooks/useGetRole'
-import { UserDropDown } from './userDropdown'
+// import { UserDropDown } from './userDropdown'
 
 export function RootSheet() {
     const { role } = useGetRole()
@@ -28,9 +28,6 @@ export function RootSheet() {
                     <div className="flex">
                         <aside className="fixed inset-y-0 left-0 z-10 flex flex-col border-r bg-muted/40 w-14 sm:w-16">
                             <nav className="flex flex-col items-center gap-4 px-2 sm:py-4">
-                                <div className="space-x-2">
-                                    <UserDropDown />
-                                </div>
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>

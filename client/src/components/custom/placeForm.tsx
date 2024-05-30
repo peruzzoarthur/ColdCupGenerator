@@ -129,7 +129,7 @@ const PlaceForm: React.FC<PlaceFormProps> = ({
 
             <div className="flex justify-center mt-2">
                 <Button
-                    className="w-1/6"
+                    className="w-[100px] sm:w-1/6 bg-opacity-65"
                     onClick={handleSubmit(onSubmit)}
                     type="button"
                 >

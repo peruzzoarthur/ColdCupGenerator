@@ -58,7 +58,7 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
 
     return (
         <div className="flex flex-col w-full min-h-screen ">
-            <div className="flex flex-col gap-2 py-4 pl-14">
+            <div className="flex flex-col gap-2 ">
                 <header className="static top-0 flex flex-col items-start h-auto gap-4 px-4 py-4 bg-transparent border-0">
                     <Breadcrumb className="flex">
                         <BreadcrumbList>

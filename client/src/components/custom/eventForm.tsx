@@ -177,7 +177,7 @@ const EventForm: React.FC<EventFormProps> = ({
                             </SelectContent>
                             <div className="flex items-center justify-center">
                                 <Button
-                                    className="flex w-1/3 "
+                                    className="flex w-2/3 sm:w-1/3 "
                                     onClick={() => addCategory(field.value)}
                                 >
                                     Add Category
@@ -199,7 +199,7 @@ const EventForm: React.FC<EventFormProps> = ({
                                                             )
                                                         }
                                                         key={category.id}
-                                                        className="justify-center w-5 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
+                                                        className="justify-center cursor-pointer w-5 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
                                                     >{`${category.level}`}</Badge>
                                                 )
                                             } else {
@@ -286,7 +286,7 @@ const EventForm: React.FC<EventFormProps> = ({
                                         </SelectGroup>
                                     </SelectContent>
                                     <Button
-                                        className="flex items-center w-1/6 rounded-tl-sm rounded-bl-sm"
+                                        className="flex items-center w-2/6 rounded-tl-sm rounded-bl-sm sm:w-3/12 md:w-1/6"
                                         onClick={() => {
                                             if (field.value === '') {
                                                 return
@@ -332,94 +332,96 @@ const EventForm: React.FC<EventFormProps> = ({
                     </FormItem>
                 )}
             />
-            <div className="flex justify-center mt-6 mb-6 gap-x-6">
-                <FormField
-                    control={form.control}
-                    name="startDate"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>First day</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={'outline'}
-                                            className={cn(
-                                                'w-[240px] pl-3 text-left font-normal',
-                                                !field.value &&
-                                                    'text-muted-foreground'
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, 'PPP')
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                >
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            {/* <FormDescription>First day.</FormDescription> */}
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            <div className="flex justify-center">
+                <div className="grid grid-cols-1 mt-6 mb-6 sm:grid-cols-2 gap-x-6 gap-y-2">
+                    <FormField
+                        control={form.control}
+                        name="startDate"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>First day</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'w-[240px] sm:w-[200px] md:w-[240px] lg:w-[280px] xl:w-[340px] pl-3 text-left font-normal',
+                                                    !field.value &&
+                                                        'text-muted-foreground'
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, 'PPP')
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                {/* <FormDescription>First day.</FormDescription> */}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="finishDate"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Last day</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={'outline'}
-                                            className={cn(
-                                                'w-[240px] pl-3 text-left font-normal',
-                                                !field.value &&
-                                                    'text-muted-foreground'
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, 'PPP')
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                >
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            {/* <FormDescription>Last day.</FormDescription> */}
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    <FormField
+                        control={form.control}
+                        name="finishDate"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Last day</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'w-[240px] sm:w-[200px] md:w-[240px] lg:w-[280px] xl:w-[340px] pl-3 text-left font-normal',
+                                                    !field.value &&
+                                                        'text-muted-foreground'
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, 'PPP')
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                                <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                {/* <FormDescription>Last day.</FormDescription> */}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
             </div>
             <FormField
                 name="timeOfFirstMatch"
@@ -498,7 +500,7 @@ const EventForm: React.FC<EventFormProps> = ({
             />
             <div className="flex justify-center mt-4">
                 <Button
-                    className="w-1/6 bg-opacity-65"
+                    className="w-[100px] sm:w-1/6 bg-opacity-65"
                     onClick={handleSubmit(onSubmit)}
                     type="button"
                 >

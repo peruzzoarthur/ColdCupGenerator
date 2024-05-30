@@ -71,8 +71,8 @@ function Places() {
 
     return (
         <>
-            <div className="flex justify-center">
-                <div className="flex flex-col w-2/3">
+            <div className="flex justify-center w-full">
+                <div className="flex flex-col w-4/5">
                     <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
                         Register Place
                         <img src={ball} alt="ball" className="w-8 h-8" />
