@@ -31,7 +31,6 @@ import {
     PaginationItem,
 } from '@/components/ui/pagination'
 import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
@@ -42,6 +41,8 @@ import { ProfilePictureDrawerDialog } from './profilePictureDrawer'
 import { useState } from 'react'
 import { CheckedState } from '@radix-ui/react-checkbox'
 import avatar from '../../styles/jpg/user_template.jpg'
+import { useInvitations } from '@/hooks/useInvitations'
+import { InvitationBlock } from './invitationBlock'
 
 type ProfileDashboardProps = {
     user: User
@@ -56,6 +57,8 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
         useState<CheckedState>(true)
     const [showFinishedMatches, setShowFinishedMatches] =
         useState<CheckedState>(true)
+
+    const { playerInvitations } = useInvitations()
 
     return (
         <div className="flex flex-col w-full min-h-screen ">
@@ -101,6 +104,7 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
 
                 <main className="grid items-start flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
                     <div className="grid items-start gap-4 auto-rows-max md:gap-8 lg:col-span-2">
+                        {/* Info cards */}
                         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
                             <Card
                                 className="sm:col-span-2"
@@ -160,6 +164,8 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                                 </CardFooter>
                             </Card>
                         </div>
+
+                        {/* matches-tabs */}
                         <Tabs
                             defaultValue={matchesPeriod}
                             onValueChange={(value) => setMatchesPeriod(value)}
@@ -215,6 +221,7 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                             </div>
                         </Tabs>
 
+                        {/* matches-form */}
                         <Card>
                             <CardHeader className="p-7">
                                 <CardTitle>Matches</CardTitle>
@@ -226,6 +233,8 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                             <CardContent>Add the table here.</CardContent>
                         </Card>
                     </div>
+
+                    {/* Invites */}
                     <div>
                         <Card className="overflow-hidden">
                             <CardHeader className="flex flex-row items-start bg-muted/50">
@@ -239,7 +248,7 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                                         >
                                             <Copy className="w-3 h-3" />
                                             <span className="sr-only">
-                                                Copy Order ID
+                                                Handle invitations here
                                             </span>
                                         </Button>
                                     </CardTitle>
@@ -250,31 +259,25 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                             </CardHeader>
                             <CardContent className="p-6 text-sm">
                                 <div className="grid gap-3">
-                                    <div className="font-semibold">
-                                        Invite type: event, doubles, friends?
-                                    </div>
-                                    <div> invite</div>
-                                    <Separator className="my-2" />
-                                    <div className="font-semibold">
-                                        Invite type: event, doubles, friends?
-                                    </div>
-                                    <div> invite</div>
+                                    {playerInvitations ? (
+                                        playerInvitations?.invitations.map(
+                                            (i, index) => (
+                                                <>
+                                                    <div key={index}>
+                                                        <InvitationBlock
+                                                            playerId={
+                                                                playerInvitations.playerId
+                                                            }
+                                                            invitation={i}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )
+                                        )
+                                    ) : (
+                                        <div>you have no invites yet</div>
+                                    )}
                                 </div>
-                                <Separator className="my-4" />
-                                <div className="font-semibold">
-                                    Invite type: event, doubles, friends?
-                                </div>
-                                <div> invite</div>
-                                <Separator className="my-4" />
-                                <div className="font-semibold">
-                                    Invite type: event, doubles, friends?
-                                </div>
-                                <div> invite</div>
-                                <Separator className="my-4" />
-                                <div className="font-semibold">
-                                    Invite type: event, doubles, friends?
-                                </div>
-                                <div> invite</div>
                             </CardContent>
                             <CardFooter className="flex flex-row items-center px-6 py-3 border-t bg-muted/50">
                                 <div className="text-xs text-muted-foreground">

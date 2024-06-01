@@ -21,6 +21,7 @@ import { RolesGuard } from "src/auth/roles.guard";
 import { JwtPayload } from "src/auth/types/auth.types";
 import { CreateDoublesInviteDto } from "./dto/create-doubles-invite.dto";
 import { RespondDoublesInviteDto } from "./dto/respond-doubles-invite.dto";
+import { CancelDoublesInviteDto } from "./dto/cancel-doubles-invite.dto";
 
 @Controller("invites")
 @ApiTags("invites")
@@ -58,6 +59,23 @@ export class InvitesController {
     return this.invitesService.respondDoublesInvitation(
       req.user.id,
       respondDoublesInviteDto
+    );
+  }
+
+  @Post("cancel-doubles-invite")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  cancelDoublesInvitation(
+    @Request() req: JwtPayload,
+    @Body() cancelDoublesInviteDto: CancelDoublesInviteDto
+  ) {
+    return this.invitesService.cancelDoublesInvitation(
+      req.user.id,
+      cancelDoublesInviteDto
     );
   }
 

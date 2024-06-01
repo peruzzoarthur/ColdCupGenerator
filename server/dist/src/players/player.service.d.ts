@@ -39,5 +39,15 @@ export declare class PlayerService {
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
     }>;
-    getPlayerInvites(userId: string): Promise<string>;
+    getPlayerInvites(userId: string): Promise<{
+        id: string;
+        invites: {
+            id: string;
+            inviteType: import(".prisma/client").$Enums.InviteType;
+            eventId: string;
+            matchId: string;
+            inviterId: string;
+            invitedId: string;
+        }[];
+    }>;
 }

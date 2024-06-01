@@ -5,7 +5,17 @@ import { JwtPayload } from "src/auth/types/auth.types";
 export declare class PlayerController {
     private readonly playerService;
     constructor(playerService: PlayerService);
-    getPlayerInvites(req: JwtPayload): Promise<string>;
+    getPlayerInvites(req: JwtPayload): Promise<{
+        id: string;
+        invites: {
+            id: string;
+            inviteType: import(".prisma/client").$Enums.InviteType;
+            eventId: string;
+            matchId: string;
+            inviterId: string;
+            invitedId: string;
+        }[];
+    }>;
     getPlayersByCategory({ id }: {
         id: string;
     }): Promise<{

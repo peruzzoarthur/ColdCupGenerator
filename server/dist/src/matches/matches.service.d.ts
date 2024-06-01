@@ -13,13 +13,13 @@ export declare class MatchesService {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
-        id: string;
+        categoryId: string;
         type: import(".prisma/client").$Enums.MatchType;
+        id: string;
         doubles: {
             id: string;
             categoryId: string;
         }[];
-        categoryId: string;
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -42,8 +42,8 @@ export declare class MatchesService {
             start: Date;
             finish: Date;
         };
-        id: string;
         type: import(".prisma/client").$Enums.MatchType;
+        id: string;
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -60,8 +60,8 @@ export declare class MatchesService {
     }[]>;
     findOne(id: string): Promise<{
         number: number;
-        id: string;
         type: import(".prisma/client").$Enums.MatchType;
+        id: string;
         doubles: {
             players: {
                 id: string;

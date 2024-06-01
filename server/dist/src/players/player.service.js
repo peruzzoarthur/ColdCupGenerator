@@ -108,8 +108,7 @@ let PlayerService = class PlayerService {
                 invites: true,
             },
         });
-        console.log(invites);
-        return "invites";
+        return invites;
     }
 };
 exports.PlayerService = PlayerService;

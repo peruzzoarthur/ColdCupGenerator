@@ -1,10 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
 import { CreatePlayerDto } from "./dto/create-player.dto";
-import { UpdatePlayerDto } from "./dto/update-player.dto";
-import { Config } from "unique-names-generator";
 import { CategoriesService } from "src/categories/categories.service";
-import { CatType } from "src/categories/types/categories.types";
 import { Prisma } from "@prisma/client";
 const {
   uniqueNamesGenerator,
@@ -120,7 +117,6 @@ export class PlayerService {
         invites: true,
       },
     });
-    console.log(invites);
-    return "invites";
+    return invites;
   }
 }

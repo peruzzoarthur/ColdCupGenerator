@@ -46,8 +46,8 @@ export declare class SetsService {
         isFinished: boolean;
     }[]>;
     findOne(id: string): Promise<{
-        id: string;
         type: import(".prisma/client").$Enums.SetType;
+        id: string;
         doubles: {
             id: string;
             categoryId: string;

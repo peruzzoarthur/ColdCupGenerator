@@ -99,7 +99,7 @@ export function LoginForm() {
         }
     }
     return (
-        <div className="flex translate-y-1/2 ">
+        <div className="flex flex-col translate-y-1/2 ">
             <Card className="max-w-sm mx-auto min-w-[320px]">
                 <CardHeader>
                     <CardTitle className="text-2xl">Login</CardTitle>

@@ -8,6 +8,22 @@ export type User = {
     profileImage: string
 }
 
+export type Invitation = {
+    id: string
+    eventId: string | null
+    matchId: string | null
+    inviterId: string
+    invitedId: string
+    inviteType: InviteType
+}
+
+enum InviteType {
+    FRIENDS = 'FRIENDS',
+    EVENT = 'EVENT',
+    DOUBLES = 'DOUBLES',
+    MATCH = 'MATCH',
+}
+
 export type Player = {
     firstName: string
     lastName: string

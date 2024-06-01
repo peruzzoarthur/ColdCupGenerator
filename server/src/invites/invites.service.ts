@@ -4,6 +4,7 @@ import { PrismaService } from "src/prisma.service";
 import { CreateDoublesInviteDto } from "./dto/create-doubles-invite.dto";
 import { RespondDoublesInviteDto } from "./dto/respond-doubles-invite.dto";
 import { DoublesService } from "src/doubles/doubles.service";
+import { CancelDoublesInviteDto } from "./dto/cancel-doubles-invite.dto";
 
 @Injectable()
 export class InvitesService {
@@ -49,6 +50,13 @@ export class InvitesService {
       throw new HttpException("User not found", HttpStatus.NOT_FOUND);
     }
 
+    if (inviter.player.id === invited.id) {
+      throw new HttpException(
+        "You are already friends with yourself, right?",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
     const newInvite = this.prisma.invite.create({
       data: {
         inviteType: "DOUBLES",
@@ -88,7 +96,7 @@ export class InvitesService {
         },
       },
     });
-    console.log(invite);
+
     const user = await this.prisma.user.findUniqueOrThrow({
       where: {
         id: userId,
@@ -117,6 +125,45 @@ export class InvitesService {
         },
       });
     }
+  }
+
+  async cancelDoublesInvitation(
+    userId: string,
+    cancelDoublesInvitationDto: CancelDoublesInviteDto
+  ) {
+    const invite = await this.prisma.invite.findUnique({
+      where: {
+        id: cancelDoublesInvitationDto.inviteId,
+      },
+      select: {
+        id: true,
+        inviterId: true,
+        players: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (user.playerId !== invite.inviterId) {
+      throw new HttpException(
+        "In order to cancel the request, you must be the inviter.",
+        HttpStatus.UNAUTHORIZED
+      );
+    }
+
+    return await this.prisma.invite.delete({
+      where: {
+        id: invite.id,
+      },
+    });
   }
 
   async findAll() {
