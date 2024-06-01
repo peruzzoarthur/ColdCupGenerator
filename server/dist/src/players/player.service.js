@@ -93,6 +93,24 @@ let PlayerService = class PlayerService {
         });
         return removePlayer;
     }
+    async getPlayerInvites(userId) {
+        const user = await this.prismaService.user.findUniqueOrThrow({
+            where: {
+                id: userId,
+            },
+        });
+        const invites = await this.prismaService.player.findUniqueOrThrow({
+            where: {
+                id: user.playerId,
+            },
+            select: {
+                id: true,
+                invites: true,
+            },
+        });
+        console.log(invites);
+        return "invites";
+    }
 };
 exports.PlayerService = PlayerService;
 exports.PlayerService = PlayerService = __decorate([

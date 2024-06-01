@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
   UseGuards,
 } from "@nestjs/common";
 import { PlayerService } from "./player.service";
@@ -22,12 +23,23 @@ import {
 import { Roles } from "src/auth/roles.decorator";
 import { RolesGuard } from "src/auth/roles.guard";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { JwtPayload } from "src/auth/types/auth.types";
 
 @Controller("player")
 @ApiTags("player")
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
+  @Get("invites")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async getPlayerInvites(@Request() req: JwtPayload) {
+    return await this.playerService.getPlayerInvites(req.user.id);
+  }
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()

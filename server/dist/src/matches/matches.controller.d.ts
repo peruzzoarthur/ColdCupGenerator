@@ -11,13 +11,13 @@ export declare class MatchesController {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
-        categoryId: string;
-        type: import(".prisma/client").$Enums.MatchType;
         id: string;
+        type: import(".prisma/client").$Enums.MatchType;
         doubles: {
             id: string;
             categoryId: string;
         }[];
+        categoryId: string;
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -40,8 +40,8 @@ export declare class MatchesController {
             start: Date;
             finish: Date;
         };
-        type: import(".prisma/client").$Enums.MatchType;
         id: string;
+        type: import(".prisma/client").$Enums.MatchType;
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -62,8 +62,8 @@ export declare class MatchesController {
     }>;
     findOne(id: string): Promise<{
         number: number;
-        type: import(".prisma/client").$Enums.MatchType;
         id: string;
+        type: import(".prisma/client").$Enums.MatchType;
         doubles: {
             players: {
                 id: string;

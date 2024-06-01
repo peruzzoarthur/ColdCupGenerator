@@ -1,16 +1,18 @@
 import { PlayerService } from "./player.service";
 import { CreatePlayerDto } from "./dto/create-player.dto";
 import { UpdatePlayerDto } from "./dto/update-player.dto";
+import { JwtPayload } from "src/auth/types/auth.types";
 export declare class PlayerController {
     private readonly playerService;
     constructor(playerService: PlayerService);
+    getPlayerInvites(req: JwtPayload): Promise<string>;
     getPlayersByCategory({ id }: {
         id: string;
     }): Promise<{
+        id: string;
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
-        id: string;
         categories: {
             id: string;
             level: number;
@@ -18,10 +20,10 @@ export declare class PlayerController {
         }[];
     }[]>;
     getAllPlayers(): Promise<{
+        id: string;
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
-        id: string;
         categories: {
             id: string;
             level: number;

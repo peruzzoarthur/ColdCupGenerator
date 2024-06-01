@@ -91,13 +91,6 @@ export class UsersController {
       await this.usersService.updatePassword(id, updateUserDto)
     );
   }
-  @Patch("upload")
-  @UseInterceptors(FileInterceptor("file"))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log("hellofile");
-    console.log(file.buffer);
-  }
-
   @Patch("profile-image")
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor("file"))
@@ -105,7 +98,6 @@ export class UsersController {
   @ApiCreatedResponse({ type: UserEntity })
   async updateProfileImage(
     @Request() req: JwtPayload,
-    // @Param("id") id: string,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({

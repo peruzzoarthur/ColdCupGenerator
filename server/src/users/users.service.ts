@@ -94,6 +94,7 @@ export class UsersService {
       data: {
         firstName: connectToPlayerDto.firstName,
         lastName: connectToPlayerDto.lastName,
+        position: connectToPlayerDto.position,
         categories: {
           connect: {
             id: connectToPlayerDto.categoryId,

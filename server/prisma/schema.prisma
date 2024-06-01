@@ -171,6 +171,8 @@ model User {
   role         Role      @default(USER)
   hashedRt     String?
   profileImage String?
+  // invites    Invite[]
+  // friends    Friend[]
 }
 
 enum Role {
@@ -179,13 +181,17 @@ enum Role {
 }
 
 model Invite {
-  id      String     @id @default(uuid())
-  type    InviteType
-  players Player[]
-  event   Event?     @relation(fields: [eventId], references: [id])
-  eventId String?    @unique
-  match   Match?     @relation(fields: [matchId], references: [id])
-  matchId String?    @unique
+  id         String     @id @default(uuid())
+  inviteType InviteType
+  players    Player[]
+  event      Event?     @relation(fields: [eventId], references: [id])
+  eventId    String?    @unique
+  match      Match?     @relation(fields: [matchId], references: [id])
+  matchId    String?    @unique
+  inviterId  String
+  invitedId  String
+
+  @@unique([inviterId, invitedId, inviteType])
 }
 
 enum InviteType {

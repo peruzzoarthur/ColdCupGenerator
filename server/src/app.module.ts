@@ -18,6 +18,7 @@ import { UsersModule } from "./users/users.module";
 import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { RefreshJwtGuard } from "./auth/refresh-jwt-auth.guard";
 import { DevtoolsModule } from "@nestjs/devtools-integration";
+import { InvitesModule } from './invites/invites.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { DevtoolsModule } from "@nestjs/devtools-integration";
     CourtsModule,
     UsersModule,
     AuthModule,
+    InvitesModule,
   ],
   controllers: [],
   providers: [PrismaService],

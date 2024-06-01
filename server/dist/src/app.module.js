@@ -24,6 +24,7 @@ const courts_module_1 = require("./courts/courts.module");
 const auth_module_1 = require("./auth/auth.module");
 const users_module_1 = require("./users/users.module");
 const devtools_integration_1 = require("@nestjs/devtools-integration");
+const invites_module_1 = require("./invites/invites.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -51,6 +52,7 @@ exports.AppModule = AppModule = __decorate([
             courts_module_1.CourtsModule,
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
+            invites_module_1.InvitesModule,
         ],
         controllers: [],
         providers: [prisma_service_1.PrismaService],

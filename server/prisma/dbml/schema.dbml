@@ -21,6 +21,7 @@ Table Event {
   matchDates MatchDate [not null]
   eventType EventType [not null, default: 'ALLxALL']
   courts Court [not null]
+  invite Invite
 }
 
 Table Court {
@@ -85,6 +86,7 @@ Table Match {
   matchDate MatchDate
   court Court
   courtId String
+  invite Invite
 }
 
 Table MatchDate {
@@ -143,6 +145,22 @@ Table User {
   profileImage String
 }
 
+Table Invite {
+  id String [pk]
+  inviteType InviteType [not null]
+  players Player [not null]
+  event Event
+  eventId String [unique]
+  match Match
+  matchId String [unique]
+  inviterId String [not null]
+  invitedId String [not null]
+
+  indexes {
+    (inviterId, invitedId, inviteType) [unique]
+  }
+}
+
 Table Player {
   id String [pk]
   firstName String
@@ -153,6 +171,7 @@ Table Player {
   doubles Double [not null]
   events Event [not null]
   user User
+  invites Invite [not null]
 }
 
 Table Double {
@@ -232,14 +251,19 @@ Table GamesPlayed {
   gamesId String [ref: > Game.id]
 }
 
+Table InviteToPlayer {
+  playersId String [ref: > Player.id]
+  invitesId String [ref: > Invite.id]
+}
+
 Table DoubleToPlayer {
   doublesId String [ref: > Double.id]
   playersId String [ref: > Player.id]
 }
 
-Enum Role {
-  USER
-  ADMIN
+Enum EventType {
+  ALLxALL
+  GROUPS
 }
 
 Enum CatType {
@@ -248,9 +272,10 @@ Enum CatType {
   M
 }
 
-Enum PlayerPosition {
-  REVES
-  DRIVE
+Enum MatchType {
+  BO3
+  BO5
+  SUPERSET
 }
 
 Enum SetType {
@@ -258,15 +283,21 @@ Enum SetType {
   SUPER
 }
 
-Enum MatchType {
-  BO3
-  BO5
-  SUPERSET
+Enum Role {
+  USER
+  ADMIN
 }
 
-Enum EventType {
-  ALLxALL
-  GROUPS
+Enum InviteType {
+  FRIENDS
+  EVENT
+  DOUBLES
+  MATCH
+}
+
+Enum PlayerPosition {
+  REVES
+  DRIVE
 }
 
 Ref: Court.placeId > Place.id
@@ -302,5 +333,9 @@ Ref: Game.setId > Set.id
 Ref: Game.winnerId > Double.id
 
 Ref: User.playerId - Player.id
+
+Ref: Invite.eventId - Event.id
+
+Ref: Invite.matchId - Match.id
 
 Ref: Double.categoryId > Category.id

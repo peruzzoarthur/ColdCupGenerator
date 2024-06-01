@@ -25,6 +25,9 @@ let PlayerController = class PlayerController {
     constructor(playerService) {
         this.playerService = playerService;
     }
+    async getPlayerInvites(req) {
+        return await this.playerService.getPlayerInvites(req.user.id);
+    }
     async getPlayersByCategory({ id }) {
         return await this.playerService.getPlayersByCategory(id);
     }
@@ -42,6 +45,19 @@ let PlayerController = class PlayerController {
     }
 };
 exports.PlayerController = PlayerController;
+__decorate([
+    (0, common_1.Get)("invites"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PlayerController.prototype, "getPlayerInvites", null);
 __decorate([
     (0, common_1.Get)(":id"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),

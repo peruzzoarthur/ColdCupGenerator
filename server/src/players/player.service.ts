@@ -23,7 +23,6 @@ export class PlayerService {
       const newPlayer = await this.prismaService.player.create({
         data: {
           position: createPlayerDto.position,
-          // email: `${createPlayerDto.firstName}${createPlayerDto.lastName}@proton.me`,
           firstName: createPlayerDto.firstName,
           lastName: createPlayerDto.lastName,
           categories: {
@@ -103,5 +102,25 @@ export class PlayerService {
     });
 
     return removePlayer;
+  }
+
+  async getPlayerInvites(userId: string) {
+    const user = await this.prismaService.user.findUniqueOrThrow({
+      where: {
+        id: userId,
+      },
+    });
+
+    const invites = await this.prismaService.player.findUniqueOrThrow({
+      where: {
+        id: user.playerId,
+      },
+      select: {
+        id: true,
+        invites: true,
+      },
+    });
+    console.log(invites);
+    return "invites";
   }
 }
