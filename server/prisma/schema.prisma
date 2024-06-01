@@ -35,6 +35,12 @@ model Event {
   matchDates             MatchDate[]
   eventType              EventType     @default(ALLxALL) // todo change this default later
   courts                 Court[]
+  invite                 Invite?
+}
+
+enum EventType {
+  ALLxALL
+  GROUPS
 }
 
 model Court {
@@ -76,6 +82,12 @@ model Category {
   @@unique([level, type], name: "CategoryId")
 }
 
+enum CatType {
+  ALL
+  F
+  M
+}
+
 model Match {
   id              String     @id @default(uuid())
   number          Int        @default(autoincrement())
@@ -93,6 +105,13 @@ model Match {
   matchDate       MatchDate?
   court           Court?     @relation(fields: [courtId], references: [id])
   courtId         String?
+  invite          Invite?
+}
+
+enum MatchType {
+  BO3
+  BO5
+  SUPERSET
 }
 
 model MatchDate {
@@ -107,13 +126,12 @@ model MatchDate {
   courtId String
   atRest  EventDouble[]
 
-  @@unique([eventId, start, finish, courtId]) // todo add courts here when created...
+  @@unique([eventId, start, finish, courtId])
 }
 
 model Set {
   id          String   @id @default(uuid())
   type        SetType  @default(SUPER)
-  // players     Player[]
   doubles     Double[]
   winner      Double?  @relation("SetWinnerDouble", fields: [setWinnerId], references: [id])
   setWinnerId String?
@@ -122,6 +140,11 @@ model Set {
   games       Game[]
   isFinished  Boolean  @default(false)
   events      Event[]
+}
+
+enum SetType {
+  NORMAL
+  SUPER
 }
 
 model Game {
@@ -150,6 +173,28 @@ model User {
   profileImage String?
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
+model Invite {
+  id      String     @id @default(uuid())
+  type    InviteType
+  players Player[]
+  event   Event?     @relation(fields: [eventId], references: [id])
+  eventId String?    @unique
+  match   Match?     @relation(fields: [matchId], references: [id])
+  matchId String?    @unique
+}
+
+enum InviteType {
+  FRIENDS
+  EVENT
+  DOUBLES
+  MATCH
+}
+
 model Player {
   id         String          @id @default(uuid())
   firstName  String?
@@ -160,21 +205,25 @@ model Player {
   doubles    Double[]
   events     Event[]
   user       User?
+  invites    Invite[]
+}
+
+enum PlayerPosition {
+  REVES
+  DRIVE
 }
 
 model Double {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   players     Player[]
   matchs      Match[]
-  category    Category @relation(fields: [categoryId], references: [id])
+  category    Category      @relation(fields: [categoryId], references: [id])
   categoryId  String
-  games       Game[]   @relation("GamesPlayed") //todo testing
+  games       Game[]        @relation("GamesPlayed")
   sets        Set[]
-  matchesWins Match[]  @relation("MatchWinnerDouble")
-  setsWins    Set[]    @relation("SetWinnerDouble")
-  gamesWins   Game[]   @relation("GameWinnerDouble")
-  // atRest      MatchDate[]
-
+  matchesWins Match[]       @relation("MatchWinnerDouble")
+  setsWins    Set[]         @relation("SetWinnerDouble")
+  gamesWins   Game[]        @relation("GameWinnerDouble")
   eventDouble EventDouble[]
 }
 
@@ -184,36 +233,4 @@ model Place {
   address String? @unique
   events  Event[]
   courts  Court[]
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
-enum CatType {
-  ALL
-  F
-  M
-}
-
-enum PlayerPosition {
-  REVES
-  DRIVE
-}
-
-enum SetType {
-  NORMAL
-  SUPER
-}
-
-enum MatchType {
-  BO3
-  BO5
-  SUPERSET
-}
-
-enum EventType {
-  ALLxALL
-  GROUPS
 }

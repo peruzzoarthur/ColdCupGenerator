@@ -5,6 +5,7 @@ export const useAuth = () => {
 
     const signOut = () => {
         localStorage.removeItem('isAuthenticated')
+        // localStorage.setItem('accessToken', '')
     }
 
     const isLogged = () =>

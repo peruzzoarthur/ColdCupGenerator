@@ -30,15 +30,31 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useState } from 'react'
 import { cn } from '@/lib/utils'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, CalendarIcon } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { ErrorResponse, User } from '@/types/padel.types'
 import { ErrorAlert } from './errorAlert'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { format } from 'date-fns'
+import { Calendar } from '../ui/calendar'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '../ui/select'
+import { Label } from '../ui/label'
+import { useNavigate } from '@tanstack/react-router'
 
 type RegisterInput = z.infer<typeof registerSchema>
 
 export default function RegisterLoginForm() {
+    const [year, setYear] = useState<string>('')
+    const [defaultMonth, setDefaultMonth] = useState<Date>(
+        '' as unknown as Date
+    )
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
@@ -49,11 +65,13 @@ export default function RegisterLoginForm() {
             firstName: '',
             lastName: '',
             email: '',
-            dob: '',
+            dob: '' as unknown as Date,
             password: '',
             confirmPassword: '',
         },
     })
+
+    const navigate = useNavigate()
 
     const onSubmit = async (input: RegisterInput) => {
         try {
@@ -73,12 +91,12 @@ export default function RegisterLoginForm() {
                 })
                 return
             }
-            alert(JSON.stringify(input, null, 4))
 
             const data: AxiosResponse<User> = await axios.post(
                 `${import.meta.env.VITE_SERVER_URL}/users/`,
                 requestBody
             )
+            navigate({ to: '/login' })
             toast({
                 title: 'Success',
             })
@@ -180,18 +198,104 @@ export default function RegisterLoginForm() {
                                     )}
                                 />
                                 {/* year */}
+
                                 <FormField
                                     control={form.control}
                                     name="dob"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="flex flex-col">
                                             <FormLabel>Date of birth</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Enter your DOB..."
-                                                    {...field}
-                                                />
-                                            </FormControl>
+                                            <Label className="text-muted-foreground">
+                                                Select year
+                                            </Label>
+                                            <div className="flex flex-col items-center justify-end space-y-2">
+                                                <Select
+                                                    onValueChange={(value) => {
+                                                        setYear(value)
+                                                        setDefaultMonth(
+                                                            new Date(
+                                                                Number(value),
+                                                                5
+                                                            )
+                                                        )
+                                                    }}
+                                                    defaultValue={year}
+                                                >
+                                                    <SelectTrigger className="w-[180px]">
+                                                        <SelectValue placeholder="Select year" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {Array.from(
+                                                            { length: 101 },
+                                                            (_, i) =>
+                                                                (
+                                                                    2024 - i
+                                                                ).toString()
+                                                        ).map((y, index) => (
+                                                            <SelectItem
+                                                                value={y}
+                                                                key={index}
+                                                            >
+                                                                {y}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                            <Label className="text-muted-foreground">
+                                                Select date
+                                            </Label>
+                                            <div className="flex flex-col items-center justify-end space-y-2">
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button
+                                                                variant={
+                                                                    'outline'
+                                                                }
+                                                                className={cn(
+                                                                    'w-[180px]  pl-3 text-left font-normal',
+                                                                    !field.value &&
+                                                                        'text-muted-foreground'
+                                                                )}
+                                                            >
+                                                                {field.value ? (
+                                                                    format(
+                                                                        field.value,
+                                                                        'PPP'
+                                                                    )
+                                                                ) : (
+                                                                    <span>
+                                                                        Pick a
+                                                                        date
+                                                                    </span>
+                                                                )}
+                                                                <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent
+                                                        className="w-auto p-0"
+                                                        align="start"
+                                                    >
+                                                        <Calendar
+                                                            initialFocus
+                                                            mode="single"
+                                                            selected={
+                                                                new Date(
+                                                                    field.value
+                                                                )
+                                                            }
+                                                            defaultMonth={
+                                                                defaultMonth
+                                                            }
+                                                            onSelect={
+                                                                field.onChange
+                                                            }
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </div>
                                             <FormMessage />
                                         </FormItem>
                                     )}

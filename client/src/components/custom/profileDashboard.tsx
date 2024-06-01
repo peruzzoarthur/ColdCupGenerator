@@ -41,6 +41,7 @@ import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { ProfilePictureDrawerDialog } from './profilePictureDrawer'
 import { useState } from 'react'
 import { CheckedState } from '@radix-ui/react-checkbox'
+import avatar from '../../styles/jpg/user_template.jpg'
 
 type ProfileDashboardProps = {
     user: User
@@ -85,7 +86,10 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                                         src={user.profileImage}
                                     />
                                 ) : (
-                                    <img /> // add avatar here
+                                    <img
+                                        src={avatar}
+                                        className="rounded-full min-w-52 h-52"
+                                    />
                                 )}
                                 <ProfilePictureDrawerDialog
                                     refetchUser={refetchUser}

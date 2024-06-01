@@ -17,7 +17,6 @@ import {
     Users2,
 } from 'lucide-react'
 import { useGetRole } from '@/hooks/useGetRole'
-// import { UserDropDown } from './userDropdown'
 
 export function RootSheet() {
     const { role } = useGetRole()
@@ -27,13 +26,13 @@ export function RootSheet() {
                 <SheetTrigger asChild>
                     <div className="flex">
                         <aside className="fixed inset-y-0 left-0 z-10 flex flex-col border-r bg-muted/40 w-14 sm:w-16">
-                            <nav className="flex flex-col items-center gap-4 px-2 sm:py-4">
+                            <nav className="flex flex-col items-center gap-4 px-2 py-4">
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Link
                                                 to="/"
-                                                className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground md:h-8 md:w-8"
+                                                className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground "
                                             >
                                                 <Home className="w-5 h-5" />
                                                 <span className="sr-only">
@@ -49,7 +48,7 @@ export function RootSheet() {
                                         <TooltipTrigger asChild>
                                             <Link
                                                 to="/profile"
-                                                className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground md:h-8 md:w-8"
+                                                className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground "
                                             >
                                                 <User className="w-5 h-5" />
                                                 <span className="sr-only">
@@ -65,7 +64,7 @@ export function RootSheet() {
                                         <TooltipTrigger asChild>
                                             <Link
                                                 to="/events"
-                                                className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground md:h-8 md:w-8"
+                                                className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground "
                                             >
                                                 <CalendarDays className="w-5 h-5" />
                                                 <span className="sr-only">
@@ -87,7 +86,7 @@ export function RootSheet() {
                                                 <TooltipTrigger asChild>
                                                     <Link
                                                         to="/categories"
-                                                        className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground md:h-8 md:w-8"
+                                                        className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground "
                                                     >
                                                         <ListOrdered className="w-5 h-5" />
                                                         <span className="sr-only">
@@ -103,7 +102,7 @@ export function RootSheet() {
                                                 <TooltipTrigger asChild>
                                                     <Link
                                                         to="/players"
-                                                        className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground md:h-8 md:w-8"
+                                                        className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground "
                                                     >
                                                         <CircleUser className="w-5 h-5" />
                                                         <span className="sr-only">
@@ -119,7 +118,7 @@ export function RootSheet() {
                                                 <TooltipTrigger asChild>
                                                     <Link
                                                         to="/doubles"
-                                                        className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground md:h-8 md:w-8"
+                                                        className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground "
                                                     >
                                                         <Users2 className="w-5 h-5" />
                                                         <span className="sr-only">
@@ -135,7 +134,7 @@ export function RootSheet() {
                                                 <TooltipTrigger asChild>
                                                     <Link
                                                         to="/places"
-                                                        className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground md:h-8 md:w-8"
+                                                        className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 [&.active]:bg-accent text-accent-foreground hover:text-foreground "
                                                     >
                                                         <Tent className="w-5 h-5" />
                                                         <span className="sr-only">
@@ -154,7 +153,7 @@ export function RootSheet() {
                                         <TooltipTrigger asChild>
                                             <Link
                                                 to="/"
-                                                className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 text-muted-foreground hover:text-foreground md:h-8 md:w-8"
+                                                className="flex items-center justify-center transition-colors rounded-lg h-9 w-9 text-muted-foreground hover:text-foreground "
                                             >
                                                 <Settings className="w-5 h-5" />
                                                 <span className="sr-only">

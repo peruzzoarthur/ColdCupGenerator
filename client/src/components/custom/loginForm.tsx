@@ -25,6 +25,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { ErrorResponse, User } from '@/types/padel.types'
 import { ErrorAlert } from './errorAlert'
 import { useAuth } from '@/hooks/useAuth'
+import { useGetUserById } from '@/hooks/useGetUser'
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -38,7 +39,8 @@ export function LoginForm() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
     const authentication = useAuth()
-    // const { refetchRole } = useGetRole()
+    const { refetchUser } = useGetUserById()
+
     const navigate = useNavigate()
 
     const form = useForm<LoginInput>({
@@ -69,6 +71,7 @@ export function LoginForm() {
             localStorage.setItem('user', JSON.stringify(data.data.user))
             authentication.signIn()
             navigate({ to: '/' })
+            refetchUser()
             toast({
                 title: 'Success',
             })

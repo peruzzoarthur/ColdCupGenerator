@@ -16,9 +16,11 @@ import { axiosInstance } from '@/axiosInstance'
 import { useAuth } from '@/hooks/useAuth'
 import { useNavigate } from '@tanstack/react-router'
 
-export const UserDropDown = () => {
-    const navigate = useNavigate()
+import { useGetUserById } from '@/hooks/useGetUser'
 
+export const UserDropdown = () => {
+    const navigate = useNavigate()
+    const { user } = useGetUserById()
     const authentication = useAuth()
 
     const logoutHandler = async () => {
@@ -27,7 +29,7 @@ export const UserDropDown = () => {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
         authentication.signOut()
-        navigate({ to: '/login' })
+        await navigate({ to: '/login' })
         return data
     }
     const { theme, setTheme } = useTheme()
@@ -41,11 +43,19 @@ export const UserDropDown = () => {
                         size="icon"
                         className="w-12 h-12 overflow-hidden rounded-full"
                     >
-                        <img
-                            src={mari}
-                            alt="Avatar"
-                            className="overflow-hidden "
-                        />
+                        {user?.profileImage ? (
+                            <img
+                                src={user.profileImage}
+                                alt="Avatar"
+                                className="overflow-hidden "
+                            />
+                        ) : (
+                            <img
+                                src={mari}
+                                alt="Avatar"
+                                className="overflow-hidden "
+                            />
+                        )}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -77,7 +87,6 @@ export const UserDropDown = () => {
                                     onCheckedChange={() => setTheme('dark')}
                                     id="set-theme-dark"
                                 />
-                                {/* <Label htmlFor="set-theme-dark">Set theme</Label> */}
                             </div>
                         )}
                         {theme === 'system' && (

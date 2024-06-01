@@ -416,7 +416,6 @@ const EventForm: React.FC<EventFormProps> = ({
                                         />
                                     </PopoverContent>
                                 </Popover>
-                                {/* <FormDescription>Last day.</FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
