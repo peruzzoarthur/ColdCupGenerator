@@ -259,7 +259,9 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                             </CardHeader>
                             <CardContent className="p-6 text-sm">
                                 <div className="grid gap-3">
-                                    {playerInvitations ? (
+                                    {playerInvitations &&
+                                    playerInvitations.invitations.length !==
+                                        0 ? (
                                         playerInvitations?.invitations.map(
                                             (i, index) => (
                                                 <>

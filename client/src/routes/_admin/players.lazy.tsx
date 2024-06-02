@@ -63,7 +63,6 @@ function Players() {
             )
 
             toasted(data.data)
-            console.log(data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>
@@ -75,11 +74,11 @@ function Players() {
                     setErrorMessage(axiosError.response.data.message)
                 } else {
                     setError(true)
-                    setErrorMessage('Error creating doubles')
+                    setErrorMessage('Error creating player')
                 }
             } else {
                 setError(true)
-                setErrorMessage('Error creating doubles')
+                setErrorMessage('Error creating player')
             }
         }
     }

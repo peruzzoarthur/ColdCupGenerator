@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import { Match, PadelEvent } from '@/types/padel.types'
+import { ErrorResponse, Match, PadelEvent } from '@/types/padel.types'
 // import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 import { EventDoublesTable } from './eventsTable/eventDoublesTable'
 import { RegisteredDoublesTable, doublesColumns } from './eventsTable/columns'
@@ -53,6 +53,8 @@ import { useGetMatchById } from '@/hooks/useGetMatchById'
 import { MatchesGrid } from './matchesGrid'
 import UpdateEventForm from './updateEventForm'
 import { axiosInstance } from '@/axiosInstance'
+import axios, { AxiosError } from 'axios'
+import { ErrorAlert } from './errorAlert'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -81,6 +83,9 @@ export function EventDashboard({
     >()
     const [matchIdState, setMatchIdState] = useState<string | undefined>()
     const [matchAssignOn, setMatchAssignOn] = useState<boolean>(false)
+
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const {
         finishedMatches,
         pendingMatches,
@@ -123,12 +128,6 @@ export function EventDashboard({
                 await axiosInstance.post(
                     '/events/activate-event',
                     activateEventDto
-                    // {
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                    //     },
-                    // }
                 )
 
             await refetchEventById()
@@ -136,7 +135,16 @@ export function EventDashboard({
             await refetchEventMatchesInfoById()
             return matches
         } catch (error) {
-            return error
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error responding to invitation.')
+            }
         }
     }
 
@@ -291,7 +299,6 @@ export function EventDashboard({
                     </header>
                 </div>
             </div>
-
             {/*EventInfo / Create Matches */}
             <div className="flex justify-center">
                 {/* Event Info Card */}
@@ -370,6 +377,13 @@ export function EventDashboard({
                     </div>
                 ) : null}
             </div>
+            {/* Error Alert */}
+            //! check this behaviour
+            {isError && (
+                <div onClick={() => setError(false)} className="mt-4">
+                    <ErrorAlert message={errorMessage} />
+                </div>
+            )}
             {/* Registered Doubles Table */}
             <div>
                 {doublesTableData && (

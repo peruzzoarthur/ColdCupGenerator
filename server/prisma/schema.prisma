@@ -190,6 +190,7 @@ model Invite {
   matchId    String?    @unique
   inviterId  String
   invitedId  String
+  createdAt  DateTime   @default(now())
 
   @@unique([inviterId, invitedId, inviteType])
 }

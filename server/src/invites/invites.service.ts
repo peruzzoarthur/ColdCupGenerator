@@ -36,24 +36,44 @@ export class InvitesService {
       },
     });
 
-    if (!inviter) {
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-    }
-
     const invited = await this.prisma.player.findUniqueOrThrow({
       where: {
         id: createDoublesInviteDto.invitedId,
       },
     });
 
-    if (!invited) {
-      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-    }
-
     if (inviter.player.id === invited.id) {
       throw new HttpException(
         "You are already friends with yourself, right?",
         HttpStatus.BAD_REQUEST
+      );
+    }
+
+    const playersAlreadyInDoubles = await this.prisma.double.findFirst({
+      where: {
+        AND: [
+          {
+            players: {
+              some: {
+                id: inviter.player.id,
+              },
+            },
+          },
+          {
+            players: {
+              some: {
+                id: invited.id,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    if (playersAlreadyInDoubles) {
+      throw new HttpException(
+        "Players already in doubles",
+        HttpStatus.CONFLICT
       );
     }
 
@@ -82,7 +102,7 @@ export class InvitesService {
     userId: string,
     respondDoublesInvitationDto: RespondDoublesInviteDto
   ) {
-    const invite = await this.prisma.invite.findUnique({
+    const invite = await this.prisma.invite.findUniqueOrThrow({
       where: {
         id: respondDoublesInvitationDto.inviteId,
       },
@@ -104,7 +124,10 @@ export class InvitesService {
     });
 
     if (user.playerId !== invite.invitedId) {
-      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        "You must be the invited one in order to respond to an invitation.",
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     if (respondDoublesInvitationDto.accepted) {
@@ -118,6 +141,7 @@ export class InvitesService {
       });
       return doubles;
     }
+
     if (!respondDoublesInvitationDto.accepted) {
       return await this.prisma.invite.delete({
         where: {

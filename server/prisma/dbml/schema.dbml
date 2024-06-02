@@ -155,6 +155,7 @@ Table Invite {
   matchId String [unique]
   inviterId String [not null]
   invitedId String [not null]
+  createdAt DateTime [default: `now()`, not null]
 
   indexes {
     (inviterId, invitedId, inviteType) [unique]

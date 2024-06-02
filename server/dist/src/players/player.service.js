@@ -110,6 +110,13 @@ let PlayerService = class PlayerService {
         });
         return invites;
     }
+    async getPlayerById(playerId) {
+        return await this.prismaService.player.findUniqueOrThrow({
+            where: {
+                id: playerId,
+            },
+        });
+    }
 };
 exports.PlayerService = PlayerService;
 exports.PlayerService = PlayerService = __decorate([

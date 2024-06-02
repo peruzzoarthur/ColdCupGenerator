@@ -6,7 +6,6 @@ export declare class PlayerController {
     private readonly playerService;
     constructor(playerService: PlayerService);
     getPlayerInvites(req: JwtPayload): Promise<{
-        id: string;
         invites: {
             id: string;
             inviteType: import(".prisma/client").$Enums.InviteType;
@@ -14,7 +13,9 @@ export declare class PlayerController {
             matchId: string;
             inviterId: string;
             invitedId: string;
+            createdAt: Date;
         }[];
+        id: string;
     }>;
     getPlayersByCategory({ id }: {
         id: string;
@@ -49,6 +50,14 @@ export declare class PlayerController {
     publishPlayer({ id }: {
         id: string;
     }, updatePlayerDto: UpdatePlayerDto): Promise<any>;
+    getPlayerById({ id }: {
+        id: string;
+    }): Promise<{
+        id: string;
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
+    }>;
     deletePlayer({ id }: {
         id: string;
     }): Promise<{
