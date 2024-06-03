@@ -16,12 +16,12 @@ export declare class DoublesService {
         }[];
     }>;
     findAllDoubles(): Promise<{
-        id: string;
         category: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
+        id: string;
         players: {
             id: string;
             firstName: string;
@@ -48,4 +48,5 @@ export declare class DoublesService {
         id: string;
         categoryId: string;
     }>;
+    softDeleteDoubles(playerId: string, doublesId: string): Promise<void>;
 }

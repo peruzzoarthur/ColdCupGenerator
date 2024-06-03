@@ -63,5 +63,40 @@ export declare class PlayerService {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
+        doubles: {
+            id: string;
+            category: {
+                id: string;
+                level: number;
+                type: import(".prisma/client").$Enums.CatType;
+            };
+            matches: {
+                id: string;
+                number: number;
+                isFinished: boolean;
+                categoryId: string;
+                winnerDoublesId: string;
+                eventId: string;
+                type: import(".prisma/client").$Enums.MatchType;
+                courtId: string;
+            }[];
+            players: {
+                id: string;
+                firstName: string;
+                lastName: string;
+                categoryId: string;
+                position: import(".prisma/client").$Enums.PlayerPosition;
+            }[];
+            matchesWins: {
+                id: string;
+                number: number;
+                isFinished: boolean;
+                categoryId: string;
+                winnerDoublesId: string;
+                eventId: string;
+                type: import(".prisma/client").$Enums.MatchType;
+                courtId: string;
+            }[];
+        }[];
     }>;
 }

@@ -119,6 +119,15 @@ let PlayerService = class PlayerService {
                 id: true,
                 category: true,
                 position: true,
+                doubles: {
+                    select: {
+                        id: true,
+                        category: true,
+                        players: true,
+                        matches: true,
+                        matchesWins: true,
+                    },
+                },
             },
         });
     }

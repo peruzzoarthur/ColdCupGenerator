@@ -225,7 +225,7 @@ enum PlayerPosition {
 model Double {
   id          String        @id @default(uuid())
   players     Player[]
-  matchs      Match[]
+  matches     Match[]
   category    Category      @relation(fields: [categoryId], references: [id])
   categoryId  String
   games       Game[]        @relation("GamesPlayed")

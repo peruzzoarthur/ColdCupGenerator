@@ -31,6 +31,7 @@ export type Player = {
     position: Position
     id: string
     category: Category
+    doubles: Double[]
 }
 
 export type Double = {
@@ -42,6 +43,7 @@ export type Double = {
     double?: Double
     event?: PadelEvent
     eventId: string
+    matches: Match[]
     matchesWins: Match[]
     games: Game[]
     gamesWins: Game[]

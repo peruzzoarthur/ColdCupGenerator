@@ -17,6 +17,7 @@ import { useToast } from '../ui/use-toast'
 import { ErrorAlert } from './errorAlert'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { MatchResult } from './matchCard/styledMatchResult'
+import { axiosInstance } from '@/axiosInstance'
 
 type ErrorResponse = {
     message: string
@@ -63,8 +64,8 @@ export const MatchCard = ({
                 eventId: match.eventId,
             }
 
-            const data = await axios.patch(
-                `${import.meta.env.VITE_SERVER_URL}/matches/finish-match/${match.id}`,
+            const data = await axiosInstance.patch(
+                `/matches/finish-match/${match.id}`,
                 requestBody
             )
 

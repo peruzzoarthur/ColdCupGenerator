@@ -20,14 +20,14 @@ export declare class EventsService {
     constructor(prismaService: PrismaService, matchesService: MatchesService);
     createEvent(createEventDto: CreateEventDto): Promise<{
         id: string;
+        name: string;
+        startDate: Date;
+        finishDate: Date;
         categories: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         }[];
-        name: string;
-        startDate: Date;
-        finishDate: Date;
         places: {
             id: string;
             name: string;
@@ -114,6 +114,13 @@ export declare class EventsService {
             };
             atRestId: string;
         }[];
+        name: string;
+        startDate: Date;
+        finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
+        matchDurationInMinutes: number;
+        isActive: boolean;
         categories: {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
@@ -131,13 +138,6 @@ export declare class EventsService {
                 };
             }[];
         }[];
-        name: string;
-        startDate: Date;
-        finishDate: Date;
-        timeOfFirstMatch: number;
-        timeOfLastMatch: number;
-        matchDurationInMinutes: number;
-        isActive: boolean;
         places: {
             id: string;
             name: string;
@@ -242,6 +242,12 @@ export declare class EventsService {
             };
             atRestId: string;
         }[];
+        startDate: Date;
+        finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
+        matchDurationInMinutes: number;
+        isActive: boolean;
         categories: {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
@@ -261,12 +267,6 @@ export declare class EventsService {
                 doubleId: string;
             }[];
         }[];
-        startDate: Date;
-        finishDate: Date;
-        timeOfFirstMatch: number;
-        timeOfLastMatch: number;
-        matchDurationInMinutes: number;
-        isActive: boolean;
         matchDates: {
             event: {
                 id: string;
@@ -422,6 +422,12 @@ export declare class EventsService {
                 courtId: string;
             };
         }[];
+        name: string;
+        startDate: Date;
+        finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
+        isActive: boolean;
         categories: {
             level: number;
             type: import(".prisma/client").$Enums.CatType;
@@ -456,12 +462,6 @@ export declare class EventsService {
                 };
             }[];
         }[];
-        name: string;
-        startDate: Date;
-        finishDate: Date;
-        timeOfFirstMatch: number;
-        timeOfLastMatch: number;
-        isActive: boolean;
         places: {
             id: string;
             name: string;

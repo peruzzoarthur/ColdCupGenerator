@@ -179,7 +179,7 @@ Table Player {
 Table Double {
   id String [pk]
   players Player [not null]
-  matchs Match [not null]
+  matches Match [not null]
   category Category [not null]
   categoryId String [not null]
   games Game [not null]
@@ -235,7 +235,7 @@ Table MatchToPlayer {
 
 Table DoubleToMatch {
   doublesId String [ref: > Double.id]
-  matchsId String [ref: > Match.id]
+  matchesId String [ref: > Match.id]
 }
 
 Table DoubleToSet {

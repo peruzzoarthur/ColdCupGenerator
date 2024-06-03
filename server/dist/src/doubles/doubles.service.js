@@ -130,6 +130,31 @@ let DoublesService = class DoublesService {
         });
         return removeDoubles;
     }
+    async softDeleteDoubles(playerId, doublesId) {
+        const doubles = await this.prismaService.double.findUniqueOrThrow({
+            where: { id: doublesId },
+            select: {
+                id: true,
+                category: true,
+                players: true,
+            },
+        });
+        if (doubles.players[0].id !== playerId ||
+            doubles.players[1].id !== playerId) {
+            throw new common_1.HttpException("Unauthorized to delete other players doubles", common_1.HttpStatus.UNAUTHORIZED);
+        }
+        await this.prismaService.double.update({
+            where: { id: doubles.id },
+            data: {
+                players: {
+                    disconnect: [
+                        { id: doubles.players[0].id },
+                        { id: doubles.players[1].id },
+                    ],
+                },
+            },
+        });
+    }
 };
 exports.DoublesService = DoublesService;
 exports.DoublesService = DoublesService = __decorate([

@@ -337,11 +337,7 @@ export function EventDashboard({
                                             more courts or places in order to
                                             fit all matches...
                                         </Alert>
-                                        <div className="flex items-center space-x-2">
-                                            <CoolButton borderClassName="h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-300)_40%,transparent_10%)]">
-                                                Edit
-                                            </CoolButton>
-                                        </div>
+                                        <div className="flex items-center space-x-2"></div>
                                     </div>
                                 )}
                             </EventInfoCard>
@@ -352,8 +348,7 @@ export function EventDashboard({
             {/* Edit Event */}
             <div className="flex justify-center p-10">
                 {isEditEventOn && eventById ? (
-                    <div>
-                        {' '}
+                    <div className="flex">
                         <UpdateEventForm
                             event={eventById}
                             refetchEventById={refetchEventById}
@@ -378,18 +373,18 @@ export function EventDashboard({
                 ) : null}
             </div>
             {/* Error Alert */}
-            //! check this behaviour
+            {/* check this behaviour */}
             {isError && (
                 <div onClick={() => setError(false)} className="mt-4">
                     <ErrorAlert message={errorMessage} />
                 </div>
             )}
             {/* Registered Doubles Table */}
-            <div>
+            <div className="flex items-center justify-center">
                 {doublesTableData && (
                     <Tabs defaultValue="all">
                         <div className="flex items-center justify-center w-full">
-                            <div className="flex flex-row ml-auto">
+                            <div className="flex flex-row ml-auto ">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button
@@ -447,7 +442,7 @@ export function EventDashboard({
                             </div>
                         </div>
                         <TabsContent value="all">
-                            <Card className="flex flex-col w-full">
+                            <Card className="flex flex-col ">
                                 <CardHeader>
                                     <CardTitle>Doubles Registered</CardTitle>
                                     <CardDescription>

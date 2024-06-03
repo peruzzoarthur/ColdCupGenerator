@@ -46,6 +46,12 @@ import { InvitationBlock } from './invitationBlock'
 import { FindPlayersDrawerDialog } from './findPlayersDrawerDialog'
 import { useGetPlayers } from '@/hooks/useGetPlayers'
 import { useGetCategories } from '@/hooks/useGetCategories'
+import { useGetPlayerById } from '@/hooks/useGetPlayerById'
+import {
+    ProfileDoublesTableData,
+    profileDoublesColumns,
+} from './profileDoublesTable/profileDoublesColumns'
+import { ProfileDoublesTable } from './profileDoublesTable/profileDoublesTable'
 
 type ProfileDashboardProps = {
     user: User
@@ -64,6 +70,21 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
     const { playerInvitations } = useInvitations()
     const { allPlayers } = useGetPlayers()
     const { allCategories } = useGetCategories()
+    const { playerById } = useGetPlayerById(user.playerId)
+    const userDoubles = playerById?.doubles
+
+    const profileDoublesTableData: ProfileDoublesTableData[] | undefined =
+        userDoubles?.map((d) => {
+            return {
+                id: d.id ?? null,
+                playerOneName: `${d.players[0].firstName} ${d.players[0].lastName}`,
+                playerTwoName: `${d.players[1].firstName} ${d.players[1].lastName}`,
+                categoryLevel: d.category?.level || null,
+                categoryType: d.category?.type || null,
+                matches: d.matches.length,
+                matchesWins: d.matchesWins.length,
+            }
+        })
 
     return (
         <div className="flex flex-col w-full min-h-screen ">
@@ -121,6 +142,14 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                                         Manage your doubles and invite friends
                                         to play together here.
                                     </CardDescription>
+                                    <CardContent>
+                                        {profileDoublesTableData && (
+                                            <ProfileDoublesTable
+                                                columns={profileDoublesColumns}
+                                                data={profileDoublesTableData}
+                                            />
+                                        )}
+                                    </CardContent>
                                 </CardHeader>
                                 <CardFooter>
                                     <FindPlayersDrawerDialog

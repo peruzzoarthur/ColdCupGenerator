@@ -112,6 +112,7 @@ export class InvitesService {
         players: {
           select: {
             id: true,
+            categoryId: true,
           },
         },
       },
@@ -134,7 +135,7 @@ export class InvitesService {
       const doubles = await this.doublesService.createDouble({
         playerOneId: invite.players[0].id,
         playerTwoId: invite.players[1].id,
-        categoryId: "73054bad-8574-47bf-93f3-48b1c6c7e498",
+        categoryId: invite.players[0].categoryId,
       });
       await this.prisma.invite.delete({
         where: { id: invite.id },

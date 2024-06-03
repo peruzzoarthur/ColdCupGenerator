@@ -4,18 +4,16 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
 export type RegisteredDoublesTable = {
-    // eventId: string | null
     catId: string | null
     id: string | null
     matchesWon: number | null
-    playerOneName: string | null
-    playerTwoName: string | null
+    playerOneName: string
+    playerTwoName: string
     categoryLevel: number | null
     categoryType: string | null
     W: number | null
     T: number | null
     gamesDiff: number | null
-    // status: 'pending' | 'registered'
 }
 
 export const doublesColumns: ColumnDef<RegisteredDoublesTable>[] = [
