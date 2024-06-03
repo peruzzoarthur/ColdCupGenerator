@@ -28,6 +28,9 @@ let PlayerController = class PlayerController {
     async getPlayerInvites(req) {
         return await this.playerService.getPlayerInvites(req.user.id);
     }
+    async getPlayerById({ id }) {
+        return await this.playerService.getPlayerById(id);
+    }
     async getPlayersByCategory({ id }) {
         return await this.playerService.getPlayersByCategory(id);
     }
@@ -39,9 +42,6 @@ let PlayerController = class PlayerController {
     }
     async publishPlayer({ id }, updatePlayerDto) {
         return null;
-    }
-    async getPlayerById({ id }) {
-        return await this.playerService.getPlayerById(id);
     }
     async deletePlayer({ id }) {
         return await this.playerService.deletePlayer(id);
@@ -61,6 +61,19 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PlayerController.prototype, "getPlayerInvites", null);
+__decorate([
+    (0, common_1.Get)(":id"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOkResponse)(),
+    (0, roles_decorator_1.Roles)(["USER", "ADMIN"]),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    __param(0, (0, common_1.Param)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PlayerController.prototype, "getPlayerById", null);
 __decorate([
     (0, common_1.Get)("by-category/:id"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
@@ -113,19 +126,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, update_player_dto_1.UpdatePlayerDto]),
     __metadata("design:returntype", Promise)
 ], PlayerController.prototype, "publishPlayer", null);
-__decorate([
-    (0, common_1.Get)(":id"),
-    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, swagger_1.ApiOkResponse)(),
-    (0, roles_decorator_1.Roles)(["ADMIN"]),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
-    (0, swagger_1.ApiBearerAuth)(),
-    __param(0, (0, common_1.Param)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], PlayerController.prototype, "getPlayerById", null);
 __decorate([
     (0, common_1.Delete)(":id"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),

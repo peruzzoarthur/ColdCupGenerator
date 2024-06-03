@@ -37,7 +37,7 @@ let DoublesService = class DoublesService {
             },
             select: {
                 id: true,
-                categories: true,
+                category: true,
             },
         });
         const doublesExist = await this.prismaService.double.findFirst({

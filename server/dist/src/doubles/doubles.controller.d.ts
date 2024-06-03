@@ -6,16 +6,17 @@ export declare class DoublesController {
     private readonly doublesService;
     constructor(doublesService: DoublesService);
     findAll(): Promise<{
+        id: string;
         category: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
-        id: string;
         players: {
             id: string;
             firstName: string;
             lastName: string;
+            categoryId: string;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }[]>;
@@ -25,6 +26,7 @@ export declare class DoublesController {
             id: string;
             firstName: string;
             lastName: string;
+            categoryId: string;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }>;
@@ -34,6 +36,7 @@ export declare class DoublesController {
             id: string;
             firstName: string;
             lastName: string;
+            categoryId: string;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }>;

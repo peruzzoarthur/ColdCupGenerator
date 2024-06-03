@@ -11,20 +11,22 @@ export declare class DoublesService {
             id: string;
             firstName: string;
             lastName: string;
+            categoryId: string;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }>;
     findAllDoubles(): Promise<{
+        id: string;
         category: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
-        id: string;
         players: {
             id: string;
             firstName: string;
             lastName: string;
+            categoryId: string;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }[]>;
@@ -34,6 +36,7 @@ export declare class DoublesService {
             id: string;
             firstName: string;
             lastName: string;
+            categoryId: string;
             position: import(".prisma/client").$Enums.PlayerPosition;
         }[];
     }>;

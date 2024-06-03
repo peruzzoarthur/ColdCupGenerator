@@ -206,7 +206,9 @@ model Player {
   id         String          @id @default(uuid())
   firstName  String?
   lastName   String?
-  categories Category[]
+  // categories Category[]
+  category   Category        @relation(fields: [categoryId], references: [id])
+  categoryId String
   position   PlayerPosition?
   matches    Match[]
   doubles    Double[]

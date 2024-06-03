@@ -9,6 +9,7 @@ export declare class PlayerService {
         id: string;
         firstName: string;
         lastName: string;
+        categoryId: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
     }>;
     getAllPlayers(): Promise<{
@@ -16,27 +17,28 @@ export declare class PlayerService {
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
-        categories: {
+        category: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
-        }[];
+        };
     }[]>;
     getPlayersByCategory(categoryId: string): Promise<{
         id: string;
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
-        categories: {
+        category: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
-        }[];
+        };
     }[]>;
     deletePlayer(playerId: string): Promise<{
         id: string;
         firstName: string;
         lastName: string;
+        categoryId: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
     }>;
     getPlayerInvites(userId: string): Promise<{
@@ -56,5 +58,10 @@ export declare class PlayerService {
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
+        category: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        };
     }>;
 }

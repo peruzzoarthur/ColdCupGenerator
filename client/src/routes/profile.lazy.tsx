@@ -56,7 +56,7 @@ function Profile() {
                         {!editPlayerForm ? (
                             !user.playerId && (
                                 <CoolButton
-                                    containerClassName="w-1/3"
+                                    containerClassName="w-2/3"
                                     borderClassName="bg-[radial-gradient(var(--green-200)_40%,transparent_10%)]"
                                     onClick={() => setEditPlayerForm(true)}
                                 >

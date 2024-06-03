@@ -43,6 +43,9 @@ import { CheckedState } from '@radix-ui/react-checkbox'
 import avatar from '../../styles/jpg/user_template.jpg'
 import { useInvitations } from '@/hooks/useInvitations'
 import { InvitationBlock } from './invitationBlock'
+import { FindPlayersDrawerDialog } from './findPlayersDrawerDialog'
+import { useGetPlayers } from '@/hooks/useGetPlayers'
+import { useGetCategories } from '@/hooks/useGetCategories'
 
 type ProfileDashboardProps = {
     user: User
@@ -59,6 +62,8 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
         useState<CheckedState>(true)
 
     const { playerInvitations } = useInvitations()
+    const { allPlayers } = useGetPlayers()
+    const { allCategories } = useGetCategories()
 
     return (
         <div className="flex flex-col w-full min-h-screen ">
@@ -118,7 +123,10 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                                     </CardDescription>
                                 </CardHeader>
                                 <CardFooter>
-                                    <Button>Invite player</Button>
+                                    <FindPlayersDrawerDialog
+                                        players={allPlayers}
+                                        categories={allCategories}
+                                    />
                                 </CardFooter>
                             </Card>
                             <Card>
@@ -264,16 +272,14 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                                         0 ? (
                                         playerInvitations?.invitations.map(
                                             (i, index) => (
-                                                <>
-                                                    <div key={index}>
-                                                        <InvitationBlock
-                                                            playerId={
-                                                                playerInvitations.playerId
-                                                            }
-                                                            invitation={i}
-                                                        />
-                                                    </div>
-                                                </>
+                                                <div key={index}>
+                                                    <InvitationBlock
+                                                        playerId={
+                                                            playerInvitations.playerId
+                                                        }
+                                                        invitation={i}
+                                                    />
+                                                </div>
                                             )
                                         )
                                     ) : (
@@ -283,7 +289,8 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                             </CardContent>
                             <CardFooter className="flex flex-row items-center px-6 py-3 border-t bg-muted/50">
                                 <div className="text-xs text-muted-foreground">
-                                    Not sure what to show here yet.
+                                    I need to do pagination for the invites get
+                                    all route.
                                 </div>
                                 <Pagination className="w-auto ml-auto mr-0">
                                     <PaginationContent>

@@ -70,16 +70,17 @@ export declare class MatchDatesController {
                 level: number;
                 type: import(".prisma/client").$Enums.CatType;
             };
+            categoryId: string;
             doubles: {
                 id: string;
                 players: {
                     id: string;
                     firstName: string;
                     lastName: string;
+                    categoryId: string;
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
             }[];
-            categoryId: string;
         };
         id: string;
         matchId: string;

@@ -22,7 +22,7 @@ export class PlayerService {
           position: createPlayerDto.position,
           firstName: createPlayerDto.firstName,
           lastName: createPlayerDto.lastName,
-          categories: {
+          category: {
             connect: {
               id: createPlayerDto.categoryId,
             },
@@ -55,7 +55,7 @@ export class PlayerService {
         firstName: true,
         lastName: true,
         position: true,
-        categories: true,
+        category: true,
       },
     });
     return allPlayers;
@@ -68,13 +68,11 @@ export class PlayerService {
         firstName: true,
         lastName: true,
         position: true,
-        categories: true,
+        category: true,
       },
       where: {
-        categories: {
-          some: {
-            id: categoryId,
-          },
+        category: {
+          id: categoryId,
         },
       },
     });
@@ -124,6 +122,13 @@ export class PlayerService {
     return await this.prismaService.player.findUniqueOrThrow({
       where: {
         id: playerId,
+      },
+      select: {
+        firstName: true,
+        lastName: true,
+        id: true,
+        category: true,
+        position: true,
       },
     });
   }

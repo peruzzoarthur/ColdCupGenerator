@@ -8,6 +8,7 @@ import { Check, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
 import { useInvitations } from '@/hooks/useInvitations'
+import { useGetPlayerById } from '@/hooks/useGetPlayerById'
 
 type InvitationBlockProps = {
     playerId: string
@@ -21,6 +22,10 @@ export const InvitationBlock = ({
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
     const { refetchPlayerInvitations } = useInvitations()
+
+    const { playerById: inviter } = useGetPlayerById(invitation.inviterId)
+
+    const { playerById: invited } = useGetPlayerById(invitation.invitedId)
 
     const acceptDoublesInvite = async (inviteId: string, accepted: boolean) => {
         try {
@@ -86,6 +91,7 @@ export const InvitationBlock = ({
         <>
             {invitation.inviteType === 'DOUBLES' && (
                 <>
+                    {/* The actual user is the invited */}
                     <div className="grid grid-flow-row-dense grid-cols-2">
                         {playerId === invitation.invitedId && (
                             <>
@@ -93,12 +99,12 @@ export const InvitationBlock = ({
                                     <p className="font-semibold">
                                         {invitation.inviteType}
                                     </p>
-                                    <p>{playerId}</p>
+                                    <p className="text-muted-foreground">{`'${inviter?.firstName} ${inviter?.lastName} - [${inviter?.category.level} ${inviter?.category.type}]' sent a doubles invitation`}</p>
                                 </div>
                                 <div className="flex flex-col items-end">
                                     <Button
                                         variant="ghost"
-                                        className="w-12 h-12"
+                                        className="w-12 h-12 rounded-full"
                                         onClick={() =>
                                             acceptDoublesInvite(
                                                 invitation.id,
@@ -110,7 +116,7 @@ export const InvitationBlock = ({
                                     </Button>
                                     <Button
                                         variant="ghost"
-                                        className="w-12 h-12"
+                                        className="w-12 h-12 rounded-full"
                                         onClick={() =>
                                             acceptDoublesInvite(
                                                 invitation.id,
@@ -123,19 +129,19 @@ export const InvitationBlock = ({
                                 </div>
                             </>
                         )}
-
+                        {/* The actual user is the inviter */}
                         {playerId === invitation.inviterId && (
                             <>
                                 <div className="flex flex-col justify-center">
                                     <p className="font-semibold">
                                         {invitation.inviteType}
                                     </p>
-                                    <p>{playerId}</p>
+                                    <p className="text-muted-foreground">{`You invited '${invited?.firstName} ${invited?.lastName} - [${invited?.category.level} ${invited?.category.type}]' for doubles`}</p>
                                 </div>
                                 <div className="flex flex-col items-end">
                                     <Button
                                         variant="ghost"
-                                        className="w-12 h-12"
+                                        className="w-12 h-12 rounded-full"
                                         onClick={() =>
                                             cancelDoublesInvite(invitation.id)
                                         }

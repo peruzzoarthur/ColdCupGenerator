@@ -166,7 +166,8 @@ Table Player {
   id String [pk]
   firstName String
   lastName String
-  categories Category [not null]
+  category Category [not null]
+  categoryId String [not null]
   position PlayerPosition
   matches Match [not null]
   doubles Double [not null]
@@ -225,11 +226,6 @@ Table EventToSet {
 Table CourtToEvent {
   courtsId String [ref: > Court.id]
   eventsId String [ref: > Event.id]
-}
-
-Table CategoryToPlayer {
-  playersId String [ref: > Player.id]
-  categoriesId String [ref: > Category.id]
 }
 
 Table MatchToPlayer {
@@ -338,5 +334,7 @@ Ref: User.playerId - Player.id
 Ref: Invite.eventId - Event.id
 
 Ref: Invite.matchId - Match.id
+
+Ref: Player.categoryId > Category.id
 
 Ref: Double.categoryId > Category.id

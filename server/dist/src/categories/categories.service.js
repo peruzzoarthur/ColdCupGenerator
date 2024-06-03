@@ -24,7 +24,7 @@ let CategoriesService = class CategoriesService {
                 type: createCategoryDto.type,
             },
         });
-        return;
+        return newCat;
     }
     async findAll() {
         return await this.prismaService.category.findMany();

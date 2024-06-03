@@ -5,7 +5,7 @@ const prisma = new client_1.PrismaClient();
 const fs = require("fs");
 async function rawSql() {
     try {
-        const rawSql = fs.readFileSync("/dev-arthur/Projects/Padel/server/prisma/users.sql", "utf8");
+        const rawSql = fs.readFileSync("/dev-arthur/Projects/Padel/server/prisma/jun_3.sql", "utf8");
         const sqlReducedToStatements = rawSql
             .split("\n")
             .filter((line) => !line.startsWith("--"))

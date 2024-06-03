@@ -17,39 +17,6 @@ export declare class PlayerController {
         }[];
         id: string;
     }>;
-    getPlayersByCategory({ id }: {
-        id: string;
-    }): Promise<{
-        id: string;
-        firstName: string;
-        lastName: string;
-        position: import(".prisma/client").$Enums.PlayerPosition;
-        categories: {
-            id: string;
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-        }[];
-    }[]>;
-    getAllPlayers(): Promise<{
-        id: string;
-        firstName: string;
-        lastName: string;
-        position: import(".prisma/client").$Enums.PlayerPosition;
-        categories: {
-            id: string;
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-        }[];
-    }[]>;
-    createPost(createPlayerDto: CreatePlayerDto): Promise<{
-        id: string;
-        firstName: string;
-        lastName: string;
-        position: import(".prisma/client").$Enums.PlayerPosition;
-    }>;
-    publishPlayer({ id }: {
-        id: string;
-    }, updatePlayerDto: UpdatePlayerDto): Promise<any>;
     getPlayerById({ id }: {
         id: string;
     }): Promise<{
@@ -57,13 +24,53 @@ export declare class PlayerController {
         firstName: string;
         lastName: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
+        category: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        };
     }>;
+    getPlayersByCategory({ id }: {
+        id: string;
+    }): Promise<{
+        id: string;
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
+        category: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        };
+    }[]>;
+    getAllPlayers(): Promise<{
+        id: string;
+        firstName: string;
+        lastName: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
+        category: {
+            id: string;
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+        };
+    }[]>;
+    createPost(createPlayerDto: CreatePlayerDto): Promise<{
+        id: string;
+        firstName: string;
+        lastName: string;
+        categoryId: string;
+        position: import(".prisma/client").$Enums.PlayerPosition;
+    }>;
+    publishPlayer({ id }: {
+        id: string;
+    }, updatePlayerDto: UpdatePlayerDto): Promise<any>;
     deletePlayer({ id }: {
         id: string;
     }): Promise<{
         id: string;
         firstName: string;
         lastName: string;
+        categoryId: string;
         position: import(".prisma/client").$Enums.PlayerPosition;
     }>;
 }

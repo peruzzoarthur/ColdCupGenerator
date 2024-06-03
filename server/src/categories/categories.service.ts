@@ -16,7 +16,7 @@ export class CategoriesService {
         type: createCategoryDto.type as CatType,
       },
     });
-    return;
+    return newCat;
   }
 
   async findAll() {

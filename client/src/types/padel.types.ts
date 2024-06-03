@@ -17,7 +17,7 @@ export type Invitation = {
     inviteType: InviteType
 }
 
-enum InviteType {
+export enum InviteType {
     FRIENDS = 'FRIENDS',
     EVENT = 'EVENT',
     DOUBLES = 'DOUBLES',
@@ -30,7 +30,7 @@ export type Player = {
     categoryId: string
     position: Position
     id: string
-    categories?: Category[]
+    category: Category
 }
 
 export type Double = {

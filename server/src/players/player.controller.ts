@@ -40,6 +40,18 @@ export class PlayerController {
   async getPlayerInvites(@Request() req: JwtPayload) {
     return await this.playerService.getPlayerInvites(req.user.id);
   }
+
+  @Get(":id")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async getPlayerById(@Param() { id }: { id: string }) {
+    return await this.playerService.getPlayerById(id);
+  }
+
   @Get("by-category/:id")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
@@ -84,17 +96,6 @@ export class PlayerController {
     @Body() updatePlayerDto: UpdatePlayerDto
   ) {
     return null;
-  }
-
-  @Get(":id")
-  @HttpCode(HttpStatus.OK)
-  @ApiOkResponse()
-  @Roles(["ADMIN"])
-  @UseGuards(JwtAuthGuard)
-  @UseGuards(RolesGuard)
-  @ApiBearerAuth()
-  async getPlayerById(@Param() { id }: { id: string }) {
-    return await this.playerService.getPlayerById(id);
   }
 
   @Delete(":id")
