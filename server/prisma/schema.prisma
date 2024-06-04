@@ -24,7 +24,7 @@ model Event {
   players                Player[]
   matches                Match[]
   places                 Place[]
-  eventDoubles           EventDouble[] // Relation to link doubles specifically to an event
+  eventDoubles           EventDouble[]
   startDate              DateTime?
   finishDate             DateTime?
   matchDurationInMinutes Int?

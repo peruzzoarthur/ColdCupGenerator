@@ -37,14 +37,57 @@ export declare class PlayerController {
                 type: import(".prisma/client").$Enums.CatType;
             };
             matches: {
+                event: {
+                    id: string;
+                    name: string;
+                    isActive: boolean;
+                    startDate: Date;
+                    finishDate: Date;
+                    matchDurationInMinutes: number;
+                    timeOfFirstMatch: number;
+                    timeOfLastMatch: number;
+                    eventType: import(".prisma/client").$Enums.EventType;
+                };
                 id: string;
-                number: number;
+                category: {
+                    id: string;
+                    level: number;
+                    type: import(".prisma/client").$Enums.CatType;
+                };
+                doubles: {
+                    id: string;
+                    players: {
+                        id: string;
+                        firstName: string;
+                        lastName: string;
+                        categoryId: string;
+                        position: import(".prisma/client").$Enums.PlayerPosition;
+                    }[];
+                }[];
+                sets: {
+                    games: {
+                        winnerId: string;
+                    }[];
+                    setWinnerId: string;
+                }[];
                 isFinished: boolean;
-                categoryId: string;
                 winnerDoublesId: string;
-                eventId: string;
-                type: import(".prisma/client").$Enums.MatchType;
-                courtId: string;
+                matchDate: {
+                    id: string;
+                    eventId: string;
+                    matchId: string;
+                    start: Date;
+                    finish: Date;
+                    courtId: string;
+                };
+                court: {
+                    name: string;
+                    place: {
+                        id: string;
+                        name: string;
+                        address: string;
+                    };
+                };
             }[];
             players: {
                 id: string;
@@ -62,6 +105,12 @@ export declare class PlayerController {
                 eventId: string;
                 type: import(".prisma/client").$Enums.MatchType;
                 courtId: string;
+            }[];
+            eventDouble: {
+                eventId: string;
+                doubleId: string;
+                categoryId: string;
+                atRestId: string;
             }[];
         }[];
     }>;

@@ -21,8 +21,8 @@ export type ProfileDoublesTableData = {
 }
 
 export const profileDoublesColumns: ColumnDef<ProfileDoublesTableData>[] = [
-    { accessorKey: 'playerOneName', header: 'Player One' },
-    { accessorKey: 'playerTwoName', header: 'Player Two' },
+    { accessorKey: 'playerOneName', header: 'P1' },
+    { accessorKey: 'playerTwoName', header: 'P2' },
 
     {
         accessorKey: 'categoryLevel',

@@ -124,8 +124,40 @@ let PlayerService = class PlayerService {
                         id: true,
                         category: true,
                         players: true,
-                        matches: true,
+                        matches: {
+                            select: {
+                                id: true,
+                                category: true,
+                                event: true,
+                                matchDate: true,
+                                sets: {
+                                    select: {
+                                        setWinnerId: true,
+                                        games: {
+                                            select: {
+                                                winnerId: true,
+                                            },
+                                        },
+                                    },
+                                },
+                                isFinished: true,
+                                winnerDoublesId: true,
+                                doubles: {
+                                    select: {
+                                        players: true,
+                                        id: true,
+                                    },
+                                },
+                                court: {
+                                    select: {
+                                        place: true,
+                                        name: true,
+                                    },
+                                },
+                            },
+                        },
                         matchesWins: true,
+                        eventDouble: true,
                     },
                 },
             },

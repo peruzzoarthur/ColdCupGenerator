@@ -41,12 +41,11 @@ export type Double = {
     categoryId: string
     doubleId: string
     double?: Double
-    event?: PadelEvent
-    eventId: string
     matches: Match[]
     matchesWins: Match[]
     games: Game[]
     gamesWins: Game[]
+    eventDouble: EventDouble[]
 }
 
 export type EventDouble = {
@@ -107,12 +106,13 @@ export type Match = {
     doubles: Double[]
     category: Category
     categoryId: string
+    event: PadelEvent
     eventId: string
     doublesId: string
     isFinished: boolean
     sets: Set[]
     winner: Double
-    matchDate: MatchDate
+    matchDate?: MatchDate
 }
 
 export type MatchDate = {

@@ -52,6 +52,10 @@ export function ProfileDoublesTable<TData, TValue>({
     // isActive,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
+    const [pagination, setPagination] = React.useState({
+        pageIndex: 0,
+        pageSize: 5,
+    })
     const table = useReactTable({
         data,
         columns,
@@ -59,8 +63,10 @@ export function ProfileDoublesTable<TData, TValue>({
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
+        onPaginationChange: setPagination,
         state: {
             sorting,
+            pagination,
         },
     })
 
