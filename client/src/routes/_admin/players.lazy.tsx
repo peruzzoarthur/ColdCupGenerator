@@ -20,7 +20,7 @@ export type ErrorResponse = {
     message: string
 }
 
-export type CreatePlayer = Omit<Player, 'id'>
+export type CreatePlayer = Partial<Player>
 
 function Players() {
     const [isError, setError] = useState<boolean>(false)

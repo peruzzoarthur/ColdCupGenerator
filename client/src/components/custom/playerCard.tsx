@@ -74,13 +74,7 @@ export function PlayerCard({
                                     </p>
 
                                     <div className="text-sm text-muted-foreground">
-                                        {player.categories?.map(
-                                            (cat, index) => (
-                                                <p
-                                                    key={index}
-                                                >{`${cat.level} - ${cat.type}`}</p>
-                                            )
-                                        )}
+                                        <p>{`${player.category?.level} - ${player.category?.type}`}</p>
                                     </div>
                                 </div>
                             </div>
