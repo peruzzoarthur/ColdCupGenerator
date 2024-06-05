@@ -29,6 +29,7 @@ import axios, { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useToast } from '../ui/use-toast'
 import { ErrorAlert } from './errorAlert'
+import { Button } from '../ui/button'
 
 type PlayerSelectByCategoryProps = {
     players: Player[] | undefined
@@ -93,13 +94,13 @@ export const PlayerSelectByCategory = ({
                                 <>
                                     <DropdownMenu key={index}>
                                         <DropdownMenuTrigger asChild>
-                                            <SelectItem
+                                            <Button
                                                 className="cursor-pointer"
                                                 value={filteredPlayer.id}
                                             >
                                                 {filteredPlayer.firstName}{' '}
                                                 {filteredPlayer.lastName}
-                                            </SelectItem>
+                                            </Button>
                                         </DropdownMenuTrigger>
 
                                         <DropdownMenuContent className="w-56">

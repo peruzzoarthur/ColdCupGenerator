@@ -49,12 +49,12 @@ export declare class MatchesController {
             result: string;
             isFinished: boolean;
         }[];
+        isFinished: boolean;
         eventId: string;
         winner: {
             id: string;
             categoryId: string;
         };
-        isFinished: boolean;
     }[]>;
     findResult(id: string): Promise<{
         doublesOneGames: number;

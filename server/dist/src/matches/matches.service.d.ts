@@ -51,12 +51,12 @@ export declare class MatchesService {
             result: string;
             isFinished: boolean;
         }[];
+        isFinished: boolean;
         eventId: string;
         winner: {
             id: string;
             categoryId: string;
         };
-        isFinished: boolean;
     }[]>;
     findOne(id: string): Promise<{
         number: number;

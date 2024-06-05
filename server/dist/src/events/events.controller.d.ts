@@ -60,13 +60,13 @@ export declare class EventsController {
                 result: string;
                 isFinished: boolean;
             }[];
-            eventId: string;
+            isFinished: boolean;
             winnerDoublesId: string;
+            eventId: string;
             winner: {
                 id: string;
                 categoryId: string;
             };
-            isFinished: boolean;
         }[];
         eventDoubles: {
             category: {
@@ -99,31 +99,6 @@ export declare class EventsController {
             };
             atRestId: string;
         }[];
-        startDate: Date;
-        finishDate: Date;
-        timeOfFirstMatch: number;
-        timeOfLastMatch: number;
-        matchDurationInMinutes: number;
-        isActive: boolean;
-        categories: {
-            level: number;
-            type: import(".prisma/client").$Enums.CatType;
-            id: string;
-            eventDoubles: {
-                double: {
-                    categoryId: string;
-                    id: string;
-                    players: {
-                        id: string;
-                        firstName: string;
-                        lastName: string;
-                        categoryId: string;
-                        position: import(".prisma/client").$Enums.PlayerPosition;
-                    }[];
-                };
-                doubleId: string;
-            }[];
-        }[];
         matchDates: {
             event: {
                 id: string;
@@ -150,6 +125,31 @@ export declare class EventsController {
             eventId: string;
             start: Date;
             finish: Date;
+        }[];
+        startDate: Date;
+        finishDate: Date;
+        timeOfFirstMatch: number;
+        timeOfLastMatch: number;
+        matchDurationInMinutes: number;
+        isActive: boolean;
+        categories: {
+            level: number;
+            type: import(".prisma/client").$Enums.CatType;
+            id: string;
+            eventDoubles: {
+                double: {
+                    categoryId: string;
+                    id: string;
+                    players: {
+                        id: string;
+                        firstName: string;
+                        lastName: string;
+                        categoryId: string;
+                        position: import(".prisma/client").$Enums.PlayerPosition;
+                    }[];
+                };
+                doubleId: string;
+            }[];
         }[];
         courts: {
             id: string;
@@ -211,12 +211,12 @@ export declare class EventsController {
                 result: string;
                 isFinished: boolean;
             }[];
+            isFinished: boolean;
             eventId: string;
             winner: {
                 id: string;
                 categoryId: string;
             };
-            isFinished: boolean;
         }[];
         eventDoubles: {
             category: {
@@ -325,12 +325,12 @@ export declare class EventsController {
                     position: import(".prisma/client").$Enums.PlayerPosition;
                 }[];
             }[];
+            isFinished: boolean;
             eventId: string;
             winner: {
                 id: string;
                 categoryId: string;
             };
-            isFinished: boolean;
         }[];
         eventDoubles: {
             category: {
@@ -379,6 +379,14 @@ export declare class EventsController {
             };
         }[];
         name: string;
+        matchDates: {
+            id: string;
+            eventId: string;
+            matchId: string;
+            start: Date;
+            finish: Date;
+            courtId: string;
+        }[];
         startDate: Date;
         finishDate: Date;
         timeOfFirstMatch: number;
@@ -422,14 +430,6 @@ export declare class EventsController {
             id: string;
             name: string;
             address: string;
-        }[];
-        matchDates: {
-            id: string;
-            eventId: string;
-            matchId: string;
-            start: Date;
-            finish: Date;
-            courtId: string;
         }[];
         courts: {
             id: string;
