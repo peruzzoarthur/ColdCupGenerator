@@ -35,7 +35,7 @@ type ProfileDashboardProps = {
 }
 
 export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
-    const [matchesPeriod, setMatchesPeriod] = useState<string>('all')
+    const [matchesPeriod, setMatchesPeriod] = useState<string>('10')
     const [showPendingMatches, setShowPendingMatches] =
         useState<CheckedState>(true)
     const [showFinishedMatches, setShowFinishedMatches] =
@@ -76,22 +76,68 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
             }
         })
 
-    const userMatches = userDoubles?.flatMap((d) => {
+    let userMatches = userDoubles?.flatMap((d) => {
         return d.matches
     })
 
     if (userMatches && matchesPeriod === 'year') {
-        userMatches?.filter((m) => {
+        userMatches = userMatches.filter((m) => {
             const matchStart = m.matchDate?.start
             if (matchStart) {
                 const matchYear = new Date(matchStart).getFullYear()
                 const year = new Date().getFullYear()
                 return matchYear === year
-            } else return
+            } else {
+                return false
+            }
+        })
+    }
+    if (userMatches && matchesPeriod === 'month') {
+        userMatches = userMatches.filter((m) => {
+            const matchStart = m.matchDate?.start
+            if (matchStart) {
+                const month = new Date().getMonth()
+                const year = new Date().getFullYear()
+                const firstDayOfCurrentMonth = new Date(
+                    year,
+                    month,
+                    1
+                ).getTime()
+                const firstDayOfNextMonth = new Date(
+                    year,
+                    month + 1,
+                    1
+                ).getTime()
+
+                const matchTimestamp = new Date(new Date(matchStart)).getTime()
+
+                return (
+                    matchTimestamp >= firstDayOfCurrentMonth &&
+                    matchTimestamp < firstDayOfNextMonth
+                )
+            } else {
+                return false
+            }
         })
     }
 
-    console.log(userMatches)
+    if (userMatches && matchesPeriod === '10') {
+        userMatches = userMatches.filter((m) => {
+            const matchStart = m.matchDate?.start
+            if (matchStart) {
+                const timeNow = new Date().getTime()
+                const timeInTenDays = timeNow + 10 * 24 * 60 * 60 * 1000
+                const matchTimestamp = new Date(new Date(matchStart)).getTime()
+
+                return (
+                    matchTimestamp <= timeInTenDays && matchTimestamp > timeNow
+                )
+            } else {
+                return false
+            }
+        })
+    }
+
     const profileMatchesTableData: ProfileMatchesTableData[] | undefined =
         userMatches?.map((m) => {
             const doublesOneGames = m.sets[0].games.filter(
@@ -164,7 +210,6 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                             setShowFinishedMatches={setShowFinishedMatches}
                         />
                         <ProfileMatchesTableCard
-                            matchesPeriod={matchesPeriod}
                             profileMatchesTableData={profileMatchesTableData}
                         />
                     </div>

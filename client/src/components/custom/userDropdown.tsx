@@ -35,7 +35,7 @@ export const UserDropdown = () => {
     const { theme, setTheme } = useTheme()
 
     return (
-        <div className="flex justify-end">
+        <div className="flex justify-end p-2">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button

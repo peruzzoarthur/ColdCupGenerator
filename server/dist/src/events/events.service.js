@@ -613,6 +613,7 @@ let EventsService = class EventsService {
                 finishDate: true,
                 timeOfFirstMatch: true,
                 timeOfLastMatch: true,
+                matchDurationInMinutes: true,
                 matchDates: true,
                 courts: true,
                 matches: {

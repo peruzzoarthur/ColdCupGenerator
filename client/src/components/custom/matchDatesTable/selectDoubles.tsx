@@ -8,16 +8,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { Category } from '@/types/padel.types'
+import { Category, EventDouble } from '@/types/padel.types'
 
 type SelectDoublesProps = {
     eventCategories: Category[] | undefined
+    eventDoubles: EventDouble[] | undefined
     setDoublesFilter: React.Dispatch<React.SetStateAction<string>>
 }
 
 export function SelectDoubles({
     eventCategories,
     setDoublesFilter,
+    eventDoubles,
 }: SelectDoublesProps) {
     return (
         <Select
@@ -40,7 +42,7 @@ export function SelectDoubles({
                         <>
                             <SelectGroup key={index1}>
                                 {c.level} {c.type}
-                                {c.eventDoubles?.map((d, index2) => {
+                                {eventDoubles?.map((d, index2) => {
                                     return (
                                         <SelectItem
                                             key={index2}

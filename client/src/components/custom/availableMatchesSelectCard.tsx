@@ -8,18 +8,16 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 import { Category, Match, MatchDate } from '@/types/padel.types'
-// import { useGetById } from '@/hooks/useGetMatchDateById'
 import { Card, CardDescription, CardHeader } from '../ui/card'
 import { Button } from '../ui/button'
-// import { useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
-import axios from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
-// import { useState } from 'react'
+import { axiosInstance } from '@/axiosInstance'
 
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
     categories: Category[] | undefined
+    matches: Match[] | undefined
     matchDateIdState: string | undefined
     setMatchDateIdState: React.Dispatch<
         React.SetStateAction<string | undefined>
@@ -46,6 +44,7 @@ type AvailableMatchesSelectProps = {
 export function AvailableMatchesSelectCard({
     matchDates,
     categories,
+    matches,
     matchDateIdState,
     setMatchDateIdState,
     matchIdState,
@@ -55,20 +54,15 @@ export function AvailableMatchesSelectCard({
     matchDateById,
     isFetchingMatchDateById,
     refetchMatchDateById,
-    // matchById,
-    // isFetchingMatchById,
     refetchMatchById,
 }: AvailableMatchesSelectProps) {
-    // const [matchPlaceholder, setMatchPlaceholder] =
-    //     useState<string>('Select a match')
-
     const handleUpdateMatch = async (matchId: string, matchDateId: string) => {
         try {
             const activateEventDto = {
                 matchDateId: matchDateId,
             }
-            const { data: match }: { data: Match } = await axios.patch(
-                `${import.meta.env.VITE_SERVER_URL}/matches/update-match-date/${matchId}`,
+            const { data: match }: { data: Match } = await axiosInstance.patch(
+                `/matches/update-match-date/${matchId}`,
                 activateEventDto
             )
 
@@ -144,19 +138,14 @@ export function AvailableMatchesSelectCard({
                     Select match
                     <Select
                         onValueChange={(value) => {
-                            // setMatchPlaceholder(
-                            //     `Match #${matchById?.number} ${matchById?.doubles[0].players[0].firstName} / ${matchById?.doubles[0].players[1].firstName} x ${matchById?.doubles[1].players[0].firstName} / ${matchById?.doubles[1].players[1].firstName}`
-                            // )
                             setMatchIdState(value)
                             refetchMatchDateById()
-                            // refetchMatchById()
                         }}
                     >
                         <SelectTrigger className="items-center justify-center ">
                             {currentMatch ? (
                                 <SelectValue
                                     placeholder={`Match #${currentMatch.number} ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}
-                                    // placeholder=
                                 />
                             ) : (
                                 <SelectValue placeholder={`Select match`} />
@@ -164,23 +153,29 @@ export function AvailableMatchesSelectCard({
                         </SelectTrigger>
 
                         <SelectContent>
-                            {categories?.map((c, index1) => (
-                                <SelectGroup key={index1}>
-                                    <SelectLabel>
-                                        {c.level} {c.type}
-                                    </SelectLabel>
-                                    {c.matches?.map((m, index2) => (
-                                        <div
-                                            className="flex flex-col"
-                                            key={index2}
-                                        >
-                                            <SelectItem value={m.id}>
-                                                {`Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `}
-                                            </SelectItem>
-                                        </div>
-                                    ))}
-                                </SelectGroup>
-                            ))}
+                            {categories?.map((c, index) => {
+                                return (
+                                    <SelectGroup key={index}>
+                                        <SelectLabel>
+                                            {c.level} {c.type}
+                                        </SelectLabel>
+                                        {matches
+                                            ?.filter(
+                                                (m) => m.categoryId === c.id
+                                            )
+                                            .map((m, index2) => (
+                                                <div
+                                                    className="flex flex-col"
+                                                    key={index2}
+                                                >
+                                                    <SelectItem value={m.id}>
+                                                        {`Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `}
+                                                    </SelectItem>
+                                                </div>
+                                            ))}
+                                    </SelectGroup>
+                                )
+                            })}
                         </SelectContent>
                     </Select>
                 </CardDescription>

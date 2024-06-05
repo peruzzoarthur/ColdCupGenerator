@@ -39,6 +39,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useToast } from '../ui/use-toast'
 import { ErrorAlert } from './errorAlert'
+import { axiosInstance } from '@/axiosInstance'
 
 type UpdateEventFormProps = {
     defaultValues: formObject
@@ -181,15 +182,9 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
                 eventId: event?.id,
             }
 
-            const data: AxiosResponse<PadelEvent> = await axios.patch(
-                `${import.meta.env.VITE_SERVER_URL}/events/update-event`,
-                requestBody,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                    },
-                }
+            const data: AxiosResponse<PadelEvent> = await axiosInstance.patch(
+                `/events/update-event`,
+                requestBody
             )
             toasted(data.data)
             await refetchEventById()

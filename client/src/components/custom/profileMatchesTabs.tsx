@@ -35,7 +35,7 @@ export function ProfileMatchesTabs({
         >
             <div className="flex items-center">
                 <TabsList>
-                    <TabsTrigger value="week">Week</TabsTrigger>
+                    <TabsTrigger value="10">10 days</TabsTrigger>
                     <TabsTrigger value="month">Month</TabsTrigger>
                     <TabsTrigger value="year">Year</TabsTrigger>
                     <TabsTrigger value="all">All</TabsTrigger>

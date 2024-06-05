@@ -309,17 +309,18 @@ export function EventDashboard({
                                     setIsAutoPopulateOn={setIsAutoPopulateOn}
                                     setIsEditEventOn={setIsEditEventOn}
                                 >
-                                    {eventMatchesInfoById.suitable ? (
+                                    {eventMatchesInfoById.suitable &&
+                                    eventById ? (
                                         <CoolButton
                                             className="items-center justify-center"
                                             onClick={async () =>
                                                 handleActivate(
-                                                    event.id,
-                                                    event.startDate,
-                                                    event.finishDate,
-                                                    event.timeOfFirstMatch,
-                                                    event.timeOfLastMatch,
-                                                    event.matchDurationInMinutes
+                                                    eventById.id,
+                                                    eventById.startDate,
+                                                    eventById.finishDate,
+                                                    eventById.timeOfFirstMatch,
+                                                    eventById.timeOfLastMatch,
+                                                    eventById.matchDurationInMinutes
                                                 )
                                             }
                                         >
@@ -599,6 +600,7 @@ export function EventDashboard({
                                     ) : null}
 
                                     <MatchDatesTable
+                                        eventDoubles={eventById?.eventDoubles}
                                         matchDateById={matchDateById}
                                         isFetchingMatchDateById={
                                             isFetchingMatchDateById
@@ -612,6 +614,7 @@ export function EventDashboard({
                                         }
                                         refetchMatchById={refetchMatchById}
                                         categories={eventById?.categories}
+                                        matches={eventById?.matches}
                                         matchDateIdState={matchDateIdState}
                                         setMatchDateIdState={
                                             setMatchDateIdState

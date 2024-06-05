@@ -18,12 +18,12 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 import { Category, Double } from '@/types/padel.types'
-import axios from 'axios'
 import { Pencil1Icon } from '@radix-ui/react-icons'
 import { useToast } from '../ui/use-toast'
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { axiosInstance } from '@/axiosInstance'
 
 type DoublesCardProps = React.ComponentProps<typeof Card> & {
     doubles: Double
@@ -64,9 +64,7 @@ export function DoublesCard({
 
     const handleDelete = async (id: string) => {
         try {
-            const data = await axios.delete(
-                `${import.meta.env.VITE_SERVER_URL}/doubles/${id}`
-            )
+            const data = await axiosInstance.delete(`/doubles/${id}`)
 
             deleteDoublesToasted(doubles)
             setShowCard(false)
@@ -98,8 +96,8 @@ export function DoublesCard({
                 categoryId: categoryId,
             }
 
-            const data = await axios.patch(
-                `${import.meta.env.VITE_SERVER_URL}/doubles/${id}`,
+            const data = await axiosInstance.patch(
+                `/doubles/${id}`,
                 requestBody
             )
 

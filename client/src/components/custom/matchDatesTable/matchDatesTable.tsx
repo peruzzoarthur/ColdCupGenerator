@@ -22,7 +22,13 @@ import {
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { CircleIcon, CrossCircledIcon } from '@radix-ui/react-icons'
-import { Category, Court, Match, MatchDate } from '@/types/padel.types'
+import {
+    Category,
+    Court,
+    EventDouble,
+    Match,
+    MatchDate,
+} from '@/types/padel.types'
 import { AvailableMatchesSelectCard } from '../availableMatchesSelectCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { Input } from '@/components/ui/input'
@@ -44,6 +50,7 @@ import { SelectCourt } from './selectCourt'
 import { SelectCategory } from './selectCategory'
 
 interface DataTableProps<TData, TValue> {
+    eventDoubles: EventDouble[] | undefined
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     matchDateIdState: string | undefined
@@ -55,6 +62,7 @@ interface DataTableProps<TData, TValue> {
     matchAssignOn: boolean
     setMatchAssignOn: React.Dispatch<React.SetStateAction<boolean>>
     categories: Category[] | undefined
+    matches: Match[] | undefined
     refetchEventMatchDates: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<MatchDate[] | undefined, Error>>
@@ -89,6 +97,7 @@ export function MatchDatesTable<TData, TValue>({
     setMatchAssignOn,
     matchIdState,
     categories,
+    matches,
     setMatchIdState,
     refetchEventMatchDates,
     matchDates,
@@ -107,6 +116,7 @@ export function MatchDatesTable<TData, TValue>({
     matchById,
     refetchMatchById,
     isFetchingMatchById,
+    eventDoubles,
 }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
@@ -195,6 +205,7 @@ export function MatchDatesTable<TData, TValue>({
                         <SelectDoubles
                             eventCategories={categories}
                             setDoublesFilter={setDoublesFilter}
+                            eventDoubles={eventDoubles}
                         />
 
                         <DropdownMenuSeparator />
@@ -285,6 +296,7 @@ export function MatchDatesTable<TData, TValue>({
                         setMatchDateIdState={setMatchDateIdState}
                         matchDateIdState={matchDateIdState}
                         categories={categories}
+                        matches={matches}
                         matchIdState={matchIdState}
                         setMatchIdState={setMatchIdState}
                         setMatchAssignOn={setMatchAssignOn}

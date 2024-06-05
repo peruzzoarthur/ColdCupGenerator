@@ -166,7 +166,6 @@ let MatchesService = class MatchesService {
         return `This action updates a #${id} match`;
     }
     async updateMatchDate(id, updateMatchDto) {
-        console.log(id);
         let match = await this.prismaService.match.findUnique({
             where: {
                 id: id,

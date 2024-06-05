@@ -83,7 +83,7 @@ export type PadelEvent = {
     id: string
     name: string
     places: Place[]
-    eventDoubles?: Double[]
+    eventDoubles?: EventDouble[]
     categories: Category[]
     matches: Match[]
     startDate: string

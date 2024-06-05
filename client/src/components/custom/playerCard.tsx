@@ -8,10 +8,10 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 import { Player } from '@/types/padel.types'
-import axios from 'axios'
 import { EraserIcon } from '@radix-ui/react-icons'
 import { useToast } from '../ui/use-toast'
 import { useState } from 'react'
+import { axiosInstance } from '@/axiosInstance'
 
 type PlayerCardProps = React.ComponentProps<typeof Card> & {
     player: Player
@@ -40,9 +40,7 @@ export function PlayerCard({
 
     const handleDelete = async (id: string) => {
         try {
-            const data = await axios.delete(
-                `${import.meta.env.VITE_SERVER_URL}/player/${id}`
-            )
+            const data = await axiosInstance.delete(`/player/${id}`)
 
             toasted(player)
             setReload(false)

@@ -12,11 +12,9 @@ import {
 import { ProfileMatchesTable } from './profileMatchesTable/profileMatchesTable'
 
 type ProfileMatchesTableCardProps = {
-    matchesPeriod: string
     profileMatchesTableData: ProfileMatchesTableData[] | undefined
 }
 export function ProfileMatchesTableCard({
-    matchesPeriod,
     profileMatchesTableData,
 }: ProfileMatchesTableCardProps) {
     return (
@@ -24,10 +22,8 @@ export function ProfileMatchesTableCard({
             <CardHeader className="p-7">
                 <CardTitle>Matches</CardTitle>
                 <CardDescription>Your matches list.</CardDescription>
-                <p>{matchesPeriod}</p>
             </CardHeader>
             <CardContent>
-                {' '}
                 {profileMatchesTableData && (
                     <ProfileMatchesTable
                         columns={profileMatchesColumns}
