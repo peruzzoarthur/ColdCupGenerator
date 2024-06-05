@@ -798,7 +798,7 @@ let EventsService = class EventsService {
             categories: categoriesWithTotalMatches,
             totalMatches: totalMatches,
             availableMatchDates: availableMatchDates,
-            suitable: availableMatchDates - totalMatches > 0,
+            suitable: availableMatchDates - totalMatches >= 0,
         };
         return eventWithTotalMatches;
     }

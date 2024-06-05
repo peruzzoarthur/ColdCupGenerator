@@ -29,7 +29,7 @@ export function EventInfoCard({
     setIsEditEventOn,
 }: EventInfoCardProps) {
     return (
-        <Card className={cn('w-[380px]', className)}>
+        <Card className={cn('w-4/5 sm:w-[380px]', className)}>
             <CardHeader>
                 <div className="flex justify-between">
                     <CardTitle>Event Info</CardTitle>

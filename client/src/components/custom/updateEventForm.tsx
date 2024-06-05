@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { format } from 'date-fns'
-import { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -26,7 +25,7 @@ import {
 import { Badge } from '../ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { cn } from '@/lib/utils'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon, XCircle } from 'lucide-react'
 import { Calendar } from '../ui/calendar'
 import { timesForMatches } from '../../util/times'
 import { CourtsByPlaceCheckbox } from './courtsByPlaceCheckBox'
@@ -42,12 +41,15 @@ import { useToast } from '../ui/use-toast'
 import { ErrorAlert } from './errorAlert'
 
 type UpdateEventFormProps = {
-    onSubmit: SubmitHandler<formObject>
     defaultValues: formObject
     event: PadelEvent | undefined
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
+    refetchEventMatchesInfoById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
+    setIsEditEventOn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type formObject = {
@@ -76,6 +78,8 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
     defaultValues,
     event,
     refetchEventById,
+    refetchEventMatchesInfoById,
+    setIsEditEventOn,
 }) => {
     const { toast } = useToast()
 
@@ -189,6 +193,7 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
             )
             toasted(data.data)
             await refetchEventById()
+            await refetchEventMatchesInfoById()
             return data
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -198,18 +203,28 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
                     setErrorMessage(axiosError.response.data.message)
                 } else {
                     setError(true)
-                    setErrorMessage('Error updating doubles')
+                    setErrorMessage('Error updating event info')
                 }
             } else {
                 setError(true)
-                setErrorMessage('Error updating doubles')
+                setErrorMessage('Error updating info')
             }
         }
     }
 
     return (
-        <div className="p-10 border rounded-lg">
-            <h1 className="text-2xl font-bold">Edit Event</h1>
+        <div className="flex flex-col w-full p-10 overflow-hidden border rounded-lg">
+            <div className="flex flex-row justify-between">
+                <h1 className="text-2xl font-bold">Edit Event</h1>
+                <Button
+                    variant="ghost"
+                    onClick={() => {
+                        setIsEditEventOn((previousState) => !previousState)
+                    }}
+                >
+                    <XCircle className="h-3.5 w-3.5" />
+                </Button>
+            </div>
             <Form {...form}>
                 <FormField
                     name="eventName"
@@ -413,7 +428,7 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
                         </FormItem>
                     )}
                 />
-                <div className="flex justify-center mt-6 mb-6 gap-x-6">
+                <div className="flex flex-col items-center justify-center mt-6 mb-6 gap-y-2 gap-x-2 sm:gap-x-6 sm:flex-row">
                     <FormField
                         control={form.control}
                         name="startDate"

@@ -57,9 +57,7 @@ function Events() {
     const createEventToast = (event: PadelEvent) => {
         toast({
             title: 'Success! 🙌',
-
             description: `Created Event ${event.name} at ${event.places.map((p) => p.name).join(', ')} with categories: ${event.categories.map((c) => `${c.level} ${c.type}`).join(', ')}.`,
-            // className: 'bg-emerald-600 bg-opacity-60 text-white',
         })
     }
 
@@ -106,12 +104,6 @@ function Events() {
             const data: AxiosResponse<PadelEvent> = await axiosInstance.post(
                 '/events/',
                 requestBody
-                // {
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                //     },
-                // }
             )
 
             createEventToast(data.data)
@@ -152,12 +144,6 @@ function Events() {
             const data: AxiosResponse<EventDouble> = await axiosInstance.post(
                 '/events/register',
                 requestBody
-                // {
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                //     },
-                // }
             )
             registerDoublesToast(data.data.double, data.data.event)
             await refetchEventMatchesInfoById()
@@ -259,45 +245,47 @@ function Events() {
                 )}
 
                 {selectedEvent && toggleEvent && (
-                    <div className="flex flex-col">
-                        <div className="flex flex-col items-center w-full">
-                            <div className="flex flex-col items-center w-full ">
-                                <div className="flex flex-col items-center w-2/3 ">
-                                    {selectedEvent && (
-                                        <div className="flex flex-col justify-center w-full mt-2 mb-4">
-                                            <h1 className="justify-center mb-4 text-3xl font-medium">
-                                                🏆 {eventById?.name} 🏆
-                                            </h1>
-                                            <RegisterDoublesForm
-                                                categoriesState={
-                                                    categoriesState
-                                                }
-                                                eventCategories={selectedEvent.categories.map(
-                                                    (cat) => cat
-                                                )}
-                                                onSubmit={
-                                                    registerDoubleOnSubmit
-                                                }
-                                                setCategoriesState={
-                                                    setCategoriesState
-                                                }
-                                                defaultValues={{
-                                                    doublesId: '',
-                                                }}
-                                                allDoubles={allDoubles}
-                                            />
-                                        </div>
-                                    )}
-                                    {isError && (
-                                        <div
-                                            onClick={() => setError(false)}
-                                            className="mb-4 "
-                                        >
-                                            <ErrorAlert
-                                                message={errorMessage}
-                                            />
-                                        </div>
-                                    )}
+                    <>
+                        <div className="flex flex-col">
+                            <div className="flex flex-col items-center w-full">
+                                <div className="flex flex-col items-center w-full ">
+                                    <div className="flex flex-col items-center w-2/3 ">
+                                        {selectedEvent && (
+                                            <div className="flex flex-col justify-center w-full mt-2 mb-4">
+                                                <h1 className="justify-center mb-4 text-3xl font-medium">
+                                                    🏆 {eventById?.name} 🏆
+                                                </h1>
+                                                <RegisterDoublesForm
+                                                    categoriesState={
+                                                        categoriesState
+                                                    }
+                                                    eventCategories={selectedEvent.categories.map(
+                                                        (cat) => cat
+                                                    )}
+                                                    onSubmit={
+                                                        registerDoubleOnSubmit
+                                                    }
+                                                    setCategoriesState={
+                                                        setCategoriesState
+                                                    }
+                                                    defaultValues={{
+                                                        doublesId: '',
+                                                    }}
+                                                    allDoubles={allDoubles}
+                                                />
+                                            </div>
+                                        )}
+                                        {isError && (
+                                            <div
+                                                onClick={() => setError(false)}
+                                                className="mb-4 "
+                                            >
+                                                <ErrorAlert
+                                                    message={errorMessage}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -306,7 +294,7 @@ function Events() {
                             toggleEventOff={toggleEventOff}
                             refetchEvents={refetchEvents}
                         />
-                    </div>
+                    </>
                 )}
             </div>
         </>
