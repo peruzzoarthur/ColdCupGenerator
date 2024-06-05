@@ -8,7 +8,6 @@ import {
     Select,
     SelectContent,
     SelectGroup,
-    SelectItem,
     SelectLabel,
     SelectSeparator,
     SelectTrigger,
@@ -93,17 +92,20 @@ export const PlayerSelectByCategory = ({
                             .map((filteredPlayer, index) => (
                                 <>
                                     <DropdownMenu key={index}>
-                                        <DropdownMenuTrigger asChild>
+                                        <DropdownMenuTrigger
+                                            asChild
+                                            className="flex flex-col items-start"
+                                        >
                                             <Button
-                                                className="cursor-pointer"
-                                                value={filteredPlayer.id}
+                                                variant="ghost"
+                                                className="w-full cursor-pointer "
                                             >
                                                 {filteredPlayer.firstName}{' '}
                                                 {filteredPlayer.lastName}
                                             </Button>
                                         </DropdownMenuTrigger>
 
-                                        <DropdownMenuContent className="w-56">
+                                        <DropdownMenuContent className="flex flex-col w-56">
                                             <DropdownMenuLabel>
                                                 Invite Type
                                             </DropdownMenuLabel>

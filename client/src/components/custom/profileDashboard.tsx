@@ -79,15 +79,28 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
     const userMatches = userDoubles?.flatMap((d) => {
         return d.matches
     })
+
+    if (userMatches && matchesPeriod === 'year') {
+        userMatches?.filter((m) => {
+            const matchStart = m.matchDate?.start
+            if (matchStart) {
+                const matchYear = new Date(matchStart).getFullYear()
+                const year = new Date().getFullYear()
+                return matchYear === year
+            } else return
+        })
+    }
+
     console.log(userMatches)
     const profileMatchesTableData: ProfileMatchesTableData[] | undefined =
         userMatches?.map((m) => {
             const doublesOneGames = m.sets[0].games.filter(
                 (g) => g.winnerId === m.doubles[0].id
-            ).length
+            ).length //! this works only for superset matches cause of set[0]
             const doublesTwoGames = m.sets[0].games.filter(
                 (g) => g.winnerId === m.doubles[1].id
             ).length
+
             return {
                 id: m.id,
                 matchStart: m.matchDate?.start ?? null,
