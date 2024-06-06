@@ -12,7 +12,7 @@ import { useGetPlayers } from '@/hooks/useGetPlayers'
 import { PlayerCard } from '@/components/custom/playerCard'
 import { axiosInstance } from '@/axiosInstance'
 
-export const Route = createLazyFileRoute('/_admin/players')({
+export const Route = createLazyFileRoute('/_auth/players')({
     component: Players,
 })
 

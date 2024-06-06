@@ -4,7 +4,7 @@ import { CatType, Category } from '@/types/padel.types'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { AxiosResponse } from 'axios'
 
-export const Route = createLazyFileRoute('/_admin/categories')({
+export const Route = createLazyFileRoute('/_auth/categories')({
     component: Categories,
 })
 

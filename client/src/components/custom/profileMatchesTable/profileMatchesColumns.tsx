@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Link } from '@tanstack/react-router'
 
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
@@ -7,6 +8,7 @@ export type ProfileMatchesTableData = {
     id: string
     matchStart: string | null
     eventName: string | null
+    eventId: string | null
     doublesOne: string
     doublesOneId: string
     doublesTwo: string
@@ -128,10 +130,18 @@ export const profileMatchesColumns: ColumnDef<ProfileMatchesTableData>[] = [
         accessorKey: 'eventName',
         header: () => <div className="font-medium text-center">Event </div>,
         cell: ({ row }) => {
+            const id = row.original.eventId as string
             return (
-                <div className="font-medium text-center">
-                    {row.getValue('eventName')}
-                </div>
+                <Link
+                    to={'/events/$id'}
+                    params={{
+                        id: id,
+                    }}
+                >
+                    <div className="font-medium text-center">
+                        {row.getValue('eventName')}
+                    </div>
+                </Link>
             )
         },
     },

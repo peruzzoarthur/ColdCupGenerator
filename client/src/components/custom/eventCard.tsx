@@ -11,13 +11,14 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 import { PadelEvent } from '@/types/padel.types'
+import { Link } from '@tanstack/react-router'
 
 type EventCardProps = React.ComponentProps<typeof Card> & {
     event: PadelEvent
-    toggleEventOn: (event: PadelEvent) => void
+    // toggleEventOn: (event: PadelEvent) => void
 }
 
-export function EventCard({ className, event, toggleEventOn }: EventCardProps) {
+export function EventCard({ className, event }: EventCardProps) {
     return (
         <Card className={cn('w-[380px]', className)}>
             <CardHeader>
@@ -60,12 +61,15 @@ export function EventCard({ className, event, toggleEventOn }: EventCardProps) {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button
-                    onClick={async () => await toggleEventOn(event)}
+                <Link
+                    to={'/events/$id'}
+                    params={{ id: event.id }}
                     className="w-full"
                 >
-                    <CheckCircledIcon className="w-4 h-4 mr-2" /> Open event
-                </Button>
+                    <Button className="w-full">
+                        <CheckCircledIcon className="w-4 h-4 mr-2" /> Open event
+                    </Button>
+                </Link>
             </CardFooter>
         </Card>
     )

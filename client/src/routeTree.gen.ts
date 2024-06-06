@@ -13,7 +13,8 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AdminImport } from './routes/_admin'
+import { Route as AuthImport } from './routes/_auth'
+import { Route as AuthEventsIdImport } from './routes/_auth/events/$id'
 
 // Create Virtual Routes
 
@@ -22,11 +23,11 @@ const ProfileLazyImport = createFileRoute('/profile')()
 const LoginLazyImport = createFileRoute('/login')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
-const AdminPlayersLazyImport = createFileRoute('/_admin/players')()
-const AdminPlacesLazyImport = createFileRoute('/_admin/places')()
-const AdminEventsLazyImport = createFileRoute('/_admin/events')()
-const AdminDoublesLazyImport = createFileRoute('/_admin/doubles')()
-const AdminCategoriesLazyImport = createFileRoute('/_admin/categories')()
+const AuthPlayersLazyImport = createFileRoute('/_auth/players')()
+const AuthPlacesLazyImport = createFileRoute('/_auth/places')()
+const AuthDoublesLazyImport = createFileRoute('/_auth/doubles')()
+const AuthCategoriesLazyImport = createFileRoute('/_auth/categories')()
+const AuthEventsIndexLazyImport = createFileRoute('/_auth/events/')()
 
 // Create/Update Routes
 
@@ -50,8 +51,8 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
-const AdminRoute = AdminImport.update({
-  id: '/_admin',
+const AuthRoute = AuthImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,36 +61,39 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const AdminPlayersLazyRoute = AdminPlayersLazyImport.update({
+const AuthPlayersLazyRoute = AuthPlayersLazyImport.update({
   path: '/players',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/_admin/players.lazy').then((d) => d.Route),
-)
+  getParentRoute: () => AuthRoute,
+} as any).lazy(() => import('./routes/_auth/players.lazy').then((d) => d.Route))
 
-const AdminPlacesLazyRoute = AdminPlacesLazyImport.update({
+const AuthPlacesLazyRoute = AuthPlacesLazyImport.update({
   path: '/places',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/_admin/places.lazy').then((d) => d.Route))
+  getParentRoute: () => AuthRoute,
+} as any).lazy(() => import('./routes/_auth/places.lazy').then((d) => d.Route))
 
-const AdminEventsLazyRoute = AdminEventsLazyImport.update({
-  path: '/events',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/_admin/events.lazy').then((d) => d.Route))
-
-const AdminDoublesLazyRoute = AdminDoublesLazyImport.update({
+const AuthDoublesLazyRoute = AuthDoublesLazyImport.update({
   path: '/doubles',
-  getParentRoute: () => AdminRoute,
+  getParentRoute: () => AuthRoute,
+} as any).lazy(() => import('./routes/_auth/doubles.lazy').then((d) => d.Route))
+
+const AuthCategoriesLazyRoute = AuthCategoriesLazyImport.update({
+  path: '/categories',
+  getParentRoute: () => AuthRoute,
 } as any).lazy(() =>
-  import('./routes/_admin/doubles.lazy').then((d) => d.Route),
+  import('./routes/_auth/categories.lazy').then((d) => d.Route),
 )
 
-const AdminCategoriesLazyRoute = AdminCategoriesLazyImport.update({
-  path: '/categories',
-  getParentRoute: () => AdminRoute,
+const AuthEventsIndexLazyRoute = AuthEventsIndexLazyImport.update({
+  path: '/events/',
+  getParentRoute: () => AuthRoute,
 } as any).lazy(() =>
-  import('./routes/_admin/categories.lazy').then((d) => d.Route),
+  import('./routes/_auth/events/index.lazy').then((d) => d.Route),
 )
+
+const AuthEventsIdRoute = AuthEventsIdImport.update({
+  path: '/events/$id',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -99,8 +103,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_admin': {
-      preLoaderRoute: typeof AdminImport
+    '/_auth': {
+      preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -119,25 +123,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_admin/categories': {
-      preLoaderRoute: typeof AdminCategoriesLazyImport
-      parentRoute: typeof AdminImport
+    '/_auth/categories': {
+      preLoaderRoute: typeof AuthCategoriesLazyImport
+      parentRoute: typeof AuthImport
     }
-    '/_admin/doubles': {
-      preLoaderRoute: typeof AdminDoublesLazyImport
-      parentRoute: typeof AdminImport
+    '/_auth/doubles': {
+      preLoaderRoute: typeof AuthDoublesLazyImport
+      parentRoute: typeof AuthImport
     }
-    '/_admin/events': {
-      preLoaderRoute: typeof AdminEventsLazyImport
-      parentRoute: typeof AdminImport
+    '/_auth/places': {
+      preLoaderRoute: typeof AuthPlacesLazyImport
+      parentRoute: typeof AuthImport
     }
-    '/_admin/places': {
-      preLoaderRoute: typeof AdminPlacesLazyImport
-      parentRoute: typeof AdminImport
+    '/_auth/players': {
+      preLoaderRoute: typeof AuthPlayersLazyImport
+      parentRoute: typeof AuthImport
     }
-    '/_admin/players': {
-      preLoaderRoute: typeof AdminPlayersLazyImport
-      parentRoute: typeof AdminImport
+    '/_auth/events/$id': {
+      preLoaderRoute: typeof AuthEventsIdImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/events/': {
+      preLoaderRoute: typeof AuthEventsIndexLazyImport
+      parentRoute: typeof AuthImport
     }
   }
 }
@@ -146,12 +154,13 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
-  AdminRoute.addChildren([
-    AdminCategoriesLazyRoute,
-    AdminDoublesLazyRoute,
-    AdminEventsLazyRoute,
-    AdminPlacesLazyRoute,
-    AdminPlayersLazyRoute,
+  AuthRoute.addChildren([
+    AuthCategoriesLazyRoute,
+    AuthDoublesLazyRoute,
+    AuthPlacesLazyRoute,
+    AuthPlayersLazyRoute,
+    AuthEventsIdRoute,
+    AuthEventsIndexLazyRoute,
   ]),
   AboutLazyRoute,
   LoginLazyRoute,

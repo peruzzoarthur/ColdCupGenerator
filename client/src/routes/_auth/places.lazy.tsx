@@ -8,7 +8,7 @@ import { ErrorAlert } from '@/components/custom/errorAlert'
 import PlaceForm, { placeFormObject } from '@/components/custom/placeForm'
 import { axiosInstance } from '@/axiosInstance'
 
-export const Route = createLazyFileRoute('/_admin/places')({
+export const Route = createLazyFileRoute('/_auth/places')({
     component: Places,
 })
 

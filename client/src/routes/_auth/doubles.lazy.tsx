@@ -14,7 +14,7 @@ import { useGetDoubles } from '@/hooks/useGetDoubles'
 import { DoublesCard } from '@/components/custom/doublesCard'
 import { axiosInstance } from '@/axiosInstance'
 
-export const Route = createLazyFileRoute('/_admin/doubles')({
+export const Route = createLazyFileRoute('/_auth/doubles')({
     component: Doubles,
 })
 

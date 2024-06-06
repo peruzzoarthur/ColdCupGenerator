@@ -33,7 +33,6 @@ import { ErrorResponse, Match, PadelEvent } from '@/types/padel.types'
 import { EventDoublesTable } from './eventsTable/eventDoublesTable'
 import { RegisteredDoublesTable, doublesColumns } from './eventsTable/columns'
 import { MatchesCarousel } from './matchesCarousel'
-import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useGetEventById } from '@/hooks/useGetEventById'
 import { useState } from 'react'
 import {
@@ -55,20 +54,13 @@ import UpdateEventForm from './updateEventForm'
 import { axiosInstance } from '@/axiosInstance'
 import axios, { AxiosError } from 'axios'
 import { ErrorAlert } from './errorAlert'
+import { Link } from '@tanstack/react-router'
 
 type EventDashBoardProps = {
     event: PadelEvent
-    toggleEventOff: () => void
-    refetchEvents: (
-        options?: RefetchOptions | undefined
-    ) => Promise<QueryObserverResult<PadelEvent[] | undefined, Error>>
 }
 
-export function EventDashboard({
-    event,
-    toggleEventOff,
-    refetchEvents,
-}: EventDashBoardProps) {
+export function EventDashboard({ event }: EventDashBoardProps) {
     const [isEditEventOn, setIsEditEventOn] = useState<boolean>(false)
 
     const [isAutoPopulateOn, setIsAutoPopulateOn] = useState<boolean>(false)
@@ -277,12 +269,13 @@ export function EventDashboard({
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink
-                                    asChild
-                                    onClick={toggleEventOff}
-                                >
-                                    <p className="cursor-pointer">All events</p>
-                                </BreadcrumbLink>
+                                <Link to={'/events'}>
+                                    <BreadcrumbLink asChild>
+                                        <p className="cursor-pointer">
+                                            All events
+                                        </p>
+                                    </BreadcrumbLink>
+                                </Link>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
@@ -545,7 +538,6 @@ export function EventDashboard({
                                             </h1>
                                             <MatchesCarousel
                                                 matches={pendingMatches}
-                                                refetchEvents={refetchEvents}
                                                 refetchEventById={
                                                     refetchEventById
                                                 }
@@ -564,7 +556,6 @@ export function EventDashboard({
                                             </h1>
                                             <MatchesCarousel
                                                 matches={finishedMatches}
-                                                refetchEvents={refetchEvents}
                                                 refetchEventById={
                                                     refetchEventById
                                                 }
@@ -584,7 +575,7 @@ export function EventDashboard({
                                             Schedule
                                         </h1>
                                         <div className="flex items-center ml-2">
-                                            <Calendar className="flex cursor-pointer" />
+                                            <Calendar className="flex" />
                                         </div>
                                     </div>
 

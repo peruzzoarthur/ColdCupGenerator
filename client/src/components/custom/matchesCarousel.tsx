@@ -11,9 +11,7 @@ import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 type MatchesCarouselProps = {
     matches: Match[]
-    refetchEvents: (
-        options?: RefetchOptions | undefined
-    ) => Promise<QueryObserverResult<PadelEvent[] | undefined, Error>>
+
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
