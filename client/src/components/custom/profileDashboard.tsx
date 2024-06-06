@@ -138,6 +138,18 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
         })
     }
 
+    if (userMatches && !showPendingMatches) {
+        userMatches = userMatches.filter((m) => {
+            return m.isFinished === true
+        })
+    }
+
+    if (userMatches && !showFinishedMatches) {
+        userMatches = userMatches.filter((m) => {
+            return m.isFinished === false
+        })
+    }
+
     const profileMatchesTableData: ProfileMatchesTableData[] | undefined =
         userMatches?.map((m) => {
             const doublesOneGames = m.sets[0].games.filter(
@@ -152,14 +164,15 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                 matchStart: m.matchDate?.start ?? null,
                 eventName: m.event.name ?? null,
                 doublesOne: `${m.doubles[0].players[0].firstName} ${m.doubles[0].players[0].lastName} / ${m.doubles[0].players[1].firstName} ${m.doubles[0].players[1].lastName}`,
+                doublesOneId: m.doubles[0].id,
                 doublesTwo: `${m.doubles[1].players[0].firstName} ${m.doubles[1].players[0].lastName} / ${m.doubles[1].players[1].firstName} ${m.doubles[1].players[1].lastName}`,
+                doublesTwoId: m.doubles[1].id,
                 isFinished: m.isFinished,
                 doublesOneGames: doublesOneGames ?? null,
                 doublesTwoGames: doublesTwoGames ?? null,
+                winnerDoublesId: m.winnerDoublesId,
             }
         })
-
-    // console.log(profileMatchesTableData)
 
     return (
         <div className="flex flex-col w-full min-h-screen ">

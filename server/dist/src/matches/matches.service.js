@@ -46,7 +46,7 @@ let MatchesService = class MatchesService {
             });
             return match;
         }
-        console.log("calling without matchDateId");
+        console.log("calling with matchDateId");
         const match = await this.prismaService.match.create({
             data: {
                 doubles: { connect: createMatchDto.doublesIds.map((id) => ({ id })) },

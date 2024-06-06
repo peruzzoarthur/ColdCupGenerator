@@ -1,11 +1,4 @@
 import { Button } from '@/components/ui/button'
-// import {
-//     DropdownMenu,
-//     DropdownMenuContent,
-//     DropdownMenuItem,
-//     DropdownMenuLabel,
-//     DropdownMenuTrigger,
-// } from '@/components/ui/dropdown-menu'
 
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
@@ -15,10 +8,13 @@ export type ProfileMatchesTableData = {
     matchStart: string | null
     eventName: string | null
     doublesOne: string
+    doublesOneId: string
     doublesTwo: string
+    doublesTwoId: string
     isFinished: boolean
     doublesOneGames: number | null
     doublesTwoGames: number | null
+    winnerDoublesId: string | null
 }
 
 export const profileMatchesColumns: ColumnDef<ProfileMatchesTableData>[] = [
@@ -26,16 +22,24 @@ export const profileMatchesColumns: ColumnDef<ProfileMatchesTableData>[] = [
         accessorKey: 'doublesOne',
         header: 'Doubles One',
         cell: ({ row }) => {
-            const isFinished = row.getValue('isFinished')
-
+            const isFinished = row.original.isFinished
+            const winnerId = row.original.winnerDoublesId
+            const doublesOneId = row.original.doublesOneId
+            const isWinner = winnerId === doublesOneId
             return (
                 <>
-                    {!isFinished ? (
-                        <div className="p-0.5 font-normal text-left ">
-                            {row.getValue('doublesOne')}
-                        </div>
+                    {isFinished ? (
+                        isWinner ? (
+                            <div className="p-0.5 font-bold text-left ">
+                                {row.getValue('doublesOne')}
+                            </div>
+                        ) : (
+                            <div className="p-0.5 font-thin text-left ">
+                                {row.getValue('doublesOne')}
+                            </div>
+                        )
                     ) : (
-                        <div className="p-0.5 font-thin text-left ">
+                        <div className="p-0.5 font-normal text-left ">
                             {row.getValue('doublesOne')}
                         </div>
                     )}
@@ -46,21 +50,35 @@ export const profileMatchesColumns: ColumnDef<ProfileMatchesTableData>[] = [
     {
         accessorKey: 'doublesOneGames',
         header: '',
+        cell: ({ row }) => {
+            const result: number = row.getValue('doublesOneGames')
+
+            return <>{result === 0 ? null : <div>{result}</div>}</>
+        },
     },
+
     {
         accessorKey: 'doublesTwo',
         header: 'Doubles Two',
         cell: ({ row }) => {
-            const isFinished = row.getValue('isFinished')
-
+            const isFinished = row.original.isFinished
+            const winnerId = row.original.winnerDoublesId
+            const doublesTwoId = row.original.doublesTwoId
+            const isWinner = winnerId === doublesTwoId
             return (
                 <>
-                    {!isFinished ? (
-                        <div className="p-0.5 font-normal text-left ">
-                            {row.getValue('doublesTwo')}
-                        </div>
+                    {isFinished ? (
+                        isWinner ? (
+                            <div className="p-0.5 font-bold text-left ">
+                                {row.getValue('doublesTwo')}
+                            </div>
+                        ) : (
+                            <div className="p-0.5 font-thin text-left ">
+                                {row.getValue('doublesTwo')}
+                            </div>
+                        )
                     ) : (
-                        <div className="p-0.5 font-thin text-left ">
+                        <div className="p-0.5 font-normal text-left ">
                             {row.getValue('doublesTwo')}
                         </div>
                     )}
@@ -72,6 +90,11 @@ export const profileMatchesColumns: ColumnDef<ProfileMatchesTableData>[] = [
     {
         accessorKey: 'doublesTwoGames',
         header: '',
+        cell: ({ row }) => {
+            const result: number = row.getValue('doublesTwoGames')
+
+            return <>{result === 0 ? null : <div>{result}</div>}</>
+        },
     },
 
     {
@@ -93,7 +116,7 @@ export const profileMatchesColumns: ColumnDef<ProfileMatchesTableData>[] = [
         },
         cell: ({ row }) => {
             return (
-                <div className="font-medium text-right">
+                <div className="font-normal text-right">
                     {row.getValue('matchStart')
                         ? new Date(row.getValue('matchStart')).toLocaleString()
                         : null}
@@ -101,70 +124,15 @@ export const profileMatchesColumns: ColumnDef<ProfileMatchesTableData>[] = [
             )
         },
     },
-    // {
-    //     accessorKey: 'categoryType',
-    //     header: ({ column }) => {
-    //         return (
-    //             <div className="text-center ">
-    //                 <Button
-    //                     variant="ghost"
-    //                     onClick={() =>
-    //                         column.toggleSorting(column.getIsSorted() === 'asc')
-    //                     }
-    //                 >
-    //                     Category Type
-    //                     <ArrowUpDown className="w-4 h-4 ml-2" />
-    //                 </Button>
-    //             </div>
-    //         )
-    //     },
-    //     cell: ({ row }) => {
-    //         return (
-    //             <div className="font-medium text-center">
-    //                 {row.getValue('categoryType')}
-    //             </div>
-    //         )
-    //     },
-    // },
-    // {
-    //     accessorKey: 'id',
-    //     header: () => <></>,
-    //     cell: () => <></>, //!  maybe i don't need to instantiate this two columns
-    //     enableHiding: false,
-    // },
-
     {
-        accessorKey: 'isFinished',
-        header: () => <></>,
-        cell: () => <></>, //!  maybe i don't need to instantiate this two columns
-        enableHiding: false,
+        accessorKey: 'eventName',
+        header: () => <div className="font-medium text-center">Event </div>,
+        cell: ({ row }) => {
+            return (
+                <div className="font-medium text-center">
+                    {row.getValue('eventName')}
+                </div>
+            )
+        },
     },
-    // { accessorKey: 'matches', header: 'Total matches' },
-    // { accessorKey: 'matchesWins', header: 'Winning matches' },
-    // {
-    //     id: 'actions',
-    //     cell: ({ row }) => {
-    //         const doublesId = row.original.id
-    //         return (
-    //             <DropdownMenu>
-    //                 <DropdownMenuTrigger asChild>
-    //                     <Button variant="ghost" className="w-8 h-8 p-0">
-    //                         <MoreHorizontal className="w-4 h-4" />
-    //                     </Button>
-    //                 </DropdownMenuTrigger>
-    //                 <DropdownMenuContent>
-    //                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-    //                     <DropdownMenuItem
-    //                         className="cursor-pointer"
-    //                         onClick={() => {
-    //                             console.log(doublesId)
-    //                         }}
-    //                     >
-    //                         Remove doubles from your doubles list
-    //                     </DropdownMenuItem>
-    //                 </DropdownMenuContent>
-    //             </DropdownMenu>
-    //         )
-    //     },
-    // },
 ]

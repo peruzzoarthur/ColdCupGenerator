@@ -6,18 +6,15 @@ export declare class MatchesController {
     private readonly matchesService;
     constructor(matchesService: MatchesService);
     create(createMatchDto: CreateMatchDto): Promise<{
+        id: string;
+        isFinished: boolean;
+        categoryId: string;
+        type: import(".prisma/client").$Enums.MatchType;
         category: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
-        categoryId: string;
-        type: import(".prisma/client").$Enums.MatchType;
-        id: string;
-        doubles: {
-            id: string;
-            categoryId: string;
-        }[];
         sets: {
             id: string;
             type: import(".prisma/client").$Enums.SetType;
@@ -25,35 +22,38 @@ export declare class MatchesController {
             result: string;
             isFinished: boolean;
         }[];
-        isFinished: boolean;
+        doubles: {
+            id: string;
+            categoryId: string;
+        }[];
     }>;
     findAll(): Promise<{
+        id: string;
+        isFinished: boolean;
+        eventId: string;
+        type: import(".prisma/client").$Enums.MatchType;
         category: {
             id: string;
             level: number;
             type: import(".prisma/client").$Enums.CatType;
         };
+        winner: {
+            id: string;
+            categoryId: string;
+        };
+        sets: {
+            id: string;
+            type: import(".prisma/client").$Enums.SetType;
+            setWinnerId: string;
+            result: string;
+            isFinished: boolean;
+        }[];
         matchDate: {
             id: string;
             eventId: string;
             matchId: string;
             start: Date;
             finish: Date;
-        };
-        type: import(".prisma/client").$Enums.MatchType;
-        id: string;
-        sets: {
-            id: string;
-            type: import(".prisma/client").$Enums.SetType;
-            setWinnerId: string;
-            result: string;
-            isFinished: boolean;
-        }[];
-        isFinished: boolean;
-        eventId: string;
-        winner: {
-            id: string;
-            categoryId: string;
         };
     }[]>;
     findResult(id: string): Promise<{
@@ -62,8 +62,9 @@ export declare class MatchesController {
     }>;
     findOne(id: string): Promise<{
         number: number;
-        type: import(".prisma/client").$Enums.MatchType;
         id: string;
+        isFinished: boolean;
+        type: import(".prisma/client").$Enums.MatchType;
         doubles: {
             players: {
                 id: string;
@@ -73,14 +74,13 @@ export declare class MatchesController {
                 position: import(".prisma/client").$Enums.PlayerPosition;
             }[];
         }[];
-        isFinished: boolean;
     }>;
     update(id: string, updateMatchDto: UpdateMatchDto): Promise<{
+        id: string;
         matchDate: {
             id: string;
             start: Date;
         };
-        id: string;
     }>;
     finishMatch(id: string, matchFinishedDto: MatchFinishedDto): Promise<{
         id: string;

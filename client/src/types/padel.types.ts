@@ -112,6 +112,7 @@ export type Match = {
     isFinished: boolean
     sets: Set[]
     winner: Double
+    winnerDoublesId: string | null
     matchDate?: MatchDate
 }
 
