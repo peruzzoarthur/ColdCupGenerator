@@ -8,7 +8,6 @@ import ball from '../../../styles/png/ball.png'
 import { PadelEvent } from '@/types/padel.types'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import { useToast } from '@/components/ui/use-toast'
-import { EventDashboard } from '@/components/custom/eventDashboard'
 import { axiosInstance } from '@/axiosInstance'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useGetCategories } from '@/hooks/useGetCategories'
@@ -38,7 +37,6 @@ function Events() {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const [showAllEvents, setShowAllEvents] = useState<boolean>(false)
-    // const [selectedEvent, setSelectedEvent] = useState<PadelEvent | undefined>()
     const [categoriesState, setCategoriesState] = useState<string[]>([])
     const [placesState, setPlacesState] = useState<string[]>([])
     const [courtsState, setCourtsState] = useState<string[]>([])
