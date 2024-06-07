@@ -87,6 +87,8 @@ interface DataTableProps<TData, TValue> {
 
     setCategoryFilter: React.Dispatch<React.SetStateAction<string>>
     eventCategories: Category[] | undefined
+    hasMatchFilter: boolean
+    setHasMatchFilter: React.Dispatch<React.SetStateAction<boolean>>
 }
 export function MatchDatesTable<TData, TValue>({
     columns,
@@ -117,6 +119,8 @@ export function MatchDatesTable<TData, TValue>({
     refetchMatchById,
     isFetchingMatchById,
     eventDoubles,
+    hasMatchFilter,
+    setHasMatchFilter,
 }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
@@ -181,6 +185,14 @@ export function MatchDatesTable<TData, TValue>({
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent className="w-56">
+                        <DropdownMenuLabel>Matches</DropdownMenuLabel>
+                        <DropdownMenuCheckboxItem
+                            checked={hasMatchFilter}
+                            onCheckedChange={setHasMatchFilter}
+                        >
+                            With date defined
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuSeparator />
                         <DropdownMenuLabel>Days</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuRadioGroup

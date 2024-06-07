@@ -55,6 +55,7 @@ import { axiosInstance } from '@/axiosInstance'
 import axios, { AxiosError } from 'axios'
 import { ErrorAlert } from './errorAlert'
 import { Link } from '@tanstack/react-router'
+import { useGetRole } from '@/hooks/useGetRole'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -70,6 +71,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
     const [doublesFilter, setDoublesFilter] = useState<string>('all')
     const [courtFilter, setCourtFilter] = useState<string>('all')
     const [categoryFilter, setCategoryFilter] = useState<string>('all')
+    const [hasMatchFilter, setHasMatchFilter] = useState<boolean>(false)
     const [matchDateIdState, setMatchDateIdState] = useState<
         string | undefined
     >()
@@ -85,6 +87,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
         eventById,
         isFetchingEventById,
     } = useGetEventById(event.id)
+
+    const { role } = useGetRole()
 
     const { eventMatchDates, refetchEventMatchDates } = useGetEventMatchDates(
         event.id
@@ -261,6 +265,11 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                     return md.categoryId === categoryFilter
                 }
             })
+            .filter((md) => {
+                if (hasMatchFilter) {
+                    return md.matchId !== null
+                } else return md
+            })
 
     return (
         <div className="flex flex-col w-full min-h-screen ">
@@ -292,74 +301,84 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                     </div>
                 )}
                 <main className="grid items-start flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 ">
-                    {eventById && eventById.isActive ? null : (
-                        <div className="flex flex-col items-center justify-center w-full space-y-5">
-                            {event.matches.length === 0 &&
-                            eventMatchesInfoById ? (
-                                <EventInfoCard
-                                    event={eventMatchesInfoById}
-                                    isAutoPopulateOn={isAutoPopulateOn}
-                                    setIsAutoPopulateOn={setIsAutoPopulateOn}
-                                    setIsEditEventOn={setIsEditEventOn}
-                                >
-                                    {eventMatchesInfoById.suitable &&
-                                    eventById ? (
-                                        <CoolButton
-                                            className="items-center justify-center"
-                                            onClick={async () =>
-                                                handleActivate(
-                                                    eventById.id,
-                                                    eventById.startDate,
-                                                    eventById.finishDate,
-                                                    eventById.timeOfFirstMatch,
-                                                    eventById.timeOfLastMatch,
-                                                    eventById.matchDurationInMinutes
-                                                )
-                                            }
-                                        >
-                                            Activate Event 🎾
-                                        </CoolButton>
-                                    ) : (
-                                        <div className="flex flex-col items-center justify-center">
-                                            <Alert
-                                                variant="destructive"
-                                                className="w-11/12 mb-2"
+                    {role === 'ADMIN' ? (
+                        eventById && eventById.isActive ? null : (
+                            <div className="flex flex-col items-center justify-center w-full space-y-5">
+                                {event.matches.length === 0 &&
+                                eventMatchesInfoById ? (
+                                    <EventInfoCard
+                                        event={eventMatchesInfoById}
+                                        isAutoPopulateOn={isAutoPopulateOn}
+                                        setIsAutoPopulateOn={
+                                            setIsAutoPopulateOn
+                                        }
+                                        setIsEditEventOn={setIsEditEventOn}
+                                    >
+                                        {eventMatchesInfoById.suitable &&
+                                        eventById ? (
+                                            <CoolButton
+                                                className="items-center justify-center"
+                                                onClick={async () =>
+                                                    handleActivate(
+                                                        eventById.id,
+                                                        eventById.startDate,
+                                                        eventById.finishDate,
+                                                        eventById.timeOfFirstMatch,
+                                                        eventById.timeOfLastMatch,
+                                                        eventById.matchDurationInMinutes
+                                                    )
+                                                }
                                             >
-                                                You need a bigger period of
-                                                time, more courts or places in
-                                                order to fit all matches...
-                                            </Alert>
-                                            <div className="flex items-center space-x-2"></div>
-                                        </div>
-                                    )}
-                                </EventInfoCard>
-                            ) : null}
+                                                Activate Event 🎾
+                                            </CoolButton>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center">
+                                                <Alert
+                                                    variant="destructive"
+                                                    className="w-11/12 mb-2"
+                                                >
+                                                    You need a bigger period of
+                                                    time, more courts or places
+                                                    in order to fit all
+                                                    matches...
+                                                </Alert>
+                                                <div className="flex items-center space-x-2"></div>
+                                            </div>
+                                        )}
+                                    </EventInfoCard>
+                                ) : null}
 
-                            {isEditEventOn && eventById ? (
-                                <UpdateEventForm
-                                    event={eventById}
-                                    refetchEventById={refetchEventById}
-                                    refetchEventMatchesInfoById={
-                                        refetchEventMatchesInfoById
-                                    }
-                                    defaultValues={{
-                                        eventName: eventById?.name,
-                                        categoriesIds: '',
-                                        placesIds: '',
-                                        startDate: new Date(event.startDate),
-                                        finishDate: new Date(event.finishDate),
-                                        matchDurationInMinutes:
-                                            event.matchDurationInMinutes.toString(),
-                                        timeOfFirstMatch:
-                                            event.timeOfFirstMatch.toString(),
-                                        timeOfLastMatch:
-                                            event.timeOfLastMatch.toString(),
-                                    }}
-                                    setIsEditEventOn={setIsEditEventOn}
-                                />
-                            ) : null}
-                        </div>
-                    )}
+                                {isEditEventOn && eventById ? (
+                                    <UpdateEventForm
+                                        event={eventById}
+                                        refetchEventById={refetchEventById}
+                                        refetchEventMatchesInfoById={
+                                            refetchEventMatchesInfoById
+                                        }
+                                        defaultValues={{
+                                            eventName: eventById?.name,
+                                            categoriesIds: '',
+                                            placesIds: '',
+                                            startDate: new Date(
+                                                event.startDate
+                                            ),
+                                            finishDate: new Date(
+                                                event.finishDate
+                                            ),
+                                            matchDurationInMinutes:
+                                                event.matchDurationInMinutes.toString(),
+                                            timeOfFirstMatch:
+                                                event.timeOfFirstMatch.toString(),
+                                            timeOfLastMatch:
+                                                event.timeOfLastMatch.toString(),
+                                        }}
+                                        setIsEditEventOn={setIsEditEventOn}
+                                    />
+                                ) : null}
+                            </div>
+                        )
+                    ) : null}
+
                     {doublesTableData && (
                         <Tabs defaultValue="all">
                             <div className="flex items-center justify-center w-full">
@@ -633,6 +652,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                         eventCourts={eventCourts}
                                         eventCategories={eventCategories}
                                         setCategoryFilter={setCategoryFilter}
+                                        hasMatchFilter={hasMatchFilter}
+                                        setHasMatchFilter={setHasMatchFilter}
                                     />
                                 </div>
                             </>

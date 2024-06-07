@@ -26,6 +26,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { HandleDoublesRequestToEventDto } from "./dto/handle-request.dto";
 
 @Controller("events")
 @ApiTags("events")
@@ -91,6 +92,36 @@ export class EventsController {
     );
   }
 
+  @Post("request")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["ADMIN", "USER"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async doublesRequestToEvent(
+    @Body() registerDoublesInEventDto: RegisterDoublesInEventDto
+  ) {
+    return await this.eventsService.doublesRequestToEvent(
+      registerDoublesInEventDto
+    );
+  }
+
+  @Post("handle-request")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async handleDoublesRequestToEvent(
+    @Body() handleDoublesRequestToEventDto: HandleDoublesRequestToEventDto
+  ) {
+    return await this.eventsService.handleRequest(
+      handleDoublesRequestToEventDto
+    );
+  }
+
   @Post("delete-doubles")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
@@ -131,12 +162,23 @@ export class EventsController {
   @Get("/event-info/:id")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
-  @Roles(["ADMIN"])
+  @Roles(["ADMIN", "USER"])
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @ApiBearerAuth()
   async getEventInfo(@Param("id") id: string) {
     return this.eventsService.getEventInfoForGenerateMatches(id);
+  }
+
+  @Get("/requests/:id")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async getEventRequests(@Param("id") id: string) {
+    return this.eventsService.getEventRequests(id);
   }
 
   @Delete(":id")

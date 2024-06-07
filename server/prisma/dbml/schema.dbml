@@ -10,6 +10,7 @@ Table Event {
   players Player [not null]
   matches Match [not null]
   places Place [not null]
+  eventRequests EventRequest [not null]
   eventDoubles EventDouble [not null]
   startDate DateTime
   finishDate DateTime
@@ -22,6 +23,21 @@ Table Event {
   eventType EventType [not null, default: 'ALLxALL']
   courts Court [not null]
   invite Invite
+  Double Double
+  doubleId String
+}
+
+Table EventRequest {
+  event Event [not null]
+  eventId String [not null]
+  double Double [not null]
+  doubleId String [not null]
+  category Category [not null]
+  categoryId String [not null]
+
+  indexes {
+    (eventId, doubleId, categoryId) [pk]
+  }
 }
 
 Table Court {
@@ -63,6 +79,7 @@ Table Category {
   events Event [not null]
   matches Match [not null]
   eventDoubles EventDouble [not null]
+  eventRequests EventRequest [not null]
 
   indexes {
     (level, type) [unique]
@@ -187,7 +204,9 @@ Table Double {
   matchesWins Match [not null]
   setsWins Set [not null]
   gamesWins Game [not null]
-  eventDouble EventDouble [not null]
+  eventRequests EventRequest [not null]
+  eventRequest Event [not null]
+  EventDouble EventDouble [not null]
 }
 
 Table Place {
@@ -296,6 +315,14 @@ Enum PlayerPosition {
   REVES
   DRIVE
 }
+
+Ref: Event.doubleId > Double.id
+
+Ref: EventRequest.eventId > Event.id
+
+Ref: EventRequest.doubleId > Double.id
+
+Ref: EventRequest.categoryId > Category.id
 
 Ref: Court.placeId > Place.id
 

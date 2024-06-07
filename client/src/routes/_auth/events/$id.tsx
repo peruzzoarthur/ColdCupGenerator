@@ -92,6 +92,41 @@ function Event() {
         }
     }
 
+    const doublesRequestHandler = async (doublesId: string) => {
+        try {
+            const requestBody = {
+                doublesId: doublesId,
+                eventId: eventById?.id,
+            }
+
+            const data: AxiosResponse<EventDouble> = await axiosInstance.post(
+                '/events/request',
+                requestBody
+            )
+            toast({
+                title: 'Success! 🙌',
+                description: 'Request sent to event',
+            })
+            await refetchEventMatchesInfoById()
+            await refetchEventById()
+            return data
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response && axiosError.response.status === 400) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                } else {
+                    setError(true)
+                    setErrorMessage('Error creating doubles')
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error creating doubles')
+            }
+        }
+    }
+
     return (
         <>
             {eventById && (
@@ -135,9 +170,9 @@ function Event() {
                                                 <DropdownMenuItem
                                                     className="cursor-pointer"
                                                     onClick={async () =>
-                                                        registerDoubleOnSubmit({
-                                                            doublesId: d.id,
-                                                        })
+                                                        doublesRequestHandler(
+                                                            d.id
+                                                        )
                                                     }
                                                 >
                                                     {d.players

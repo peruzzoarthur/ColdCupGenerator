@@ -13,6 +13,16 @@ import { Button } from '../ui/button'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { axiosInstance } from '@/axiosInstance'
+import { useState } from 'react'
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ListFilter } from 'lucide-react'
 
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
@@ -56,6 +66,12 @@ export function AvailableMatchesSelectCard({
     refetchMatchDateById,
     refetchMatchById,
 }: AvailableMatchesSelectProps) {
+    const [showMatchesWithDate, setShowMatchesWithDate] =
+        useState<boolean>(false)
+
+    const [showMatchesWithoutDate, setShowMatchesWithoutDate] =
+        useState<boolean>(true)
+
     const handleUpdateMatch = async (matchId: string, matchDateId: string) => {
         try {
             const activateEventDto = {
@@ -74,6 +90,15 @@ export function AvailableMatchesSelectCard({
     }
 
     const currentMatch = matchDateById?.match
+    console.log(matches)
+
+    if (showMatchesWithDate && !showMatchesWithoutDate) {
+        matches = matches?.filter((m) => m.matchDate !== null)
+    }
+
+    if (showMatchesWithoutDate && !showMatchesWithDate) {
+        matches = matches?.filter((m) => m.matchDate === null)
+    }
 
     return (
         <>
@@ -83,6 +108,39 @@ export function AvailableMatchesSelectCard({
                         className="items-end cursor-pointer"
                         onClick={() => setMatchAssignOn(false)}
                     ></Cross2Icon>
+                </div>
+                <div className="flex items-center gap-2 ml-auto">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1 text-sm h-7"
+                            >
+                                <ListFilter className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only">
+                                    Filter
+                                </span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Show matches</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+
+                            <DropdownMenuCheckboxItem
+                                checked={showMatchesWithDate}
+                                onCheckedChange={setShowMatchesWithDate}
+                            >
+                                With date
+                            </DropdownMenuCheckboxItem>
+                            <DropdownMenuCheckboxItem
+                                checked={showMatchesWithoutDate}
+                                onCheckedChange={setShowMatchesWithoutDate}
+                            >
+                                Without date
+                            </DropdownMenuCheckboxItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
                 {currentMatch && !isFetchingMatchDateById ? (
                     <CardHeader>

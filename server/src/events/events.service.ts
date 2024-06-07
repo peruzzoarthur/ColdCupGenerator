@@ -3,12 +3,12 @@ import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 import { PrismaService } from "src/prisma.service";
 import { RegisterDoublesInEventDto } from "./dto/register-doubles-event.dto";
-import { CategoriesService } from "src/categories/categories.service";
 import { GetEventByIdDto } from "./dto/get-event-by-id.dto";
 import { MatchesService } from "src/matches/matches.service";
 import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
 import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
+import { HandleDoublesRequestToEventDto } from "./dto/handle-request.dto";
 
 type Day = {
   day: number;
@@ -960,185 +960,105 @@ export class EventsService {
     return `This action updates a #${id} event`;
   }
 
-  // async oldActivateEventWithAutoPopulate(activateEventDto: ActivateEventDto) {
-  //   // ! get the event that will be activated
-  //   const event = await this.getEventById(activateEventDto);
+  async doublesRequestToEvent(
+    doublesRequestToEventDto: RegisterDoublesInEventDto
+  ) {
+    const doubles = await this.prismaService.double.findUniqueOrThrow({
+      where: { id: doublesRequestToEventDto.doublesId },
+    });
 
-  //   // ? THIS IS COMMENTED BECAUSE IM TESTING CREATE MATCHES
-  //   // ! create the schedule for the event
-  //   await this.createSchedule({
-  //     id: activateEventDto.id,
-  //     startDate: activateEventDto.startDate,
-  //     finishDate: activateEventDto.finishDate,
-  //     timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
-  //     timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
-  //     matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
-  //     courtIds: activateEventDto.courtsIds,
-  //   });
+    const event = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: doublesRequestToEventDto.eventId },
+      select: {
+        id: true,
+        eventDoubles: true,
+      },
+    });
 
-  //   let matchDatesAvailable = (
-  //     await this.getEventById({ id: event.id })
-  //   ).matchDates
-  //     .filter((matchDate) => matchDate.match === null)
-  //     .map((md) => {
-  //       return {
-  //         id: md.id,
-  //         start: md.start,
-  //         finish: md.finish,
-  //       };
-  //     });
+    const eventDoublesIds = event.eventDoubles.flatMap((d) => d.doubleId);
 
-  //   // !  get doubles, categories and matchDatesAvailable to use in loop to populate matches
-  //   const doubles = event.categories.flatMap((cat) =>
-  //     cat.eventDoubles.map((ed) => {
-  //       return {
-  //         doublesId: ed.doubleId,
-  //         catId: ed.double.categoryId,
-  //         doublesRestState: matchDatesAvailable[0].start, //!
-  //       };
-  //     })
-  //   );
-  //   const categoriesIds = event.categories.flatMap((cat) => cat.id);
+    if (eventDoublesIds.includes(doubles.id)) {
+      throw new HttpException(
+        "Doubles already registered at this event...",
+        HttpStatus.CONFLICT
+      );
+    }
 
-  //   let matchesToAdd: {
-  //     categoryId: string;
-  //     matchId: number;
-  //     doublesA: { doublesId: string; doublesRestState: Date };
-  //     doublesB: { doublesId: string; doublesRestState: Date };
-  //   }[] = [];
+    const createRequest = await this.prismaService.event.update({
+      where: { id: event.id },
+      data: {
+        eventRequests: {
+          create: {
+            doubleId: doubles.id,
+            categoryId: doubles.categoryId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        eventRequests: true,
+      },
+    });
 
-  //   let matchCount: number = 0;
+    return createRequest;
+  }
 
-  //   for (let c = 0; c < categoriesIds.length; c++) {
-  //     const filteredDoublesByCategory = doubles.filter(
-  //       (d) => d.catId === categoriesIds[c]
-  //     );
+  async getEventRequests(id: string) {
+    const eventRequests = await this.prismaService.event.findUniqueOrThrow({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        eventRequests: true,
+      },
+    });
+    return eventRequests;
+  }
 
-  //     for (let i = 0; i < filteredDoublesByCategory.length; i++) {
-  //       for (let j = i + 1; j < filteredDoublesByCategory.length; j++) {
-  //         matchesToAdd.push({
-  //           categoryId: categoriesIds[c],
-  //           matchId: matchCount,
-  //           doublesA: {
-  //             doublesId: filteredDoublesByCategory[i].doublesId,
-  //             doublesRestState: filteredDoublesByCategory[i].doublesRestState,
-  //           },
-  //           doublesB: {
-  //             doublesId: filteredDoublesByCategory[j].doublesId,
-  //             doublesRestState: filteredDoublesByCategory[j].doublesRestState,
-  //           },
-  //         });
-  //         matchCount++;
-  //       }
-  //     }
-  //   }
+  async handleRequest(
+    handleDoublesRequestToEventDto: HandleDoublesRequestToEventDto
+  ) {
+    const eventRequest =
+      await this.prismaService.eventRequest.findUniqueOrThrow({
+        where: {
+          eventId_doubleId_categoryId: {
+            eventId: handleDoublesRequestToEventDto.eventId,
+            categoryId: handleDoublesRequestToEventDto.categoryId,
+            doubleId: handleDoublesRequestToEventDto.doubleId,
+          },
+        },
+      });
 
-  //   for (let m = 0; matchesToAdd.length >= 0; m++) {
-  //     console.log(`Match #${m}`);
-  //     if (matchesToAdd.length === 0) {
-  //       return "done";
-  //     }
+    if (handleDoublesRequestToEventDto.accept) {
+      const registerDoubles = await this.prismaService.event.update({
+        where: {
+          id: handleDoublesRequestToEventDto.eventId,
+        },
+        data: {
+          eventDoubles: {
+            create: {
+              doubleId: eventRequest.doubleId,
+              categoryId: eventRequest.categoryId,
+            },
+          },
+        },
+      });
+      return registerDoubles;
+    }
 
-  //     const doublesA = await this.prismaService.eventDouble.findUniqueOrThrow({
-  //       where: {
-  //         eventId_doubleId_categoryId: {
-  //           eventId: event.id,
-  //           categoryId: matchesToAdd[0].categoryId,
-  //           doubleId: matchesToAdd[0].doublesA.doublesId,
-  //         },
-  //       },
-  //       select: {
-  //         doubleId: true,
-  //         atRest: true,
-  //         categoryId: true,
-  //       },
-  //     });
-
-  //     const doublesB = await this.prismaService.eventDouble.findUniqueOrThrow({
-  //       where: {
-  //         eventId_doubleId_categoryId: {
-  //           eventId: event.id,
-  //           categoryId: matchesToAdd[0].categoryId,
-  //           doubleId: matchesToAdd[0].doublesB.doublesId,
-  //         },
-  //       },
-  //       select: {
-  //         doubleId: true,
-  //         atRest: true,
-  //         categoryId: true,
-  //       },
-  //     });
-
-  //     if (doublesA === null || doublesB === null) {
-  //       throw new HttpException(
-  //         "One of the doubles is null",
-  //         HttpStatus.BAD_REQUEST
-  //       );
-  //     }
-
-  //     matchDatesAvailable = (
-  //       await this.getEventById({ id: event.id })
-  //     ).matchDates
-  //       .filter((matchDate) => matchDate.match === null) // ! this is not working yet because im not creating matches... but i guess it's ok for now... loop will only get bigger
-  //       .map((md) => {
-  //         return {
-  //           id: md.id,
-  //           start: md.start,
-  //           finish: md.finish,
-  //         };
-  //       });
-
-  //     console.log(`MatchDatesAvailable: ${matchDatesAvailable.length}`);
-
-  //     //! LOOPING OVER MATCH SLOTS
-  //     for (let i = 0; i <= matchDatesAvailable.length; i++) {
-  //       console.log(
-  //         `
-  //         doublesA.atRest: ${doublesA.atRest};
-  //         doublesB.atRest: ${doublesB.atRest};
-  //         matchTime: ${matchDatesAvailable[i].start}
-  //         `
-  //       );
-
-  //       if (
-  //         doublesA.atRest <= matchDatesAvailable[i].start &&
-  //         doublesB.atRest <= matchDatesAvailable[i].start
-  //       ) {
-  //         await this.matchesService.create({
-  //           doublesIds: [doublesA.doubleId, doublesB.doubleId],
-  //           categoryId: doublesA.categoryId,
-
-  //           eventId: event.id,
-  //           matchDateId: matchDatesAvailable[i].id,
-  //         });
-
-  //         matchesToAdd.shift();
-  //         await this.prismaService.eventDouble.updateMany({
-  //           where: {
-  //             OR: [
-  //               {
-  //                 eventId: activateEventDto.id,
-  //                 doubleId: doublesA.doubleId,
-  //                 categoryId: doublesA.categoryId,
-  //               },
-  //               {
-  //                 eventId: activateEventDto.id,
-  //                 doubleId: doublesB.doubleId,
-  //                 categoryId: doublesB.categoryId,
-  //               },
-  //             ],
-  //           },
-  //           data: {
-  //             atRest: new Date(
-  //               matchDatesAvailable[i].finish.valueOf() + 3600000 * 2
-  //             ),
-  //           },
-  //         });
-  //         console.log("🌞goSeeTheSun🌞");
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   return matchesToAdd;
-  // }
+    if (!handleDoublesRequestToEventDto.accept) {
+      return await this.prismaService.eventRequest.delete({
+        where: {
+          eventId_doubleId_categoryId: {
+            eventId: eventRequest.eventId,
+            categoryId: eventRequest.categoryId,
+            doubleId: eventRequest.doubleId,
+          },
+        },
+      });
+    }
+    return;
+  }
 }

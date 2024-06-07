@@ -17,13 +17,14 @@ datasource db {
 }
 
 model Event {
-  id                     String        @id @default(uuid())
+  id                     String         @id @default(uuid())
   name                   String
   categories             Category[]
-  isActive               Boolean       @default(false)
+  isActive               Boolean        @default(false)
   players                Player[]
   matches                Match[]
   places                 Place[]
+  eventRequests          EventRequest[]
   eventDoubles           EventDouble[]
   startDate              DateTime?
   finishDate             DateTime?
@@ -33,9 +34,22 @@ model Event {
   games                  Game[]
   sets                   Set[]
   matchDates             MatchDate[]
-  eventType              EventType     @default(ALLxALL) // todo change this default later
+  eventType              EventType      @default(ALLxALL) // todo change this default later
   courts                 Court[]
   invite                 Invite?
+  Double                 Double?        @relation(fields: [doubleId], references: [id])
+  doubleId               String?
+}
+
+model EventRequest {
+  event      Event    @relation(fields: [eventId], references: [id])
+  eventId    String
+  double     Double   @relation(fields: [doubleId], references: [id])
+  doubleId   String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  @@id([eventId, doubleId, categoryId])
 }
 
 enum EventType {
@@ -70,14 +84,15 @@ model EventDouble {
 }
 
 model Category {
-  id           String        @id @default(uuid())
-  level        Int
-  players      Player[]
-  doubles      Double[]
-  type         CatType
-  events       Event[]
-  matches      Match[]
-  eventDoubles EventDouble[]
+  id            String         @id @default(uuid())
+  level         Int
+  players       Player[]
+  doubles       Double[]
+  type          CatType
+  events        Event[]
+  matches       Match[]
+  eventDoubles  EventDouble[]
+  eventRequests EventRequest[]
 
   @@unique([level, type], name: "CategoryId")
 }
@@ -223,17 +238,19 @@ enum PlayerPosition {
 }
 
 model Double {
-  id          String        @id @default(uuid())
-  players     Player[]
-  matches     Match[]
-  category    Category      @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  games       Game[]        @relation("GamesPlayed")
-  sets        Set[]
-  matchesWins Match[]       @relation("MatchWinnerDouble")
-  setsWins    Set[]         @relation("SetWinnerDouble")
-  gamesWins   Game[]        @relation("GameWinnerDouble")
-  eventDouble EventDouble[]
+  id            String         @id @default(uuid())
+  players       Player[]
+  matches       Match[]
+  category      Category       @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  games         Game[]         @relation("GamesPlayed")
+  sets          Set[]
+  matchesWins   Match[]        @relation("MatchWinnerDouble")
+  setsWins      Set[]          @relation("SetWinnerDouble")
+  gamesWins     Game[]         @relation("GameWinnerDouble")
+  eventRequests EventRequest[]
+  eventRequest  Event[]
+  EventDouble   EventDouble[]
 }
 
 model Place {
