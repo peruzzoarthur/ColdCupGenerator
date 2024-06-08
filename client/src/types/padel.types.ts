@@ -57,6 +57,15 @@ export type EventDouble = {
     event?: PadelEvent
 }
 
+export type EventRequest = {
+    categoryId: string
+    doubleId: string
+    eventId: string
+    double?: Double
+    category?: Category
+    event?: PadelEvent
+}
+
 export type Place = {
     id: string
     name: string
@@ -84,6 +93,7 @@ export type PadelEvent = {
     name: string
     places: Place[]
     eventDoubles?: EventDouble[]
+    eventRequests?: EventRequest[]
     categories: Category[]
     matches: Match[]
     startDate: string

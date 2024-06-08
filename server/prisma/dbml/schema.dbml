@@ -206,7 +206,7 @@ Table Double {
   gamesWins Game [not null]
   eventRequests EventRequest [not null]
   eventRequest Event [not null]
-  EventDouble EventDouble [not null]
+  eventDouble EventDouble [not null]
 }
 
 Table Place {

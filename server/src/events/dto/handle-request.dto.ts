@@ -15,5 +15,5 @@ export class HandleDoublesRequestToEventDto {
 
   @IsBoolean()
   @IsNotEmpty()
-  accept: boolean;
+  accepted: boolean;
 }

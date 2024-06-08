@@ -250,7 +250,7 @@ model Double {
   gamesWins     Game[]         @relation("GameWinnerDouble")
   eventRequests EventRequest[]
   eventRequest  Event[]
-  EventDouble   EventDouble[]
+  eventDouble   EventDouble[]
 }
 
 model Place {

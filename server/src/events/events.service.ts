@@ -1011,7 +1011,21 @@ export class EventsService {
       },
       select: {
         id: true,
-        eventRequests: true,
+        eventRequests: {
+          select: {
+            event: true,
+            eventId: true,
+            double: {
+              select: {
+                id: true,
+                players: true,
+              },
+            },
+            doubleId: true,
+            category: true,
+            categoryId: true,
+          },
+        },
       },
     });
     return eventRequests;
@@ -1031,7 +1045,7 @@ export class EventsService {
         },
       });
 
-    if (handleDoublesRequestToEventDto.accept) {
+    if (handleDoublesRequestToEventDto.accepted) {
       const registerDoubles = await this.prismaService.event.update({
         where: {
           id: handleDoublesRequestToEventDto.eventId,
@@ -1045,10 +1059,19 @@ export class EventsService {
           },
         },
       });
+      await this.prismaService.eventRequest.delete({
+        where: {
+          eventId_doubleId_categoryId: {
+            eventId: eventRequest.eventId,
+            categoryId: eventRequest.categoryId,
+            doubleId: eventRequest.doubleId,
+          },
+        },
+      });
       return registerDoubles;
     }
 
-    if (!handleDoublesRequestToEventDto.accept) {
+    if (!handleDoublesRequestToEventDto.accepted) {
       return await this.prismaService.eventRequest.delete({
         where: {
           eventId_doubleId_categoryId: {

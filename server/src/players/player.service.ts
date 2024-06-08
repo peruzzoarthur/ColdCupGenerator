@@ -167,6 +167,7 @@ export class PlayerService {
               },
             },
             matchesWins: true,
+            eventDouble: true,
           },
         },
       },
