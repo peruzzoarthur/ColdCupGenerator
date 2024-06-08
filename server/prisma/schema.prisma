@@ -41,20 +41,26 @@ model Event {
   doubleId               String?
 }
 
+enum EventType {
+  ALLxALL
+  GROUPS
+}
+
 model EventRequest {
-  event      Event    @relation(fields: [eventId], references: [id])
+  event      Event         @relation(fields: [eventId], references: [id])
   eventId    String
-  double     Double   @relation(fields: [doubleId], references: [id])
+  double     Double        @relation(fields: [doubleId], references: [id])
   doubleId   String
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category      @relation(fields: [categoryId], references: [id])
   categoryId String
+  status     RequestStatus @default(PENDING)
 
   @@id([eventId, doubleId, categoryId])
 }
 
-enum EventType {
-  ALLxALL
-  GROUPS
+enum RequestStatus {
+  PENDING
+  APPROVED
 }
 
 model Court {
@@ -199,6 +205,8 @@ model Invite {
   id         String     @id @default(uuid())
   inviteType InviteType
   players    Player[]
+  double     Double?    @relation(fields: [doublesId], references: [id])
+  doublesId  String?
   event      Event?     @relation(fields: [eventId], references: [id])
   eventId    String?    @unique
   match      Match?     @relation(fields: [matchId], references: [id])
@@ -251,6 +259,7 @@ model Double {
   eventRequests EventRequest[]
   eventRequest  Event[]
   eventDouble   EventDouble[]
+  invites       Invite[]
 }
 
 model Place {

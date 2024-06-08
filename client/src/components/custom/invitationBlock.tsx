@@ -27,7 +27,10 @@ export const InvitationBlock = ({
 
     const { playerById: invited } = useGetPlayerById(invitation.invitedId)
 
-    const acceptDoublesInvite = async (inviteId: string, accepted: boolean) => {
+    const respondDoublesInvite = async (
+        inviteId: string,
+        accepted: boolean
+    ) => {
         try {
             const requestBody = {
                 inviteId: inviteId,
@@ -70,7 +73,7 @@ export const InvitationBlock = ({
                 requestBody
             )
             toast({
-                title: 'Request canceled',
+                title: 'Invite canceled',
             })
             refetchPlayerInvitations()
             return data.data
@@ -87,6 +90,73 @@ export const InvitationBlock = ({
             }
         }
     }
+
+    const respondEventInvite = async (
+        inviteId: string,
+        accepted: boolean,
+        eventId: string
+    ) => {
+        try {
+            const requestBody = {
+                inviteId: inviteId,
+                accepted: accepted,
+                eventId: eventId,
+            }
+            const data = await axiosInstance.post(
+                'invites/respond-event-invite',
+                requestBody
+            )
+            accepted
+                ? toast({
+                      title: 'Accepted event invite',
+                  })
+                : toast({
+                      title: 'Request denied',
+                  })
+            refetchPlayerInvitations()
+            return data.data
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error responding to invitation.')
+            }
+        }
+    }
+
+    const cancelEventInvite = async (inviteId: string) => {
+        try {
+            const requestBody = {
+                inviteId: inviteId,
+            }
+            const data = await axiosInstance.post(
+                'invites/cancel-event-invite',
+                requestBody
+            )
+            toast({
+                title: 'Invite canceled',
+            })
+            refetchPlayerInvitations()
+            return data.data
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error responding to invitation.')
+            }
+        }
+    }
+
     return (
         <>
             {invitation.inviteType === 'DOUBLES' && (
@@ -106,7 +176,7 @@ export const InvitationBlock = ({
                                         variant="ghost"
                                         className="w-12 h-12 rounded-full"
                                         onClick={() =>
-                                            acceptDoublesInvite(
+                                            respondDoublesInvite(
                                                 invitation.id,
                                                 true
                                             )
@@ -118,7 +188,7 @@ export const InvitationBlock = ({
                                         variant="ghost"
                                         className="w-12 h-12 rounded-full"
                                         onClick={() =>
-                                            acceptDoublesInvite(
+                                            respondDoublesInvite(
                                                 invitation.id,
                                                 false
                                             )
@@ -157,11 +227,73 @@ export const InvitationBlock = ({
             )}
             {invitation.inviteType === 'EVENT' && (
                 <>
-                    <p className="font-semibold">{invitation.inviteType}</p>
-                    <p>eventId...</p>
+                    {/* The actual user is the invited */}
+                    <div className="grid grid-flow-row-dense grid-cols-2">
+                        {playerId === invitation.invitedId && (
+                            <>
+                                <div className="flex flex-col justify-center">
+                                    <p className="font-semibold">
+                                        {invitation.inviteType}
+                                    </p>
+                                    <p className="text-muted-foreground">{`'${inviter?.firstName} ${inviter?.lastName} - [${inviter?.category.level} ${inviter?.category.type}]' invites you to event $EVENT`}</p>
+                                </div>
+                                <div className="flex flex-col items-end">
+                                    <Button
+                                        variant="ghost"
+                                        className="w-12 h-12 rounded-full"
+                                        onClick={() =>
+                                            respondEventInvite(
+                                                invitation.id,
+                                                true,
+                                                invitation.eventId ?? ''
+                                            )
+                                        }
+                                    >
+                                        <Check />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        className="w-12 h-12 rounded-full"
+                                        onClick={() =>
+                                            respondEventInvite(
+                                                invitation.id,
+                                                false,
+                                                invitation.eventId ?? ''
+                                            )
+                                        }
+                                    >
+                                        <X />
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                        {/* The actual user is the inviter */}
+                        {playerId === invitation.inviterId && (
+                            <>
+                                <div className="flex flex-col justify-center">
+                                    <p className="font-semibold">
+                                        {invitation.inviteType}
+                                    </p>
+                                    <p className="text-muted-foreground">{`You invited '${invited?.firstName} ${invited?.lastName} - [${invited?.category.level} ${invited?.category.type}]' for event $EVENT`}</p>
+                                </div>
+                                <div className="flex flex-col items-end">
+                                    <Button
+                                        variant="ghost"
+                                        className="w-12 h-12 rounded-full"
+                                        onClick={() =>
+                                            cancelEventInvite(invitation.id)
+                                        }
+                                    >
+                                        <X />
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </div>
                     <Separator className="my-2" />
                 </>
             )}
+
             {invitation.inviteType === 'MATCH' && (
                 <>
                     <p className="font-semibold">{invitation.inviteType}</p>

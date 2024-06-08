@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
-import { ErrorResponse, EventRequest } from '@/types/padel.types'
+import { ErrorResponse, EventRequest, PadelEvent } from '@/types/padel.types'
 import { Button } from '../ui/button'
 import { Check, ChevronLeft, ChevronRight, Copy, X } from 'lucide-react'
 import {
@@ -19,12 +19,20 @@ import { useToast } from '../ui/use-toast'
 import axios, { AxiosError } from 'axios'
 import { useState } from 'react'
 import { ErrorAlert } from './errorAlert'
+import { Separator } from '../ui/separator'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 type EventRequestsCardProps = {
     requests: EventRequest[] | undefined
+    refetchEventRequestsById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
 
-export function EventRequestsCard({ requests }: EventRequestsCardProps) {
+export function EventRequestsCard({
+    requests,
+    refetchEventRequestsById,
+}: EventRequestsCardProps) {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
@@ -53,6 +61,7 @@ export function EventRequestsCard({ requests }: EventRequestsCardProps) {
                 : toast({
                       title: 'Request denied',
                   })
+            refetchEventRequestsById()
             return data.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -89,46 +98,51 @@ export function EventRequestsCard({ requests }: EventRequestsCardProps) {
                 </div>
             </CardHeader>
             <CardContent className="p-6 text-sm">
-                <div className="grid grid-flow-row-dense grid-cols-2">
+                <div className="grid grid-flow-row-dense grid-cols-1">
+                    <Separator className="mb-2" />
+
                     {requests?.length !== 0 ? (
                         requests?.map((req) => (
                             <>
-                                <div className="flex flex-col justify-center">
-                                    <p>
-                                        {`[${req.category?.level} ${req.category?.type}]
+                                <div className="flex flex-row justify-between">
+                                    <div className="flex flex-col justify-center">
+                                        <p>
+                                            {`[${req.category?.level} ${req.category?.type}]
                                 - ${req.double?.players[0].firstName} ${req.double?.players[0].lastName} / ${req.double?.players[1].firstName} ${req.double?.players[1].lastName}`}
-                                    </p>
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-col items-end ">
+                                        <Button
+                                            variant="ghost"
+                                            className="w-12 h-12 rounded-full"
+                                            onClick={() =>
+                                                handleRequestToEvent(
+                                                    req.eventId,
+                                                    req.doubleId,
+                                                    req.categoryId,
+                                                    true
+                                                )
+                                            }
+                                        >
+                                            <Check />
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            className="w-12 h-12 rounded-full"
+                                            onClick={() =>
+                                                handleRequestToEvent(
+                                                    req.eventId,
+                                                    req.doubleId,
+                                                    req.categoryId,
+                                                    false
+                                                )
+                                            }
+                                        >
+                                            <X />
+                                        </Button>
+                                    </div>
                                 </div>
-                                <div className="flex flex-col items-end">
-                                    <Button
-                                        variant="ghost"
-                                        className="w-12 h-12 rounded-full"
-                                        onClick={() =>
-                                            handleRequestToEvent(
-                                                req.eventId,
-                                                req.doubleId,
-                                                req.categoryId,
-                                                true
-                                            )
-                                        }
-                                    >
-                                        <Check />
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        className="w-12 h-12 rounded-full"
-                                        onClick={() =>
-                                            handleRequestToEvent(
-                                                req.eventId,
-                                                req.doubleId,
-                                                req.categoryId,
-                                                false
-                                            )
-                                        }
-                                    >
-                                        <X />
-                                    </Button>
-                                </div>
+                                <Separator />
                             </>
                         ))
                     ) : (

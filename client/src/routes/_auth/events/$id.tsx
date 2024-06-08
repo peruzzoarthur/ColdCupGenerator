@@ -14,6 +14,7 @@ import {
     Double,
     ErrorResponse,
     EventDouble,
+    InviteType,
     PadelEvent,
 } from '@/types/padel.types'
 import { createFileRoute } from '@tanstack/react-router'
@@ -92,37 +93,37 @@ function Event() {
         }
     }
 
-    const doublesRequestHandler = async (doublesId: string) => {
+    const sendEventInvite = async (
+        invitedId: string,
+        inviteType: InviteType
+    ) => {
         try {
             const requestBody = {
-                doublesId: doublesId,
+                invitedId: invitedId,
+                inviteType: inviteType,
                 eventId: eventById?.id,
             }
+            if (inviteType === 'EVENT') {
+                const data = await axiosInstance.post(
+                    'invites/event-invite',
+                    requestBody
+                )
+                toast({
+                    title: 'Sent invite to play event.',
+                })
 
-            const data: AxiosResponse<EventDouble> = await axiosInstance.post(
-                '/events/request',
-                requestBody
-            )
-            toast({
-                title: 'Success! 🙌',
-                description: 'Request sent to event',
-            })
-            await refetchEventMatchesInfoById()
-            await refetchEventById()
-            return data
+                return data.data
+            }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>
-                if (axiosError.response && axiosError.response.status === 400) {
+                if (axiosError.response) {
                     setError(true)
                     setErrorMessage(axiosError.response.data.message)
-                } else {
-                    setError(true)
-                    setErrorMessage('Error creating doubles')
                 }
             } else {
                 setError(true)
-                setErrorMessage('Error creating doubles')
+                setErrorMessage('Error sending invitation.')
             }
         }
     }
@@ -152,8 +153,8 @@ function Event() {
                                 />
                             )}
 
-                            {role === 'USER' && !eventById.isActive && (
-                                <div className="flex justify-center">
+                            {!eventById.isActive && (
+                                <div className="flex justify-center p-6">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger>
                                             <CoolButton className="items-center justify-center">
@@ -166,27 +167,37 @@ function Event() {
                                             </DropdownMenuLabel>
                                             <DropdownMenuSeparator />
 
-                                            {playerById?.doubles.map((d) => (
-                                                <DropdownMenuItem
-                                                    className="cursor-pointer"
-                                                    onClick={async () =>
-                                                        doublesRequestHandler(
-                                                            d.id
-                                                        )
-                                                    }
-                                                >
-                                                    {d.players
-                                                        .filter(
-                                                            (p) =>
-                                                                p.id !==
-                                                                playerById.id
-                                                        )
-                                                        .map(
-                                                            (p) =>
-                                                                `${p.firstName} ${p.lastName}`
-                                                        )}
-                                                </DropdownMenuItem>
-                                            ))}
+                                            {playerById?.doubles.map((d) => {
+                                                const otherPlayerId = d.players
+                                                    .filter(
+                                                        (p) =>
+                                                            p.id !==
+                                                            playerById.id
+                                                    )
+                                                    .map((p) => p.id)[0]
+                                                return (
+                                                    <DropdownMenuItem
+                                                        className="cursor-pointer"
+                                                        onClick={async () =>
+                                                            sendEventInvite(
+                                                                otherPlayerId,
+                                                                InviteType.EVENT
+                                                            )
+                                                        }
+                                                    >
+                                                        {d.players
+                                                            .filter(
+                                                                (p) =>
+                                                                    p.id !==
+                                                                    playerById.id
+                                                            )
+                                                            .map(
+                                                                (p) =>
+                                                                    `${p.firstName} ${p.lastName}`
+                                                            )}
+                                                    </DropdownMenuItem>
+                                                )
+                                            })}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </div>

@@ -22,6 +22,9 @@ import { JwtPayload } from "src/auth/types/auth.types";
 import { CreateDoublesInviteDto } from "./dto/create-doubles-invite.dto";
 import { RespondDoublesInviteDto } from "./dto/respond-doubles-invite.dto";
 import { CancelDoublesInviteDto } from "./dto/cancel-doubles-invite.dto";
+import { CreateEventInviteDto } from "./dto/create-event-invite.dto";
+import { RespondEventInviteDto } from "./dto/respond-event-invite.dto";
+import { CancelEventInviteDto } from "./dto/cancel-event-invite.dto";
 
 @Controller("invites")
 @ApiTags("invites")
@@ -45,6 +48,23 @@ export class InvitesController {
     );
   }
 
+  @Post("event-invite")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  createEventInvitation(
+    @Request() req: JwtPayload,
+    @Body() createEventInviteDto: CreateEventInviteDto
+  ) {
+    return this.invitesService.createEventInvitation(
+      req.user.id,
+      createEventInviteDto
+    );
+  }
+
   @Post("respond-doubles-invite")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
@@ -62,6 +82,23 @@ export class InvitesController {
     );
   }
 
+  @Post("respond-event-invite")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  respondEventInvitation(
+    @Request() req: JwtPayload,
+    @Body() respondEventInviteDto: RespondEventInviteDto
+  ) {
+    return this.invitesService.respondEventInvitation(
+      req.user.id,
+      respondEventInviteDto
+    );
+  }
+
   @Post("cancel-doubles-invite")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
@@ -76,6 +113,23 @@ export class InvitesController {
     return this.invitesService.cancelDoublesInvitation(
       req.user.id,
       cancelDoublesInviteDto
+    );
+  }
+
+  @Post("cancel-event-invite")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["USER", "ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  cancelEventInvitation(
+    @Request() req: JwtPayload,
+    @Body() cancelEventInviteDto: CancelEventInviteDto
+  ) {
+    return this.invitesService.cancelEventInvitation(
+      req.user.id,
+      cancelEventInviteDto
     );
   }
 

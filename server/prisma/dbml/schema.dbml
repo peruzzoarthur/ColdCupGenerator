@@ -34,6 +34,7 @@ Table EventRequest {
   doubleId String [not null]
   category Category [not null]
   categoryId String [not null]
+  status RequestStatus [not null, default: 'PENDING']
 
   indexes {
     (eventId, doubleId, categoryId) [pk]
@@ -166,6 +167,8 @@ Table Invite {
   id String [pk]
   inviteType InviteType [not null]
   players Player [not null]
+  double Double
+  doublesId String
   event Event
   eventId String [unique]
   match Match
@@ -207,6 +210,7 @@ Table Double {
   eventRequests EventRequest [not null]
   eventRequest Event [not null]
   eventDouble EventDouble [not null]
+  invites Invite [not null]
 }
 
 Table Place {
@@ -280,6 +284,11 @@ Table DoubleToPlayer {
 Enum EventType {
   ALLxALL
   GROUPS
+}
+
+Enum RequestStatus {
+  PENDING
+  APPROVED
 }
 
 Enum CatType {
@@ -357,6 +366,8 @@ Ref: Game.setId > Set.id
 Ref: Game.winnerId > Double.id
 
 Ref: User.playerId - Player.id
+
+Ref: Invite.doublesId > Double.id
 
 Ref: Invite.eventId - Event.id
 

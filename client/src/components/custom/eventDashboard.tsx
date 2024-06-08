@@ -103,7 +103,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
     const { matchById, refetchMatchById, isFetchingMatchById } =
         useGetMatchById(matchIdState)
 
-    const { eventRequestsById } = useGetEventRequestsById(eventById?.id)
+    const { eventRequestsById, refetchEventRequestsById } =
+        useGetEventRequestsById(eventById?.id)
 
     const handleActivate = async (
         eventId: string,
@@ -304,7 +305,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                         <ErrorAlert message={errorMessage} />
                     </div>
                 )}
-                <main className="grid items-start flex-1 grid-cols-1 gap-4 p-4 py-10 xl:grid-cols-3 sm:px-6 sm:py-2 md:gap-8 ">
+                <main className="grid items-start flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 ">
                     <div className="space-y-10 xl:col-span-2">
                         {role === 'ADMIN' ? (
                             eventById && eventById.isActive ? null : (
@@ -315,6 +316,9 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                             <EventRequestsCard
                                                 requests={
                                                     eventRequestsById?.eventRequests
+                                                }
+                                                refetchEventRequestsById={
+                                                    refetchEventRequestsById
                                                 }
                                             />
 
