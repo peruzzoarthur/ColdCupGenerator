@@ -24,8 +24,24 @@ Table Event {
   matchType MatchType [not null, default: 'SUPERSET']
   courts Court [not null]
   invite Invite
-  Double Double
-  doubleId String
+  categoriesGroups CategoryGroup [not null]
+}
+
+Table CategoryGroup {
+  id String [pk]
+  category Category [not null]
+  categoryId String [not null]
+  groups DoublesGroup [not null]
+  Event Event
+  eventId String
+}
+
+Table DoublesGroup {
+  id String [pk]
+  key String [not null]
+  doubles Double [not null]
+  CategoryGroup CategoryGroup
+  categoryGroupId String
 }
 
 Table EventRequest {
@@ -82,6 +98,7 @@ Table Category {
   matches Match [not null]
   eventDoubles EventDouble [not null]
   eventRequests EventRequest [not null]
+  categoryGroup CategoryGroup [not null]
 
   indexes {
     (level, type) [unique]
@@ -211,9 +228,9 @@ Table Double {
   setsWins Set [not null]
   gamesWins Game [not null]
   eventRequests EventRequest [not null]
-  eventRequest Event [not null]
   eventDouble EventDouble [not null]
   invites Invite [not null]
+  doublesGroup DoublesGroup [not null]
 }
 
 Table Place {
@@ -252,6 +269,11 @@ Table EventToSet {
 Table CourtToEvent {
   courtsId String [ref: > Court.id]
   eventsId String [ref: > Event.id]
+}
+
+Table DoubleToDoublesGroup {
+  doublesId String [ref: > Double.id]
+  doublesgroupId String [ref: > DoublesGroup.id]
 }
 
 Table MatchToPlayer {
@@ -330,7 +352,11 @@ Enum PlayerPosition {
   DRIVE
 }
 
-Ref: Event.doubleId > Double.id
+Ref: CategoryGroup.categoryId > Category.id
+
+Ref: CategoryGroup.eventId > Event.id
+
+Ref: DoublesGroup.categoryGroupId > CategoryGroup.id
 
 Ref: EventRequest.eventId > Event.id
 

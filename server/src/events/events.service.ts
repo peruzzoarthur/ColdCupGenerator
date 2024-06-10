@@ -743,37 +743,42 @@ export class EventsService {
     const event = await this.getEventById(activateEventDto);
 
     const numberOfDoublesPerGroup = 3;
-    const numberOfGroups = Math.ceil(
-      event.categories[0].eventDoubles.length / numberOfDoublesPerGroup
-    );
-    const doubles = event.categories[0].eventDoubles;
 
-    const indexToLetter = (index: number) => {
-      const charCode = "A".charCodeAt(0) + index;
-      return String.fromCharCode(charCode);
-    };
+    for (let i = 0; i < event.categories.length; i++) {
+      const numberOfGroups = Math.ceil(
+        event.categories[i].eventDoubles.length / numberOfDoublesPerGroup
+      );
+      const doubles = event.categories[i].eventDoubles;
 
-    let groupsByCat: {
-      category: Category;
-      groups: { key: string; doubles: Double[] }[];
-    } = { category: event.categories[0], groups: [] };
+      const indexToLetter = (index: number) => {
+        const charCode = "A".charCodeAt(0) + index;
+        return String.fromCharCode(charCode);
+      };
 
-    for (let i = 0; i < numberOfGroups; i++) {
-      const key = indexToLetter(i);
-      groupsByCat.groups.push({ key: key, doubles: [] });
-    }
+      let groupsByCat: {
+        category: Category;
+        groups: { key: string; doubles: Double[] }[];
+      } = { category: event.categories[i], groups: [] };
 
-    while (doubles.length > 0) {
-      for (let j = 0; j < numberOfGroups && doubles.length > 0; j++) {
-        const totalDoubles = doubles.length;
-        const randomDoubleIndex = Math.floor(Math.random() * totalDoubles);
-        const doublesToPush = doubles[randomDoubleIndex].double;
-        groupsByCat.groups[j].doubles.push(doublesToPush);
-        doubles.splice(randomDoubleIndex, 1);
+      for (let i = 0; i < numberOfGroups; i++) {
+        const key = indexToLetter(i);
+        groupsByCat.groups.push({ key: key, doubles: [] });
       }
+
+      while (doubles.length > 0) {
+        for (let j = 0; j < numberOfGroups && doubles.length > 0; j++) {
+          console.log(j);
+          const totalDoubles = doubles.length;
+          const randomDoubleIndex = Math.floor(Math.random() * totalDoubles);
+          const doublesToPush = doubles[randomDoubleIndex].double;
+          groupsByCat.groups[j].doubles.push(doublesToPush);
+          doubles.splice(randomDoubleIndex, 1);
+        }
+      }
+
+      console.log(groupsByCat.groups);
     }
 
-    console.log(groupsByCat.groups);
     return event;
   }
 
