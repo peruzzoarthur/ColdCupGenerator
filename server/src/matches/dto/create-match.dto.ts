@@ -1,13 +1,16 @@
-import { MatchType } from "@prisma/client";
+import { MatchType, SetType } from "@prisma/client";
 import {
   IsArray,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from "class-validator";
 
 export class CreateMatchDto {
+  @IsInt()
+  number: number;
   @IsArray()
   doublesIds: string[];
   @IsString()
@@ -18,10 +21,9 @@ export class CreateMatchDto {
   categoryId: string;
 
   @IsEnum(MatchType)
-  @IsOptional()
-  type?: MatchType;
+  matchType: MatchType;
 
   @IsString()
-  @IsNotEmpty()
-  matchDateId: string | undefined;
+  @IsOptional()
+  matchDateId: string | null;
 }

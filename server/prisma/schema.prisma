@@ -35,6 +35,7 @@ model Event {
   sets                   Set[]
   matchDates             MatchDate[]
   eventType              EventType      @default(ALLxALL) // todo change this default later
+  matchType              MatchType      @default(SUPERSET)
   courts                 Court[]
   invite                 Invite?
   Double                 Double?        @relation(fields: [doubleId], references: [id])
@@ -111,7 +112,7 @@ enum CatType {
 
 model Match {
   id              String     @id @default(uuid())
-  number          Int        @default(autoincrement())
+  number          Int
   players         Player[]
   isFinished      Boolean    @default(false)
   category        Category?  @relation(fields: [categoryId], references: [id])
@@ -131,7 +132,7 @@ model Match {
 
 enum MatchType {
   BO3
-  BO5
+  BO2_SUPERTIE
   SUPERSET
 }
 
@@ -153,11 +154,13 @@ model MatchDate {
 model Set {
   id          String   @id @default(uuid())
   type        SetType  @default(SUPER)
+  number      Int
   doubles     Double[]
   winner      Double?  @relation("SetWinnerDouble", fields: [setWinnerId], references: [id])
   setWinnerId String?
   result      String?
-  match       Match    @relation(fields: [id], references: [id])
+  match       Match    @relation(fields: [matchId], references: [id])
+  matchId     String
   games       Game[]
   isFinished  Boolean  @default(false)
   events      Event[]
@@ -166,6 +169,8 @@ model Set {
 enum SetType {
   NORMAL
   SUPER
+  TIEBREAK
+  SUPERTIEBREAK
 }
 
 model Game {

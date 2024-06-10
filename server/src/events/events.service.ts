@@ -9,6 +9,7 @@ import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
 import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 import { HandleDoublesRequestToEventDto } from "./dto/handle-request.dto";
+import { Event } from "@prisma/client";
 
 type Day = {
   day: number;
@@ -663,6 +664,27 @@ export class EventsService {
       courtIds: activateEventDto.courtsIds,
     });
 
+    if (activateEventDto.eventType === "ALLxALL") {
+      await this.createMatchesAllxAll(activateEventDto);
+    }
+
+    if (activateEventDto.autoPopulate) {
+      await this.autoPopulate(activateEventDto);
+    }
+
+    await this.prismaService.event.update({
+      where: {
+        id: event.id,
+      },
+      data: {
+        isActive: true,
+      },
+    });
+    return;
+  }
+
+  async createMatchesAllxAll(activateEventDto: ActivateEventDto) {
+    const event = await this.getEventById(activateEventDto);
     const doubles = event.categories.flatMap((cat) =>
       cat.eventDoubles.map((ed) => {
         return {
@@ -701,27 +723,14 @@ export class EventsService {
     }
     for (let m = 0; m < matchesToAdd.length; m++) {
       await this.matchesService.create({
+        number: m++,
         categoryId: matchesToAdd[m].categoryId,
         doublesIds: [matchesToAdd[m].doublesAID, matchesToAdd[m].doublesBID],
         eventId: event.id,
-        type: "SUPERSET",
-        matchDateId: undefined,
+        matchType: "SUPERSET",
+        matchDateId: null, //! check if it is working
       });
     }
-
-    if (activateEventDto.autoPopulate) {
-      await this.autoPopulate(activateEventDto);
-    }
-
-    await this.prismaService.event.update({
-      where: {
-        id: event.id,
-      },
-      data: {
-        isActive: true,
-      },
-    });
-    return;
   }
 
   async getEventByIdParam(id: string) {

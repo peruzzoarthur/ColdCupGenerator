@@ -1,6 +1,8 @@
+import { EventType } from "@prisma/client";
 import {
   IsArray,
   IsBoolean,
+  IsEnum,
   IsISO8601,
   IsNotEmpty,
   IsNumber,
@@ -38,4 +40,7 @@ export class ActivateEventDto {
 
   @IsBoolean()
   autoPopulate?: boolean;
+
+  @IsEnum(EventType)
+  eventType: EventType;
 }

@@ -4,7 +4,7 @@ import { UpdateMatchDto } from "./dto/update-match.dto";
 import { PrismaService } from "src/prisma.service";
 import { MatchFinishedDto } from "./dto/match-finished.dto";
 import { SetsService } from "src/sets/sets.service";
-import { Match, Set } from "@prisma/client";
+import { Match, Set, SetType } from "@prisma/client";
 
 @Injectable()
 export class MatchesService {
@@ -13,46 +13,13 @@ export class MatchesService {
     private readonly setsService: SetsService
   ) {}
   async create(createMatchDto: CreateMatchDto) {
-    if (createMatchDto.matchDateId === undefined) {
-      console.log("calling without matchDateId");
-      const match = await this.prismaService.match.create({
-        data: {
-          doubles: { connect: createMatchDto.doublesIds.map((id) => ({ id })) },
-          eventId: createMatchDto.eventId,
-          categoryId: createMatchDto.categoryId,
-        },
-        select: {
-          id: true,
-          isFinished: true,
-          category: true,
-          categoryId: true,
-          doubles: true,
-          type: true,
-          sets: true,
-        },
-      });
-
-      const superSet: Set = await this.setsService.create({
-        doublesOneGames: 0,
-        doublesTwoGames: 0,
-        matchId: match.id,
-        doublesIds: createMatchDto.doublesIds,
-        eventId: createMatchDto.eventId,
-      });
-      return match;
-    }
-
-    console.log("calling with matchDateId");
     const match = await this.prismaService.match.create({
       data: {
+        number: createMatchDto.number,
+        type: createMatchDto.matchType,
         doubles: { connect: createMatchDto.doublesIds.map((id) => ({ id })) },
         eventId: createMatchDto.eventId,
         categoryId: createMatchDto.categoryId,
-        matchDate: {
-          connect: {
-            id: createMatchDto.matchDateId ? createMatchDto.matchDateId : null,
-          },
-        },
       },
       select: {
         id: true,
@@ -65,14 +32,68 @@ export class MatchesService {
       },
     });
 
-    const superSet: Set = await this.setsService.create({
-      doublesOneGames: 0,
-      doublesTwoGames: 0,
-      matchId: match.id,
-      doublesIds: createMatchDto.doublesIds,
-      eventId: createMatchDto.eventId,
-    });
+    if (createMatchDto.matchDateId) {
+      await this.prismaService.match.update({
+        where: { id: match.id },
+        data: {
+          matchDate: {
+            connect: {
+              id: createMatchDto.matchDateId,
+            },
+          },
+        },
+      });
+    }
 
+    if (createMatchDto.matchType === "SUPERSET") {
+      await this.setsService.create({
+        doublesOneGames: 0,
+        doublesTwoGames: 0,
+        matchId: match.id,
+        doublesIds: createMatchDto.doublesIds,
+        eventId: createMatchDto.eventId,
+        setType: SetType.SUPER,
+        number: 1,
+      });
+    }
+
+    if (createMatchDto.matchType === "BO3") {
+      for (let i = 0; i < 3; i++) {
+        await this.setsService.create({
+          number: i + 1,
+          doublesOneGames: 0,
+          doublesTwoGames: 0,
+          matchId: match.id,
+          doublesIds: createMatchDto.doublesIds,
+          eventId: createMatchDto.eventId,
+          setType: SetType.NORMAL,
+        });
+      }
+    }
+
+    if (createMatchDto.matchType === "BO2_SUPERTIE") {
+      let count = 0;
+      for (let i = 0; i < 2; i++) {
+        await this.setsService.create({
+          number: count++,
+          doublesOneGames: 0,
+          doublesTwoGames: 0,
+          matchId: match.id,
+          doublesIds: createMatchDto.doublesIds,
+          eventId: createMatchDto.eventId,
+          setType: SetType.NORMAL,
+        });
+      }
+      await this.setsService.create({
+        number: count++,
+        doublesOneGames: 0,
+        doublesTwoGames: 0,
+        matchId: match.id,
+        doublesIds: createMatchDto.doublesIds,
+        eventId: createMatchDto.eventId,
+        setType: SetType.SUPERTIEBREAK,
+      });
+    }
     return match;
   }
 
@@ -107,6 +128,8 @@ export class MatchesService {
         id: true,
         isFinished: true,
         type: true,
+        matchDate: true,
+        sets: true,
         doubles: {
           select: {
             players: true,

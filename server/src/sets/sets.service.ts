@@ -12,23 +12,28 @@ export class SetsService {
     private readonly gamesService: GamesService
   ) {}
   async create(createSetDto: CreateSetDto) {
+    const { number, setType, matchId, doublesIds, eventId } = createSetDto;
+
     const newSet = await this.prismaService.set.create({
       data: {
+        number: number,
+        type: setType,
         match: {
           connect: {
-            id: createSetDto.matchId,
+            id: matchId,
           },
         },
         doubles: {
-          connect: createSetDto.doublesIds.map((id) => ({ id })),
+          connect: doublesIds.map((id) => ({ id })),
         },
         events: {
           connect: {
-            id: createSetDto.eventId,
+            id: eventId,
           },
         },
       },
     });
+
     return newSet;
   }
 
@@ -78,7 +83,10 @@ export class SetsService {
     }
 
     if (set.isFinished) {
-      throw new HttpException("This set is finished", HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        "This set is already finished",
+        HttpStatus.FORBIDDEN
+      );
     }
 
     for (let i = 0; i < setFinishedDto.doublesOneGames; i++) {
