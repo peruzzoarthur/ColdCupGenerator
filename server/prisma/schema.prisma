@@ -17,10 +17,10 @@ datasource db {
 }
 
 model Event {
-  id                     String         @id @default(uuid())
+  id                     String          @id @default(uuid())
   name                   String
   categories             Category[]
-  isActive               Boolean        @default(false)
+  isActive               Boolean         @default(false)
   players                Player[]
   matches                Match[]
   places                 Place[]
@@ -34,12 +34,28 @@ model Event {
   games                  Game[]
   sets                   Set[]
   matchDates             MatchDate[]
-  eventType              EventType      @default(ALLxALL) // todo change this default later
-  matchType              MatchType      @default(SUPERSET)
+  eventType              EventType       @default(ALLxALL) // todo change this default later
+  matchType              MatchType       @default(SUPERSET)
   courts                 Court[]
   invite                 Invite?
-  Double                 Double?        @relation(fields: [doubleId], references: [id])
-  doubleId               String?
+  categoriesGroups       CategoryGroup[]
+}
+
+model CategoryGroup {
+  id         String         @id @default(uuid())
+  category   Category       @relation(fields: [categoryId], references: [id])
+  categoryId String
+  groups     DoublesGroup[]
+  Event      Event?         @relation(fields: [eventId], references: [id])
+  eventId    String?
+}
+
+model DoublesGroup {
+  id              String         @id @default(uuid())
+  key             String
+  doubles         Double[]
+  CategoryGroup   CategoryGroup? @relation(fields: [categoryGroupId], references: [id])
+  categoryGroupId String?
 }
 
 enum EventType {
@@ -91,7 +107,7 @@ model EventDouble {
 }
 
 model Category {
-  id            String         @id @default(uuid())
+  id            String          @id @default(uuid())
   level         Int
   players       Player[]
   doubles       Double[]
@@ -100,6 +116,7 @@ model Category {
   matches       Match[]
   eventDoubles  EventDouble[]
   eventRequests EventRequest[]
+  categoryGroup CategoryGroup[]
 
   @@unique([level, type], name: "CategoryId")
 }
@@ -197,8 +214,6 @@ model User {
   role         Role      @default(USER)
   hashedRt     String?
   profileImage String?
-  // invites    Invite[]
-  // friends    Friend[]
 }
 
 enum Role {
@@ -234,7 +249,6 @@ model Player {
   id         String          @id @default(uuid())
   firstName  String?
   lastName   String?
-  // categories Category[]
   category   Category        @relation(fields: [categoryId], references: [id])
   categoryId String
   position   PlayerPosition?
@@ -262,9 +276,9 @@ model Double {
   setsWins      Set[]          @relation("SetWinnerDouble")
   gamesWins     Game[]         @relation("GameWinnerDouble")
   eventRequests EventRequest[]
-  eventRequest  Event[]
   eventDouble   EventDouble[]
   invites       Invite[]
+  doublesGroup  DoublesGroup[]
 }
 
 model Place {

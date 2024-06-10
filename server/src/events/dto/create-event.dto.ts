@@ -1,9 +1,12 @@
+import { EventType } from "@prisma/client";
 import {
   ArrayNotEmpty,
   IsArray,
   IsDateString,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from "class-validator";
 
@@ -11,6 +14,10 @@ export class CreateEventDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsEnum(EventType)
+  @IsOptional()
+  eventType?: EventType;
 
   @IsArray()
   @ArrayNotEmpty()

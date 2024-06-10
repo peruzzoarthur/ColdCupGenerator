@@ -28,7 +28,12 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import { ErrorResponse, Match, PadelEvent } from '@/types/padel.types'
+import {
+    ErrorResponse,
+    EventType,
+    Match,
+    PadelEvent,
+} from '@/types/padel.types'
 // import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 import { EventDoublesTable } from './eventsTable/eventDoublesTable'
 import { RegisteredDoublesTable, doublesColumns } from './eventsTable/columns'
@@ -112,7 +117,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
         finishDate: string,
         timeOfFirstMatch: number,
         timeOfLastMatch: number,
-        matchDurationInMinutes: number
+        matchDurationInMinutes: number,
+        eventType: EventType
     ) => {
         try {
             const activateEventDto = {
@@ -124,6 +130,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 matchDurationInMinutes: matchDurationInMinutes,
                 courtsIds: eventById?.courts.map((c) => c.id),
                 autoPopulate: isAutoPopulateOn,
+                eventType: eventType,
             }
             const { data: matches }: { data: Match[] } =
                 await axiosInstance.post(
@@ -348,7 +355,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                                 eventById.finishDate,
                                                                 eventById.timeOfFirstMatch,
                                                                 eventById.timeOfLastMatch,
-                                                                eventById.matchDurationInMinutes
+                                                                eventById.matchDurationInMinutes,
+                                                                eventById.eventType
                                                             )
                                                         }
                                                     >

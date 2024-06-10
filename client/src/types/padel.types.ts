@@ -90,6 +90,7 @@ export type Category = {
 
 export type PadelEvent = {
     id: string
+    eventType: EventType
     name: string
     places: Place[]
     eventDoubles?: EventDouble[]
@@ -105,9 +106,13 @@ export type PadelEvent = {
     totalMatches?: number
     availableMatchDates?: number
     suitable?: boolean
-    eventType: string
     courts: Court[]
     isActive: boolean
+}
+
+export enum EventType {
+    ALLxALL = 'ALLxALL',
+    GROUPS = 'GROUPS',
 }
 
 export type Match = {
