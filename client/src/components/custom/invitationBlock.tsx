@@ -9,6 +9,7 @@ import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
 import { useInvitations } from '@/hooks/useInvitations'
 import { useGetPlayerById } from '@/hooks/useGetPlayerById'
+import { useGetEventById } from '@/hooks/useGetEventById'
 
 type InvitationBlockProps = {
     playerId: string
@@ -22,6 +23,7 @@ export const InvitationBlock = ({
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
     const { refetchPlayerInvitations } = useInvitations()
+    const { eventById } = useGetEventById(invitation.eventId ?? undefined)
 
     const { playerById: inviter } = useGetPlayerById(invitation.inviterId)
 
@@ -235,7 +237,10 @@ export const InvitationBlock = ({
                                     <p className="font-semibold">
                                         {invitation.inviteType}
                                     </p>
-                                    <p className="text-muted-foreground">{`'${inviter?.firstName} ${inviter?.lastName} - [${inviter?.category.level} ${inviter?.category.type}]' invites you to event $EVENT`}</p>
+                                    <p className="text-muted-foreground">
+                                        {`'${inviter?.firstName} ${inviter?.lastName} - [${inviter?.category.level} ${inviter?.category.type}]' invited you to event `}
+                                        <strong>{eventById?.name}</strong>
+                                    </p>
                                 </div>
                                 <div className="flex flex-col items-end">
                                     <Button
@@ -274,7 +279,10 @@ export const InvitationBlock = ({
                                     <p className="font-semibold">
                                         {invitation.inviteType}
                                     </p>
-                                    <p className="text-muted-foreground">{`You invited '${invited?.firstName} ${invited?.lastName} - [${invited?.category.level} ${invited?.category.type}]' for event $EVENT`}</p>
+                                    <p className="text-muted-foreground">
+                                        {`You invited '${invited?.firstName} ${invited?.lastName} - [${invited?.category.level} ${invited?.category.type}]' for event `}
+                                        <strong>{eventById?.name}</strong>
+                                    </p>
                                 </div>
                                 <div className="flex flex-col items-end">
                                     <Button

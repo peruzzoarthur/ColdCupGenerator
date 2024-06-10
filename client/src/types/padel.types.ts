@@ -10,7 +10,7 @@ export type User = {
 
 export type Invitation = {
     id: string
-    eventId?: string
+    eventId?: string | null
     matchId: string | null
     inviterId: string
     invitedId: string

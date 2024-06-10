@@ -109,7 +109,7 @@ export function AvailableMatchesSelectCard({
                         onClick={() => setMatchAssignOn(false)}
                     ></Cross2Icon>
                 </div>
-                <div className="flex items-center gap-2 ml-auto">
+                <div className="flex items-center justify-end gap-2 mt-2 ml-auto">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
