@@ -195,17 +195,6 @@ function Events() {
                         </div>
                     </div>
                 )}
-
-                {/* {selectedEvent && (
-                    <>
-                        <div className="flex flex-col">
-                            <div className="flex flex-col items-center w-full">
-                                <div className="flex flex-col items-center w-full "></div>
-                            </div>
-                        </div>
-                        <EventDashboard event={selectedEvent} />
-                    </>
-                )} */}
             </div>
         </>
     )

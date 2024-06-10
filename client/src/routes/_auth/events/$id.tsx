@@ -132,7 +132,7 @@ function Event() {
         <>
             {eventById && (
                 <>
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center w-full">
                         <div className="flex flex-col justify-center w-5/6 mt-2 mb-4">
                             <h1 className="justify-center mb-4 text-3xl font-medium">
                                 🏆 {eventById?.name} 🏆

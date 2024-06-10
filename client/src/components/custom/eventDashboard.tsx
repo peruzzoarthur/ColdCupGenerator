@@ -320,6 +320,9 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                 refetchEventRequestsById={
                                                     refetchEventRequestsById
                                                 }
+                                                refetchEventById={
+                                                    refetchEventById
+                                                }
                                             />
 
                                             <EventInfoCard

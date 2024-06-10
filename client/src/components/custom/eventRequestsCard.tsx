@@ -27,11 +27,15 @@ type EventRequestsCardProps = {
     refetchEventRequestsById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
+    refetchEventById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
 
 export function EventRequestsCard({
     requests,
     refetchEventRequestsById,
+    refetchEventById,
 }: EventRequestsCardProps) {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
@@ -62,6 +66,7 @@ export function EventRequestsCard({
                       title: 'Request denied',
                   })
             refetchEventRequestsById()
+            refetchEventById()
             return data.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
