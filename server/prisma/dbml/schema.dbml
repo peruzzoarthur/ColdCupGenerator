@@ -25,6 +25,7 @@ Table Event {
   courts Court [not null]
   invite Invite
   categoriesGroups CategoryGroup [not null]
+  eventMatches EventMatch [not null]
 }
 
 Table CategoryGroup {
@@ -109,9 +110,21 @@ Table Category {
   }
 }
 
+Table EventMatch {
+  number Int [increment, not null]
+  type EventMatchType [not null, default: 'GROUP']
+  event Event [not null]
+  eventId String [not null]
+  match Match [not null]
+  matchId String [unique, not null]
+
+  indexes {
+    (eventId, matchId) [pk]
+  }
+}
+
 Table Match {
   id String [pk]
-  number Int [not null]
   players Player [not null]
   isFinished Boolean [not null, default: false]
   category Category
@@ -127,6 +140,7 @@ Table Match {
   court Court
   courtId String
   invite Invite
+  eventMatch EventMatch
 }
 
 Table MatchDate {
@@ -326,6 +340,15 @@ Enum CatType {
   M
 }
 
+Enum EventMatchType {
+  GROUP
+  ROUND_OF_16
+  ROUND_OF_8
+  ROUND_OF_4
+  FINAL
+  UNCLASSIFIED
+}
+
 Enum MatchType {
   BO3
   BO2_SUPERTIE
@@ -377,6 +400,10 @@ Ref: EventDouble.doubleId > Double.id
 Ref: EventDouble.categoryId > Category.id
 
 Ref: EventDouble.atRestId > MatchDate.id
+
+Ref: EventMatch.eventId > Event.id
+
+Ref: EventMatch.matchId - Match.id
 
 Ref: Match.categoryId > Category.id
 

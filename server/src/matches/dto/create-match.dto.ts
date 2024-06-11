@@ -9,8 +9,6 @@ import {
 } from "class-validator";
 
 export class CreateMatchDto {
-  @IsInt()
-  number: number;
   @IsArray()
   doublesIds: string[];
   @IsString()

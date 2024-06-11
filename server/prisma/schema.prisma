@@ -39,6 +39,7 @@ model Event {
   courts                 Court[]
   invite                 Invite?
   categoriesGroups       CategoryGroup[]
+  eventMatches           EventMatch[]
 }
 
 model CategoryGroup {
@@ -129,24 +130,45 @@ enum CatType {
   M
 }
 
+model EventMatch {
+  number  Int            @default(autoincrement())
+  type    EventMatchType @default(GROUP)
+  event   Event          @relation(fields: [eventId], references: [id])
+  eventId String
+  match   Match          @relation(fields: [matchId], references: [id])
+  matchId String         @unique
+
+  @@id([eventId, matchId])
+}
+
+enum EventMatchType {
+  GROUP
+  ROUND_OF_16
+  ROUND_OF_8
+  ROUND_OF_4
+  FINAL
+  UNCLASSIFIED
+}
+
 model Match {
-  id              String     @id @default(uuid())
-  number          Int
+  id              String      @id @default(uuid())
+  // number          Int         
   players         Player[]
-  isFinished      Boolean    @default(false)
-  category        Category?  @relation(fields: [categoryId], references: [id])
+  isFinished      Boolean     @default(false)
+  category        Category?   @relation(fields: [categoryId], references: [id])
   categoryId      String?
-  winner          Double?    @relation("MatchWinnerDouble", fields: [winnerDoublesId], references: [id])
+  winner          Double?     @relation("MatchWinnerDouble", fields: [winnerDoublesId], references: [id])
   winnerDoublesId String?
   sets            Set[]
   doubles         Double[]
-  event           Event?     @relation(fields: [eventId], references: [id])
+  event           Event?      @relation(fields: [eventId], references: [id])
   eventId         String?
-  type            MatchType  @default(SUPERSET)
+  type            MatchType   @default(SUPERSET)
   matchDate       MatchDate?
-  court           Court?     @relation(fields: [courtId], references: [id])
+  court           Court?      @relation(fields: [courtId], references: [id])
   courtId         String?
   invite          Invite?
+  eventMatch      EventMatch?
 }
 
 enum MatchType {

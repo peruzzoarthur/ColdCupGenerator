@@ -15,7 +15,6 @@ export class MatchesService {
   async create(createMatchDto: CreateMatchDto) {
     const match = await this.prismaService.match.create({
       data: {
-        number: createMatchDto.number,
         type: createMatchDto.matchType,
         doubles: { connect: createMatchDto.doublesIds.map((id) => ({ id })) },
         eventId: createMatchDto.eventId,
@@ -124,7 +123,6 @@ export class MatchesService {
     const match = this.prismaService.match.findUnique({
       where: { id: id },
       select: {
-        number: true,
         id: true,
         isFinished: true,
         type: true,

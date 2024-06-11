@@ -121,7 +121,6 @@ export class EventsService {
         matchDurationInMinutes: true,
         matches: {
           select: {
-            number: true,
             id: true,
             winner: true,
             category: {
@@ -368,7 +367,6 @@ export class EventsService {
         matches: {
           select: {
             id: true,
-            number: true,
             categoryId: true,
             doubles: true,
             eventId: true,
@@ -494,7 +492,7 @@ export class EventsService {
     // let count = 0;
     for (let i = 0; matches.length > 0; ) {
       const match = matches[0];
-      console.log(`Calling for Match: #${matches[0].number}`);
+      console.log(`Calling for Match: #${matches[0].id}`);
       console.log(`👽My name is i, my number is: ${i}👽`);
       // console.log(matches.length);
       // console.log(matchDatesAvailable.length);
@@ -674,38 +672,58 @@ export class EventsService {
   async activateEvent(activateEventDto: ActivateEventDto) {
     const event = await this.getEventById(activateEventDto);
 
-    await this.createSchedule({
-      id: activateEventDto.id,
-      startDate: activateEventDto.startDate,
-      finishDate: activateEventDto.finishDate,
-      timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
-      timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
-      matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
-      courtIds: activateEventDto.courtsIds,
-    });
+    // await this.createSchedule({
+    //   id: activateEventDto.id,
+    //   startDate: activateEventDto.startDate,
+    //   finishDate: activateEventDto.finishDate,
+    //   timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+    //   timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+    //   matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+    //   courtIds: activateEventDto.courtsIds,
+    // });
 
-    if (activateEventDto.eventType === "ALLxALL") {
-      await this.createMatchesAllxAll(activateEventDto);
-    }
+    // if (activateEventDto.eventType === "ALLxALL") {
+    //   await this.createMatchesAllxAll(activateEventDto);
+    // }
 
     if (activateEventDto.eventType === "GROUPS") {
-      await this.createMatchesGroups(activateEventDto);
+      // await this.createCategoriesGroups(activateEventDto);
+      await this.generateGroupsMatches(event.id);
     }
 
-    if (activateEventDto.autoPopulate) {
-      await this.autoPopulate(activateEventDto);
-    }
+    // if (activateEventDto.autoPopulate) {
+    //   await this.autoPopulate(activateEventDto);
+    // }
 
-    await this.prismaService.event.update({
-      where: {
-        id: event.id,
-      },
-      data: {
-        isActive: true,
+    // await this.prismaService.event.update({
+    //   where: {
+    //     id: event.id,
+    //   },
+    //   data: {
+    //     isActive: true,
+    //   },
+    // });
+
+    // const eventUpdated = await this.getEventById(activateEventDto);
+    const eventUpdated = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: event.id },
+      select: {
+        eventMatches: {
+          select: {
+            number: true,
+            eventId: true,
+            match: {
+              select: {
+                id: true,
+                categoryId: true,
+                doubles: true,
+              },
+            },
+          },
+        },
+        categoriesGroups: true,
       },
     });
-
-    const eventUpdated = await this.getEventById(activateEventDto);
 
     return eventUpdated;
   }
@@ -750,7 +768,6 @@ export class EventsService {
     }
     for (let m = 0; m < matchesToAdd.length; m++) {
       await this.matchesService.create({
-        number: m++,
         categoryId: matchesToAdd[m].categoryId,
         doublesIds: [matchesToAdd[m].doublesAID, matchesToAdd[m].doublesBID],
         eventId: event.id,
@@ -760,7 +777,7 @@ export class EventsService {
     }
   }
 
-  async createMatchesGroups(activateEventDto: ActivateEventDto) {
+  async createCategoriesGroups(activateEventDto: ActivateEventDto) {
     const indexToLetter = (index: number) => {
       const charCode = "A".charCodeAt(0) + index;
       return String.fromCharCode(charCode);
@@ -851,30 +868,105 @@ export class EventsService {
         }
       }
 
-      const categoryGroupUpdated =
-        await this.prismaService.categoryGroup.findUniqueOrThrow({
-          where: { id: newCategoryGroup.id },
+      // const categoryGroupUpdated =
+      //   await this.prismaService.categoryGroup.findUniqueOrThrow({
+      //     where: { id: newCategoryGroup.id },
+      //     select: {
+      //       id: true,
+      //       category: true,
+      //       groups: {
+      //         select: {
+      //           id: true,
+      //           key: true,
+      //           doubles: {
+      //             select: {
+      //               id: true,
+      //               players: true,
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   });
+    }
+    return event;
+  }
+
+  async generateGroupsMatches(eventId: string) {
+    const event = await this.prismaService.event.findUniqueOrThrow({
+      where: {
+        id: eventId,
+      },
+      select: {
+        id: true,
+        matchType: true,
+        categoriesGroups: {
           select: {
-            id: true,
-            category: true,
+            categoryId: true,
             groups: {
               select: {
                 id: true,
-                key: true,
-                doubles: {
-                  select: {
-                    id: true,
-                    players: true,
-                  },
-                },
+                doubles: true,
               },
             },
           },
-        });
+        },
+      },
+    });
 
-      //! create matches
-      return categoryGroupUpdated;
+    for (let i = 0; i < event.categoriesGroups.length; i++) {
+      const groups = event.categoriesGroups[i].groups;
+
+      const categoryId = event.categoriesGroups[i].categoryId;
+
+      for (let j = 0; j < groups.length; j++) {
+        const doubles = groups[j].doubles;
+
+        for (let k = 0; k < doubles.length; k++) {
+          for (let l = k + 1; l < doubles.length; l++) {
+            const doubles1 = doubles[k];
+            const doubles2 = doubles[l];
+
+            const match = await this.matchesService.create({
+              categoryId: categoryId,
+              doublesIds: [doubles1.id, doubles2.id],
+              eventId: event.id,
+              matchType: event.matchType,
+              matchDateId: null,
+            });
+
+            await this.prismaService.eventMatch.create({
+              data: {
+                event: {
+                  connect: { id: event.id },
+                },
+                match: {
+                  connect: { id: match.id },
+                },
+              },
+            });
+          }
+        }
+      }
     }
+    const eventUpdated = await this.prismaService.event.findUniqueOrThrow({
+      where: {
+        id: eventId,
+      },
+      select: {
+        id: true,
+        matchType: true,
+        eventMatches: true,
+        categoriesGroups: {
+          select: {
+            categoryId: true,
+            groups: true,
+          },
+        },
+      },
+    });
+
+    return eventUpdated;
   }
 
   async getEventByIdParam(id: string) {
@@ -914,7 +1006,6 @@ export class EventsService {
         courts: true,
         matches: {
           select: {
-            number: true,
             id: true,
             winner: true,
             matchDate: {
@@ -1010,7 +1101,6 @@ export class EventsService {
             },
             matches: {
               select: {
-                number: true,
                 id: true,
                 matchDate: {
                   select: {

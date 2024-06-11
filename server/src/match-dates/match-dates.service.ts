@@ -50,7 +50,6 @@ export class MatchDatesService {
         id: true,
         match: {
           select: {
-            number: true,
             category: true,
             categoryId: true,
             doubles: {
@@ -78,7 +77,6 @@ export class MatchDatesService {
         court: true,
         match: {
           select: {
-            number: true,
             id: true,
             doubles: {
               select: {
