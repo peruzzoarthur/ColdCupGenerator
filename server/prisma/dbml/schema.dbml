@@ -32,15 +32,19 @@ Table CategoryGroup {
   category Category [not null]
   categoryId String [not null]
   groups DoublesGroup [not null]
-  Event Event
+  event Event
   eventId String
+
+  indexes {
+    (eventId, categoryId) [unique]
+  }
 }
 
 Table DoublesGroup {
   id String [pk]
   key String [not null]
   doubles Double [not null]
-  CategoryGroup CategoryGroup
+  categoryGroup CategoryGroup
   categoryGroupId String
 }
 

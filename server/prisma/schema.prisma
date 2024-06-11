@@ -46,15 +46,17 @@ model CategoryGroup {
   category   Category       @relation(fields: [categoryId], references: [id])
   categoryId String
   groups     DoublesGroup[]
-  Event      Event?         @relation(fields: [eventId], references: [id])
+  event      Event?         @relation(fields: [eventId], references: [id])
   eventId    String?
+
+  @@unique([eventId, categoryId])
 }
 
 model DoublesGroup {
   id              String         @id @default(uuid())
   key             String
   doubles         Double[]
-  CategoryGroup   CategoryGroup? @relation(fields: [categoryGroupId], references: [id])
+  categoryGroup   CategoryGroup? @relation(fields: [categoryGroupId], references: [id])
   categoryGroupId String?
 }
 
