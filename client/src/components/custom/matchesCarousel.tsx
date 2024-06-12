@@ -5,12 +5,12 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel'
-import { Match, PadelEvent } from '@/types/padel.types'
+import { EventMatch, PadelEvent } from '@/types/padel.types'
 import { MatchCard } from './matchCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 type MatchesCarouselProps = {
-    matches: Match[]
+    matches: EventMatch[]
 
     refetchEventById: (
         options?: RefetchOptions | undefined

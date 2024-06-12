@@ -96,7 +96,7 @@ export type PadelEvent = {
     eventDoubles?: EventDouble[]
     eventRequests?: EventRequest[]
     categories: Category[]
-    matches: Match[]
+    eventMatches: EventMatch[]
     startDate: string
     finishDate: string
     timeOfFirstMatch: number
@@ -108,6 +108,26 @@ export type PadelEvent = {
     suitable?: boolean
     courts: Court[]
     isActive: boolean
+}
+
+export type EventMatch = {
+    number: number
+    id: string
+    type: EventMatchType
+    event: PadelEvent
+    eventId: string
+    match: Match
+    matchId: string
+    matchWinnersRef: Match[]
+}
+
+enum EventMatchType {
+    GROUP,
+    ROUND_OF_16,
+    ROUND_OF_8,
+    ROUND_OF_4,
+    FINAL,
+    UNCLASSIFIED,
 }
 
 export enum EventType {

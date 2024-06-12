@@ -26,6 +26,7 @@ import {
     Category,
     Court,
     EventDouble,
+    EventMatch,
     Match,
     MatchDate,
 } from '@/types/padel.types'
@@ -62,7 +63,7 @@ interface DataTableProps<TData, TValue> {
     matchAssignOn: boolean
     setMatchAssignOn: React.Dispatch<React.SetStateAction<boolean>>
     categories: Category[] | undefined
-    matches: Match[] | undefined
+    matches: EventMatch[] | undefined
     refetchEventMatchDates: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<MatchDate[] | undefined, Error>>

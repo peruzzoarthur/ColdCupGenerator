@@ -1,9 +1,9 @@
-import { Match, PadelEvent } from '@/types/padel.types'
+import { EventMatch, PadelEvent } from '@/types/padel.types'
 import { MatchCard } from './matchCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 type MatchesGridProps = {
-    matches: Match[] | undefined
+    matches: EventMatch[] | undefined
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
@@ -21,7 +21,7 @@ export const MatchesGrid = ({
                 {matches?.map((match, index) => (
                     <MatchCard
                         key={index}
-                        match={match}
+                        match={match.match}
                         refetchEventById={refetchEventById}
                     />
                 ))}

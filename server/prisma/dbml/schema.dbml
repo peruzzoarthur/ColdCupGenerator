@@ -47,6 +47,10 @@ Table DoublesGroup {
   doubles Double [not null]
   categoryGroup CategoryGroup
   categoryGroupId String
+  firstPlace Double
+  firstPlaceDoublesId String
+  secondPlace Double
+  secondPlaceDoublesId String
 }
 
 Table EventRequest {
@@ -112,14 +116,16 @@ Table Category {
 
 Table EventMatch {
   number Int [increment, not null]
+  id String [pk]
   type EventMatchType [not null, default: 'GROUP']
   event Event [not null]
   eventId String [not null]
   match Match [not null]
   matchId String [unique, not null]
+  matchesWinnersRef Match [not null]
 
   indexes {
-    (eventId, matchId) [pk]
+    (eventId, matchId) [unique]
   }
 }
 
@@ -141,6 +147,8 @@ Table Match {
   courtId String
   invite Invite
   eventMatch EventMatch
+  winnerRef EventMatch
+  winnerRefId String
 }
 
 Table MatchDate {
@@ -249,6 +257,8 @@ Table Double {
   eventDouble EventDouble [not null]
   invites Invite [not null]
   doublesGroup DoublesGroup [not null]
+  firstPlaceInGroups DoublesGroup [not null]
+  secondPlaceInGroups DoublesGroup [not null]
 }
 
 Table Place {
@@ -385,6 +395,10 @@ Ref: CategoryGroup.eventId > Event.id
 
 Ref: DoublesGroup.categoryGroupId > CategoryGroup.id
 
+Ref: DoublesGroup.firstPlaceDoublesId > Double.id
+
+Ref: DoublesGroup.secondPlaceDoublesId > Double.id
+
 Ref: EventRequest.eventId > Event.id
 
 Ref: EventRequest.doubleId > Double.id
@@ -412,6 +426,8 @@ Ref: Match.winnerDoublesId > Double.id
 Ref: Match.eventId > Event.id
 
 Ref: Match.courtId > Court.id
+
+Ref: Match.winnerRefId - EventMatch.id
 
 Ref: MatchDate.eventId > Event.id
 

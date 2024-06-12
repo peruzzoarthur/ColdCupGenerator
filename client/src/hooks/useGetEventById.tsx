@@ -24,11 +24,11 @@ export const useGetEventById = (eventId: string | undefined) => {
         enabled: !!eventId,
     })
 
-    const finishedMatches = eventById?.matches.filter(
-        (m) => m.isFinished === true
+    const finishedMatches = eventById?.eventMatches.filter(
+        (m) => m.match.isFinished === true
     )
-    const pendingMatches = eventById?.matches.filter(
-        (m) => m.isFinished === false
+    const pendingMatches = eventById?.eventMatches.filter(
+        (m) => m.match.isFinished === false
     )
 
     return {

@@ -7,7 +7,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { Category, Match, MatchDate } from '@/types/padel.types'
+import { Category, EventMatch, Match, MatchDate } from '@/types/padel.types'
 import { Card, CardDescription, CardHeader } from '../ui/card'
 import { Button } from '../ui/button'
 import { Cross2Icon } from '@radix-ui/react-icons'
@@ -27,7 +27,7 @@ import { ListFilter } from 'lucide-react'
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
     categories: Category[] | undefined
-    matches: Match[] | undefined
+    matches: EventMatch[] | undefined
     matchDateIdState: string | undefined
     setMatchDateIdState: React.Dispatch<
         React.SetStateAction<string | undefined>
@@ -93,11 +93,11 @@ export function AvailableMatchesSelectCard({
     console.log(matches)
 
     if (showMatchesWithDate && !showMatchesWithoutDate) {
-        matches = matches?.filter((m) => m.matchDate !== null)
+        matches = matches?.filter((m) => m.match.matchDate !== null)
     }
 
     if (showMatchesWithoutDate && !showMatchesWithDate) {
-        matches = matches?.filter((m) => m.matchDate === null)
+        matches = matches?.filter((m) => m.match.matchDate === null)
     }
 
     return (
@@ -219,7 +219,8 @@ export function AvailableMatchesSelectCard({
                                         </SelectLabel>
                                         {matches
                                             ?.filter(
-                                                (m) => m.categoryId === c.id
+                                                (m) =>
+                                                    m.match.categoryId === c.id
                                             )
                                             .map((m, index2) => (
                                                 <div
@@ -227,7 +228,7 @@ export function AvailableMatchesSelectCard({
                                                     key={index2}
                                                 >
                                                     <SelectItem value={m.id}>
-                                                        {`Match #${m.number} ${m.doubles[0].players[0].firstName} / ${m.doubles[0].players[1].firstName} x ${m.doubles[1].players[0].firstName} / ${m.doubles[1].players[1].firstName} `}
+                                                        {`Match #${m.number} ${m.match.doubles[0].players[0].firstName} / ${m.match.doubles[0].players[1].firstName} x ${m.match.doubles[1].players[0].firstName} / ${m.match.doubles[1].players[1].firstName} `}
                                                     </SelectItem>
                                                 </div>
                                             ))}

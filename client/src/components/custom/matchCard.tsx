@@ -1,4 +1,4 @@
-import { Match, PadelEvent } from '@/types/padel.types'
+import { EventMatch, Match, PadelEvent } from '@/types/padel.types'
 import {
     Card,
     CardContent,
@@ -23,7 +23,7 @@ type ErrorResponse = {
     message: string
 }
 type MatchCardProps = React.ComponentProps<typeof Card> & {
-    match: Match
+    match: EventMatch
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
@@ -49,17 +49,17 @@ export const MatchCard = ({
     const [editOn, setEditOn] = useState<boolean>(false)
 
     const { matchGames, refetchMatchGames } = useGetMatchGames(
-        match.id,
-        match.isFinished
+        match.match.id,
+        match.match.isFinished
     )
 
     const onSubmit = async (input: matchFormObject) => {
         try {
             const requestBody = {
                 doublesOneGames: input.doublesOneGames,
-                doublesOneId: match.doubles[0].id,
+                doublesOneId: match.match.doubles[0].id,
                 doublesTwoGames: input.doublesTwoGames,
-                doublesTwoId: match.doubles[1].id,
+                doublesTwoId: match.match.doubles[1].id,
                 winnerDoublesId: input.winnerDoublesId,
                 eventId: match.eventId,
             }
@@ -69,7 +69,7 @@ export const MatchCard = ({
                 requestBody
             )
 
-            sendResultToast(match, input)
+            sendResultToast(match.match, input)
             await refetchMatchGames()
             await refetchEventById()
 
@@ -95,8 +95,8 @@ export const MatchCard = ({
     }
 
     let startTime = undefined
-    if (match.matchDate) {
-        const matchStartDate = new Date(match.matchDate.start)
+    if (match.match.matchDate) {
+        const matchStartDate = new Date(match.match.matchDate.start)
         startTime = matchStartDate.toLocaleString()
     }
 
@@ -106,10 +106,10 @@ export const MatchCard = ({
                 <CardHeader>
                     <CardTitle>{`Match #${match.number}`}</CardTitle>
                     <CardDescription>
-                        Category - {match.category?.level}{' '}
-                        {match.category?.type}
+                        Category - {match.match.category?.level}{' '}
+                        {match.match.category?.type}
                     </CardDescription>
-                    {match.isFinished ? <p>🟢</p> : <p>🟡</p>}
+                    {match.match.isFinished ? <p>🟢</p> : <p>🟡</p>}
                     <CardDescription>{startTime}</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -122,7 +122,7 @@ export const MatchCard = ({
                                     doublesTwoGames: '',
                                     winnerDoublesId: '',
                                 }}
-                                doublesPlaying={match.doubles}
+                                doublesPlaying={match.match.doubles}
                             />
                         </div>
                     ) : (
@@ -134,7 +134,7 @@ export const MatchCard = ({
                         </div>
                     )}
                     {/* Footer (Pencil icon to to toggle on and off editMode) */}
-                    {match.isFinished ? null : (
+                    {match.match.isFinished ? null : (
                         <CardFooter className="justify-center">
                             <div className="w-2/3">
                                 {editOn ? (

@@ -95,6 +95,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
         isFetchingEventById,
     } = useGetEventById(event.id)
 
+    console.log(pendingMatches)
+
     const { role } = useGetRole()
 
     const { eventMatchDates, refetchEventMatchDates } = useGetEventMatchDates(
@@ -284,7 +286,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
             })
 
     return (
-        <div className="flex flex-col w-full min-h-screen ">
+        <div className="flex flex-col w-full min-h-screen lg:w-4/6 ">
             <div className="flex flex-col gap-2 ">
                 <header className="static top-0 flex flex-col items-start h-auto gap-4 px-4 py-4 bg-transparent border-0">
                     <Breadcrumb>
@@ -317,7 +319,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                         {role === 'ADMIN' ? (
                             eventById && eventById.isActive ? null : (
                                 <div className="flex flex-col items-center justify-center w-full space-y-5">
-                                    {event.matches.length === 0 &&
+                                    {event.eventMatches.length === 0 &&
                                     eventMatchesInfoById ? (
                                         <div className="space-y-10">
                                             <EventRequestsCard
@@ -658,7 +660,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                         }
                                         refetchMatchById={refetchMatchById}
                                         categories={eventById?.categories}
-                                        matches={eventById?.matches}
+                                        matches={eventById?.eventMatches}
                                         matchDateIdState={matchDateIdState}
                                         setMatchDateIdState={
                                             setMatchDateIdState

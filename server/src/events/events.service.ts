@@ -9,7 +9,7 @@ import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
 import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 import { HandleDoublesRequestToEventDto } from "./dto/handle-request.dto";
-import { Category, Double, Event } from "@prisma/client";
+import { EventMatchType } from "@prisma/client";
 
 type Day = {
   day: number;
@@ -672,23 +672,24 @@ export class EventsService {
   async activateEvent(activateEventDto: ActivateEventDto) {
     const event = await this.getEventById(activateEventDto);
 
-    // await this.createSchedule({
-    //   id: activateEventDto.id,
-    //   startDate: activateEventDto.startDate,
-    //   finishDate: activateEventDto.finishDate,
-    //   timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
-    //   timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
-    //   matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
-    //   courtIds: activateEventDto.courtsIds,
-    // });
+    await this.createSchedule({
+      id: activateEventDto.id,
+      startDate: activateEventDto.startDate,
+      finishDate: activateEventDto.finishDate,
+      timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+      timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+      matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+      courtIds: activateEventDto.courtsIds,
+    });
 
-    // if (activateEventDto.eventType === "ALLxALL") {
-    //   await this.createMatchesAllxAll(activateEventDto);
-    // }
+    if (activateEventDto.eventType === "ALLxALL") {
+      await this.createMatchesAllxAll(activateEventDto);
+    }
 
     if (activateEventDto.eventType === "GROUPS") {
       // await this.createCategoriesGroups(activateEventDto);
-      await this.generateGroupsMatches(event.id);
+      await this.createGroupsMatches(event.id);
+      // await this.createFinalsMatches(event.id);
     }
 
     // if (activateEventDto.autoPopulate) {
@@ -711,6 +712,7 @@ export class EventsService {
         eventMatches: {
           select: {
             number: true,
+            type: true,
             eventId: true,
             match: {
               select: {
@@ -892,7 +894,7 @@ export class EventsService {
     return event;
   }
 
-  async generateGroupsMatches(eventId: string) {
+  async createGroupsMatches(eventId: string) {
     const event = await this.prismaService.event.findUniqueOrThrow({
       where: {
         id: eventId,
@@ -969,6 +971,145 @@ export class EventsService {
     return eventUpdated;
   }
 
+  async createFinalsMatches(eventId: string) {
+    const event = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: eventId },
+      select: {
+        id: true,
+        matchType: true,
+        categoriesGroups: {
+          select: {
+            category: true,
+            groups: true,
+          },
+        },
+      },
+    });
+
+    const groups = event.categoriesGroups[0].groups;
+    console.log(groups);
+    const numberOfGroups = groups.length;
+    const categoryId = event.categoriesGroups[0].category.id;
+
+    if (numberOfGroups <= 2) {
+      // matchType: 2 ROUND_OF_4
+      for (let i = 0; i < 2; i++) {
+        console.log(i);
+        const match = await this.matchesService.create({
+          categoryId: categoryId,
+          doublesIds: [],
+          eventId: event.id,
+          matchType: event.matchType,
+          matchDateId: null,
+        });
+
+        await this.prismaService.eventMatch.create({
+          data: {
+            type: EventMatchType.ROUND_OF_4,
+            event: {
+              connect: { id: event.id },
+            },
+            match: {
+              connect: { id: match.id },
+            },
+          },
+        });
+      }
+      // matchType: 1 FINAL
+      // matchType: 1 FINAL
+      const match = await this.matchesService.create({
+        categoryId: categoryId,
+        doublesIds: [],
+        eventId: event.id,
+        matchType: event.matchType,
+        matchDateId: null,
+      });
+
+      await this.prismaService.eventMatch.create({
+        data: {
+          type: EventMatchType.FINAL,
+          event: {
+            connect: { id: event.id },
+          },
+          match: {
+            connect: { id: match.id },
+          },
+        },
+      });
+    }
+    if (numberOfGroups <= 4) {
+      // matchType: 4 ROUND_OF_8
+      for (let i = 0; i < 4; i++) {
+        console.log(i);
+        const match = await this.matchesService.create({
+          categoryId: categoryId,
+          doublesIds: [],
+          eventId: event.id,
+          matchType: event.matchType,
+          matchDateId: null,
+        });
+
+        const newEventMatch = await this.prismaService.eventMatch.create({
+          data: {
+            type: EventMatchType.ROUND_OF_8,
+            event: {
+              connect: { id: event.id },
+            },
+            match: {
+              connect: { id: match.id },
+            },
+          },
+        });
+        console.log(newEventMatch);
+      }
+      // matchType: 2 ROUND_OF_4
+      for (let i = 0; i < 2; i++) {
+        console.log(i);
+        const match = await this.matchesService.create({
+          categoryId: categoryId,
+          doublesIds: [],
+          eventId: event.id,
+          matchType: event.matchType,
+          matchDateId: null,
+        });
+
+        const newEventMatch = await this.prismaService.eventMatch.create({
+          data: {
+            type: EventMatchType.ROUND_OF_4,
+            event: {
+              connect: { id: event.id },
+            },
+            match: {
+              connect: { id: match.id },
+            },
+          },
+        });
+        console.log(newEventMatch);
+      }
+      // matchType: 1 FINAL
+      const match = await this.matchesService.create({
+        categoryId: categoryId,
+        doublesIds: [],
+        eventId: event.id,
+        matchType: event.matchType,
+        matchDateId: null,
+      });
+
+      const newEventMatch = await this.prismaService.eventMatch.create({
+        data: {
+          type: EventMatchType.FINAL,
+          event: {
+            connect: { id: event.id },
+          },
+          match: {
+            connect: { id: match.id },
+          },
+        },
+      });
+    }
+    return event;
+  }
+
   async getEventByIdParam(id: string) {
     const event = await this.prismaService.event.findUnique({
       where: {
@@ -976,6 +1117,29 @@ export class EventsService {
       },
       select: {
         id: true,
+        eventMatches: {
+          select: {
+            id: true,
+            match: {
+              select: {
+                id: true,
+                category: true,
+                doubles: {
+                  select: {
+                    id: true,
+                    players: true,
+                  },
+                },
+                isFinished: true,
+              },
+            },
+            matchId: true,
+            eventId: true,
+            number: true,
+            type: true,
+            matchesWinnersRef: true,
+          },
+        },
         categoriesGroups: {
           select: {
             id: true,

@@ -54,11 +54,15 @@ model CategoryGroup {
 }
 
 model DoublesGroup {
-  id              String         @id @default(uuid())
-  key             String
-  doubles         Double[]
-  categoryGroup   CategoryGroup? @relation(fields: [categoryGroupId], references: [id])
-  categoryGroupId String?
+  id                   String         @id @default(uuid())
+  key                  String
+  doubles              Double[]
+  categoryGroup        CategoryGroup? @relation(fields: [categoryGroupId], references: [id])
+  categoryGroupId      String?
+  firstPlace           Double?        @relation("FirstPlaceDouble", fields: [firstPlaceDoublesId], references: [id])
+  firstPlaceDoublesId  String?
+  secondPlace          Double?        @relation("SecondPlaceDouble", fields: [secondPlaceDoublesId], references: [id])
+  secondPlaceDoublesId String?
 }
 
 enum EventType {
@@ -131,14 +135,16 @@ enum CatType {
 }
 
 model EventMatch {
-  number  Int            @default(autoincrement())
-  type    EventMatchType @default(GROUP)
-  event   Event          @relation(fields: [eventId], references: [id])
-  eventId String
-  match   Match          @relation(fields: [matchId], references: [id])
-  matchId String         @unique
+  number            Int            @default(autoincrement())
+  id                String         @id @default(uuid())
+  type              EventMatchType @default(GROUP)
+  event             Event          @relation(fields: [eventId], references: [id])
+  eventId           String
+  match             Match          @relation("Match", fields: [matchId], references: [id])
+  matchId           String         @unique
+  matchesWinnersRef Match[]        @relation("MatchesWinnerRef")
 
-  @@id([eventId, matchId])
+  @@unique([eventId, matchId])
 }
 
 enum EventMatchType {
@@ -168,7 +174,9 @@ model Match {
   court           Court?      @relation(fields: [courtId], references: [id])
   courtId         String?
   invite          Invite?
-  eventMatch      EventMatch?
+  eventMatch      EventMatch? @relation("Match")
+  winnerRef       EventMatch? @relation("MatchesWinnerRef", fields: [winnerRefId], references: [id])
+  winnerRefId     String?
 }
 
 enum MatchType {
@@ -289,20 +297,22 @@ enum PlayerPosition {
 }
 
 model Double {
-  id            String         @id @default(uuid())
-  players       Player[]
-  matches       Match[]
-  category      Category       @relation(fields: [categoryId], references: [id])
-  categoryId    String
-  games         Game[]         @relation("GamesPlayed")
-  sets          Set[]
-  matchesWins   Match[]        @relation("MatchWinnerDouble")
-  setsWins      Set[]          @relation("SetWinnerDouble")
-  gamesWins     Game[]         @relation("GameWinnerDouble")
-  eventRequests EventRequest[]
-  eventDouble   EventDouble[]
-  invites       Invite[]
-  doublesGroup  DoublesGroup[]
+  id                  String         @id @default(uuid())
+  players             Player[]
+  matches             Match[]
+  category            Category       @relation(fields: [categoryId], references: [id])
+  categoryId          String
+  games               Game[]         @relation("GamesPlayed")
+  sets                Set[]
+  matchesWins         Match[]        @relation("MatchWinnerDouble")
+  setsWins            Set[]          @relation("SetWinnerDouble")
+  gamesWins           Game[]         @relation("GameWinnerDouble")
+  eventRequests       EventRequest[]
+  eventDouble         EventDouble[]
+  invites             Invite[]
+  doublesGroup        DoublesGroup[]
+  firstPlaceInGroups  DoublesGroup[] @relation("FirstPlaceDouble")
+  secondPlaceInGroups DoublesGroup[] @relation("SecondPlaceDouble")
 }
 
 model Place {
