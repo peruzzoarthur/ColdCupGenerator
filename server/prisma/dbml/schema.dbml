@@ -48,7 +48,7 @@ Table CategoryGroup {
 Table DoublesGroup {
   id String [pk]
   key String [not null]
-  doubles Double [not null]
+  eventDoubles EventDouble [not null]
   categoryGroup CategoryGroup
   categoryGroupId String
   firstPlace Double
@@ -96,6 +96,8 @@ Table EventDouble {
   categoryId String [not null]
   atRest MatchDate
   atRestId String
+  DoublesGroup DoublesGroup
+  doublesGroupId String
 
   indexes {
     (eventId, doubleId, categoryId) [pk]
@@ -121,7 +123,6 @@ Table Category {
 
 Table EventMatch {
   number Int [increment, not null]
-  id String [pk]
   type EventMatchType [not null, default: 'GROUP']
   event Event [not null]
   eventId String [not null]
@@ -134,7 +135,7 @@ Table EventMatch {
   doublesGroupId String
 
   indexes {
-    (eventId, matchId) [unique]
+    (eventId, matchId) [pk]
   }
 }
 
@@ -265,7 +266,6 @@ Table Double {
   eventRequests EventRequest [not null]
   eventDouble EventDouble [not null]
   invites Invite [not null]
-  doublesGroup DoublesGroup [not null]
   firstPlaceInGroups DoublesGroup [not null]
   secondPlaceInGroups DoublesGroup [not null]
 }
@@ -306,11 +306,6 @@ Table EventToSet {
 Table CourtToEvent {
   courtsId String [ref: > Court.id]
   eventsId String [ref: > Event.id]
-}
-
-Table DoubleToDoublesGroup {
-  doublesId String [ref: > Double.id]
-  doublesgroupId String [ref: > DoublesGroup.id]
 }
 
 Table MatchToPlayer {
@@ -424,6 +419,8 @@ Ref: EventDouble.categoryId > Category.id
 
 Ref: EventDouble.atRestId > MatchDate.id
 
+Ref: EventDouble.doublesGroupId > DoublesGroup.id
+
 Ref: EventMatch.eventId > Event.id
 
 Ref: EventMatch.matchId - Match.id
@@ -440,7 +437,7 @@ Ref: Match.eventId > Event.id
 
 Ref: Match.courtId > Court.id
 
-Ref: Match.winnerRefId - EventMatch.id
+Ref: Match.winnerRefId - EventMatch.matchId
 
 Ref: MatchDate.eventId > Event.id
 

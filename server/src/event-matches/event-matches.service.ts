@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CreateEventMatchDto } from "./dto/create-event-match.dto";
 import { UpdateEventMatchDto } from "./dto/update-event-match.dto";
 import { PrismaService } from "src/prisma.service";
+import { FindEventMatchDto } from "./dto/find-event-match.dto";
 
 @Injectable()
 export class EventMatchesService {
@@ -15,9 +16,14 @@ export class EventMatchesService {
     return await this.prisma.eventMatch.findMany();
   }
 
-  async findOne(id: string) {
+  async findOne(findEventMatchDto: FindEventMatchDto) {
     const eventMatch = await this.prisma.eventMatch.findUniqueOrThrow({
-      where: { id: id },
+      where: {
+        eventId_matchId: {
+          eventId: findEventMatchDto.eventId,
+          matchId: findEventMatchDto.matchId,
+        },
+      },
     });
     return eventMatch;
   }

@@ -10,6 +10,7 @@ import {
 import { EventMatchesService } from "./event-matches.service";
 import { CreateEventMatchDto } from "./dto/create-event-match.dto";
 import { UpdateEventMatchDto } from "./dto/update-event-match.dto";
+import { FindEventMatchDto } from "./dto/find-event-match.dto";
 
 @Controller("event-matches")
 export class EventMatchesController {
@@ -25,9 +26,9 @@ export class EventMatchesController {
     return this.eventMatchesService.findAll();
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.eventMatchesService.findOne(id);
+  @Post("event-match")
+  findOne(@Body() findEventMatchDto: FindEventMatchDto) {
+    return this.eventMatchesService.findOne(findEventMatchDto);
   }
 
   @Patch(":id")

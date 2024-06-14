@@ -9,7 +9,7 @@ import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
 import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 import { HandleDoublesRequestToEventDto } from "./dto/handle-request.dto";
-import { EventMatchType } from "@prisma/client";
+import { Double, EventDouble, EventMatchType, MatchType } from "@prisma/client";
 
 type Day = {
   day: number;
@@ -333,10 +333,14 @@ export class EventsService {
               select: {
                 id: true,
                 key: true,
-                doubles: {
+                eventDoubles: {
                   select: {
-                    id: true,
-                    players: true,
+                    double: {
+                      select: {
+                        id: true,
+                        players: true,
+                      },
+                    },
                   },
                 },
               },
@@ -780,12 +784,24 @@ export class EventsService {
       }
     }
     for (let m = 0; m < matchesToAdd.length; m++) {
-      await this.matchesService.create({
+      const match = await this.matchesService.create({
         categoryId: matchesToAdd[m].categoryId,
         doublesIds: [matchesToAdd[m].doublesAID, matchesToAdd[m].doublesBID],
         eventId: event.id,
         matchType: "SUPERSET",
         matchDateId: null, //! check if it is working
+      });
+
+      const newEventMatch = await this.prismaService.eventMatch.create({
+        data: {
+          type: EventMatchType.UNCLASSIFIED,
+          event: {
+            connect: { id: event.id },
+          },
+          match: {
+            connect: { id: match.id },
+          },
+        },
       });
     }
   }
@@ -801,11 +817,13 @@ export class EventsService {
     const numberOfDoublesPerGroup = 3;
 
     for (let i = 0; i < event.categories.length; i++) {
+      const categoryId = event.categories[i].id;
+
       const newCategoryGroup = await this.prismaService.categoryGroup.create({
         data: {
           category: {
             connect: {
-              id: event.categories[i].id,
+              id: categoryId,
             },
           },
           event: {
@@ -840,7 +858,11 @@ export class EventsService {
           select: {
             id: true,
             key: true,
-            doubles: true,
+            eventDoubles: {
+              select: {
+                double: true,
+              },
+            },
           },
         });
       }
@@ -870,9 +892,13 @@ export class EventsService {
           await this.prismaService.doublesGroup.update({
             where: { id: doublesGroupsIds[j] },
             data: {
-              doubles: {
+              eventDoubles: {
                 connect: {
-                  id: doublesToPush.id,
+                  eventId_doubleId_categoryId: {
+                    categoryId: categoryId,
+                    doubleId: doublesToPush.id,
+                    eventId: event.id,
+                  },
                 },
               },
             },
@@ -919,7 +945,11 @@ export class EventsService {
             groups: {
               select: {
                 id: true,
-                doubles: true,
+                eventDoubles: {
+                  select: {
+                    double: true,
+                  },
+                },
               },
             },
           },
@@ -933,7 +963,7 @@ export class EventsService {
       const categoryId = event.categoriesGroups[i].categoryId;
 
       for (let j = 0; j < groups.length; j++) {
-        const doubles = groups[j].doubles;
+        const doubles = groups[j].eventDoubles;
         const groupId = groups[j].id;
 
         for (let k = 0; k < doubles.length; k++) {
@@ -943,7 +973,7 @@ export class EventsService {
 
             const match = await this.matchesService.create({
               categoryId: categoryId,
-              doublesIds: [doubles1.id, doubles2.id],
+              doublesIds: [doubles1.double.id, doubles2.double.id],
               eventId: event.id,
               matchType: event.matchType,
               matchDateId: null,
@@ -986,6 +1016,33 @@ export class EventsService {
 
   async endGroupsStage(eventId: string) {
     // check if all matches are finished and create logic for placing 1st and 2nd places to finals
+
+    type EventDoubles = {
+      double: {
+        id: string;
+        games: {
+          id: string;
+          setId: string;
+          winnerId: string;
+        }[];
+        categoryId: string;
+        matchesWins: {
+          id: string;
+          isFinished: boolean;
+          categoryId: string;
+          winnerDoublesId: string;
+          eventId: string;
+          type: MatchType;
+          courtId: string;
+          winnerRefId: string;
+        }[];
+        gamesWins: {
+          id: string;
+          setId: string;
+          winnerId: string;
+        }[];
+      };
+    };
     const event = await this.prismaService.event.findUniqueOrThrow({
       where: { id: eventId },
       select: {
@@ -993,14 +1050,44 @@ export class EventsService {
         categoriesGroups: {
           select: {
             id: true,
+            category: true,
             groups: {
               select: {
+                id: true,
                 key: true,
+                eventDoubles: {
+                  select: {
+                    double: {
+                      select: {
+                        id: true,
+                        categoryId: true,
+                        matchesWins: true,
+                        games: true,
+                        gamesWins: true,
+                      },
+                    },
+                  },
+                },
                 groupMatches: {
                   select: {
-                    id: true,
                     number: true,
-                    match: true,
+                    match: {
+                      select: {
+                        id: true,
+                        isFinished: true,
+                        eventId: true,
+                        sets: {
+                          select: {
+                            games: {
+                              select: {
+                                doubles: true,
+                                winnerId: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -1027,11 +1114,141 @@ export class EventsService {
       );
       if (pendingEventMatchesInCategory.length !== 0) {
         throw new HttpException(
-          `${pendingEventMatchesInCategory.length} matches are unfinished`,
+          `${pendingEventMatchesInCategory.length} matches are unfinished at category ${categoriesGroups[i].category.level} ${categoriesGroups[i].category.type}`,
           HttpStatus.BAD_REQUEST
         );
       }
+
       if (pendingEventMatchesInCategory.length === 0) {
+        // Set first and second place
+        for (let j = 0; j < groups.length; j++) {
+          const group = groups[j];
+          console.log(
+            "#########################################################"
+          );
+          console.log(`Group ${group.key}`);
+          console.log(
+            "---------------------------------------------------------"
+          );
+
+          let firstPlaceDoubles: EventDoubles;
+          let secondPlaceDoubles = null;
+          let maxMatchesWon = -1;
+          let secondMaxMatchesWon = -1;
+          let maxGamesDiff = -1;
+          let secondMaxGamesDiff = -1;
+
+          for (let k = 0; k < group.eventDoubles.length; k++) {
+            const doubles = group.eventDoubles[k];
+            console.log(doubles.double.id);
+
+            const matchesWon = doubles.double.matchesWins.filter(
+              (m) => m.eventId === event.id
+            ).length;
+
+            const groupSets = group.groupMatches.flatMap((g) => g.match.sets);
+            const groupGames = groupSets.flatMap((s) => s.games);
+            // const doublesGroupGames = groupGames.filter((g) =>
+            //   g.doubles.includes({
+            //     id: doubles.double.id,
+            //     categoryId: doubles.double.categoryId,
+            //   })
+            // );
+            const filteredGamesByDoubles = groupGames.filter((g) =>
+              g.doubles.some((d) => d.id === doubles.double.id)
+            );
+
+            const filterGamesWonByDoubles = filteredGamesByDoubles.filter(
+              (g) => g.winnerId === doubles.double.id
+            );
+
+            // console.log(groupGames.length);
+            // console.log(filteredGamesByDoubles.length);
+            // console.log(filterGamesWonByDoubles.length);
+
+            const gamesDiff =
+              filterGamesWonByDoubles.length -
+              (filteredGamesByDoubles.length - filterGamesWonByDoubles.length);
+
+            console.log(`Doubles: ${doubles.double.id}`);
+            console.log(`Matches W: ${matchesWon}`);
+            console.log(`Games Diff: ${gamesDiff}`);
+            console.log(
+              "---------------------------------------------------------"
+            );
+
+            if (
+              matchesWon > maxMatchesWon ||
+              (matchesWon === maxMatchesWon && gamesDiff > maxGamesDiff)
+            ) {
+              secondPlaceDoubles = firstPlaceDoubles;
+              secondMaxMatchesWon = maxMatchesWon;
+              secondMaxGamesDiff = maxGamesDiff;
+              firstPlaceDoubles = doubles;
+              maxMatchesWon = matchesWon;
+              maxGamesDiff = gamesDiff;
+            } else if (
+              matchesWon > secondMaxMatchesWon ||
+              (matchesWon === secondMaxMatchesWon &&
+                gamesDiff > secondMaxGamesDiff)
+            ) {
+              secondPlaceDoubles = doubles;
+              secondMaxMatchesWon = matchesWon;
+              secondMaxGamesDiff = gamesDiff;
+            }
+          }
+
+          if (firstPlaceDoubles) {
+            const firstPlaceAtGroup =
+              await this.prismaService.doublesGroup.update({
+                where: { id: group.id },
+                data: {
+                  firstPlace: {
+                    connect: {
+                      id: firstPlaceDoubles.double.id,
+                    },
+                  },
+                },
+              });
+            console.log(firstPlaceAtGroup);
+            console.log(
+              `First Place Doubles: ${firstPlaceDoubles.double.id} with ${maxMatchesWon} matches won and ${maxGamesDiff} games diff`
+            );
+          } else {
+            throw new HttpException(
+              "Unable to define first place at group",
+              HttpStatus.NOT_FOUND
+            );
+          }
+
+          if (secondPlaceDoubles) {
+            const secondPlaceAtGroup =
+              await this.prismaService.doublesGroup.update({
+                where: { id: group.id },
+                data: {
+                  secondPlace: {
+                    connect: {
+                      id: secondPlaceDoubles.double.id,
+                    },
+                  },
+                },
+              });
+            console.log(secondPlaceAtGroup);
+            console.log(
+              `Second Place Doubles: ${secondPlaceDoubles.double.id} with ${secondMaxMatchesWon} matches won and ${secondMaxGamesDiff} games diff`
+            );
+          } else {
+            throw new HttpException(
+              "Unable to define second place at group",
+              HttpStatus.NOT_FOUND
+            );
+          }
+
+          console.log(
+            "#########################################################"
+          );
+        }
+
         await this.prismaService.categoryGroup.update({
           where: {
             id: categoriesGroups[i].id,
@@ -1048,10 +1265,30 @@ export class EventsService {
           data: {
             isGroupMatchesFinished: true,
           },
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+            isFinished: true,
+            startDate: true,
+            finishDate: true,
+            matchDurationInMinutes: true,
+            timeOfFirstMatch: true,
+            timeOfLastMatch: true,
+            eventType: true,
+            matchType: true,
+            isGroupMatchesFinished: true,
+            categoriesGroups: {
+              select: {
+                groupsStageFinished: true,
+                groups: true,
+              },
+            },
+          },
         });
+        return updateEvent;
       }
     }
-    return event;
   }
 
   async createFinalsMatches(eventId: string) {
@@ -1128,6 +1365,7 @@ export class EventsService {
     }
     if (numberOfGroups <= 4) {
       // matchType: 4 ROUND_OF_8
+
       for (let i = 0; i < 4; i++) {
         console.log(i);
         const match = await this.matchesService.create({
@@ -1208,7 +1446,6 @@ export class EventsService {
         id: true,
         eventMatches: {
           select: {
-            id: true,
             match: {
               select: {
                 id: true,
@@ -1241,10 +1478,14 @@ export class EventsService {
                 id: true,
                 key: true,
                 groupMatches: true,
-                doubles: {
+                eventDoubles: {
                   select: {
-                    id: true,
-                    players: true,
+                    double: {
+                      select: {
+                        id: true,
+                        players: true,
+                      },
+                    },
                   },
                 },
               },
