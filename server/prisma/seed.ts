@@ -13,7 +13,7 @@ const fs = require("fs");
 async function rawSql() {
   try {
     const rawSql = fs.readFileSync(
-      "/dev-arthur/Projects/Padel/server/prisma/jun_11.sql",
+      "/dev-arthur/Projects/Padel/server/prisma/jun_13_with_match_results",
       "utf8"
     );
     const sqlReducedToStatements = rawSql

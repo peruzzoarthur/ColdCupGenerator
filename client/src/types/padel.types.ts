@@ -32,6 +32,7 @@ export type Player = {
     id: string
     category: Category
     doubles: Double[]
+    matches: Match[]
 }
 
 export type Double = {
@@ -114,11 +115,38 @@ export type EventMatch = {
     number: number
     id: string
     type: EventMatchType
-    event: PadelEvent
     eventId: string
-    match: Match
     matchId: string
-    matchWinnersRef: Match[]
+    categoryGroupId?: string | null
+    doublesGroupId?: string | null
+    event: Event
+    match: Match
+    matchesWinnersRef: Match[]
+    categoryGroup?: CategoryGroup | null
+    doublesGroup?: DoublesGroup | null
+}
+
+export type DoublesGroup = {
+    id: string
+    key: string
+    doubles: number[]
+    categoryGroupId?: string | null
+    firstPlaceDoublesId?: string | null
+    secondPlaceDoublesId?: string | null
+    categoryGroup?: CategoryGroup | null
+    firstPlace?: Double | null
+    secondPlace?: Double | null
+    groupMatches: EventMatch[]
+}
+
+export type CategoryGroup = {
+    id: string
+    categoryId: string
+    eventId?: string | null
+    category: Category
+    groups: DoublesGroup[]
+    event?: Event | null
+    finalMatches: EventMatch[]
 }
 
 enum EventMatchType {

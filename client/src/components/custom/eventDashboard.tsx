@@ -553,7 +553,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                         Pending matches
                                     </h2>
                                     <MatchesGrid
-                                        matches={pendingMatches}
+                                        eventMatches={pendingMatches}
                                         refetchEventById={refetchEventById}
                                     />
 
@@ -561,7 +561,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                         Finished matches
                                     </h2>
                                     <MatchesGrid
-                                        matches={finishedMatches}
+                                        eventMatches={finishedMatches}
                                         refetchEventById={refetchEventById}
                                     />
                                 </div>
@@ -592,7 +592,9 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                     Pending matches
                                                 </h1>
                                                 <MatchesCarousel
-                                                    matches={pendingMatches}
+                                                    eventMatches={
+                                                        pendingMatches
+                                                    }
                                                     refetchEventById={
                                                         refetchEventById
                                                     }
@@ -610,7 +612,9 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                     Finished matches
                                                 </h1>
                                                 <MatchesCarousel
-                                                    matches={finishedMatches}
+                                                    eventMatches={
+                                                        finishedMatches
+                                                    }
                                                     refetchEventById={
                                                         refetchEventById
                                                     }

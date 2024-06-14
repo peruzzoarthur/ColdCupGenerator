@@ -10,25 +10,25 @@ import { MatchCard } from './matchCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
 type MatchesCarouselProps = {
-    matches: EventMatch[]
+    eventMatches: EventMatch[]
 
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
 export function MatchesCarousel({
-    matches,
+    eventMatches,
     refetchEventById,
 }: MatchesCarouselProps) {
     return (
         <>
             <Carousel className="max-w-[420px]">
                 <CarouselContent>
-                    {matches.map((match, index) => (
+                    {eventMatches.map((eventMatch, index) => (
                         <CarouselItem key={index}>
                             <div className="p-1">
                                 <MatchCard
-                                    match={match}
+                                    eventMatch={eventMatch}
                                     key={index}
                                     refetchEventById={refetchEventById}
                                 />

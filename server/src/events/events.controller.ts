@@ -27,6 +27,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { HandleDoublesRequestToEventDto } from "./dto/handle-request.dto";
+import { EndGroupsStageDto } from "./dto/end-groups-stage.dto";
 
 @Controller("events")
 @ApiTags("events")
@@ -75,6 +76,17 @@ export class EventsController {
   @ApiBearerAuth()
   async activateEventAutoPop(@Body() activateEventDto: ActivateEventDto) {
     return await this.eventsService.activateEvent(activateEventDto);
+  }
+
+  @Post("end-groups-stage")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async endGroupsStage(@Body() endGroupsStageDto: EndGroupsStageDto) {
+    return await this.eventsService.endGroupsStage(endGroupsStageDto.id);
   }
 
   @Post("register")

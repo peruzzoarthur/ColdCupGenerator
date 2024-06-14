@@ -672,24 +672,23 @@ export class EventsService {
   async activateEvent(activateEventDto: ActivateEventDto) {
     const event = await this.getEventById(activateEventDto);
 
-    await this.createSchedule({
-      id: activateEventDto.id,
-      startDate: activateEventDto.startDate,
-      finishDate: activateEventDto.finishDate,
-      timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
-      timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
-      matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
-      courtIds: activateEventDto.courtsIds,
-    });
+    // await this.createSchedule({
+    //   id: activateEventDto.id,
+    //   startDate: activateEventDto.startDate,
+    //   finishDate: activateEventDto.finishDate,
+    //   timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+    //   timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+    //   matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+    //   courtIds: activateEventDto.courtsIds,
+    // });
 
     if (activateEventDto.eventType === "ALLxALL") {
       await this.createMatchesAllxAll(activateEventDto);
     }
 
     if (activateEventDto.eventType === "GROUPS") {
-      // await this.createCategoriesGroups(activateEventDto);
+      await this.createCategoriesGroups(activateEventDto);
       await this.createGroupsMatches(event.id);
-      // await this.createFinalsMatches(event.id);
     }
 
     // if (activateEventDto.autoPopulate) {
@@ -709,21 +708,33 @@ export class EventsService {
     const eventUpdated = await this.prismaService.event.findUniqueOrThrow({
       where: { id: event.id },
       select: {
-        eventMatches: {
+        // eventMatches: {
+        //   select: {
+        //     number: true,
+        //     type: true,
+        //     eventId: true,
+        //     match: {
+        //       select: {
+        //         id: true,
+        //         categoryId: true,
+        //         doubles: true,
+        //       },
+        //     },
+        //   },
+        // },
+        categoriesGroups: {
           select: {
-            number: true,
-            type: true,
-            eventId: true,
-            match: {
+            id: true,
+            category: true,
+            groups: {
               select: {
                 id: true,
-                categoryId: true,
-                doubles: true,
+                key: true,
+                groupMatches: true,
               },
             },
           },
         },
-        categoriesGroups: true,
       },
     });
 
@@ -923,6 +934,7 @@ export class EventsService {
 
       for (let j = 0; j < groups.length; j++) {
         const doubles = groups[j].doubles;
+        const groupId = groups[j].id;
 
         for (let k = 0; k < doubles.length; k++) {
           for (let l = k + 1; l < doubles.length; l++) {
@@ -945,6 +957,7 @@ export class EventsService {
                 match: {
                   connect: { id: match.id },
                 },
+                doublesGroup: { connect: { id: groupId } },
               },
             });
           }
@@ -971,6 +984,76 @@ export class EventsService {
     return eventUpdated;
   }
 
+  async endGroupsStage(eventId: string) {
+    // check if all matches are finished and create logic for placing 1st and 2nd places to finals
+    const event = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: eventId },
+      select: {
+        id: true,
+        categoriesGroups: {
+          select: {
+            id: true,
+            groups: {
+              select: {
+                key: true,
+                groupMatches: {
+                  select: {
+                    id: true,
+                    number: true,
+                    match: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const categoriesGroups = event.categoriesGroups;
+
+    if (!categoriesGroups) {
+      throw new HttpException(
+        "Event with no groups created",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
+    for (let i = 0; i < categoriesGroups.length; i++) {
+      const groups = categoriesGroups[i].groups;
+      const eventMatchesInCategory = groups.flatMap((g) => g.groupMatches);
+      const pendingEventMatchesInCategory = eventMatchesInCategory.filter(
+        (em) => em.match.isFinished === false
+      );
+      if (pendingEventMatchesInCategory.length !== 0) {
+        throw new HttpException(
+          `${pendingEventMatchesInCategory.length} matches are unfinished`,
+          HttpStatus.BAD_REQUEST
+        );
+      }
+      if (pendingEventMatchesInCategory.length === 0) {
+        await this.prismaService.categoryGroup.update({
+          where: {
+            id: categoriesGroups[i].id,
+          },
+          data: {
+            groupsStageFinished: true,
+          },
+        });
+
+        const updateEvent = await this.prismaService.event.update({
+          where: {
+            id: event.id,
+          },
+          data: {
+            isGroupMatchesFinished: true,
+          },
+        });
+      }
+    }
+    return event;
+  }
+
   async createFinalsMatches(eventId: string) {
     const event = await this.prismaService.event.findUniqueOrThrow({
       where: { id: eventId },
@@ -980,7 +1063,13 @@ export class EventsService {
         categoriesGroups: {
           select: {
             category: true,
-            groups: true,
+            groups: {
+              select: {
+                id: true,
+                key: true,
+                groupMatches: true,
+              },
+            },
           },
         },
       },
@@ -1124,6 +1213,7 @@ export class EventsService {
               select: {
                 id: true,
                 category: true,
+                winner: true,
                 doubles: {
                   select: {
                     id: true,
@@ -1138,16 +1228,19 @@ export class EventsService {
             number: true,
             type: true,
             matchesWinnersRef: true,
+            doublesGroup: true,
           },
         },
         categoriesGroups: {
           select: {
             id: true,
             category: true,
+            groupsStageFinished: true,
             groups: {
               select: {
                 id: true,
                 key: true,
+                groupMatches: true,
                 doubles: {
                   select: {
                     id: true,

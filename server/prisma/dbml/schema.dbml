@@ -7,6 +7,7 @@ Table Event {
   name String [not null]
   categories Category [not null]
   isActive Boolean [not null, default: false]
+  isFinished Boolean [not null, default: false]
   players Player [not null]
   matches Match [not null]
   places Place [not null]
@@ -26,6 +27,7 @@ Table Event {
   invite Invite
   categoriesGroups CategoryGroup [not null]
   eventMatches EventMatch [not null]
+  isGroupMatchesFinished Boolean [not null, default: false]
 }
 
 Table CategoryGroup {
@@ -35,6 +37,8 @@ Table CategoryGroup {
   groups DoublesGroup [not null]
   event Event
   eventId String
+  finalMatches EventMatch [not null]
+  groupsStageFinished Boolean [not null, default: false]
 
   indexes {
     (eventId, categoryId) [unique]
@@ -51,6 +55,7 @@ Table DoublesGroup {
   firstPlaceDoublesId String
   secondPlace Double
   secondPlaceDoublesId String
+  groupMatches EventMatch [not null]
 }
 
 Table EventRequest {
@@ -123,6 +128,10 @@ Table EventMatch {
   match Match [not null]
   matchId String [unique, not null]
   matchesWinnersRef Match [not null]
+  categoryGroup CategoryGroup
+  categoryGroupId String
+  doublesGroup DoublesGroup
+  doublesGroupId String
 
   indexes {
     (eventId, matchId) [unique]
@@ -418,6 +427,10 @@ Ref: EventDouble.atRestId > MatchDate.id
 Ref: EventMatch.eventId > Event.id
 
 Ref: EventMatch.matchId - Match.id
+
+Ref: EventMatch.categoryGroupId > CategoryGroup.id
+
+Ref: EventMatch.doublesGroupId > DoublesGroup.id
 
 Ref: Match.categoryId > Category.id
 

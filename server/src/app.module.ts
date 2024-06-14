@@ -19,6 +19,7 @@ import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { RefreshJwtGuard } from "./auth/refresh-jwt-auth.guard";
 import { DevtoolsModule } from "@nestjs/devtools-integration";
 import { InvitesModule } from './invites/invites.module';
+import { EventMatchesModule } from './event-matches/event-matches.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { InvitesModule } from './invites/invites.module';
     UsersModule,
     AuthModule,
     InvitesModule,
+    EventMatchesModule,
   ],
   controllers: [],
   providers: [PrismaService],

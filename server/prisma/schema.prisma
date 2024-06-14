@@ -21,6 +21,7 @@ model Event {
   name                   String
   categories             Category[]
   isActive               Boolean         @default(false)
+  isFinished             Boolean         @default(false)
   players                Player[]
   matches                Match[]
   places                 Place[]
@@ -40,15 +41,18 @@ model Event {
   invite                 Invite?
   categoriesGroups       CategoryGroup[]
   eventMatches           EventMatch[]
+  isGroupMatchesFinished Boolean         @default(false)
 }
 
 model CategoryGroup {
-  id         String         @id @default(uuid())
-  category   Category       @relation(fields: [categoryId], references: [id])
-  categoryId String
-  groups     DoublesGroup[]
-  event      Event?         @relation(fields: [eventId], references: [id])
-  eventId    String?
+  id                  String         @id @default(uuid())
+  category            Category       @relation(fields: [categoryId], references: [id])
+  categoryId          String
+  groups              DoublesGroup[]
+  event               Event?         @relation(fields: [eventId], references: [id])
+  eventId             String?
+  finalMatches        EventMatch[]   @relation("EventFinalMatches")
+  groupsStageFinished Boolean        @default(false)
 
   @@unique([eventId, categoryId])
 }
@@ -63,6 +67,7 @@ model DoublesGroup {
   firstPlaceDoublesId  String?
   secondPlace          Double?        @relation("SecondPlaceDouble", fields: [secondPlaceDoublesId], references: [id])
   secondPlaceDoublesId String?
+  groupMatches         EventMatch[]   @relation("EventGroupMatches")
 }
 
 enum EventType {
@@ -143,6 +148,10 @@ model EventMatch {
   match             Match          @relation("Match", fields: [matchId], references: [id])
   matchId           String         @unique
   matchesWinnersRef Match[]        @relation("MatchesWinnerRef")
+  categoryGroup     CategoryGroup? @relation("EventFinalMatches", fields: [categoryGroupId], references: [id])
+  categoryGroupId   String?
+  doublesGroup      DoublesGroup?  @relation("EventGroupMatches", fields: [doublesGroupId], references: [id])
+  doublesGroupId    String?
 
   @@unique([eventId, matchId])
 }
@@ -158,7 +167,6 @@ enum EventMatchType {
 
 model Match {
   id              String      @id @default(uuid())
-  // number          Int         
   players         Player[]
   isFinished      Boolean     @default(false)
   category        Category?   @relation(fields: [categoryId], references: [id])

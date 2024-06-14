@@ -23,13 +23,13 @@ type ErrorResponse = {
     message: string
 }
 type MatchCardProps = React.ComponentProps<typeof Card> & {
-    match: EventMatch
+    eventMatch: EventMatch
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
 export const MatchCard = ({
-    match,
+    eventMatch,
     className,
     refetchEventById,
 }: MatchCardProps) => {
@@ -49,27 +49,27 @@ export const MatchCard = ({
     const [editOn, setEditOn] = useState<boolean>(false)
 
     const { matchGames, refetchMatchGames } = useGetMatchGames(
-        match.match.id,
-        match.match.isFinished
+        eventMatch.match.id,
+        eventMatch.match.isFinished
     )
 
     const onSubmit = async (input: matchFormObject) => {
         try {
             const requestBody = {
                 doublesOneGames: input.doublesOneGames,
-                doublesOneId: match.match.doubles[0].id,
+                doublesOneId: eventMatch.match.doubles[0].id,
                 doublesTwoGames: input.doublesTwoGames,
-                doublesTwoId: match.match.doubles[1].id,
+                doublesTwoId: eventMatch.match.doubles[1].id,
                 winnerDoublesId: input.winnerDoublesId,
-                eventId: match.eventId,
+                eventId: eventMatch.eventId,
             }
 
             const data = await axiosInstance.patch(
-                `/matches/finish-match/${match.id}`,
+                `/matches/finish-match/${eventMatch.match.id}`,
                 requestBody
             )
 
-            sendResultToast(match.match, input)
+            sendResultToast(eventMatch.match, input)
             await refetchMatchGames()
             await refetchEventById()
 
@@ -95,8 +95,8 @@ export const MatchCard = ({
     }
 
     let startTime = undefined
-    if (match.match.matchDate) {
-        const matchStartDate = new Date(match.match.matchDate.start)
+    if (eventMatch.match.matchDate) {
+        const matchStartDate = new Date(eventMatch.match.matchDate.start)
         startTime = matchStartDate.toLocaleString()
     }
 
@@ -104,12 +104,16 @@ export const MatchCard = ({
         <>
             <Card className={cn('w-[380px] min-h-[354px]', className)}>
                 <CardHeader>
-                    <CardTitle>{`Match #${match.number}`}</CardTitle>
+                    <CardTitle>{`Match #${eventMatch.number}`}</CardTitle>
                     <CardDescription>
-                        Category - {match.match.category?.level}{' '}
-                        {match.match.category?.type}
+                        Category - {eventMatch.match.category?.level}{' '}
+                        {eventMatch.match.category?.type}
                     </CardDescription>
-                    {match.match.isFinished ? <p>🟢</p> : <p>🟡</p>}
+                    <CardDescription>
+                        Group {eventMatch.doublesGroup?.key}
+                    </CardDescription>
+
+                    {eventMatch.match.isFinished ? <p>🟢</p> : <p>🟡</p>}
                     <CardDescription>{startTime}</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -122,19 +126,19 @@ export const MatchCard = ({
                                     doublesTwoGames: '',
                                     winnerDoublesId: '',
                                 }}
-                                doublesPlaying={match.match.doubles}
+                                doublesPlaying={eventMatch.match.doubles}
                             />
                         </div>
                     ) : (
                         <div className="flex flex-col">
                             <MatchResult
-                                match={match}
+                                match={eventMatch}
                                 matchGames={matchGames}
                             />
                         </div>
                     )}
                     {/* Footer (Pencil icon to to toggle on and off editMode) */}
-                    {match.match.isFinished ? null : (
+                    {eventMatch.match.isFinished ? null : (
                         <CardFooter className="justify-center">
                             <div className="w-2/3">
                                 {editOn ? (

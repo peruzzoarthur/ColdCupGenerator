@@ -129,6 +129,7 @@ export class PlayerService {
         id: true,
         category: true,
         position: true,
+
         doubles: {
           select: {
             id: true,

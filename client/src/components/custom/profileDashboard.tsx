@@ -51,10 +51,11 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
         0
     )
 
-    const totalMatchesPlayed = playerById?.doubles.reduce(
-        (acc, curr) => acc + curr.matches.length,
-        0
-    )
+    const totalMatches = playerById?.doubles.flatMap((d) => d.matches)
+
+    const totalMatchesPlayed = totalMatches?.filter(
+        (m) => m.isFinished === true
+    ).length
 
     const eventsAttended = playerById?.doubles.reduce(
         (acc, curr) => acc + curr.eventDouble.length,
