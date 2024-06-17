@@ -68,6 +68,7 @@ model DoublesGroup {
   secondPlace          Double?        @relation("SecondPlaceDouble", fields: [secondPlaceDoublesId], references: [id])
   secondPlaceDoublesId String?
   groupMatches         EventMatch[]   @relation("EventGroupMatches")
+  groupFinished        Boolean        @default(false)
 }
 
 enum EventType {
@@ -141,23 +142,6 @@ enum CatType {
   M
 }
 
-model EventMatch {
-  number            Int            @default(autoincrement())
-  // id                String         @id @default(uuid())
-  type              EventMatchType @default(GROUP)
-  event             Event          @relation(fields: [eventId], references: [id])
-  eventId           String
-  match             Match          @relation("Match", fields: [matchId], references: [id])
-  matchId           String         @unique
-  matchesWinnersRef Match[]        @relation("MatchesWinnerRef")
-  categoryGroup     CategoryGroup? @relation("EventFinalMatches", fields: [categoryGroupId], references: [id])
-  categoryGroupId   String?
-  doublesGroup      DoublesGroup?  @relation("EventGroupMatches", fields: [doublesGroupId], references: [id])
-  doublesGroupId    String?
-
-  @@id([eventId, matchId])
-}
-
 enum EventMatchType {
   GROUP
   ROUND_OF_16
@@ -167,26 +151,57 @@ enum EventMatchType {
   UNCLASSIFIED
 }
 
+model EventMatch {
+  number          Int            @default(autoincrement())
+  // id              String         @id @default(uuid())
+  type            EventMatchType @default(GROUP)
+  event           Event          @relation(fields: [eventId], references: [id])
+  eventId         String
+  match           Match          @relation("Match", fields: [matchId], references: [id])
+  matchId         String         @unique
+  // matchesWinnersRef Match[]       @relation("MatchesWinnerRef")
+  categoryGroup   CategoryGroup? @relation("EventFinalMatches", fields: [categoryGroupId], references: [id])
+  categoryGroupId String?
+  doublesGroup    DoublesGroup?  @relation("EventGroupMatches", fields: [doublesGroupId], references: [id])
+  doublesGroupId  String?
+
+  @@id([eventId, matchId])
+}
+
+model MatchesReference {
+  matchOne    Match   @relation("MatchOne", fields: [matchOneId], references: [id], map: "fk_match_one")
+  matchOneId  String  @unique
+  matchTwo    Match?  @relation("MatchTwo", fields: [matchTwoId], references: [id], map: "fk_match_two")
+  matchTwoId  String? @unique
+  nextMatch   Match?  @relation("Next", fields: [nextMatchId], references: [id], map: "fk_next_match")
+  nextMatchId String? @unique
+
+  @@unique([matchOneId, matchTwoId, nextMatchId])
+}
+
 model Match {
-  id              String      @id @default(uuid())
+  id              String            @id @default(uuid())
   players         Player[]
-  isFinished      Boolean     @default(false)
-  category        Category?   @relation(fields: [categoryId], references: [id])
+  isFinished      Boolean           @default(false)
+  category        Category?         @relation(fields: [categoryId], references: [id])
   categoryId      String?
-  winner          Double?     @relation("MatchWinnerDouble", fields: [winnerDoublesId], references: [id])
+  winner          Double?           @relation("MatchWinnerDouble", fields: [winnerDoublesId], references: [id])
   winnerDoublesId String?
   sets            Set[]
   doubles         Double[]
-  event           Event?      @relation(fields: [eventId], references: [id])
+  event           Event?            @relation(fields: [eventId], references: [id])
   eventId         String?
-  type            MatchType   @default(SUPERSET)
+  type            MatchType         @default(SUPERSET)
   matchDate       MatchDate?
-  court           Court?      @relation(fields: [courtId], references: [id])
+  court           Court?            @relation(fields: [courtId], references: [id])
   courtId         String?
   invite          Invite?
-  eventMatch      EventMatch? @relation("Match")
-  winnerRef       EventMatch? @relation("MatchesWinnerRef", fields: [winnerRefId], references: [matchId])
-  winnerRefId     String?
+  eventMatch      EventMatch?       @relation("Match")
+  // winnerRef       EventMatch? @relation("MatchesWinnerRef", fields: [winnerRefId], references: [matchId])
+  // winnerRefId     String?
+  matchRefOne     MatchesReference? @relation("MatchOne")
+  matchRefTwo     MatchesReference? @relation("MatchTwo")
+  matchRefNext    MatchesReference? @relation("Next")
 }
 
 enum MatchType {

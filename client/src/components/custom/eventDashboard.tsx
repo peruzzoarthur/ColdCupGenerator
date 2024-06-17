@@ -300,7 +300,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
             })
 
     return (
-        <div className="flex flex-col w-full min-h-screen lg:w-4/6 ">
+        <div className="flex flex-col w-full min-h-screen xl:w-4/6 ">
             <div className="flex flex-col gap-2 ">
                 <header className="static top-0 flex flex-col items-start h-auto gap-4 px-4 py-4 bg-transparent border-0">
                     <Breadcrumb>
@@ -514,6 +514,11 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                                     <DropdownMenuRadioItem
                                                                         key={
                                                                             index
+                                                                        }
+                                                                        onClick={() =>
+                                                                            setGroupsFilter(
+                                                                                'all'
+                                                                            )
                                                                         }
                                                                         value={
                                                                             c

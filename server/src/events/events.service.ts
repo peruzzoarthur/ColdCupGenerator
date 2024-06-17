@@ -1016,7 +1016,6 @@ export class EventsService {
 
   async endGroupsStage(eventId: string) {
     // check if all matches are finished and create logic for placing 1st and 2nd places to finals
-
     type EventDoubles = {
       double: {
         id: string;
@@ -1034,7 +1033,6 @@ export class EventsService {
           eventId: string;
           type: MatchType;
           courtId: string;
-          winnerRefId: string;
         }[];
         gamesWins: {
           id: string;
@@ -1055,6 +1053,7 @@ export class EventsService {
               select: {
                 id: true,
                 key: true,
+                groupFinished: true,
                 eventDoubles: {
                   select: {
                     double: {
@@ -1108,6 +1107,7 @@ export class EventsService {
 
     for (let i = 0; i < categoriesGroups.length; i++) {
       const groups = categoriesGroups[i].groups;
+      const categoryId = categoriesGroups[i].category.id;
       const eventMatchesInCategory = groups.flatMap((g) => g.groupMatches);
       const pendingEventMatchesInCategory = eventMatchesInCategory.filter(
         (em) => em.match.isFinished === false
@@ -1123,6 +1123,9 @@ export class EventsService {
         // Set first and second place
         for (let j = 0; j < groups.length; j++) {
           const group = groups[j];
+          if (group.groupFinished) {
+            continue; //! test this later...
+          }
           console.log(
             "#########################################################"
           );
@@ -1138,6 +1141,12 @@ export class EventsService {
           let maxGamesDiff = -1;
           let secondMaxGamesDiff = -1;
 
+          let doublesGroups: {
+            id: string;
+            matchesWon: number;
+            gamesDiff: number;
+          }[] = [];
+
           for (let k = 0; k < group.eventDoubles.length; k++) {
             const doubles = group.eventDoubles[k];
             console.log(doubles.double.id);
@@ -1148,12 +1157,7 @@ export class EventsService {
 
             const groupSets = group.groupMatches.flatMap((g) => g.match.sets);
             const groupGames = groupSets.flatMap((s) => s.games);
-            // const doublesGroupGames = groupGames.filter((g) =>
-            //   g.doubles.includes({
-            //     id: doubles.double.id,
-            //     categoryId: doubles.double.categoryId,
-            //   })
-            // );
+
             const filteredGamesByDoubles = groupGames.filter((g) =>
               g.doubles.some((d) => d.id === doubles.double.id)
             );
@@ -1162,14 +1166,15 @@ export class EventsService {
               (g) => g.winnerId === doubles.double.id
             );
 
-            // console.log(groupGames.length);
-            // console.log(filteredGamesByDoubles.length);
-            // console.log(filterGamesWonByDoubles.length);
-
             const gamesDiff =
               filterGamesWonByDoubles.length -
               (filteredGamesByDoubles.length - filterGamesWonByDoubles.length);
 
+            doublesGroups.push({
+              id: doubles.double.id,
+              matchesWon: matchesWon,
+              gamesDiff: gamesDiff,
+            });
             console.log(`Doubles: ${doubles.double.id}`);
             console.log(`Matches W: ${matchesWon}`);
             console.log(`Games Diff: ${gamesDiff}`);
@@ -1196,6 +1201,57 @@ export class EventsService {
               secondMaxMatchesWon = matchesWon;
               secondMaxGamesDiff = gamesDiff;
             }
+          }
+
+          if (isGroupTied(doublesGroups)) {
+            let random = Math.floor(Math.random() * doublesGroups.length);
+            const firstPlace = await this.prismaService.eventDouble.findUnique({
+              where: {
+                eventId_doubleId_categoryId: {
+                  categoryId: categoryId,
+                  eventId: event.id,
+                  doubleId: doublesGroups[random].id,
+                },
+              },
+              select: {
+                double: {
+                  select: {
+                    id: true,
+                    categoryId: true,
+                    matchesWins: true,
+                    games: true,
+                    gamesWins: true,
+                  },
+                },
+              },
+            });
+            firstPlaceDoubles = firstPlace;
+            doublesGroups.splice(random, 1);
+
+            random = Math.floor(Math.random() * doublesGroups.length);
+            const secondPlace = await this.prismaService.eventDouble.findUnique(
+              {
+                where: {
+                  eventId_doubleId_categoryId: {
+                    categoryId: categoryId,
+                    eventId: event.id,
+                    doubleId: doublesGroups[random].id,
+                  },
+                },
+                select: {
+                  double: {
+                    select: {
+                      id: true,
+                      categoryId: true,
+                      matchesWins: true,
+                      games: true,
+                      gamesWins: true,
+                    },
+                  },
+                },
+              }
+            );
+            secondPlaceDoubles = secondPlace;
           }
 
           if (firstPlaceDoubles) {
@@ -1226,6 +1282,7 @@ export class EventsService {
               await this.prismaService.doublesGroup.update({
                 where: { id: group.id },
                 data: {
+                  groupFinished: true,
                   secondPlace: {
                     connect: {
                       id: secondPlaceDoubles.double.id,
@@ -1464,7 +1521,6 @@ export class EventsService {
             eventId: true,
             number: true,
             type: true,
-            matchesWinnersRef: true,
             doublesGroup: true,
           },
         },
@@ -1851,4 +1907,25 @@ export class EventsService {
     }
     return;
   }
+}
+
+function isGroupTied(
+  group: { id: string; matchesWon: number; gamesDiff: number }[]
+): boolean {
+  if (group.length === 0) {
+    return false;
+  }
+
+  const { matchesWon, gamesDiff } = group[0];
+
+  for (let i = 1; i < group.length; i++) {
+    if (
+      group[i].matchesWon !== matchesWon ||
+      group[i].gamesDiff !== gamesDiff
+    ) {
+      return false;
+    }
+  }
+
+  return true;
 }

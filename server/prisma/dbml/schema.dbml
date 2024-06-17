@@ -56,6 +56,7 @@ Table DoublesGroup {
   secondPlace Double
   secondPlaceDoublesId String
   groupMatches EventMatch [not null]
+  groupFinished Boolean [not null, default: false]
 }
 
 Table EventRequest {
@@ -128,7 +129,6 @@ Table EventMatch {
   eventId String [not null]
   match Match [not null]
   matchId String [unique, not null]
-  matchesWinnersRef Match [not null]
   categoryGroup CategoryGroup
   categoryGroupId String
   doublesGroup DoublesGroup
@@ -136,6 +136,19 @@ Table EventMatch {
 
   indexes {
     (eventId, matchId) [pk]
+  }
+}
+
+Table MatchesReference {
+  matchOne Match [not null]
+  matchOneId String [unique, not null]
+  matchTwo Match
+  matchTwoId String [unique]
+  nextMatch Match
+  nextMatchId String [unique]
+
+  indexes {
+    (matchOneId, matchTwoId, nextMatchId) [unique]
   }
 }
 
@@ -157,8 +170,9 @@ Table Match {
   courtId String
   invite Invite
   eventMatch EventMatch
-  winnerRef EventMatch
-  winnerRefId String
+  matchRefOne MatchesReference
+  matchRefTwo MatchesReference
+  matchRefNext MatchesReference
 }
 
 Table MatchDate {
@@ -429,6 +443,12 @@ Ref: EventMatch.categoryGroupId > CategoryGroup.id
 
 Ref: EventMatch.doublesGroupId > DoublesGroup.id
 
+Ref: MatchesReference.matchOneId - Match.id
+
+Ref: MatchesReference.matchTwoId - Match.id
+
+Ref: MatchesReference.nextMatchId - Match.id
+
 Ref: Match.categoryId > Category.id
 
 Ref: Match.winnerDoublesId > Double.id
@@ -436,8 +456,6 @@ Ref: Match.winnerDoublesId > Double.id
 Ref: Match.eventId > Event.id
 
 Ref: Match.courtId > Court.id
-
-Ref: Match.winnerRefId - EventMatch.matchId
 
 Ref: MatchDate.eventId > Event.id
 
