@@ -57,6 +57,10 @@ Table DoublesGroup {
   secondPlaceDoublesId String
   groupMatches EventMatch [not null]
   groupFinished Boolean [not null, default: false]
+
+  indexes {
+    (categoryGroupId, key) [unique]
+  }
 }
 
 Table EventRequest {

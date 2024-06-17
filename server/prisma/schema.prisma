@@ -69,6 +69,8 @@ model DoublesGroup {
   secondPlaceDoublesId String?
   groupMatches         EventMatch[]   @relation("EventGroupMatches")
   groupFinished        Boolean        @default(false)
+
+  @@unique([categoryGroupId, key])
 }
 
 enum EventType {
