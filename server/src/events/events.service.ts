@@ -1471,7 +1471,13 @@ export class EventsService {
         categoriesGroups: {
           select: {
             id: true,
-            category: true,
+            category: {
+              select: {
+                id: true,
+                type: true,
+                level: true,
+              },
+            },
             groupsStageFinished: true,
             groups: {
               select: {
@@ -1578,6 +1584,7 @@ export class EventsService {
               },
             },
             category: true,
+            doublesGroupId: true,
             atRest: true,
           },
         },

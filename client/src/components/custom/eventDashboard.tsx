@@ -63,6 +63,7 @@ import { Link } from '@tanstack/react-router'
 import { useGetRole } from '@/hooks/useGetRole'
 import { useGetEventRequestsById } from '@/hooks/useGetEventRequests'
 import { EventRequestsCard } from './eventRequestsCard'
+import { Badge } from '../ui/badge'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -70,10 +71,10 @@ type EventDashBoardProps = {
 
 export function EventDashboard({ event }: EventDashBoardProps) {
     const [isEditEventOn, setIsEditEventOn] = useState<boolean>(false)
-
     const [isAutoPopulateOn, setIsAutoPopulateOn] = useState<boolean>(false)
     const [toggleMatchesGrid, setToggleMatchesGrid] = useState<boolean>(false)
     const [catFilter, setCatFilter] = useState<string>('all')
+    const [groupsFilter, setGroupsFilter] = useState<string>('all')
     const [dayFilter, setDayFilter] = useState('all')
     const [doublesFilter, setDoublesFilter] = useState<string>('all')
     const [courtFilter, setCourtFilter] = useState<string>('all')
@@ -94,8 +95,6 @@ export function EventDashboard({ event }: EventDashBoardProps) {
         eventById,
         isFetchingEventById,
     } = useGetEventById(event.id)
-
-    console.log(pendingMatches)
 
     const { role } = useGetRole()
 
@@ -177,7 +176,22 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 W: winningGames ?? null,
                 T: totalGames ?? null,
                 gamesDiff: gamesDiff,
+                doublesGroupId: d.doublesGroupId,
             }
+        })
+
+    const filteredDoublesData = doublesTableData
+        ?.filter((td) => {
+            if (catFilter === 'all') {
+                return td
+            }
+            return td.catId === catFilter
+        })
+        .filter((td) => {
+            if (groupsFilter === 'all') {
+                return td
+            }
+            return td.doublesGroupId === groupsFilter
         })
 
     const eventDays = eventMatchDates?.map((md) => {
@@ -414,9 +428,43 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                             )
                         ) : null}
 
-                        {doublesTableData && (
+                        {filteredDoublesData && eventById && (
                             <Tabs defaultValue="all">
                                 <div className="flex items-center justify-center w-full">
+                                    {catFilter !== 'all' &&
+                                        eventById.categoriesGroups.map((cg) =>
+                                            cg.groups.map((g) => {
+                                                if (g.id === groupsFilter) {
+                                                    return (
+                                                        <Badge
+                                                            className="ml-1 cursor-pointer"
+                                                            variant="default"
+                                                            onClick={() =>
+                                                                setGroupsFilter(
+                                                                    g.id
+                                                                )
+                                                            }
+                                                        >
+                                                            {g.key}
+                                                        </Badge>
+                                                    )
+                                                } else {
+                                                    return (
+                                                        <Badge
+                                                            className="ml-1 cursor-pointer"
+                                                            variant="outline"
+                                                            onClick={() =>
+                                                                setGroupsFilter(
+                                                                    g.id
+                                                                )
+                                                            }
+                                                        >
+                                                            {g.key}
+                                                        </Badge>
+                                                    )
+                                                }
+                                            })
+                                        )}
                                     <div className="flex flex-row ml-auto ">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -444,17 +492,49 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                     <DropdownMenuRadioItem value="all">
                                                         All
                                                     </DropdownMenuRadioItem>
-                                                    {event.categories.map(
-                                                        (c, index) => (
-                                                            <DropdownMenuRadioItem
-                                                                key={index}
-                                                                value={c.id}
-                                                            >
-                                                                {c.level}{' '}
-                                                                {c.type}
-                                                            </DropdownMenuRadioItem>
-                                                        )
-                                                    )}
+                                                    {eventById.eventType ===
+                                                        'ALLxALL' &&
+                                                        eventById.categories.map(
+                                                            (c, index) => (
+                                                                <DropdownMenuRadioItem
+                                                                    key={index}
+                                                                    value={c.id}
+                                                                >
+                                                                    {c.level}{' '}
+                                                                    {c.type}
+                                                                </DropdownMenuRadioItem>
+                                                            )
+                                                        )}
+
+                                                    {eventById.eventType ===
+                                                        'GROUPS' &&
+                                                        eventById.categoriesGroups.map(
+                                                            (c, index) => (
+                                                                <>
+                                                                    <DropdownMenuRadioItem
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        value={
+                                                                            c
+                                                                                .category
+                                                                                .id
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            c
+                                                                                .category
+                                                                                .level
+                                                                        }{' '}
+                                                                        {
+                                                                            c
+                                                                                .category
+                                                                                .type
+                                                                        }
+                                                                    </DropdownMenuRadioItem>
+                                                                </>
+                                                            )
+                                                        )}
                                                 </DropdownMenuRadioGroup>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -464,7 +544,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                             className="gap-1 h-7"
                                             onClick={() =>
                                                 downloadRegisteredDoublesToExcel(
-                                                    doublesTableData
+                                                    filteredDoublesData
                                                 )
                                             }
                                         >
@@ -501,20 +581,9 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                         }
                                                         eventId={eventById?.id}
                                                         columns={doublesColumns}
-                                                        data={doublesTableData.filter(
-                                                            (td) => {
-                                                                if (
-                                                                    catFilter ===
-                                                                    'all'
-                                                                ) {
-                                                                    return td
-                                                                }
-                                                                return (
-                                                                    td.catId ===
-                                                                    catFilter
-                                                                )
-                                                            }
-                                                        )}
+                                                        data={
+                                                            filteredDoublesData
+                                                        }
                                                     />
                                                 </div>
                                             ) : null}

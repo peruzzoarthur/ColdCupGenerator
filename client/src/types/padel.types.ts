@@ -56,6 +56,7 @@ export type EventDouble = {
     double?: Double
     category?: Category
     event?: PadelEvent
+    doublesGroupId: string
 }
 
 export type EventRequest = {
@@ -109,6 +110,7 @@ export type PadelEvent = {
     suitable?: boolean
     courts: Court[]
     isActive: boolean
+    categoriesGroups: CategoryGroup[]
 }
 
 export type EventMatch = {

@@ -14,6 +14,7 @@ export type RegisteredDoublesTable = {
     W: number | null
     T: number | null
     gamesDiff: number | null
+    doublesGroupId: string | null
 }
 
 export const doublesColumns: ColumnDef<RegisteredDoublesTable>[] = [
@@ -135,6 +136,13 @@ export const doublesColumns: ColumnDef<RegisteredDoublesTable>[] = [
 
     {
         accessorKey: 'catId',
+        header: () => <></>,
+        cell: () => <></>, //!  maybe i don't need to instantiate this two columns
+        enableHiding: false,
+    },
+
+    {
+        accessorKey: 'doublesGroupId',
         header: () => <></>,
         cell: () => <></>, //!  maybe i don't need to instantiate this two columns
         enableHiding: false,
