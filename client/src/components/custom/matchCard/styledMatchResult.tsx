@@ -38,20 +38,27 @@ export const MatchResult = ({
                     <div className="flex items-center p-4 mt-1 space-x-4 border">
                         <div className="flex-1 space-y-1">
                             <div className="flex flex-row justify-between">
-                                <div className="text-sm text-muted-foreground ">
-                                    {eventMatch.match.doubles[0]?.players?.map(
-                                        (p, index) => (
-                                            <p
-                                                key={index}
-                                            >{`${p.firstName} ${p.lastName}`}</p>
-                                        )
-                                    )}
-                                </div>
+                                {eventMatch.match.doubles[0] ? (
+                                    <div className="text-sm text-muted-foreground ">
+                                        {eventMatch.match.doubles[0]?.players?.map(
+                                            (p, index) => (
+                                                <p
+                                                    key={index}
+                                                >{`${p.firstName} ${p.lastName}`}</p>
+                                            )
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="text-sm text-muted-foreground ">
+                                        BYE
+                                    </div>
+                                )}
+
                                 <div className="justify-end text-sm text-muted-foreground">
                                     {eventMatch.match.isFinished &&
                                     matchGames ? (
                                         <p className="items-end align-end">
-                                            {matchGames.doublesTwoGames}
+                                            {matchGames.doublesTwo.gamesWon}
                                         </p>
                                     ) : (
                                         <p className="items-end justify-end">
@@ -65,20 +72,27 @@ export const MatchResult = ({
                     <div className="flex items-center p-4 mt-1 space-x-4 border">
                         <div className="flex-1 space-y-1">
                             <div className="flex flex-row justify-between">
-                                <div className="text-sm text-muted-foreground ">
-                                    {eventMatch.match.doubles[1]?.players?.map(
-                                        (p, index) => (
-                                            <p
-                                                key={index}
-                                            >{`${p.firstName} ${p.lastName}`}</p>
-                                        )
-                                    )}
-                                </div>
+                                {eventMatch.match.doubles[1] ? (
+                                    <div className="text-sm text-muted-foreground ">
+                                        {eventMatch.match.doubles[1]?.players?.map(
+                                            (p, index) => (
+                                                <p
+                                                    key={index}
+                                                >{`${p.firstName} ${p.lastName}`}</p>
+                                            )
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="text-sm text-muted-foreground ">
+                                        BYE
+                                    </div>
+                                )}
+
                                 <div className="justify-end text-sm text-muted-foreground">
                                     {eventMatch.match.isFinished &&
                                     matchGames ? (
                                         <p className="items-end align-end">
-                                            {matchGames.doublesTwoGames}
+                                            {matchGames.doublesTwo.gamesWon}
                                         </p>
                                     ) : (
                                         <p className="items-end justify-end">
@@ -97,7 +111,7 @@ export const MatchResult = ({
             {/* Doubles One isWinner */}
             {eventMatch.match.isFinished &&
                 eventMatch.match.winner.id ===
-                    eventMatch.match.doubles[0].id && (
+                    matchGames?.doublesOne.doubles.id && (
                     <>
                         <Component
                             className={cn(
@@ -139,35 +153,40 @@ export const MatchResult = ({
                                     borderRadius: `calc(${borderRadius} * 0.96)`,
                                 }}
                             >
-                                <div className="flex items-center p-4 space-x-4 border rounded-md ">
-                                    <div className="flex-1 space-y-1">
-                                        <div className="flex flex-row justify-between">
-                                            <div className="text-sm text-muted-foreground">
-                                                {eventMatch.match.doubles[0].players?.map(
-                                                    (p, index) => (
-                                                        <p
-                                                            key={index}
-                                                        >{`${p.firstName} ${p.lastName}`}</p>
-                                                    )
-                                                )}
-                                            </div>
-                                            <div className="justify-end text-sm text-muted-foreground">
-                                                {eventMatch.match.isFinished &&
-                                                matchGames ? (
-                                                    <p className="items-end align-end">
-                                                        {
-                                                            matchGames.doublesOneGames
-                                                        }
-                                                    </p>
-                                                ) : (
-                                                    <p className="items-end justify-end">
-                                                        0
-                                                    </p>
-                                                )}
+                                {matchGames.doublesOne ? (
+                                    <div className="flex items-center p-4 space-x-4 border rounded-md ">
+                                        <div className="flex-1 space-y-1">
+                                            <div className="flex flex-row justify-between">
+                                                <div className="text-sm text-muted-foreground">
+                                                    {matchGames?.doublesOne.doubles.players?.map(
+                                                        (p, index) => (
+                                                            <p
+                                                                key={index}
+                                                            >{`${p.firstName} ${p.lastName}`}</p>
+                                                        )
+                                                    )}
+                                                </div>
+                                                <div className="justify-end text-sm text-muted-foreground">
+                                                    {eventMatch.match
+                                                        .isFinished &&
+                                                    matchGames ? (
+                                                        <p className="items-end align-end">
+                                                            {
+                                                                matchGames
+                                                                    .doublesOne
+                                                                    .gamesWon
+                                                            }
+                                                        </p>
+                                                    ) : (
+                                                        <p className="items-end justify-end">
+                                                            0
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                ) : null}
                             </div>
                         </Component>
 
@@ -209,35 +228,40 @@ export const MatchResult = ({
                                     borderRadius: `calc(${borderRadius} * 0.96)`,
                                 }}
                             >
-                                <div className="flex items-center p-4 space-x-4 border rounded-md">
-                                    <div className="flex-1 space-y-1">
-                                        <div className="flex flex-row justify-between">
-                                            <div className="text-sm text-muted-foreground ">
-                                                {eventMatch.match.doubles[1].players?.map(
-                                                    (p, index) => (
-                                                        <p
-                                                            key={index}
-                                                        >{`${p.firstName} ${p.lastName}`}</p>
-                                                    )
-                                                )}
-                                            </div>
-                                            <div className="justify-end text-sm text-muted-foreground">
-                                                {eventMatch.match.isFinished &&
-                                                matchGames ? (
-                                                    <p className="items-end align-end">
-                                                        {
-                                                            matchGames.doublesTwoGames
-                                                        }
-                                                    </p>
-                                                ) : (
-                                                    <p className="items-end justify-end">
-                                                        0
-                                                    </p>
-                                                )}
+                                {matchGames.doublesTwo.doubles ? (
+                                    <div className="flex items-center p-4 space-x-4 border rounded-md">
+                                        <div className="flex-1 space-y-1">
+                                            <div className="flex flex-row justify-between">
+                                                <div className="text-sm text-muted-foreground ">
+                                                    {matchGames?.doublesTwo.doubles.players?.map(
+                                                        (p, index) => (
+                                                            <p
+                                                                key={index}
+                                                            >{`${p.firstName} ${p.lastName}`}</p>
+                                                        )
+                                                    )}
+                                                </div>
+                                                <div className="justify-end text-sm text-muted-foreground">
+                                                    {eventMatch.match
+                                                        .isFinished &&
+                                                    matchGames ? (
+                                                        <p className="items-end align-end">
+                                                            {
+                                                                matchGames
+                                                                    .doublesTwo
+                                                                    .gamesWon
+                                                            }
+                                                        </p>
+                                                    ) : (
+                                                        <p className="items-end justify-end">
+                                                            0
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                ) : null}
                             </div>
                         </Component>
                     </>
@@ -246,7 +270,7 @@ export const MatchResult = ({
             {/* Doubles Two isWinner */}
             {eventMatch.match.isFinished &&
                 eventMatch.match.winner.id ===
-                    eventMatch.match.doubles[1].id && (
+                    matchGames?.doublesTwo.doubles?.id && (
                     <>
                         {/* doubles One*/}
                         <Component
@@ -287,35 +311,40 @@ export const MatchResult = ({
                                     borderRadius: `calc(${borderRadius} * 0.96)`,
                                 }}
                             >
-                                <div className="flex items-center p-4 space-x-4 border rounded-md ">
-                                    <div className="flex-1 space-y-1">
-                                        <div className="flex flex-row justify-between">
-                                            <div className="text-sm text-muted-foreground ">
-                                                {eventMatch.match.doubles[0].players?.map(
-                                                    (p, index) => (
-                                                        <p
-                                                            key={index}
-                                                        >{`${p.firstName} ${p.lastName}`}</p>
-                                                    )
-                                                )}
-                                            </div>
-                                            <div className="justify-end text-sm text-muted-foreground">
-                                                {eventMatch.match.isFinished &&
-                                                matchGames ? (
-                                                    <p className="items-end align-end">
-                                                        {
-                                                            matchGames.doublesOneGames
-                                                        }
-                                                    </p>
-                                                ) : (
-                                                    <p className="items-end justify-end">
-                                                        0
-                                                    </p>
-                                                )}
+                                {matchGames.doublesOne ? (
+                                    <div className="flex items-center p-4 space-x-4 border rounded-md ">
+                                        <div className="flex-1 space-y-1">
+                                            <div className="flex flex-row justify-between">
+                                                <div className="text-sm text-muted-foreground ">
+                                                    {matchGames?.doublesOne.doubles.players?.map(
+                                                        (p, index) => (
+                                                            <p
+                                                                key={index}
+                                                            >{`${p.firstName} ${p.lastName}`}</p>
+                                                        )
+                                                    )}
+                                                </div>
+                                                <div className="justify-end text-sm text-muted-foreground">
+                                                    {eventMatch.match
+                                                        .isFinished &&
+                                                    matchGames ? (
+                                                        <p className="items-end align-end">
+                                                            {
+                                                                matchGames
+                                                                    .doublesOne
+                                                                    .gamesWon
+                                                            }
+                                                        </p>
+                                                    ) : (
+                                                        <p className="items-end justify-end">
+                                                            0
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                ) : null}
                             </div>
                         </Component>
 
@@ -359,35 +388,40 @@ export const MatchResult = ({
                                     borderRadius: `calc(${borderRadius} * 0.96)`,
                                 }}
                             >
-                                <div className="flex items-center p-4 space-x-4 border rounded-md ">
-                                    <div className="flex-1 space-y-1">
-                                        <div className="flex flex-row justify-between">
-                                            <div className="text-sm text-muted-foreground">
-                                                {eventMatch.match.doubles[1].players?.map(
-                                                    (p, index) => (
-                                                        <p
-                                                            key={index}
-                                                        >{`${p.firstName} ${p.lastName}`}</p>
-                                                    )
-                                                )}
-                                            </div>
-                                            <div className="justify-end text-sm text-muted-foreground">
-                                                {eventMatch.match.isFinished &&
-                                                matchGames ? (
-                                                    <p className="items-end align-end">
-                                                        {
-                                                            matchGames.doublesTwoGames
-                                                        }
-                                                    </p>
-                                                ) : (
-                                                    <p className="items-end justify-end">
-                                                        0
-                                                    </p>
-                                                )}
+                                {matchGames.doublesTwo.doubles ? (
+                                    <div className="flex items-center p-4 space-x-4 border rounded-md ">
+                                        <div className="flex-1 space-y-1">
+                                            <div className="flex flex-row justify-between">
+                                                <div className="text-sm text-muted-foreground">
+                                                    {matchGames?.doublesTwo?.doubles.players?.map(
+                                                        (p, index) => (
+                                                            <p
+                                                                key={index}
+                                                            >{`${p.firstName} ${p.lastName}`}</p>
+                                                        )
+                                                    )}
+                                                </div>
+                                                <div className="justify-end text-sm text-muted-foreground">
+                                                    {eventMatch.match
+                                                        .isFinished &&
+                                                    matchGames ? (
+                                                        <p className="items-end align-end">
+                                                            {
+                                                                matchGames
+                                                                    .doublesTwo
+                                                                    .gamesWon
+                                                            }
+                                                        </p>
+                                                    ) : (
+                                                        <p className="items-end justify-end">
+                                                            0
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                ) : null}
                             </div>
                         </Component>
                     </>

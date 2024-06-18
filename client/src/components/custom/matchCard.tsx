@@ -125,6 +125,7 @@ export const MatchCard = ({
                     )}
 
                     {eventMatch.match.isFinished ? <p>🟢</p> : <p>🟡</p>}
+                    {eventMatch.match.id}
                     <CardDescription>{startTime}</CardDescription>
                 </CardHeader>
                 <CardContent>

@@ -1422,28 +1422,53 @@ export class EventsService {
 
         const getDoublesToConnect = (firstPlace: string, secondPlace: string) =>
           [
-            firstPlace ? { id: firstPlace } : null,
-            secondPlace ? { id: secondPlace } : null,
+            firstPlace ? firstPlace : null,
+            secondPlace ? secondPlace : null,
           ].filter((item) => item !== null);
 
         const createMatch = async (firstPlace: string, secondPlace: string) => {
           const doublesToConnect = getDoublesToConnect(firstPlace, secondPlace);
-          return this.prismaService.match.create({
+          const match = await this.matchesService.create({
+            categoryId: categoryId,
+            doublesIds: doublesToConnect,
+            eventId: event.id,
+            matchDateId: null,
+            matchType: event.matchType,
+          });
+
+          if (doublesToConnect.length === 1) {
+            return this.prismaService.match.update({
+              where: { id: match.id },
+              data: {
+                isFinished: true,
+                winner: {
+                  connect: { id: doublesToConnect[0] },
+                },
+                eventMatch: {
+                  create: {
+                    type: EventMatchType.ROUND_OF_8,
+                    event: {
+                      connect: {
+                        id: event.id,
+                      },
+                    },
+                    categoryGroup: {
+                      connect: {
+                        id: categoryGroupId,
+                      },
+                    },
+                  },
+                },
+              },
+              select: {
+                id: true,
+                doubles: true,
+              },
+            });
+          }
+          return this.prismaService.match.update({
+            where: { id: match.id },
             data: {
-              category: {
-                connect: {
-                  id: categoryId,
-                },
-              },
-              doubles: {
-                connect: doublesToConnect,
-              },
-              event: {
-                connect: {
-                  id: event.id,
-                },
-              },
-              type: event.matchType,
               eventMatch: {
                 create: {
                   type: EventMatchType.ROUND_OF_8,
@@ -1465,6 +1490,43 @@ export class EventsService {
               doubles: true,
             },
           });
+          // return this.prismaService.match.create({
+          //   data: {
+          //     category: {
+          //       connect: {
+          //         id: categoryId,
+          //       },
+          //     },
+          //     doubles: {
+          //       connect: doublesToConnect,
+          //     },
+          //     event: {
+          //       connect: {
+          //         id: event.id,
+          //       },
+          //     },
+          //     type: event.matchType,
+          //     eventMatch: {
+          //       create: {
+          //         type: EventMatchType.ROUND_OF_8,
+          //         event: {
+          //           connect: {
+          //             id: event.id,
+          //           },
+          //         },
+          //         categoryGroup: {
+          //           connect: {
+          //             id: categoryGroupId,
+          //           },
+          //         },
+          //       },
+          //     },
+          //   },
+          //   select: {
+          //     id: true,
+          //     doubles: true,
+          //   },
+          // });
         };
 
         const match1Ax2D = await createMatch(

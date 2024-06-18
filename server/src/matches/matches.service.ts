@@ -4,7 +4,7 @@ import { UpdateMatchDto } from "./dto/update-match.dto";
 import { PrismaService } from "src/prisma.service";
 import { MatchFinishedDto } from "./dto/match-finished.dto";
 import { SetsService } from "src/sets/sets.service";
-import { Match, Set, SetType } from "@prisma/client";
+import { CatType, Match, Set, SetType } from "@prisma/client";
 
 @Injectable()
 export class MatchesService {
@@ -124,6 +124,8 @@ export class MatchesService {
       where: { id: id },
       select: {
         id: true,
+        winner: true,
+        winnerDoublesId: true,
         isFinished: true,
         type: true,
         matchDate: true,
@@ -173,22 +175,78 @@ export class MatchesService {
 
     //! here im handling only one set games... SUPERSET type...
 
+    let doublesA: {
+      id: string;
+      players: {
+        firstName: string;
+        lastName: string;
+      }[];
+      category: {
+        id: string;
+        level: number;
+        type: CatType;
+      };
+    };
+
+    let doublesB: {
+      id: string;
+      players: {
+        firstName: string;
+        lastName: string;
+      }[];
+      category: {
+        id: string;
+        level: number;
+        type: CatType;
+      };
+    };
     const set = match.sets;
-    const doublesAID = match.doubles[0].id;
-    const doublesBID = match.doubles[1].id;
+
+    const doublesAID = match.doubles[0]?.id;
+    if (doublesAID) {
+      doublesA = await this.prismaService.double.findUnique({
+        where: { id: doublesAID },
+        select: {
+          id: true,
+          category: true,
+          players: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+    }
+    const doublesBID = match.doubles[1]?.id;
+    if (doublesBID) {
+      doublesB = await this.prismaService.double.findUnique({
+        where: { id: doublesBID },
+        select: {
+          id: true,
+          category: true,
+          players: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+    }
 
     const doublesOne = {
-      id: doublesAID,
+      doubles: doublesA ?? null,
       gamesWon: set[0].games.filter((g) => g.winnerId === doublesAID).length,
     };
 
     const doublesTwo = {
-      id: doublesBID,
+      doubles: doublesB ?? null,
       gamesWon: set[0].games.filter((g) => g.winnerId === doublesBID).length,
     };
     return {
-      doublesOneGames: doublesOne.gamesWon,
-      doublesTwoGames: doublesTwo.gamesWon,
+      doublesOne: doublesOne,
+      doublesTwo: doublesTwo,
     };
 
     // const querySet = match.sets({
