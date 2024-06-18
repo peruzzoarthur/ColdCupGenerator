@@ -101,6 +101,21 @@ export class EventsController {
     return await this.eventsService.createFinalsMatches(createFinalsDto.id);
   }
 
+  @Post("update-ref-matches")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async checkAndUpdateReferencedMatches(
+    @Body() createFinalsDto: CreateFinalsDto
+  ) {
+    return await this.eventsService.checkAndUpdateReferencedMatches(
+      createFinalsDto.id
+    );
+  }
+
   @Post("register")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()

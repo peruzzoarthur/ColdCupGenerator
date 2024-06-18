@@ -21,6 +21,7 @@ export const useGetMatchGames = (matchId: string, isFinished: boolean) => {
             }
             return null
         },
+        enabled: !!isFinished,
     })
 
     return { matchGames, isFetching, refetchMatchGames }

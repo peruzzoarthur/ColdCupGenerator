@@ -1,4 +1,9 @@
-import { EventMatch, Match, PadelEvent } from '@/types/padel.types'
+import {
+    EventMatch,
+    EventMatchType,
+    Match,
+    PadelEvent,
+} from '@/types/padel.types'
 import {
     Card,
     CardContent,
@@ -109,9 +114,15 @@ export const MatchCard = ({
                         Category - {eventMatch.match.category?.level}{' '}
                         {eventMatch.match.category?.type}
                     </CardDescription>
-                    <CardDescription>
-                        Group {eventMatch.doublesGroup?.key}
-                    </CardDescription>
+                    {eventMatch.type === EventMatchType.GROUP ? (
+                        <CardDescription>
+                            Group {eventMatch.doublesGroup?.key}
+                        </CardDescription>
+                    ) : (
+                        <CardDescription>
+                            {eventMatch.type.toString().replace(/_/g, ' ')}
+                        </CardDescription>
+                    )}
 
                     {eventMatch.match.isFinished ? <p>🟢</p> : <p>🟡</p>}
                     <CardDescription>{startTime}</CardDescription>
@@ -132,7 +143,7 @@ export const MatchCard = ({
                     ) : (
                         <div className="flex flex-col">
                             <MatchResult
-                                match={eventMatch}
+                                eventMatch={eventMatch}
                                 matchGames={matchGames}
                             />
                         </div>

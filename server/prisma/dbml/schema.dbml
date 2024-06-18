@@ -39,6 +39,7 @@ Table CategoryGroup {
   eventId String
   finalMatches EventMatch [not null]
   groupsStageFinished Boolean [not null, default: false]
+  matchesWithReference MatchesReferenced [not null]
 
   indexes {
     (eventId, categoryId) [unique]
@@ -143,16 +144,18 @@ Table EventMatch {
   }
 }
 
-Table MatchesReference {
-  matchOne Match [not null]
-  matchOneId String [unique, not null]
-  matchTwo Match
-  matchTwoId String [unique]
-  nextMatch Match
-  nextMatchId String [unique]
+Table MatchesReferenced {
+  matchA Match
+  matchAId String [unique, not null]
+  matchB Match
+  matchBId String [unique]
+  refMatch Match
+  refMatchId String [unique]
+  categoryGroup CategoryGroup
+  categoryGroupId String
 
   indexes {
-    (matchOneId, matchTwoId, nextMatchId) [unique]
+    (matchAId, matchBId, refMatchId) [unique]
   }
 }
 
@@ -174,9 +177,9 @@ Table Match {
   courtId String
   invite Invite
   eventMatch EventMatch
-  matchRefOne MatchesReference
-  matchRefTwo MatchesReference
-  matchRefNext MatchesReference
+  matchRefA MatchesReferenced
+  matchRefB MatchesReferenced
+  matchRef MatchesReferenced
 }
 
 Table MatchDate {
@@ -447,11 +450,13 @@ Ref: EventMatch.categoryGroupId > CategoryGroup.id
 
 Ref: EventMatch.doublesGroupId > DoublesGroup.id
 
-Ref: MatchesReference.matchOneId - Match.id
+Ref: MatchesReferenced.matchAId - Match.id
 
-Ref: MatchesReference.matchTwoId - Match.id
+Ref: MatchesReferenced.matchBId - Match.id
 
-Ref: MatchesReference.nextMatchId - Match.id
+Ref: MatchesReferenced.refMatchId - Match.id
+
+Ref: MatchesReferenced.categoryGroupId > CategoryGroup.id
 
 Ref: Match.categoryId > Category.id
 

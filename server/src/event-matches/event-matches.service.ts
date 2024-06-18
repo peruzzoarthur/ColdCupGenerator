@@ -13,7 +13,15 @@ export class EventMatchesService {
   }
 
   async findAll() {
-    return await this.prisma.eventMatch.findMany();
+    return await this.prisma.eventMatch.findMany({
+      select: {
+        number: true,
+        type: true,
+        match: {
+          select: {},
+        },
+      },
+    });
   }
 
   async findOne(findEventMatchDto: FindEventMatchDto) {

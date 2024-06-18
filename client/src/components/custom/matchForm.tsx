@@ -62,69 +62,73 @@ export const MatchForm: React.FC<MatchFormProps> = ({
 
     return (
         <Form {...form}>
-            <FormField
-                name="doublesOneGames"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <div className="flex items-center p-4 mt-1 space-x-4 border">
-                            <div className="flex-1 space-y-1">
-                                <div className="flex flex-row justify-between">
-                                    <div className="text-sm text-muted-foreground ">
-                                        {' '}
-                                        {`${doublesPlaying[0].players[0].firstName} ${doublesPlaying[0].players[0].lastName}`}
-                                        {' / '}
-                                        {`${doublesPlaying[0].players[1].firstName} ${doublesPlaying[0].players[1].lastName}`}
-                                    </div>
-                                    <div className="flex justify-end text-sm text-muted-foreground">
-                                        <FormControl>
-                                            <Input
-                                                className="items-end justify-end w-[54px]"
-                                                type="number"
-                                                placeholder="0"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                name="doublesTwoGames"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <div className="flex items-center p-4 mt-1 space-x-4 border">
-                            <div className="flex-1 space-y-1">
-                                <div className="flex flex-row justify-between">
-                                    <div className="text-sm text-muted-foreground ">
-                                        {' '}
-                                        {`${doublesPlaying[1].players[0].firstName} ${doublesPlaying[1].players[0].lastName}`}
-                                        {' / '}
-                                        {`${doublesPlaying[1].players[1].firstName} ${doublesPlaying[1].players[1].lastName}`}
-                                    </div>
-                                    <div className="flex justify-end text-sm text-muted-foreground">
-                                        <FormControl>
-                                            <Input
-                                                className="items-end justify-end w-[54px]"
-                                                type="number"
-                                                placeholder="0"
-                                                {...field}
-                                            />
-                                        </FormControl>
+            {doublesPlaying[0] && (
+                <FormField
+                    name="doublesOneGames"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <div className="flex items-center p-4 mt-1 space-x-4 border">
+                                <div className="flex-1 space-y-1">
+                                    <div className="flex flex-row justify-between">
+                                        <div className="text-sm text-muted-foreground ">
+                                            {' '}
+                                            {`${doublesPlaying[0].players[0].firstName} ${doublesPlaying[0].players[0].lastName}`}
+                                            {' / '}
+                                            {`${doublesPlaying[0].players[1].firstName} ${doublesPlaying[0].players[1].lastName}`}
+                                        </div>
+                                        <div className="flex justify-end text-sm text-muted-foreground">
+                                            <FormControl>
+                                                <Input
+                                                    className="items-end justify-end w-[54px]"
+                                                    type="number"
+                                                    placeholder="0"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            )}
 
+            {doublesPlaying[1] && (
+                <FormField
+                    name="doublesTwoGames"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <div className="flex items-center p-4 mt-1 space-x-4 border">
+                                <div className="flex-1 space-y-1">
+                                    <div className="flex flex-row justify-between">
+                                        <div className="text-sm text-muted-foreground ">
+                                            {' '}
+                                            {`${doublesPlaying[1].players[0].firstName} ${doublesPlaying[1].players[0].lastName}`}
+                                            {' / '}
+                                            {`${doublesPlaying[1].players[1].firstName} ${doublesPlaying[1].players[1].lastName}`}
+                                        </div>
+                                        <div className="flex justify-end text-sm text-muted-foreground">
+                                            <FormControl>
+                                                <Input
+                                                    className="items-end justify-end w-[54px]"
+                                                    type="number"
+                                                    placeholder="0"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            )}
             <FormField
                 control={form.control}
                 name="winnerDoublesId"

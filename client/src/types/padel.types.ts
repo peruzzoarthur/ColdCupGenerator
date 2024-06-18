@@ -151,13 +151,13 @@ export type CategoryGroup = {
     finalMatches: EventMatch[]
 }
 
-enum EventMatchType {
-    GROUP,
-    ROUND_OF_16,
-    ROUND_OF_8,
-    ROUND_OF_4,
-    FINAL,
-    UNCLASSIFIED,
+export enum EventMatchType {
+    GROUP = 'GROUP',
+    ROUND_OF_16 = 'ROUND_OF_16',
+    ROUND_OF_8 = 'ROUND_OF_8',
+    ROUND_OF_4 = 'ROUND_OF_4',
+    FINAL = 'FINAL',
+    UNCLASSIFIED = 'UNCLASSIFIED',
 }
 
 export enum EventType {
