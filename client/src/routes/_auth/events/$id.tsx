@@ -1,5 +1,4 @@
 import { axiosInstance } from '@/axiosInstance'
-import { CoolButton } from '@/components/custom/coolButton'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import { EventDashboard } from '@/components/custom/eventDashboard'
 import RegisterDoublesForm, {
@@ -30,6 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useGetUserById } from '@/hooks/useGetUser'
 import { useGetPlayerById } from '@/hooks/useGetPlayerById'
+import { CoolButton } from '@/components/custom/coolButton'
 
 export const Route = createFileRoute('/_auth/events/$id')({
     component: Event,
@@ -156,48 +156,53 @@ function Event() {
                             {!eventById.isActive && (
                                 <div className="flex justify-center p-6">
                                     <DropdownMenu>
-                                        <DropdownMenuTrigger>
-                                            <CoolButton className="items-center justify-center">
+                                        <CoolButton as="div">
+                                            <DropdownMenuTrigger>
                                                 Register in event 🎾
-                                            </CoolButton>
-                                        </DropdownMenuTrigger>
+                                            </DropdownMenuTrigger>
+                                        </CoolButton>
+
                                         <DropdownMenuContent>
                                             <DropdownMenuLabel>
                                                 Invite player to play
                                             </DropdownMenuLabel>
                                             <DropdownMenuSeparator />
 
-                                            {playerById?.doubles.map((d) => {
-                                                const otherPlayerId = d.players
-                                                    .filter(
-                                                        (p) =>
-                                                            p.id !==
-                                                            playerById.id
-                                                    )
-                                                    .map((p) => p.id)[0]
-                                                return (
-                                                    <DropdownMenuItem
-                                                        className="cursor-pointer"
-                                                        onClick={async () =>
-                                                            sendEventInvite(
-                                                                otherPlayerId,
-                                                                InviteType.EVENT
-                                                            )
-                                                        }
-                                                    >
-                                                        {d.players
+                                            {playerById?.doubles.map(
+                                                (d, index) => {
+                                                    const otherPlayerId =
+                                                        d.players
                                                             .filter(
                                                                 (p) =>
                                                                     p.id !==
                                                                     playerById.id
                                                             )
-                                                            .map(
-                                                                (p) =>
-                                                                    `${p.firstName} ${p.lastName}`
-                                                            )}
-                                                    </DropdownMenuItem>
-                                                )
-                                            })}
+                                                            .map((p) => p.id)[0]
+                                                    return (
+                                                        <DropdownMenuItem
+                                                            key={index}
+                                                            className="cursor-pointer"
+                                                            onClick={async () =>
+                                                                sendEventInvite(
+                                                                    otherPlayerId,
+                                                                    InviteType.EVENT
+                                                                )
+                                                            }
+                                                        >
+                                                            {d.players
+                                                                .filter(
+                                                                    (p) =>
+                                                                        p.id !==
+                                                                        playerById.id
+                                                                )
+                                                                .map(
+                                                                    (p) =>
+                                                                        `${p.firstName} ${p.lastName}`
+                                                                )}
+                                                        </DropdownMenuItem>
+                                                    )
+                                                }
+                                            )}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </div>

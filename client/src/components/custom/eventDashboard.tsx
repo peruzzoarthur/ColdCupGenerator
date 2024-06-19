@@ -495,9 +495,9 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                     {eventById.eventType ===
                                                         'ALLxALL' &&
                                                         eventById.categories.map(
-                                                            (c, index) => (
+                                                            (c) => (
                                                                 <DropdownMenuRadioItem
-                                                                    key={index}
+                                                                    key={c.id}
                                                                     value={c.id}
                                                                 >
                                                                     {c.level}{' '}
@@ -509,35 +509,35 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                     {eventById.eventType ===
                                                         'GROUPS' &&
                                                         eventById.categoriesGroups.map(
-                                                            (c, index) => (
-                                                                <>
-                                                                    <DropdownMenuRadioItem
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        onClick={() =>
-                                                                            setGroupsFilter(
-                                                                                'all'
-                                                                            )
-                                                                        }
-                                                                        value={
-                                                                            c
-                                                                                .category
-                                                                                .id
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            c
-                                                                                .category
-                                                                                .level
-                                                                        }{' '}
-                                                                        {
-                                                                            c
-                                                                                .category
-                                                                                .type
-                                                                        }
-                                                                    </DropdownMenuRadioItem>
-                                                                </>
+                                                            (c) => (
+                                                                <DropdownMenuRadioItem
+                                                                    key={
+                                                                        c
+                                                                            .category
+                                                                            .id
+                                                                    } // Ensure this key is unique
+                                                                    onClick={() =>
+                                                                        setGroupsFilter(
+                                                                            'all'
+                                                                        )
+                                                                    }
+                                                                    value={
+                                                                        c
+                                                                            .category
+                                                                            .id
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        c
+                                                                            .category
+                                                                            .level
+                                                                    }{' '}
+                                                                    {
+                                                                        c
+                                                                            .category
+                                                                            .type
+                                                                    }
+                                                                </DropdownMenuRadioItem>
                                                             )
                                                         )}
                                                 </DropdownMenuRadioGroup>
@@ -698,6 +698,20 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                     ) : null}
                                 </div>
                             </>
+                        )}
+
+                        {pendingMatches?.length === 0 && (
+                            <div className="flex justify-center">
+                                <CoolButton
+                                    className="items-center justify-center"
+                                    borderClassName="bg-[radial-gradient(var(--green-800)_40%,transparent_10%)]"
+                                    onClick={async () =>
+                                        console.log('end event')
+                                    }
+                                >
+                                    Finish event
+                                </CoolButton>
+                            </div>
                         )}
 
                         {matchDatesTableData && filteredMatchDatesTableData ? (

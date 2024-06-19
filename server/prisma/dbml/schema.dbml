@@ -153,6 +153,7 @@ Table MatchesReferenced {
   refMatchId String [unique]
   categoryGroup CategoryGroup
   categoryGroupId String
+  isUpdated Boolean [not null, default: false]
 
   indexes {
     (matchAId, matchBId, refMatchId) [unique]

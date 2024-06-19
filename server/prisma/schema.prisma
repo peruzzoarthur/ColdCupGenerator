@@ -180,6 +180,7 @@ model MatchesReferenced {
   refMatchId      String?        @unique
   categoryGroup   CategoryGroup? @relation(fields: [categoryGroupId], references: [id])
   categoryGroupId String?
+  isUpdated       Boolean        @default(false)
 
   @@unique([matchAId, matchBId, refMatchId])
 }

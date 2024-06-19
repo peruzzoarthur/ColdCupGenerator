@@ -113,7 +113,7 @@ export const MatchResult = ({
                 eventMatch.match.winner.id ===
                     matchGames?.doublesOne.doubles.id && (
                     <>
-                        {matchGames.doublesOne ? (
+                        {matchGames.doublesOne.doubles ? (
                             <Component
                                 className={cn(
                                     'bg-transparent relative text-xl  h-full w-full p-[1px] overflow-hidden',
@@ -273,7 +273,7 @@ export const MatchResult = ({
                     matchGames?.doublesTwo.doubles?.id && (
                     <>
                         {/* doubles One*/}
-                        {matchGames.doublesOne ? (
+                        {matchGames.doublesOne.doubles ? (
                             <Component
                                 className={cn(
                                     'bg-transparent relative text-xl h-full w-full p-[1px] overflow-hidden',

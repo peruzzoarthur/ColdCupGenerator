@@ -24,7 +24,6 @@ export const useGetMatchDoublesWithGames = (
     } = useQuery({
         queryKey: ['get-match-games', matchId, isFinished],
         queryFn: async () => {
-            console.log(matchId)
             const { data }: { data: MatchDoublesWithGamesResponse } =
                 await axiosInstance.get(`/matches/result/${matchId}`)
             if (data) {

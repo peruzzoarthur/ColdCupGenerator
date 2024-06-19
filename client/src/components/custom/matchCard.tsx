@@ -23,6 +23,7 @@ import { ErrorAlert } from './errorAlert'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { MatchResult } from './matchCard/styledMatchResult'
 import { axiosInstance } from '@/axiosInstance'
+import { useGetRole } from '@/hooks/useGetRole'
 
 type ErrorResponse = {
     message: string
@@ -42,6 +43,8 @@ export const MatchCard = ({
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
     const { toast } = useToast()
+
+    const { role } = useGetRole()
 
     const sendResultToast = (match: Match, form: matchFormObject) => {
         toast({
@@ -74,6 +77,10 @@ export const MatchCard = ({
                 `/matches/finish-match/${eventMatch.match.id}`,
                 requestBody
             )
+
+            await axiosInstance.post('/events/update-ref-matches', {
+                id: eventMatch.eventId,
+            })
 
             sendResultToast(eventMatch.match, input)
             await refetchMatchDoublesWithGames()
@@ -126,7 +133,7 @@ export const MatchCard = ({
                     )}
 
                     {eventMatch.match.isFinished ? <p>🟢</p> : <p>🟡</p>}
-                    {eventMatch.match.id}
+                    {/* {eventMatch.match.id} */}
                     <CardDescription>{startTime}</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -153,27 +160,29 @@ export const MatchCard = ({
                     {/* Footer (Pencil icon to to toggle on and off editMode) */}
                     {eventMatch.match.isFinished ? null : (
                         <CardFooter className="justify-center">
-                            <div className="w-2/3">
-                                {editOn ? (
-                                    <div className="flex justify-center mt-2">
-                                        <Pencil1Icon
-                                            onClick={() => {
-                                                setEditOn(false)
-                                            }}
-                                            className="w-4 h-4 mr-2 hover:cursor-pointer"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className="flex justify-center mt-2">
-                                        <Pencil1Icon
-                                            onClick={() => {
-                                                setEditOn(true)
-                                            }}
-                                            className="justify-end w-4 h-4 mr-2 hover:cursor-pointer"
-                                        />
-                                    </div>
-                                )}
-                            </div>
+                            {role === 'ADMIN' && (
+                                <div className="w-2/3 ">
+                                    {editOn ? (
+                                        <div className="flex justify-center mt-4">
+                                            <Pencil1Icon
+                                                onClick={() => {
+                                                    setEditOn(false)
+                                                }}
+                                                className="w-4 h-4 mr-2 hover:cursor-pointer"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="flex justify-center mt-4">
+                                            <Pencil1Icon
+                                                onClick={() => {
+                                                    setEditOn(true)
+                                                }}
+                                                className="justify-end w-4 h-4 mr-2 hover:cursor-pointer"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </CardFooter>
                     )}
                 </CardContent>

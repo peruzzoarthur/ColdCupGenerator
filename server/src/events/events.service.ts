@@ -1426,7 +1426,11 @@ export class EventsService {
             secondPlace ? secondPlace : null,
           ].filter((item) => item !== null);
 
-        const createMatch = async (firstPlace: string, secondPlace: string) => {
+        const createMatch = async (
+          eventMatchType: EventMatchType,
+          firstPlace?: string,
+          secondPlace?: string
+        ) => {
           const doublesToConnect = getDoublesToConnect(firstPlace, secondPlace);
           const match = await this.matchesService.create({
             categoryId: categoryId,
@@ -1437,6 +1441,7 @@ export class EventsService {
           });
 
           if (doublesToConnect.length === 1) {
+            //* Bye case
             return this.prismaService.match.update({
               where: { id: match.id },
               data: {
@@ -1446,7 +1451,7 @@ export class EventsService {
                 },
                 eventMatch: {
                   create: {
-                    type: EventMatchType.ROUND_OF_8,
+                    type: eventMatchType,
                     event: {
                       connect: {
                         id: event.id,
@@ -1471,7 +1476,7 @@ export class EventsService {
             data: {
               eventMatch: {
                 create: {
-                  type: EventMatchType.ROUND_OF_8,
+                  type: eventMatchType,
                   event: {
                     connect: {
                       id: event.id,
@@ -1490,46 +1495,10 @@ export class EventsService {
               doubles: true,
             },
           });
-          // return this.prismaService.match.create({
-          //   data: {
-          //     category: {
-          //       connect: {
-          //         id: categoryId,
-          //       },
-          //     },
-          //     doubles: {
-          //       connect: doublesToConnect,
-          //     },
-          //     event: {
-          //       connect: {
-          //         id: event.id,
-          //       },
-          //     },
-          //     type: event.matchType,
-          //     eventMatch: {
-          //       create: {
-          //         type: EventMatchType.ROUND_OF_8,
-          //         event: {
-          //           connect: {
-          //             id: event.id,
-          //           },
-          //         },
-          //         categoryGroup: {
-          //           connect: {
-          //             id: categoryGroupId,
-          //           },
-          //         },
-          //       },
-          //     },
-          //   },
-          //   select: {
-          //     id: true,
-          //     doubles: true,
-          //   },
-          // });
         };
 
         const match1Ax2D = await createMatch(
+          "ROUND_OF_8",
           groups.A?.firstPlaceDoublesId,
           groups.D?.secondPlaceDoublesId
         );
@@ -1538,6 +1507,7 @@ export class EventsService {
         console.log("------------------------------------------");
 
         const match2Ax1D = await createMatch(
+          "ROUND_OF_8",
           groups.A?.secondPlaceDoublesId,
           groups.D?.firstPlaceDoublesId
         );
@@ -1546,6 +1516,7 @@ export class EventsService {
         console.log("------------------------------------------");
 
         const match1Bx2C = await createMatch(
+          "ROUND_OF_8",
           groups.B?.firstPlaceDoublesId,
           groups.C?.secondPlaceDoublesId
         );
@@ -1554,6 +1525,7 @@ export class EventsService {
         console.log("------------------------------------------");
 
         const match2Bx1C = await createMatch(
+          "ROUND_OF_8",
           groups.B?.secondPlaceDoublesId,
           groups.C?.firstPlaceDoublesId
         );
@@ -1564,9 +1536,11 @@ export class EventsService {
         const createMatchByReference = async (
           matchAId: string,
           matchBId: string,
-          matchType: EventMatchType,
+          eventMatchType: EventMatchType,
           categoryGroupId: string
         ) => {
+          const match = await createMatch(eventMatchType);
+
           return this.prismaService.matchesReferenced.create({
             data: {
               categoryGroup: {
@@ -1585,33 +1559,8 @@ export class EventsService {
                 },
               },
               refMatch: {
-                create: {
-                  category: {
-                    connect: {
-                      id: categoryId,
-                    },
-                  },
-                  event: {
-                    connect: {
-                      id: event.id,
-                    },
-                  },
-                  type: event.matchType,
-                  eventMatch: {
-                    create: {
-                      type: matchType,
-                      event: {
-                        connect: {
-                          id: event.id,
-                        },
-                      },
-                      categoryGroup: {
-                        connect: {
-                          id: categoryGroupId,
-                        },
-                      },
-                    },
-                  },
+                connect: {
+                  id: match.id,
                 },
               },
             },
@@ -1752,16 +1701,109 @@ export class EventsService {
   }
 
   async checkAndUpdateReferencedMatches(eventId: string) {
+    type ResponseMatches = {
+      id: string;
+      isFinished: boolean;
+      eventMatch: {
+        number: number;
+        type: EventMatchType;
+      };
+    }[];
+
     const referencedMatches =
       await this.prismaService.matchesReferenced.findMany({
         where: {
           categoryGroup: {
             eventId: eventId,
           },
+          isUpdated: false,
         },
       });
 
-    return referencedMatches;
+    let notReadyMatches: ResponseMatches = [];
+
+    let updatedMatches: ResponseMatches = [];
+
+    for (let i = 0; i < referencedMatches.length; i++) {
+      const { matchAId, matchBId, refMatchId } = referencedMatches[i];
+
+      const matchA = await this.prismaService.match.findUniqueOrThrow({
+        where: { id: matchAId },
+        select: {
+          id: true,
+          isFinished: true,
+          winnerDoublesId: true,
+          eventMatch: {
+            select: {
+              type: true,
+              number: true,
+            },
+          },
+        },
+      });
+
+      if (!matchA.isFinished) {
+        notReadyMatches.push(matchA);
+      }
+
+      if (matchA.isFinished) {
+        updatedMatches.push(matchA);
+      }
+
+      const matchB = await this.prismaService.match.findUniqueOrThrow({
+        where: { id: matchBId },
+        select: {
+          id: true,
+          isFinished: true,
+          winnerDoublesId: true,
+          eventMatch: {
+            select: {
+              type: true,
+              number: true,
+            },
+          },
+        },
+      });
+
+      if (!matchB.isFinished) {
+        notReadyMatches.push(matchB);
+      }
+
+      if (matchB.isFinished) {
+        updatedMatches.push(matchB);
+      }
+
+      if (matchA.isFinished && matchB.isFinished) {
+        await this.prismaService.match.update({
+          where: {
+            id: refMatchId,
+          },
+          data: {
+            doubles: {
+              connect: [
+                { id: matchA.winnerDoublesId },
+                { id: matchB.winnerDoublesId },
+              ],
+            },
+          },
+        });
+
+        await this.prismaService.matchesReferenced.update({
+          where: {
+            matchAId_matchBId_refMatchId: {
+              matchAId: matchAId,
+              matchBId: matchBId,
+              refMatchId: refMatchId,
+            },
+          },
+          data: {
+            isUpdated: true,
+          },
+        });
+      }
+    }
+
+    return { updated: updatedMatches, notReady: notReadyMatches };
   }
 
   async getEventByIdParam(id: string) {
