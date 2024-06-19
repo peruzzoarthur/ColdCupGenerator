@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MovingBorder } from '@/components/ui/moving-border'
-import { MatchGamesResponse } from '@/hooks/useGetMatchGames'
+import { MatchDoublesWithGamesResponse } from '@/hooks/useGetMatchDoublesWithGames'
 import { cn } from '@/lib/utils'
 import { EventMatch } from '@/types/padel.types'
 import React from 'react'
 
 type ResultProps = {
     eventMatch: EventMatch
-    matchGames: MatchGamesResponse | null | undefined
+    matchGames: MatchDoublesWithGamesResponse | null | undefined
     borderRadius?: string
     borderColor?: string
     children?: React.ReactNode
@@ -50,7 +50,7 @@ export const MatchResult = ({
                                     </div>
                                 ) : (
                                     <div className="text-sm text-muted-foreground ">
-                                        BYE
+                                        To be defined
                                     </div>
                                 )}
 
@@ -84,7 +84,7 @@ export const MatchResult = ({
                                     </div>
                                 ) : (
                                     <div className="text-sm text-muted-foreground ">
-                                        BYE
+                                        To be defined
                                     </div>
                                 )}
 
@@ -113,47 +113,47 @@ export const MatchResult = ({
                 eventMatch.match.winner.id ===
                     matchGames?.doublesOne.doubles.id && (
                     <>
-                        <Component
-                            className={cn(
-                                'bg-transparent relative text-xl  h-full w-full p-[1px] overflow-hidden',
-                                containerClassName
-                            )}
-                            style={{
-                                borderRadius: borderRadius,
-                            }}
-                            {...otherProps}
-                        >
-                            <div
-                                className="absolute inset-0"
-                                style={{
-                                    borderRadius: `calc(${borderRadius} * 0.96)`,
-                                }}
-                            >
-                                <MovingBorder
-                                    duration={duration}
-                                    rx="30%"
-                                    ry="30%"
-                                >
-                                    <div
-                                        className={cn(
-                                            `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--green-500)_40%,transparent_10%)]`,
-                                            borderClassName
-                                        )}
-                                    />
-                                </MovingBorder>
-                            </div>
-
-                            {/*Doubles 0 */}
-                            <div
+                        {matchGames.doublesOne ? (
+                            <Component
                                 className={cn(
-                                    'relative border-gray-800 backdrop-blur-xl flex flex-col  justify-center w-full h-full text-sm antialiased',
-                                    className
+                                    'bg-transparent relative text-xl  h-full w-full p-[1px] overflow-hidden',
+                                    containerClassName
                                 )}
                                 style={{
-                                    borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    borderRadius: borderRadius,
                                 }}
+                                {...otherProps}
                             >
-                                {matchGames.doublesOne ? (
+                                <div
+                                    className="absolute inset-0"
+                                    style={{
+                                        borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    }}
+                                >
+                                    <MovingBorder
+                                        duration={duration}
+                                        rx="30%"
+                                        ry="30%"
+                                    >
+                                        <div
+                                            className={cn(
+                                                `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--green-500)_40%,transparent_10%)]`,
+                                                borderClassName
+                                            )}
+                                        />
+                                    </MovingBorder>
+                                </div>
+
+                                {/*Doubles 0 */}
+                                <div
+                                    className={cn(
+                                        'relative border-gray-800 backdrop-blur-xl flex flex-col  justify-center w-full h-full text-sm antialiased',
+                                        className
+                                    )}
+                                    style={{
+                                        borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    }}
+                                >
                                     <div className="flex items-center p-4 space-x-4 border rounded-md ">
                                         <div className="flex-1 space-y-1">
                                             <div className="flex flex-row justify-between">
@@ -186,49 +186,49 @@ export const MatchResult = ({
                                             </div>
                                         </div>
                                     </div>
-                                ) : null}
-                            </div>
-                        </Component>
+                                </div>
+                            </Component>
+                        ) : null}
 
-                        <Component
-                            className={cn(
-                                'bg-transparent relative text-xl  h-full w-full p-[1px] overflow-hidden',
-                                containerClassName
-                            )}
-                            style={{
-                                borderRadius: borderRadius,
-                            }}
-                            {...otherProps}
-                        >
-                            <div
-                                className="absolute inset-0"
-                                style={{
-                                    borderRadius: `calc(${borderRadius} * 0.96)`,
-                                }}
-                            >
-                                <MovingBorder
-                                    duration={duration}
-                                    rx="30%"
-                                    ry="30%"
-                                >
-                                    <div
-                                        className={cn(
-                                            `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-500)_40%,transparent_10%)]`,
-                                            borderClassName
-                                        )}
-                                    />
-                                </MovingBorder>
-                            </div>
-                            <div
+                        {matchGames.doublesTwo.doubles ? (
+                            <Component
                                 className={cn(
-                                    'relative border-gray-800 backdrop-blur-xl flex flex-col  justify-center w-full h-full text-sm antialiased',
-                                    className
+                                    'bg-transparent relative text-xl  h-full w-full p-[1px] overflow-hidden',
+                                    containerClassName
                                 )}
                                 style={{
-                                    borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    borderRadius: borderRadius,
                                 }}
+                                {...otherProps}
                             >
-                                {matchGames.doublesTwo.doubles ? (
+                                <div
+                                    className="absolute inset-0"
+                                    style={{
+                                        borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    }}
+                                >
+                                    <MovingBorder
+                                        duration={duration}
+                                        rx="30%"
+                                        ry="30%"
+                                    >
+                                        <div
+                                            className={cn(
+                                                `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-500)_40%,transparent_10%)]`,
+                                                borderClassName
+                                            )}
+                                        />
+                                    </MovingBorder>
+                                </div>
+                                <div
+                                    className={cn(
+                                        'relative border-gray-800 backdrop-blur-xl flex flex-col  justify-center w-full h-full text-sm antialiased',
+                                        className
+                                    )}
+                                    style={{
+                                        borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    }}
+                                >
                                     <div className="flex items-center p-4 space-x-4 border rounded-md">
                                         <div className="flex-1 space-y-1">
                                             <div className="flex flex-row justify-between">
@@ -261,9 +261,9 @@ export const MatchResult = ({
                                             </div>
                                         </div>
                                     </div>
-                                ) : null}
-                            </div>
-                        </Component>
+                                </div>
+                            </Component>
+                        ) : null}
                     </>
                 )}
 
@@ -273,45 +273,45 @@ export const MatchResult = ({
                     matchGames?.doublesTwo.doubles?.id && (
                     <>
                         {/* doubles One*/}
-                        <Component
-                            className={cn(
-                                'bg-transparent relative text-xl h-full w-full p-[1px] overflow-hidden',
-                                containerClassName
-                            )}
-                            style={{
-                                borderRadius: borderRadius,
-                            }}
-                            {...otherProps}
-                        >
-                            <div
-                                className="absolute inset-0"
-                                style={{
-                                    borderRadius: `calc(${borderRadius} * 0.96)`,
-                                }}
-                            >
-                                <MovingBorder
-                                    duration={duration}
-                                    rx="30%"
-                                    ry="30%"
-                                >
-                                    <div
-                                        className={cn(
-                                            `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-500)_40%,transparent_10%)]`,
-                                            borderClassName
-                                        )}
-                                    />
-                                </MovingBorder>
-                            </div>
-                            <div
+                        {matchGames.doublesOne ? (
+                            <Component
                                 className={cn(
-                                    'relative border-gray-800 backdrop-blur-xl flex flex-col  justify-center w-full h-full text-sm antialiased',
-                                    className
+                                    'bg-transparent relative text-xl h-full w-full p-[1px] overflow-hidden',
+                                    containerClassName
                                 )}
                                 style={{
-                                    borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    borderRadius: borderRadius,
                                 }}
+                                {...otherProps}
                             >
-                                {matchGames.doublesOne ? (
+                                <div
+                                    className="absolute inset-0"
+                                    style={{
+                                        borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    }}
+                                >
+                                    <MovingBorder
+                                        duration={duration}
+                                        rx="30%"
+                                        ry="30%"
+                                    >
+                                        <div
+                                            className={cn(
+                                                `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--red-500)_40%,transparent_10%)]`,
+                                                borderClassName
+                                            )}
+                                        />
+                                    </MovingBorder>
+                                </div>
+                                <div
+                                    className={cn(
+                                        'relative border-gray-800 backdrop-blur-xl flex flex-col  justify-center w-full h-full text-sm antialiased',
+                                        className
+                                    )}
+                                    style={{
+                                        borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    }}
+                                >
                                     <div className="flex items-center p-4 space-x-4 border rounded-md ">
                                         <div className="flex-1 space-y-1">
                                             <div className="flex flex-row justify-between">
@@ -344,51 +344,52 @@ export const MatchResult = ({
                                             </div>
                                         </div>
                                     </div>
-                                ) : null}
-                            </div>
-                        </Component>
+                                </div>
+                            </Component>
+                        ) : null}
 
                         {/* doublesTwo */}
-                        <Component
-                            className={cn(
-                                'bg-transparent relative text-xl h-full w-full p-[1px] overflow-hidden',
-                                containerClassName
-                            )}
-                            style={{
-                                borderRadius: borderRadius,
-                            }}
-                            {...otherProps}
-                        >
-                            <div
-                                className="absolute inset-0"
-                                style={{
-                                    borderRadius: `calc(${borderRadius} * 0.96)`,
-                                }}
-                            >
-                                <MovingBorder
-                                    duration={duration}
-                                    rx="30%"
-                                    ry="30%"
-                                >
-                                    <div
-                                        className={cn(
-                                            `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--green-500)_40%,transparent_10%)]`,
-                                            borderClassName
-                                        )}
-                                    />
-                                </MovingBorder>
-                            </div>
 
-                            <div
+                        {matchGames.doublesTwo.doubles ? (
+                            <Component
                                 className={cn(
-                                    'relative border-gray-800 backdrop-blur-xl flex flex-col  justify-center w-full h-full text-sm antialiased',
-                                    className
+                                    'bg-transparent relative text-xl h-full w-full p-[1px] overflow-hidden',
+                                    containerClassName
                                 )}
                                 style={{
-                                    borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    borderRadius: borderRadius,
                                 }}
+                                {...otherProps}
                             >
-                                {matchGames.doublesTwo.doubles ? (
+                                <div
+                                    className="absolute inset-0"
+                                    style={{
+                                        borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    }}
+                                >
+                                    <MovingBorder
+                                        duration={duration}
+                                        rx="30%"
+                                        ry="30%"
+                                    >
+                                        <div
+                                            className={cn(
+                                                `h-10 w-60 opacity-[0.3] bg-[radial-gradient(var(--green-500)_40%,transparent_10%)]`,
+                                                borderClassName
+                                            )}
+                                        />
+                                    </MovingBorder>
+                                </div>
+
+                                <div
+                                    className={cn(
+                                        'relative border-gray-800 backdrop-blur-xl flex flex-col  justify-center w-full h-full text-sm antialiased',
+                                        className
+                                    )}
+                                    style={{
+                                        borderRadius: `calc(${borderRadius} * 0.96)`,
+                                    }}
+                                >
                                     <div className="flex items-center p-4 space-x-4 border rounded-md ">
                                         <div className="flex-1 space-y-1">
                                             <div className="flex flex-row justify-between">
@@ -421,9 +422,9 @@ export const MatchResult = ({
                                             </div>
                                         </div>
                                     </div>
-                                ) : null}
-                            </div>
-                        </Component>
+                                </div>
+                            </Component>
+                        ) : null}
                     </>
                 )}
         </>

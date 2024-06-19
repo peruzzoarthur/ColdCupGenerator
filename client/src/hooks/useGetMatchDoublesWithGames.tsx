@@ -2,7 +2,7 @@ import { axiosInstance } from '@/axiosInstance'
 import { Double } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
 
-export type MatchGamesResponse = {
+export type MatchDoublesWithGamesResponse = {
     doublesOne: {
         doubles: Double
         gamesWon: number
@@ -13,16 +13,19 @@ export type MatchGamesResponse = {
     }
 }
 
-export const useGetMatchGames = (matchId: string, isFinished: boolean) => {
+export const useGetMatchDoublesWithGames = (
+    matchId: string,
+    isFinished: boolean
+) => {
     const {
-        data: matchGames,
+        data: matchDoublesWithGames,
         isFetching,
-        refetch: refetchMatchGames,
+        refetch: refetchMatchDoublesWithGames,
     } = useQuery({
         queryKey: ['get-match-games', matchId, isFinished],
         queryFn: async () => {
             console.log(matchId)
-            const { data }: { data: MatchGamesResponse } =
+            const { data }: { data: MatchDoublesWithGamesResponse } =
                 await axiosInstance.get(`/matches/result/${matchId}`)
             if (data) {
                 return data
@@ -32,5 +35,5 @@ export const useGetMatchGames = (matchId: string, isFinished: boolean) => {
         enabled: !!isFinished,
     })
 
-    return { matchGames, isFetching, refetchMatchGames }
+    return { matchDoublesWithGames, isFetching, refetchMatchDoublesWithGames }
 }

@@ -15,7 +15,7 @@ import {
 import { cn } from '@/lib/utils'
 import { MatchForm, matchFormObject } from './matchForm'
 import axios, { AxiosError } from 'axios'
-import { useGetMatchGames } from '@/hooks/useGetMatchGames'
+import { useGetMatchDoublesWithGames } from '@/hooks/useGetMatchDoublesWithGames'
 import { useState } from 'react'
 import { Pencil1Icon } from '@radix-ui/react-icons'
 import { useToast } from '../ui/use-toast'
@@ -53,10 +53,11 @@ export const MatchCard = ({
     }
     const [editOn, setEditOn] = useState<boolean>(false)
 
-    const { matchGames, refetchMatchGames } = useGetMatchGames(
-        eventMatch.match.id,
-        eventMatch.match.isFinished
-    )
+    const { matchDoublesWithGames, refetchMatchDoublesWithGames } =
+        useGetMatchDoublesWithGames(
+            eventMatch.match.id,
+            eventMatch.match.isFinished
+        )
 
     const onSubmit = async (input: matchFormObject) => {
         try {
@@ -75,7 +76,7 @@ export const MatchCard = ({
             )
 
             sendResultToast(eventMatch.match, input)
-            await refetchMatchGames()
+            await refetchMatchDoublesWithGames()
             await refetchEventById()
 
             return data
@@ -145,7 +146,7 @@ export const MatchCard = ({
                         <div className="flex flex-col">
                             <MatchResult
                                 eventMatch={eventMatch}
-                                matchGames={matchGames}
+                                matchGames={matchDoublesWithGames}
                             />
                         </div>
                     )}
