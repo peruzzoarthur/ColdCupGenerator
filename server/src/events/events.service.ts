@@ -1806,6 +1806,28 @@ export class EventsService {
     return { updated: updatedMatches, notReady: notReadyMatches };
   }
 
+  async endTournament(eventId: string) {
+    const event = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: eventId },
+      select: {
+        matches: true,
+      },
+    });
+
+    const areMatchesFinished = event.matches.every(
+      (match) => match.isFinished === true
+    );
+
+    if (!areMatchesFinished) {
+      throw new HttpException(
+        "Unfinished match(es) in this tournament",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
+    return event;
+  }
+
   async getEventByIdParam(id: string) {
     const event = await this.prismaService.event.findUnique({
       where: {

@@ -116,6 +116,17 @@ export class EventsController {
     );
   }
 
+  @Post("end-tournament")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async endTournament(@Body() endTournamentDto: CreateFinalsDto) {
+    return await this.eventsService.endTournament(endTournamentDto.id);
+  }
+
   @Post("register")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
