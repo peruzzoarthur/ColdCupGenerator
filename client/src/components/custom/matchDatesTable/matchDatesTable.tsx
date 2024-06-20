@@ -29,6 +29,7 @@ import {
     EventMatch,
     Match,
     MatchDate,
+    PadelEvent,
 } from '@/types/padel.types'
 import { AvailableMatchesSelectCard } from '../availableMatchesSelectCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
@@ -63,7 +64,7 @@ interface DataTableProps<TData, TValue> {
     matchAssignOn: boolean
     setMatchAssignOn: React.Dispatch<React.SetStateAction<boolean>>
     categories: Category[] | undefined
-    matches: EventMatch[] | undefined
+    eventMatches: EventMatch[] | undefined
     refetchEventMatchDates: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<MatchDate[] | undefined, Error>>
@@ -90,6 +91,9 @@ interface DataTableProps<TData, TValue> {
     eventCategories: Category[] | undefined
     hasMatchFilter: boolean
     setHasMatchFilter: React.Dispatch<React.SetStateAction<boolean>>
+    refetchEventById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
 export function MatchDatesTable<TData, TValue>({
     columns,
@@ -100,7 +104,7 @@ export function MatchDatesTable<TData, TValue>({
     setMatchAssignOn,
     matchIdState,
     categories,
-    matches,
+    eventMatches,
     setMatchIdState,
     refetchEventMatchDates,
     matchDates,
@@ -122,6 +126,7 @@ export function MatchDatesTable<TData, TValue>({
     eventDoubles,
     hasMatchFilter,
     setHasMatchFilter,
+    refetchEventById,
 }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
@@ -309,7 +314,7 @@ export function MatchDatesTable<TData, TValue>({
                         setMatchDateIdState={setMatchDateIdState}
                         matchDateIdState={matchDateIdState}
                         categories={categories}
-                        matches={matches}
+                        eventMatches={eventMatches}
                         matchIdState={matchIdState}
                         setMatchIdState={setMatchIdState}
                         setMatchAssignOn={setMatchAssignOn}
@@ -320,6 +325,7 @@ export function MatchDatesTable<TData, TValue>({
                         matchById={matchById}
                         refetchMatchById={refetchMatchById}
                         isFetchingMatchById={isFetchingMatchById}
+                        refetchEventById={refetchEventById}
                     />
                 </div>
             ) : null}

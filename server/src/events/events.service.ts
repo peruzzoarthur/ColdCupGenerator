@@ -10,6 +10,7 @@ import { ActivateEventDto } from "./dto/activate-event.dto";
 import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 import { HandleDoublesRequestToEventDto } from "./dto/handle-request.dto";
 import { Double, EventDouble, EventMatchType, MatchType } from "@prisma/client";
+import { TreeLevelColumn } from "typeorm";
 
 type Day = {
   day: number;
@@ -676,15 +677,15 @@ export class EventsService {
   async activateEvent(activateEventDto: ActivateEventDto) {
     const event = await this.getEventById(activateEventDto);
 
-    // await this.createSchedule({
-    //   id: activateEventDto.id,
-    //   startDate: activateEventDto.startDate,
-    //   finishDate: activateEventDto.finishDate,
-    //   timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
-    //   timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
-    //   matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
-    //   courtIds: activateEventDto.courtsIds,
-    // });
+    await this.createSchedule({
+      id: activateEventDto.id,
+      startDate: activateEventDto.startDate,
+      finishDate: activateEventDto.finishDate,
+      timeOfFirstMatch: Number(activateEventDto.timeOfFirstMatch),
+      timeOfLastMatch: Number(activateEventDto.timeOfLastMatch),
+      matchDurationInMinutes: Number(activateEventDto.matchDurationInMinutes),
+      courtIds: activateEventDto.courtsIds,
+    });
 
     if (activateEventDto.eventType === "ALLxALL") {
       await this.createMatchesAllxAll(activateEventDto);
@@ -695,37 +696,22 @@ export class EventsService {
       await this.createGroupsMatches(event.id);
     }
 
-    // if (activateEventDto.autoPopulate) {
-    //   await this.autoPopulate(activateEventDto);
-    // }
+    if (activateEventDto.autoPopulate) {
+      await this.autoPopulate(activateEventDto);
+    }
 
-    // await this.prismaService.event.update({
-    //   where: {
-    //     id: event.id,
-    //   },
-    //   data: {
-    //     isActive: true,
-    //   },
-    // });
+    await this.prismaService.event.update({
+      where: {
+        id: event.id,
+      },
+      data: {
+        isActive: true,
+      },
+    });
 
-    // const eventUpdated = await this.getEventById(activateEventDto);
     const eventUpdated = await this.prismaService.event.findUniqueOrThrow({
       where: { id: event.id },
       select: {
-        // eventMatches: {
-        //   select: {
-        //     number: true,
-        //     type: true,
-        //     eventId: true,
-        //     match: {
-        //       select: {
-        //         id: true,
-        //         categoryId: true,
-        //         doubles: true,
-        //       },
-        //     },
-        //   },
-        // },
         categoriesGroups: {
           select: {
             id: true,
@@ -2009,6 +1995,7 @@ export class EventsService {
                 id: true,
                 category: true,
                 winner: true,
+                matchDate: true,
                 doubles: {
                   select: {
                     id: true,

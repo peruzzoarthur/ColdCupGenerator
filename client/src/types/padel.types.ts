@@ -180,6 +180,7 @@ export type Match = {
     winner: Double
     winnerDoublesId: string | null
     matchDate?: MatchDate
+    eventMatch?: EventMatch
 }
 
 export type MatchDate = {

@@ -327,27 +327,29 @@ export function EventDashboard({ event }: EventDashBoardProps) {
     return (
         <div className="flex flex-col w-full min-h-screen xl:w-4/6 ">
             <div className="flex flex-col gap-2 ">
-                <header className="static top-0 flex flex-col items-start h-auto gap-4 px-4 py-4 bg-transparent border-0">
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <Link to={'/events'}>
-                                    <BreadcrumbLink asChild>
-                                        <p className="cursor-pointer">
-                                            All events
-                                        </p>
-                                    </BreadcrumbLink>
-                                </Link>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>
-                                    {eventById?.name}
-                                </BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </header>
+                {eventById && (
+                    <header className="static top-0 flex flex-col items-start h-auto gap-4 px-4 py-4 bg-transparent border-0">
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <Link to={'/events'}>
+                                        <BreadcrumbLink asChild>
+                                            <p className="cursor-pointer">
+                                                All events
+                                            </p>
+                                        </BreadcrumbLink>
+                                    </Link>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>
+                                        {eventById.name}
+                                    </BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </header>
+                )}
                 {isError && (
                     <div onClick={() => setError(false)} className="mt-4">
                         <ErrorAlert message={errorMessage} />
@@ -355,6 +357,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 )}
                 <main className="grid items-start flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 ">
                     <div className="space-y-10 xl:col-span-2">
+                        {/* Requests and Infocard for activating event */}
                         {role === 'ADMIN' ? (
                             eventById &&
                             eventById.isActive &&
@@ -728,7 +731,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                         )}
 
                         {pendingMatches?.length === 0 &&
-                            !eventById?.isFinished && (
+                            !eventById?.isFinished &&
+                            eventById?.isActive && (
                                 <div className="flex justify-center">
                                     <CoolButton
                                         className="items-center justify-center"
@@ -780,7 +784,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                         }
                                         refetchMatchById={refetchMatchById}
                                         categories={eventById?.categories}
-                                        matches={eventById?.eventMatches}
+                                        eventMatches={eventById?.eventMatches}
                                         matchDateIdState={matchDateIdState}
                                         setMatchDateIdState={
                                             setMatchDateIdState
@@ -810,6 +814,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                         setCategoryFilter={setCategoryFilter}
                                         hasMatchFilter={hasMatchFilter}
                                         setHasMatchFilter={setHasMatchFilter}
+                                        refetchEventById={refetchEventById}
                                     />
                                 </div>
                             </>

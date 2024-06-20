@@ -88,6 +88,11 @@ export class MatchDatesService {
                 },
               },
             },
+            eventMatch: {
+              select: {
+                number: true,
+              },
+            },
           },
         },
       },

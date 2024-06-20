@@ -7,7 +7,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { Category, EventMatch, Match, MatchDate } from '@/types/padel.types'
+import {
+    Category,
+    EventMatch,
+    Match,
+    MatchDate,
+    PadelEvent,
+} from '@/types/padel.types'
 import { Card, CardDescription, CardHeader } from '../ui/card'
 import { Button } from '../ui/button'
 import { Cross2Icon } from '@radix-ui/react-icons'
@@ -27,7 +33,7 @@ import { ListFilter } from 'lucide-react'
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
     categories: Category[] | undefined
-    matches: EventMatch[] | undefined
+    eventMatches: EventMatch[] | undefined
     matchDateIdState: string | undefined
     setMatchDateIdState: React.Dispatch<
         React.SetStateAction<string | undefined>
@@ -50,11 +56,14 @@ type AvailableMatchesSelectProps = {
     refetchMatchById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<Match | undefined, Error>>
+    refetchEventById: (
+        options?: RefetchOptions | undefined
+    ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
 export function AvailableMatchesSelectCard({
     matchDates,
     categories,
-    matches,
+    eventMatches,
     matchDateIdState,
     setMatchDateIdState,
     matchIdState,
@@ -65,6 +74,7 @@ export function AvailableMatchesSelectCard({
     isFetchingMatchDateById,
     refetchMatchDateById,
     refetchMatchById,
+    refetchEventById,
 }: AvailableMatchesSelectProps) {
     const [showMatchesWithDate, setShowMatchesWithDate] =
         useState<boolean>(false)
@@ -90,14 +100,13 @@ export function AvailableMatchesSelectCard({
     }
 
     const currentMatch = matchDateById?.match
-    console.log(matches)
 
     if (showMatchesWithDate && !showMatchesWithoutDate) {
-        matches = matches?.filter((m) => m.match.matchDate !== null)
+        eventMatches = eventMatches?.filter((m) => m.match.matchDate !== null)
     }
 
     if (showMatchesWithoutDate && !showMatchesWithDate) {
-        matches = matches?.filter((m) => m.match.matchDate === null)
+        eventMatches = eventMatches?.filter((m) => m.match.matchDate === null)
     }
 
     return (
@@ -145,7 +154,7 @@ export function AvailableMatchesSelectCard({
                 {currentMatch && !isFetchingMatchDateById ? (
                     <CardHeader>
                         {' '}
-                        {`Current match: Match #${currentMatch.number} - ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}{' '}
+                        {`Current match: Match #${currentMatch.eventMatch?.number} - ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}{' '}
                     </CardHeader>
                 ) : null}
 
@@ -203,39 +212,38 @@ export function AvailableMatchesSelectCard({
                         <SelectTrigger className="items-center justify-center ">
                             {currentMatch ? (
                                 <SelectValue
-                                    placeholder={`Match #${currentMatch.number} ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}
+                                    placeholder={`Match #${currentMatch.eventMatch?.number} ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}
                                 />
                             ) : (
                                 <SelectValue placeholder={`Select match`} />
                             )}
-                        </SelectTrigger>
 
-                        <SelectContent>
-                            {categories?.map((c, index) => {
-                                return (
-                                    <SelectGroup key={index}>
-                                        <SelectLabel>
-                                            {c.level} {c.type}
-                                        </SelectLabel>
-                                        {matches
-                                            ?.filter(
-                                                (m) =>
-                                                    m.match.categoryId === c.id
-                                            )
-                                            .map((m, index2) => (
-                                                <div
-                                                    className="flex flex-col"
-                                                    key={index2}
-                                                >
-                                                    <SelectItem value={m.id}>
+                            <SelectContent>
+                                {categories?.map((c, index) => {
+                                    return (
+                                        <SelectGroup key={index}>
+                                            <SelectLabel>
+                                                {c.level} {c.type}
+                                            </SelectLabel>
+                                            {eventMatches
+                                                ?.filter(
+                                                    (m) =>
+                                                        m.match.category.id ===
+                                                        c.id
+                                                )
+                                                .map((m, index2) => (
+                                                    <SelectItem
+                                                        value={m.match.id}
+                                                        key={index2}
+                                                    >
                                                         {`Match #${m.number} ${m.match.doubles[0].players[0].firstName} / ${m.match.doubles[0].players[1].firstName} x ${m.match.doubles[1].players[0].firstName} / ${m.match.doubles[1].players[1].firstName} `}
                                                     </SelectItem>
-                                                </div>
-                                            ))}
-                                    </SelectGroup>
-                                )
-                            })}
-                        </SelectContent>
+                                                ))}
+                                        </SelectGroup>
+                                    )
+                                })}
+                            </SelectContent>
+                        </SelectTrigger>
                     </Select>
                 </CardDescription>
                 <div className="flex justify-center mt-2">
@@ -251,6 +259,7 @@ export function AvailableMatchesSelectCard({
                                 )
                                 refetchMatchDateById()
                                 refetchMatchById()
+                                refetchEventById()
                             }}
                         >
                             Update

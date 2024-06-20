@@ -37,6 +37,7 @@ export const Route = createFileRoute('/_auth/events/$id')({
 
 function Event() {
     const { id } = Route.useParams()
+
     const { eventById, refetchEventById } = useGetEventById(id)
 
     const { refetchEventMatchesInfoById } = useGetEventMatchesInfoById(
@@ -134,11 +135,13 @@ function Event() {
                 <>
                     <div className="flex flex-col items-center w-full">
                         <div className="flex flex-col justify-center w-5/6 mt-2 mb-4">
+                            {/* Title of event */}
                             <h1 className="justify-center mb-4 text-3xl font-medium">
                                 🏆 {eventById?.name} 🏆
                             </h1>
 
-                            {role === 'ADMIN' && (
+                            {/* Admin register form for adding doubles */}
+                            {role === 'ADMIN' && !eventById.isFinished && (
                                 <RegisterDoublesForm
                                     categoriesState={categoriesState}
                                     eventCategories={eventById.categories.map(
@@ -153,7 +156,8 @@ function Event() {
                                 />
                             )}
 
-                            {!eventById.isActive && (
+                            {/* Dropdown to invite player doubles to event */}
+                            {!eventById.isActive && !eventById.isFinished && (
                                 <div className="flex justify-center p-6">
                                     <DropdownMenu>
                                         <CoolButton as="div">
@@ -207,6 +211,7 @@ function Event() {
                                     </DropdownMenu>
                                 </div>
                             )}
+                            {/* Errors will be shown here */}
                             {isError && (
                                 <div
                                     onClick={() => setError(false)}
@@ -216,6 +221,7 @@ function Event() {
                                 </div>
                             )}
                         </div>
+                        {/* The Dashboard */}
                         <EventDashboard event={eventById} />
                     </div>
                 </>

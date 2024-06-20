@@ -165,10 +165,14 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                 matchStart: m.matchDate?.start ?? null,
                 eventName: m.event.name ?? null,
                 eventId: m.event.id ?? null,
-                doublesOne: `${m.doubles[0].players[0].firstName} ${m.doubles[0].players[0].lastName} / ${m.doubles[0].players[1].firstName} ${m.doubles[0].players[1].lastName}`,
-                doublesOneId: m.doubles[0].id,
-                doublesTwo: `${m.doubles[1].players[0].firstName} ${m.doubles[1].players[0].lastName} / ${m.doubles[1].players[1].firstName} ${m.doubles[1].players[1].lastName}`,
-                doublesTwoId: m.doubles[1].id,
+                doublesOne: m.doubles[0]
+                    ? `${m.doubles[0].players[0].firstName} ${m.doubles[0].players[0].lastName} / ${m.doubles[0].players[1].firstName} ${m.doubles[0].players[1].lastName}`
+                    : '',
+                doublesOneId: m.doubles[0] ? m.doubles[0].id : '',
+                doublesTwo: m.doubles[1]
+                    ? `${m.doubles[1].players[0].firstName} ${m.doubles[1].players[0].lastName} / ${m.doubles[1].players[1].firstName} ${m.doubles[1].players[1].lastName}`
+                    : '',
+                doublesTwoId: m.doubles[1] ? m.doubles[1].id : '',
                 isFinished: m.isFinished,
                 doublesOneGames: doublesOneGames ?? null,
                 doublesTwoGames: doublesTwoGames ?? null,

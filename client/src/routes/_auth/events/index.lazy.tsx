@@ -5,7 +5,7 @@ import { useGetEvents } from '@/hooks/useGetEvents'
 import { EventCard } from '@/components/custom/eventCard'
 import { Button } from '@/components/ui/button'
 import ball from '../../../styles/png/ball.png'
-import { PadelEvent } from '@/types/padel.types'
+import { EventType, PadelEvent } from '@/types/padel.types'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import { useToast } from '@/components/ui/use-toast'
 import { axiosInstance } from '@/axiosInstance'
@@ -23,6 +23,7 @@ export type createEventFormObject = {
     timeOfFirstMatch: string
     timeOfLastMatch: string
     matchDurationInMinutes: string
+    eventType: EventType
 }
 
 export type ErrorResponse = {
@@ -73,6 +74,7 @@ function Events() {
                 timeOfFirstMatch: input.timeOfFirstMatch,
                 timeOfLastMatch: input.timeOfLastMatch,
                 matchDurationInMinutes: input.matchDurationInMinutes,
+                eventType: input.eventType,
             }
             const data: AxiosResponse<PadelEvent> = await axiosInstance.post(
                 '/events/',
@@ -135,6 +137,7 @@ function Events() {
                                     matchDurationInMinutes: '',
                                     timeOfFirstMatch: '',
                                     timeOfLastMatch: '',
+                                    eventType: EventType.ALLxALL,
                                 }}
                             />
 

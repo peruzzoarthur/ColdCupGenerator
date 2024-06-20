@@ -24,7 +24,7 @@ import {
     SelectValue,
 } from '../ui/select'
 import { Badge } from '../ui/badge'
-import { Category, Place } from '@/types/padel.types'
+import { Category, EventType, Place } from '@/types/padel.types'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { cn } from '@/lib/utils'
 import { CalendarIcon } from 'lucide-react'
@@ -57,6 +57,7 @@ type formObject = {
     timeOfFirstMatch: string
     timeOfLastMatch: string
     matchDurationInMinutes: string
+    eventType: EventType
 }
 
 const formSchema = z.object({
@@ -68,6 +69,7 @@ const formSchema = z.object({
     timeOfFirstMatch: z.string(),
     timeOfLastMatch: z.string(),
     matchDurationInMinutes: z.string(),
+    eventType: z.enum(['ALLxALL', 'GROUPS']),
 })
 
 const EventForm: React.FC<EventFormProps> = ({
@@ -493,6 +495,37 @@ const EventForm: React.FC<EventFormProps> = ({
                         <FormControl>
                             <Input placeholder="60" {...field} />
                         </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                name="eventType"
+                control={form.control}
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Event type</FormLabel>
+                        <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                        >
+                            <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select event type" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Types</SelectLabel>
+                                    <SelectItem value={EventType.GROUPS}>
+                                        GROUPS
+                                    </SelectItem>
+                                    <SelectItem value={EventType.ALLxALL}>
+                                        All x all
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                         <FormMessage />
                     </FormItem>
                 )}
