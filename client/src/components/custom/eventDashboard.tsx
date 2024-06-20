@@ -112,7 +112,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
     const { eventRequestsById, refetchEventRequestsById } =
         useGetEventRequestsById(eventById?.id)
 
-    const handleActivate = async (
+    const handleActivateEvent = async (
         eventId: string,
         startDate: string,
         finishDate: string,
@@ -152,7 +152,32 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 }
             } else {
                 setError(true)
-                setErrorMessage('Error responding to invitation.')
+                setErrorMessage('Error activating event.')
+            }
+        }
+    }
+
+    const handleFinishEvent = async (eventId: string) => {
+        try {
+            const endEventDto = {
+                id: eventId,
+            }
+
+            await axiosInstance.post('/events/end-category-groups', endEventDto)
+            const { data: event }: { data: PadelEvent } =
+                await axiosInstance.post('/events/end-event', endEventDto)
+
+            return event
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error activating event.')
             }
         }
     }
@@ -331,7 +356,9 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 <main className="grid items-start flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 ">
                     <div className="space-y-10 xl:col-span-2">
                         {role === 'ADMIN' ? (
-                            eventById && eventById.isActive ? null : (
+                            eventById &&
+                            eventById.isActive &&
+                            !eventById.isFinished ? null : (
                                 <div className="flex flex-col items-center justify-center w-full space-y-5">
                                     {event.eventMatches.length === 0 &&
                                     eventMatchesInfoById ? (
@@ -365,7 +392,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                     <CoolButton
                                                         className="items-center justify-center"
                                                         onClick={async () =>
-                                                            handleActivate(
+                                                            handleActivateEvent(
                                                                 eventById.id,
                                                                 eventById.startDate,
                                                                 eventById.finishDate,
@@ -700,19 +727,20 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                             </>
                         )}
 
-                        {pendingMatches?.length === 0 && (
-                            <div className="flex justify-center">
-                                <CoolButton
-                                    className="items-center justify-center"
-                                    borderClassName="bg-[radial-gradient(var(--green-800)_40%,transparent_10%)]"
-                                    onClick={async () =>
-                                        console.log('end event')
-                                    }
-                                >
-                                    Finish event
-                                </CoolButton>
-                            </div>
-                        )}
+                        {pendingMatches?.length === 0 &&
+                            !eventById?.isFinished && (
+                                <div className="flex justify-center">
+                                    <CoolButton
+                                        className="items-center justify-center"
+                                        borderClassName="bg-[radial-gradient(var(--green-800)_40%,transparent_10%)]"
+                                        onClick={async () =>
+                                            handleFinishEvent(event.id)
+                                        }
+                                    >
+                                        Finish event
+                                    </CoolButton>
+                                </div>
+                            )}
 
                         {matchDatesTableData && filteredMatchDatesTableData ? (
                             <>

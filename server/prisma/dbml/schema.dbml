@@ -38,8 +38,13 @@ Table CategoryGroup {
   event Event
   eventId String
   finalMatches EventMatch [not null]
-  groupsStageFinished Boolean [not null, default: false]
   matchesWithReference MatchesReferenced [not null]
+  firstPlace Double
+  firstPlaceId String
+  secondPlace Double
+  secondPlaceId String
+  groupsStageFinished Boolean [not null, default: false]
+  categoryFinished Boolean [not null, default: false]
 
   indexes {
     (eventId, categoryId) [unique]
@@ -290,6 +295,8 @@ Table Double {
   invites Invite [not null]
   firstPlaceInGroups DoublesGroup [not null]
   secondPlaceInGroups DoublesGroup [not null]
+  firstPlaceInCategory CategoryGroup [not null]
+  secondPlaceInCategory CategoryGroup [not null]
 }
 
 Table Place {
@@ -418,6 +425,10 @@ Enum PlayerPosition {
 Ref: CategoryGroup.categoryId > Category.id
 
 Ref: CategoryGroup.eventId > Event.id
+
+Ref: CategoryGroup.firstPlaceId > Double.id
+
+Ref: CategoryGroup.secondPlaceId > Double.id
 
 Ref: DoublesGroup.categoryGroupId > CategoryGroup.id
 

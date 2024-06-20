@@ -1385,8 +1385,8 @@ export class EventsService {
       }
 
       if (numberOfGroups <= 2) {
-        // matchType: 2 ROUND_OF_4
-        // matchType: 1 FINAL
+        // !matchType: 2 ROUND_OF_4
+        // !matchType: 1 FINAL
       }
 
       if (numberOfGroups <= 4) {
@@ -1806,11 +1806,137 @@ export class EventsService {
     return { updated: updatedMatches, notReady: notReadyMatches };
   }
 
-  async endTournament(eventId: string) {
+  async endCategoryGroups(eventId: string) {
+    const event = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: eventId },
+      select: {
+        categoriesGroups: {
+          select: {
+            id: true,
+            groupsStageFinished: true,
+            categoryFinished: true,
+            finalMatches: {
+              select: {
+                number: true,
+                type: true,
+                match: {
+                  select: {
+                    id: true,
+                    isFinished: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const categoriesGroups = event.categoriesGroups;
+
+    for (let i = 0; i < categoriesGroups.length; i++) {
+      if (!categoriesGroups[i].groupsStageFinished) {
+        throw new HttpException(
+          "Groups stage not finished yet",
+          HttpStatus.BAD_REQUEST
+        );
+      }
+
+      if (categoriesGroups[i].categoryFinished) {
+        continue;
+      }
+
+      const finalMatches = categoriesGroups[i].finalMatches;
+      console.log(finalMatches);
+      const areMatchesFinished = finalMatches.every(
+        (em) => em.match.isFinished === true
+      );
+
+      if (!areMatchesFinished) {
+        throw new HttpException(
+          "One or more matches aren't finished",
+          HttpStatus.BAD_REQUEST
+        );
+      } else {
+        const getFinal = finalMatches.filter((fm) => fm.type === "FINAL");
+        if (getFinal.length !== 1) {
+          throw new HttpException(
+            "There is more than one 'FINAL' registered in this category",
+            HttpStatus.CONFLICT
+          );
+        }
+        const finalId = getFinal[0].match.id;
+        const final = await this.prismaService.match.findUniqueOrThrow({
+          where: { id: finalId },
+          select: {
+            winnerDoublesId: true,
+            doubles: true,
+          },
+        });
+        const winnerId = final.winnerDoublesId;
+
+        if (final.doubles.length !== 2) {
+          //! Verify if possible to restrict number of arrays in db to 2...
+          throw new HttpException(
+            "Wrong number of doubles assigned to match",
+            HttpStatus.CONFLICT
+          );
+        }
+
+        const secondPlaceId = final.doubles.filter((d) => d.id !== winnerId)[0]
+          .id;
+        console.log(final);
+        console.log(secondPlaceId);
+        await this.prismaService.event.update({
+          where: { id: eventId },
+          data: {
+            categoriesGroups: {
+              update: {
+                where: {
+                  id: categoriesGroups[i].id,
+                },
+                data: {
+                  categoryFinished: true,
+                  firstPlace: {
+                    connect: {
+                      id: winnerId,
+                    },
+                  },
+                  secondPlace: {
+                    connect: {
+                      id: secondPlaceId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+    }
+
+    const updatedEvent = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: eventId },
+      select: {
+        categoriesGroups: {
+          select: {
+            id: true,
+            groupsStageFinished: true,
+            categoryFinished: true,
+            firstPlace: true,
+            secondPlace: true,
+          },
+        },
+      },
+    });
+    return updatedEvent;
+  }
+  async endEvent(eventId: string) {
     const event = await this.prismaService.event.findUniqueOrThrow({
       where: { id: eventId },
       select: {
         matches: true,
+        categoriesGroups: true,
       },
     });
 
@@ -1819,13 +1945,54 @@ export class EventsService {
     );
 
     if (!areMatchesFinished) {
-      throw new HttpException(
-        "Unfinished match(es) in this tournament",
-        HttpStatus.BAD_REQUEST
+      const notFinishedMatches = event.matches.filter(
+        (m) => m.isFinished === false
       );
+
+      if (notFinishedMatches.length === 1) {
+        throw new HttpException(
+          `Unfinished match ${notFinishedMatches[0].id} in this tournament`,
+          HttpStatus.BAD_REQUEST
+        );
+      } else {
+        throw new HttpException(
+          `Unfinished matches [${notFinishedMatches.map((m) => m.id).join(", ")}] in this tournament`,
+          HttpStatus.BAD_REQUEST
+        );
+      }
     }
 
-    return event;
+    const areCategoriesFinished = event.categoriesGroups.every(
+      (cg) => cg.groupsStageFinished && cg.categoryFinished
+    );
+
+    if (!areCategoriesFinished) {
+      const notFinishedGroups = event.categoriesGroups.filter(
+        (cg) => cg.categoryFinished === false
+      );
+
+      if (notFinishedGroups.length === 1) {
+        throw new HttpException(
+          `Unfinished category ${notFinishedGroups[0].id} in this tournament`,
+          HttpStatus.BAD_REQUEST
+        );
+      } else {
+        throw new HttpException(
+          `Unfinished categories [${notFinishedGroups.map((m) => m.id).join(", ")}] in this tournament`,
+          HttpStatus.BAD_REQUEST
+        );
+      }
+    }
+
+    const updatedEvent = await this.prismaService.event.update({
+      where: { id: eventId },
+      data: {
+        isActive: false,
+        isFinished: true,
+      },
+    });
+
+    return updatedEvent;
   }
 
   async getEventByIdParam(id: string) {
@@ -1979,6 +2146,7 @@ export class EventsService {
           },
         },
         isActive: true,
+        isFinished: true,
         categories: {
           select: {
             id: true,

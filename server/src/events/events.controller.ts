@@ -116,15 +116,26 @@ export class EventsController {
     );
   }
 
-  @Post("end-tournament")
+  @Post("end-category-groups")
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse()
   @Roles(["ADMIN"])
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @ApiBearerAuth()
-  async endTournament(@Body() endTournamentDto: CreateFinalsDto) {
-    return await this.eventsService.endTournament(endTournamentDto.id);
+  async endCategoryGroups(@Body() endCategoryGroupsDto: CreateFinalsDto) {
+    return await this.eventsService.endCategoryGroups(endCategoryGroupsDto.id);
+  }
+
+  @Post("end-event")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async endEvent(@Body() endEventDto: CreateFinalsDto) {
+    return await this.eventsService.endEvent(endEventDto.id);
   }
 
   @Post("register")

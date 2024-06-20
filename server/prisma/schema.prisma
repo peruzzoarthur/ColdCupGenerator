@@ -52,8 +52,13 @@ model CategoryGroup {
   event                Event?              @relation(fields: [eventId], references: [id])
   eventId              String?
   finalMatches         EventMatch[]        @relation("EventFinalMatches")
-  groupsStageFinished  Boolean             @default(false)
   matchesWithReference MatchesReferenced[]
+  firstPlace           Double?             @relation("FirstPlaceInCategory", fields: [firstPlaceId], references: [id])
+  firstPlaceId         String?
+  secondPlace          Double?             @relation("SecondPlaceInCategory", fields: [secondPlaceId], references: [id])
+  secondPlaceId        String?
+  groupsStageFinished  Boolean             @default(false)
+  categoryFinished     Boolean             @default(false)
 
   @@unique([eventId, categoryId])
 }
@@ -328,21 +333,23 @@ enum PlayerPosition {
 }
 
 model Double {
-  id                  String         @id @default(uuid())
-  players             Player[]
-  matches             Match[]
-  category            Category       @relation(fields: [categoryId], references: [id])
-  categoryId          String
-  games               Game[]         @relation("GamesPlayed")
-  sets                Set[]
-  matchesWins         Match[]        @relation("MatchWinnerDouble")
-  setsWins            Set[]          @relation("SetWinnerDouble")
-  gamesWins           Game[]         @relation("GameWinnerDouble")
-  eventRequests       EventRequest[]
-  eventDouble         EventDouble[]
-  invites             Invite[]
-  firstPlaceInGroups  DoublesGroup[] @relation("FirstPlaceDouble")
-  secondPlaceInGroups DoublesGroup[] @relation("SecondPlaceDouble")
+  id                    String          @id @default(uuid())
+  players               Player[]
+  matches               Match[]
+  category              Category        @relation(fields: [categoryId], references: [id])
+  categoryId            String
+  games                 Game[]          @relation("GamesPlayed")
+  sets                  Set[]
+  matchesWins           Match[]         @relation("MatchWinnerDouble")
+  setsWins              Set[]           @relation("SetWinnerDouble")
+  gamesWins             Game[]          @relation("GameWinnerDouble")
+  eventRequests         EventRequest[]
+  eventDouble           EventDouble[]
+  invites               Invite[]
+  firstPlaceInGroups    DoublesGroup[]  @relation("FirstPlaceDouble")
+  secondPlaceInGroups   DoublesGroup[]  @relation("SecondPlaceDouble")
+  firstPlaceInCategory  CategoryGroup[] @relation("FirstPlaceInCategory")
+  secondPlaceInCategory CategoryGroup[] @relation("SecondPlaceInCategory")
 }
 
 model Place {

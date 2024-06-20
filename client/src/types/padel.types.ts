@@ -110,6 +110,7 @@ export type PadelEvent = {
     suitable?: boolean
     courts: Court[]
     isActive: boolean
+    isFinished: boolean
     categoriesGroups: CategoryGroup[]
 }
 
