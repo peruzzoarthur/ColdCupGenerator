@@ -20,7 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select'
-import { Category, Double } from '@/types/padel.types'
+import { Category } from '@/types/padel.types'
 
 type RegisterDoublesFormProps = {
     onSubmit: SubmitHandler<registerDoublesFormObject>
@@ -28,7 +28,6 @@ type RegisterDoublesFormProps = {
     eventCategories: Category[] | undefined
     categoriesState: string[]
     setCategoriesState: React.Dispatch<React.SetStateAction<string[]>>
-    allDoubles: Double[] | undefined
 }
 
 export type registerDoublesFormObject = {
@@ -42,7 +41,7 @@ const formSchema = z.object({
 const RegisterDoublesForm: React.FC<RegisterDoublesFormProps> = ({
     onSubmit,
     defaultValues,
-    allDoubles,
+    eventCategories,
 }) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -50,10 +49,6 @@ const RegisterDoublesForm: React.FC<RegisterDoublesFormProps> = ({
     })
 
     const { handleSubmit } = form
-
-    // console.log(form.getValues())
-
-    // console.log(allDoubles)
 
     return (
         <Form {...form}>
@@ -76,22 +71,32 @@ const RegisterDoublesForm: React.FC<RegisterDoublesFormProps> = ({
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Doubles</SelectLabel>
-                                    {allDoubles?.map((d, index) => (
-                                        <SelectItem value={d.id} key={index}>
-                                            {d.players.map((p, index) => (
-                                                <p key={index}>
-                                                    {`${p.firstName}
+                                {eventCategories?.map((category, index) => (
+                                    <SelectGroup key={`cat_${index}`}>
+                                        <SelectLabel>
+                                            {category.level} {category.type}
+                                            {category.doubles?.map(
+                                                (d, index) => (
+                                                    <SelectItem
+                                                        value={d.id}
+                                                        key={index}
+                                                    >
+                                                        {d.players.map(
+                                                            (p, index) => (
+                                                                <p key={index}>
+                                                                    {`${p.firstName}
                                                     ${p.lastName}`}
-                                                </p>
-                                            ))}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
+                                                                </p>
+                                                            )
+                                                        )}
+                                                    </SelectItem>
+                                                )
+                                            )}
+                                        </SelectLabel>
+                                    </SelectGroup>
+                                ))}
                             </SelectContent>
                         </Select>
-
                         <FormMessage />
                     </FormItem>
                 )}

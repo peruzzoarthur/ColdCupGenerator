@@ -2140,6 +2140,13 @@ export class EventsService {
             id: true,
             type: true,
             level: true,
+            doubles: {
+              select: {
+                id: true,
+                players: true,
+              },
+            },
+            players: true,
             eventDoubles: {
               select: {
                 double: {

@@ -9,7 +9,6 @@ import { GetCategoryByIdDto } from "./dto/get-category-by-id.dto";
 export class CategoriesService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(createCategoryDto: CreateCategoryDto) {
-    console.log(createCategoryDto);
     const newCat = await this.prismaService.category.create({
       data: {
         level: createCategoryDto.level,
@@ -20,7 +19,14 @@ export class CategoriesService {
   }
 
   async findAll() {
-    return await this.prismaService.category.findMany();
+    return await this.prismaService.category.findMany({
+      select: {
+        id: true,
+        level: true,
+        type: true,
+        players: true,
+      },
+    });
   }
 
   findOne(id: number) {

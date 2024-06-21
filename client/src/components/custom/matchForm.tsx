@@ -37,15 +37,18 @@ export type matchFormObject = {
 const formSchema = z.object({
     doublesOneGames: z
         .string()
-        .regex(/^\d+$/)
-        .min(0, { message: 'Values range from 0 to 9.' })
-        .max(1, { message: 'Values range from 0 to 9.' }),
+        .regex(/^[0-9]$/, { message: 'Values range from 0 to 9.' }),
 
     doublesTwoGames: z
         .string()
-        .regex(/^\d+$/)
-        .max(1, { message: 'Values range from 0 to 9.' }), //?
-    winnerDoublesId: z.string(),
+        .regex(/^[0-9]$/, { message: 'Values range from 0 to 9.' }),
+
+    winnerDoublesId: z
+        .string()
+        .regex(
+            /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+            { message: 'Please select one winner' }
+        ),
 })
 
 export const MatchForm: React.FC<MatchFormProps> = ({

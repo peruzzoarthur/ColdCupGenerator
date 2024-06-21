@@ -20,12 +20,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select'
-import { Category, Player } from '@/types/padel.types'
+import { Category } from '@/types/padel.types'
 
 type DoublesFormProps = {
     onSubmit: SubmitHandler<doublesFormObject>
     defaultValues: doublesFormObject
-    allPlayers: Player[] | undefined
     allCategories: Category[] | undefined
 }
 
@@ -44,7 +43,6 @@ const formSchema = z.object({
 const DoublesForm: React.FC<DoublesFormProps> = ({
     onSubmit,
     defaultValues,
-    allPlayers,
     allCategories,
 }) => {
     const form = useForm({
@@ -72,14 +70,25 @@ const DoublesForm: React.FC<DoublesFormProps> = ({
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>All Players</SelectLabel>
-                                    {allPlayers?.map((p, index) => (
-                                        <SelectItem value={p.id} key={index}>
-                                            {`${p.firstName} ${p.lastName}`}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
+                                {allCategories?.map((category, index) => (
+                                    <SelectGroup key={`cat_${index}`}>
+                                        <SelectLabel>
+                                            {category.level} {category.type}
+                                            {category.players?.map(
+                                                (p, index) => (
+                                                    <SelectItem
+                                                        value={p.id}
+                                                        key={`p_${index}`}
+                                                    >
+                                                        {' '}
+                                                        {`${p.firstName}
+                                                    ${p.lastName}`}
+                                                    </SelectItem>
+                                                )
+                                            )}
+                                        </SelectLabel>
+                                    </SelectGroup>
+                                ))}
                             </SelectContent>
                         </Select>
 
@@ -104,14 +113,25 @@ const DoublesForm: React.FC<DoublesFormProps> = ({
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>All Players</SelectLabel>
-                                    {allPlayers?.map((p, index) => (
-                                        <SelectItem value={p.id} key={index}>
-                                            {`${p.firstName} ${p.lastName}`}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
+                                {allCategories?.map((category, index) => (
+                                    <SelectGroup key={`cat_${index}`}>
+                                        <SelectLabel>
+                                            {category.level} {category.type}
+                                            {category.players?.map(
+                                                (p, index) => (
+                                                    <SelectItem
+                                                        value={p.id}
+                                                        key={`p_${index}`}
+                                                    >
+                                                        {' '}
+                                                        {`${p.firstName}
+                                                    ${p.lastName}`}
+                                                    </SelectItem>
+                                                )
+                                            )}
+                                        </SelectLabel>
+                                    </SelectGroup>
+                                ))}
                             </SelectContent>
                         </Select>
 

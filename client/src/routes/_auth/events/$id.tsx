@@ -146,15 +146,12 @@ function Event() {
                                 !eventById.isFinished && (
                                     <RegisterDoublesForm
                                         categoriesState={categoriesState}
-                                        eventCategories={eventById.categories.map(
-                                            (cat) => cat
-                                        )}
+                                        eventCategories={eventById.categories}
                                         onSubmit={registerDoubleOnSubmit}
                                         setCategoriesState={setCategoriesState}
                                         defaultValues={{
                                             doublesId: '',
                                         }}
-                                        allDoubles={allDoubles}
                                     />
                                 )}
 

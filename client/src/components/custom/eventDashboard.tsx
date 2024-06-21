@@ -155,45 +155,18 @@ export function EventDashboard({ event }: EventDashBoardProps) {
         }
     }
 
-    // const handleEndGroupsStage = async (eventId: string) => {
-    //     try {
-    //         const endEventDto = {
-    //             id: eventId,
-    //         }
-
-    //         await refetchEventById()
-    //         const { data: event }: { data: PadelEvent } =
-    //         await axiosInstance.post('/events/end-groups-stage', endEventDto)
-    //             await axiosInstance.post('/events/create-finals', endEventDto)
-    //         await refetchEventById()
-
-    //         return event
-    //     } catch (error) {
-    //         if (axios.isAxiosError(error)) {
-    //             const axiosError = error as AxiosError<ErrorResponse>
-    //             if (axiosError.response) {
-    //                 setError(true)
-    //                 setErrorMessage(axiosError.response.data.message)
-    //             }
-    //         } else {
-    //             setError(true)
-    //             setErrorMessage('Error creating finals.')
-    //         }
-    //     }
-    // }
-
     const handleCreateFinals = async (eventId: string) => {
         try {
             const endEventDto = {
                 id: eventId,
             }
 
-            await refetchEventById()
             const { data: event }: { data: PadelEvent } =
                 await axiosInstance.post(
                     '/events/end-groups-stage',
                     endEventDto
                 )
+
             await axiosInstance.post('/events/create-finals', endEventDto)
             await refetchEventById()
 
@@ -221,6 +194,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
             await axiosInstance.post('/events/end-category-groups', endEventDto)
             const { data: event }: { data: PadelEvent } =
                 await axiosInstance.post('/events/end-event', endEventDto)
+
+            await refetchEventById()
 
             return event
         } catch (error) {
