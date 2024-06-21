@@ -27,7 +27,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { Tabs, TabsContent } from '@/components/ui/tabs'
 import {
     ErrorResponse,
     EventType,
@@ -458,9 +457,10 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                             )
                         ) : null}
 
+                        {/* Filter/Export Buttons && Doubles Table */}
                         {filteredDoublesData && eventById && (
-                            <Tabs defaultValue="all">
-                                <div className="flex items-center justify-center w-full">
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-center w-full ">
                                     {catFilter !== 'all' &&
                                         eventById.categoriesGroups.map((cg) =>
                                             cg.groups.map((g) => {
@@ -495,7 +495,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                                 }
                                             })
                                         )}
-                                    <div className="flex flex-row ml-auto ">
+                                    <div className="flex flex-row ml-auto space-x-2 ">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button
@@ -590,53 +590,50 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                         </Button>
                                     </div>
                                 </div>
-                                <TabsContent value="all">
-                                    <Card className="flex flex-col ">
-                                        <CardHeader>
-                                            <CardTitle>
-                                                Doubles Registered
-                                            </CardTitle>
-                                            <CardDescription>
-                                                Manage doubles registered in the
-                                                events and generate games.
-                                            </CardDescription>
-                                        </CardHeader>
-                                        <CardContent>
-                                            {doublesTableData ? (
-                                                <div className="flex flex-col justify-center">
-                                                    <EventDoublesTable
-                                                        isActive={
-                                                            eventById?.isActive
-                                                        }
-                                                        refetchEventById={
-                                                            refetchEventById
-                                                        }
-                                                        refetchEventMatchesInfoById={
-                                                            refetchEventMatchesInfoById
-                                                        }
-                                                        eventId={eventById?.id}
-                                                        columns={doublesColumns}
-                                                        data={
-                                                            filteredDoublesData
-                                                        }
-                                                    />
-                                                </div>
-                                            ) : null}
-                                        </CardContent>
-                                        <CardFooter>
-                                            <div className="text-xs text-muted-foreground">
-                                                Showing <strong>1-10</strong> of{' '}
-                                                <strong>
-                                                    {event.eventDoubles?.length}
-                                                </strong>{' '}
-                                                doubles
+                                <Card className="flex flex-col ">
+                                    <CardHeader>
+                                        <CardTitle>
+                                            Doubles Registered
+                                        </CardTitle>
+                                        <CardDescription>
+                                            Manage doubles registered in the
+                                            events and generate games.
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {doublesTableData ? (
+                                            <div className="flex flex-col justify-center">
+                                                <EventDoublesTable
+                                                    isActive={
+                                                        eventById?.isActive
+                                                    }
+                                                    refetchEventById={
+                                                        refetchEventById
+                                                    }
+                                                    refetchEventMatchesInfoById={
+                                                        refetchEventMatchesInfoById
+                                                    }
+                                                    eventId={eventById?.id}
+                                                    columns={doublesColumns}
+                                                    data={filteredDoublesData}
+                                                />
                                             </div>
-                                        </CardFooter>
-                                    </Card>
-                                </TabsContent>
-                            </Tabs>
+                                        ) : null}
+                                    </CardContent>
+                                    <CardFooter>
+                                        <div className="text-xs text-muted-foreground">
+                                            Showing <strong>1-10</strong> of{' '}
+                                            <strong>
+                                                {event.eventDoubles?.length}
+                                            </strong>{' '}
+                                            doubles
+                                        </div>
+                                    </CardFooter>
+                                </Card>
+                            </div>
                         )}
 
+                        {/* MatchesGrid || Carousel */}
                         {toggleMatchesGrid ? (
                             <>
                                 <div className="flex flex-col items-center mt-6">
@@ -730,6 +727,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                             </>
                         )}
 
+                        {/* Finish Event Button */}
                         {pendingMatches?.length === 0 &&
                             !eventById?.isFinished &&
                             eventById?.isActive && (
@@ -746,6 +744,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                 </div>
                             )}
 
+                        {/* Schedule and its buttons */}
                         {matchDatesTableData && filteredMatchDatesTableData ? (
                             <>
                                 <div className="flex flex-col items-center justify-center">

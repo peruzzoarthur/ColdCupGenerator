@@ -141,20 +141,22 @@ function Event() {
                             </h1>
 
                             {/* Admin register form for adding doubles */}
-                            {role === 'ADMIN' && !eventById.isFinished && (
-                                <RegisterDoublesForm
-                                    categoriesState={categoriesState}
-                                    eventCategories={eventById.categories.map(
-                                        (cat) => cat
-                                    )}
-                                    onSubmit={registerDoubleOnSubmit}
-                                    setCategoriesState={setCategoriesState}
-                                    defaultValues={{
-                                        doublesId: '',
-                                    }}
-                                    allDoubles={allDoubles}
-                                />
-                            )}
+                            {role === 'ADMIN' &&
+                                !eventById.isActive &&
+                                !eventById.isFinished && (
+                                    <RegisterDoublesForm
+                                        categoriesState={categoriesState}
+                                        eventCategories={eventById.categories.map(
+                                            (cat) => cat
+                                        )}
+                                        onSubmit={registerDoubleOnSubmit}
+                                        setCategoriesState={setCategoriesState}
+                                        defaultValues={{
+                                            doublesId: '',
+                                        }}
+                                        allDoubles={allDoubles}
+                                    />
+                                )}
 
                             {/* Dropdown to invite player doubles to event */}
                             {!eventById.isActive && !eventById.isFinished && (
