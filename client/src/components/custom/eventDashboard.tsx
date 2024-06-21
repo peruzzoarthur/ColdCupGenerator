@@ -636,94 +636,102 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                         {/* MatchesGrid || Carousel */}
                         {toggleMatchesGrid ? (
                             <>
-                                <div className="flex flex-col items-center mt-6">
-                                    <div className="flex flex-row justify-center">
-                                        <h1 className="text-3xl font-bold">
-                                            Matches
-                                        </h1>
-                                        <div className="flex items-end ml-2">
-                                            <Square
-                                                className="flex cursor-pointer"
-                                                onClick={() =>
-                                                    setToggleMatchesGrid(false)
-                                                }
-                                            />
+                                {eventById && eventById.isActive ? (
+                                    <div className="flex flex-col items-center mt-6">
+                                        <div className="flex flex-row justify-center">
+                                            <h1 className="text-3xl font-bold">
+                                                Matches
+                                            </h1>
+                                            <div className="flex items-end ml-2">
+                                                <Square
+                                                    className="flex cursor-pointer"
+                                                    onClick={() =>
+                                                        setToggleMatchesGrid(
+                                                            false
+                                                        )
+                                                    }
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <h2 className="py-4 text-xl font-bold">
-                                        Pending matches
-                                    </h2>
-                                    <MatchesGrid
-                                        eventMatches={pendingMatches}
-                                        refetchEventById={refetchEventById}
-                                    />
+                                        <h2 className="py-4 text-xl font-bold">
+                                            Pending matches
+                                        </h2>
+                                        <MatchesGrid
+                                            eventMatches={pendingMatches}
+                                            refetchEventById={refetchEventById}
+                                        />
 
-                                    <h2 className="pt-10 pb-4 text-xl font-bold">
-                                        Finished matches
-                                    </h2>
-                                    <MatchesGrid
-                                        eventMatches={finishedMatches}
-                                        refetchEventById={refetchEventById}
-                                    />
-                                </div>
+                                        <h2 className="pt-10 pb-4 text-xl font-bold">
+                                            Finished matches
+                                        </h2>
+                                        <MatchesGrid
+                                            eventMatches={finishedMatches}
+                                            refetchEventById={refetchEventById}
+                                        />
+                                    </div>
+                                ) : null}
                             </>
                         ) : (
                             <>
-                                <div className="flex flex-col mt-6 ">
-                                    <div className="flex flex-row justify-center">
-                                        <h1 className="text-3xl font-bold">
-                                            Matches
-                                        </h1>
-                                        <div className="flex items-center ml-2">
-                                            <Grid3X3
-                                                className="flex cursor-pointer"
-                                                onClick={() =>
-                                                    setToggleMatchesGrid(true)
-                                                }
-                                            />
+                                {eventById && eventById.isActive ? (
+                                    <div className="flex flex-col items-center mt-6 ">
+                                        <div className="flex flex-row justify-center">
+                                            <h1 className="text-3xl font-bold">
+                                                Matches
+                                            </h1>
+                                            <div className="flex items-center ml-2">
+                                                <Grid3X3
+                                                    className="flex cursor-pointer"
+                                                    onClick={() =>
+                                                        setToggleMatchesGrid(
+                                                            true
+                                                        )
+                                                    }
+                                                />
+                                            </div>
                                         </div>
+                                        {/* Pending Matches Carousels */}
+                                        {!isFetchingEventById &&
+                                        pendingMatches &&
+                                        pendingMatches.length !== 0 ? (
+                                            <>
+                                                <div className="flex flex-col items-center justify-center">
+                                                    <h1 className="py-2 text-xl font-bold">
+                                                        Pending matches
+                                                    </h1>
+                                                    <MatchesCarousel
+                                                        eventMatches={
+                                                            pendingMatches
+                                                        }
+                                                        refetchEventById={
+                                                            refetchEventById
+                                                        }
+                                                    />
+                                                </div>
+                                            </>
+                                        ) : null}
+                                        {/* Finished Matches Carousels */}
+                                        {!isFetchingEventById &&
+                                        finishedMatches &&
+                                        finishedMatches.length !== 0 ? (
+                                            <>
+                                                <div className="flex flex-col items-center justify-center">
+                                                    <h1 className="py-2 text-xl font-bold">
+                                                        Finished matches
+                                                    </h1>
+                                                    <MatchesCarousel
+                                                        eventMatches={
+                                                            finishedMatches
+                                                        }
+                                                        refetchEventById={
+                                                            refetchEventById
+                                                        }
+                                                    />
+                                                </div>
+                                            </>
+                                        ) : null}
                                     </div>
-                                    {/* Pending Matches Carousels */}
-                                    {!isFetchingEventById &&
-                                    pendingMatches &&
-                                    pendingMatches.length !== 0 ? (
-                                        <>
-                                            <div className="flex flex-col items-center justify-center">
-                                                <h1 className="py-2 text-xl font-bold">
-                                                    Pending matches
-                                                </h1>
-                                                <MatchesCarousel
-                                                    eventMatches={
-                                                        pendingMatches
-                                                    }
-                                                    refetchEventById={
-                                                        refetchEventById
-                                                    }
-                                                />
-                                            </div>
-                                        </>
-                                    ) : null}
-                                    {/* Finished Matches Carousels */}
-                                    {!isFetchingEventById &&
-                                    finishedMatches &&
-                                    finishedMatches.length !== 0 ? (
-                                        <>
-                                            <div className="flex flex-col items-center justify-center">
-                                                <h1 className="py-2 text-xl font-bold">
-                                                    Finished matches
-                                                </h1>
-                                                <MatchesCarousel
-                                                    eventMatches={
-                                                        finishedMatches
-                                                    }
-                                                    refetchEventById={
-                                                        refetchEventById
-                                                    }
-                                                />
-                                            </div>
-                                        </>
-                                    ) : null}
-                                </div>
+                                ) : null}
                             </>
                         )}
 
@@ -745,7 +753,10 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                             )}
 
                         {/* Schedule and its buttons */}
-                        {matchDatesTableData && filteredMatchDatesTableData ? (
+                        {eventById &&
+                        matchDatesTableData &&
+                        filteredMatchDatesTableData &&
+                        eventById.isActive ? (
                             <>
                                 <div className="flex flex-col items-center justify-center">
                                     <div className="flex flex-row pt-10">
@@ -769,7 +780,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                     ) : null}
 
                                     <MatchDatesTable
-                                        eventDoubles={eventById?.eventDoubles}
+                                        eventDoubles={eventById.eventDoubles}
                                         matchDateById={matchDateById}
                                         isFetchingMatchDateById={
                                             isFetchingMatchDateById

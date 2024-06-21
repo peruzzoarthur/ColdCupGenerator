@@ -50,6 +50,7 @@ import { MatchDatesTableProps } from './columns'
 import { SelectDoubles } from './selectDoubles'
 import { SelectCourt } from './selectCourt'
 import { SelectCategory } from './selectCategory'
+import { useGetRole } from '@/hooks/useGetRole'
 
 interface DataTableProps<TData, TValue> {
     eventDoubles: EventDouble[] | undefined
@@ -134,6 +135,7 @@ export function MatchDatesTable<TData, TValue>({
     const [globalFilters, setGlobalFilters] = React.useState<string>('')
     const [columnDoublesFilters, setColumnDoublesFilters] =
         React.useState<ColumnFiltersState>([])
+    const { role } = useGetRole()
 
     const table = useReactTable({
         data,
@@ -159,90 +161,97 @@ export function MatchDatesTable<TData, TValue>({
         <>
             {/* Header with Filters, Export and Edit */}
             <div className="flex items-center gap-2 ml-auto">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1 h-7"
-                    onClick={() => {
-                        if (!matchAssignOn) {
-                            setMatchAssignOn(true)
-                        } else {
-                            setMatchAssignOn(false)
-                        }
-                    }}
-                >
-                    <Pencil className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Edit
-                    </span>
-                </Button>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                {role === 'ADMIN' ? (
+                    <>
                         <Button
                             variant="outline"
                             size="sm"
                             className="gap-1 h-7"
+                            onClick={() => {
+                                if (!matchAssignOn) {
+                                    setMatchAssignOn(true)
+                                } else {
+                                    setMatchAssignOn(false)
+                                }
+                            }}
                         >
-                            <ListFilter className="h-3.5 w-3.5" />
+                            <Pencil className="h-3.5 w-3.5" />
                             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                Filter
+                                Edit
                             </span>
                         </Button>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent className="w-56">
-                        <DropdownMenuLabel>Matches</DropdownMenuLabel>
-                        <DropdownMenuCheckboxItem
-                            checked={hasMatchFilter}
-                            onCheckedChange={setHasMatchFilter}
-                        >
-                            With date defined
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuLabel>Days</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuRadioGroup
-                            value={dayFilter}
-                            onValueChange={setDayFilter}
-                        >
-                            <DropdownMenuRadioItem value="all">
-                                All
-                            </DropdownMenuRadioItem>
-                            {uniqueValuesForDays.map((d, index) => (
-                                <DropdownMenuRadioItem
-                                    key={index}
-                                    value={d.toString()}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-1 h-7"
                                 >
-                                    {d}
-                                </DropdownMenuRadioItem>
-                            ))}
-                        </DropdownMenuRadioGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuLabel>Doubles</DropdownMenuLabel>
+                                    <ListFilter className="h-3.5 w-3.5" />
+                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                        Filter
+                                    </span>
+                                </Button>
+                            </DropdownMenuTrigger>
 
-                        <SelectDoubles
-                            eventCategories={categories}
-                            setDoublesFilter={setDoublesFilter}
-                            eventDoubles={eventDoubles}
-                        />
+                            <DropdownMenuContent className="w-56">
+                                <DropdownMenuLabel>Matches</DropdownMenuLabel>
+                                <DropdownMenuCheckboxItem
+                                    checked={hasMatchFilter}
+                                    onCheckedChange={setHasMatchFilter}
+                                >
+                                    With date defined
+                                </DropdownMenuCheckboxItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel>Days</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuRadioGroup
+                                    value={dayFilter}
+                                    onValueChange={setDayFilter}
+                                >
+                                    <DropdownMenuRadioItem value="all">
+                                        All
+                                    </DropdownMenuRadioItem>
+                                    {uniqueValuesForDays.map((d, index) => (
+                                        <DropdownMenuRadioItem
+                                            key={index}
+                                            value={d.toString()}
+                                        >
+                                            {d}
+                                        </DropdownMenuRadioItem>
+                                    ))}
+                                </DropdownMenuRadioGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel>Doubles</DropdownMenuLabel>
 
-                        <DropdownMenuSeparator />
-                        <DropdownMenuLabel>Courts</DropdownMenuLabel>
+                                <SelectDoubles
+                                    eventCategories={categories}
+                                    setDoublesFilter={setDoublesFilter}
+                                    eventDoubles={eventDoubles}
+                                />
 
-                        <SelectCourt
-                            eventCourts={eventCourts}
-                            setCourtFilter={setCourtFilter}
-                        />
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel>Courts</DropdownMenuLabel>
 
-                        <DropdownMenuSeparator />
-                        <DropdownMenuLabel>Categories</DropdownMenuLabel>
+                                <SelectCourt
+                                    eventCourts={eventCourts}
+                                    setCourtFilter={setCourtFilter}
+                                />
 
-                        <SelectCategory
-                            eventCategories={eventCategories}
-                            setCategoryFilter={setCategoryFilter}
-                        />
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuLabel>
+                                    Categories
+                                </DropdownMenuLabel>
+
+                                <SelectCategory
+                                    eventCategories={eventCategories}
+                                    setCategoryFilter={setCategoryFilter}
+                                />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </>
+                ) : null}
+
                 {matchDatesTableData && (
                     <Button
                         size="sm"

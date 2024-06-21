@@ -82,6 +82,12 @@ export function AvailableMatchesSelectCard({
     const [showMatchesWithoutDate, setShowMatchesWithoutDate] =
         useState<boolean>(true)
 
+    const [showDatesWithMatches, setShowDatesWithMatches] =
+        useState<boolean>(false)
+
+    const [showDatesWithoutMatches, setShowDatesWithoutMatches] =
+        useState<boolean>(true)
+
     const handleUpdateMatch = async (matchId: string, matchDateId: string) => {
         try {
             const activateEventDto = {
@@ -107,6 +113,14 @@ export function AvailableMatchesSelectCard({
 
     if (showMatchesWithoutDate && !showMatchesWithDate) {
         eventMatches = eventMatches?.filter((m) => m.match.matchDate === null)
+    }
+
+    if (showDatesWithMatches && !showDatesWithoutMatches) {
+        matchDates = matchDates?.filter((md) => md.match !== null)
+    }
+
+    if (showDatesWithoutMatches && !showDatesWithMatches) {
+        matchDates = matchDates?.filter((md) => md.match === null)
     }
 
     return (
@@ -135,7 +149,6 @@ export function AvailableMatchesSelectCard({
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Show matches</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-
                             <DropdownMenuCheckboxItem
                                 checked={showMatchesWithDate}
                                 onCheckedChange={setShowMatchesWithDate}
@@ -148,12 +161,26 @@ export function AvailableMatchesSelectCard({
                             >
                                 Without date
                             </DropdownMenuCheckboxItem>
+
+                            <DropdownMenuLabel>Show dates</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuCheckboxItem
+                                checked={showDatesWithMatches}
+                                onCheckedChange={setShowDatesWithMatches}
+                            >
+                                With match
+                            </DropdownMenuCheckboxItem>
+                            <DropdownMenuCheckboxItem
+                                checked={showDatesWithoutMatches}
+                                onCheckedChange={setShowDatesWithoutMatches}
+                            >
+                                Without match
+                            </DropdownMenuCheckboxItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
                 {currentMatch && !isFetchingMatchDateById ? (
                     <CardHeader>
-                        {' '}
                         {`Current match: Match #${currentMatch.eventMatch?.number} - ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}{' '}
                     </CardHeader>
                 ) : null}
