@@ -169,6 +169,20 @@ export class PlayerService {
             },
             matchesWins: true,
             eventDouble: true,
+            firstPlaceInCategory: {
+              select: {
+                id: true,
+                event: true,
+                category: true,
+              },
+            },
+            secondPlaceInCategory: {
+              select: {
+                id: true,
+                event: true,
+                category: true,
+              },
+            },
           },
         },
       },

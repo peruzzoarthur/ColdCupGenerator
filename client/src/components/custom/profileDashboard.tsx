@@ -62,6 +62,16 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
         0
     )
 
+    const firsPlaceInCategories = playerById?.doubles.flatMap(
+        (d) => d.firstPlaceInCategory
+    )
+    console.log(firsPlaceInCategories)
+
+    const secondPlaceInCategories = playerById?.doubles.flatMap(
+        (d) => d.secondPlaceInCategory
+    )
+    console.log(secondPlaceInCategories)
+
     const userDoubles = playerById?.doubles
 
     const profileDoublesTableData: ProfileDoublesTableData[] | undefined =
@@ -214,6 +224,8 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
 
                             <ProfileEventsAttendedCard
                                 eventsAttended={eventsAttended}
+                                firstPlaces={firsPlaceInCategories}
+                                secondPlaces={secondPlaceInCategories}
                             />
                         </div>
 

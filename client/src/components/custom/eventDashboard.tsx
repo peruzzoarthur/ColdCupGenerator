@@ -33,7 +33,6 @@ import {
     Match,
     PadelEvent,
 } from '@/types/padel.types'
-// import { useGetDoublesInEvent } from '@/hooks/useGetDoublesInEvent'
 import { EventDoublesTable } from './eventsTable/eventDoublesTable'
 import { RegisteredDoublesTable, doublesColumns } from './eventsTable/columns'
 import { MatchesCarousel } from './matchesCarousel'

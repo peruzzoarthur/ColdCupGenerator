@@ -60,7 +60,7 @@ type AvailableMatchesSelectProps = {
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
-export function AvailableMatchesSelectCard({
+export function EditScheduleCard({
     matchDates,
     categories,
     eventMatches,

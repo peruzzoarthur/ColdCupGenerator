@@ -31,7 +31,7 @@ import {
     MatchDate,
     PadelEvent,
 } from '@/types/padel.types'
-import { AvailableMatchesSelectCard } from '../availableMatchesSelectCard'
+import { EditScheduleCard } from '../editScheduleCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { Input } from '@/components/ui/input'
 import { File, ListFilter, Pencil, Search } from 'lucide-react'
@@ -318,7 +318,7 @@ export function MatchDatesTable<TData, TValue>({
             {/* The table  */}
             {matchAssignOn ? (
                 <div className="flex justify-center w-full mt-2 mb-2">
-                    <AvailableMatchesSelectCard
+                    <EditScheduleCard
                         isFetchingMatchDateById={isFetchingMatchDateById}
                         setMatchDateIdState={setMatchDateIdState}
                         matchDateIdState={matchDateIdState}

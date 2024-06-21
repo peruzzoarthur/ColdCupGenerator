@@ -47,6 +47,8 @@ export type Double = {
     games: Game[]
     gamesWins: Game[]
     eventDouble: EventDouble[]
+    firstPlaceInCategory: CategoryGroup[]
+    secondPlaceInCategory: CategoryGroup[]
 }
 
 export type EventDouble = {
@@ -145,10 +147,10 @@ export type DoublesGroup = {
 export type CategoryGroup = {
     id: string
     categoryId: string
-    eventId?: string | null
+    event: PadelEvent | null
+    eventId: string | null
     category: Category
     groups: DoublesGroup[]
-    event?: Event | null
     finalMatches: EventMatch[]
 }
 
