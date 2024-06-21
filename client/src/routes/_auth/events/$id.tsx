@@ -5,7 +5,6 @@ import RegisterDoublesForm, {
     registerDoublesFormObject,
 } from '@/components/custom/registerDoublesForm'
 import { useToast } from '@/components/ui/use-toast'
-import { useGetDoubles } from '@/hooks/useGetDoubles'
 import { useGetEventById } from '@/hooks/useGetEventById'
 import { useGetEventMatchesInfoById } from '@/hooks/useGetEventMatchesInfoById'
 import { useGetRole } from '@/hooks/useGetRole'
@@ -44,9 +43,6 @@ function Event() {
         eventById?.id
     )
     const { toast } = useToast()
-
-    const { allDoubles } = useGetDoubles()
-
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const [categoriesState, setCategoriesState] = useState<string[]>([])
