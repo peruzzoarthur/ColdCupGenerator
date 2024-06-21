@@ -114,6 +114,7 @@ export type PadelEvent = {
     isActive: boolean
     isFinished: boolean
     categoriesGroups: CategoryGroup[]
+    isGroupMatchesFinished: boolean
 }
 
 export type EventMatch = {

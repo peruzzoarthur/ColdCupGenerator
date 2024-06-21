@@ -155,6 +155,63 @@ export function EventDashboard({ event }: EventDashBoardProps) {
         }
     }
 
+    // const handleEndGroupsStage = async (eventId: string) => {
+    //     try {
+    //         const endEventDto = {
+    //             id: eventId,
+    //         }
+
+    //         await refetchEventById()
+    //         const { data: event }: { data: PadelEvent } =
+    //         await axiosInstance.post('/events/end-groups-stage', endEventDto)
+    //             await axiosInstance.post('/events/create-finals', endEventDto)
+    //         await refetchEventById()
+
+    //         return event
+    //     } catch (error) {
+    //         if (axios.isAxiosError(error)) {
+    //             const axiosError = error as AxiosError<ErrorResponse>
+    //             if (axiosError.response) {
+    //                 setError(true)
+    //                 setErrorMessage(axiosError.response.data.message)
+    //             }
+    //         } else {
+    //             setError(true)
+    //             setErrorMessage('Error creating finals.')
+    //         }
+    //     }
+    // }
+
+    const handleCreateFinals = async (eventId: string) => {
+        try {
+            const endEventDto = {
+                id: eventId,
+            }
+
+            await refetchEventById()
+            const { data: event }: { data: PadelEvent } =
+                await axiosInstance.post(
+                    '/events/end-groups-stage',
+                    endEventDto
+                )
+            await axiosInstance.post('/events/create-finals', endEventDto)
+            await refetchEventById()
+
+            return event
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error creating finals.')
+            }
+        }
+    }
+
     const handleFinishEvent = async (eventId: string) => {
         try {
             const endEventDto = {
@@ -175,7 +232,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 }
             } else {
                 setError(true)
-                setErrorMessage('Error activating event.')
+                setErrorMessage('Error finishing event.')
             }
         }
     }
@@ -734,10 +791,30 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                             </>
                         )}
 
+                        {/* Finish Groups Stage Button */}
+                        {eventById &&
+                            pendingMatches?.length === 0 &&
+                            !eventById.isFinished &&
+                            !eventById.isGroupMatchesFinished &&
+                            eventById.isActive && (
+                                <div className="flex justify-center">
+                                    <CoolButton
+                                        className="items-center justify-center"
+                                        borderClassName="bg-[radial-gradient(var(--green-800)_40%,transparent_10%)]"
+                                        onClick={async () =>
+                                            handleCreateFinals(event.id)
+                                        }
+                                    >
+                                        Create finals
+                                    </CoolButton>
+                                </div>
+                            )}
                         {/* Finish Event Button */}
-                        {pendingMatches?.length === 0 &&
-                            !eventById?.isFinished &&
-                            eventById?.isActive && (
+                        {eventById &&
+                            pendingMatches?.length === 0 &&
+                            !eventById.isFinished &&
+                            eventById.isGroupMatchesFinished &&
+                            eventById.isActive && (
                                 <div className="flex justify-center">
                                     <CoolButton
                                         className="items-center justify-center"

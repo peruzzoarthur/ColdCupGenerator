@@ -2134,6 +2134,7 @@ export class EventsService {
         },
         isActive: true,
         isFinished: true,
+        isGroupMatchesFinished: true,
         categories: {
           select: {
             id: true,
