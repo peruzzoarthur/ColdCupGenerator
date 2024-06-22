@@ -493,39 +493,44 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                             <div className="space-y-2">
                                 <div className="flex items-center justify-center w-full ">
                                     {catFilter !== 'all' &&
-                                        eventById.categoriesGroups.map((cg) =>
-                                            cg.groups.map((g) => {
-                                                if (g.id === groupsFilter) {
-                                                    return (
-                                                        <Badge
-                                                            className="ml-1 cursor-pointer"
-                                                            variant="default"
-                                                            onClick={() =>
-                                                                setGroupsFilter(
-                                                                    g.id
-                                                                )
-                                                            }
-                                                        >
-                                                            {g.key}
-                                                        </Badge>
-                                                    )
-                                                } else {
-                                                    return (
-                                                        <Badge
-                                                            className="ml-1 cursor-pointer"
-                                                            variant="outline"
-                                                            onClick={() =>
-                                                                setGroupsFilter(
-                                                                    g.id
-                                                                )
-                                                            }
-                                                        >
-                                                            {g.key}
-                                                        </Badge>
-                                                    )
-                                                }
-                                            })
-                                        )}
+                                        eventById.categoriesGroups
+                                            .filter(
+                                                (cg) =>
+                                                    cg.category.id === catFilter
+                                            )
+                                            .map((cg) =>
+                                                cg.groups.map((g) => {
+                                                    if (g.id === groupsFilter) {
+                                                        return (
+                                                            <Badge
+                                                                className="ml-1 cursor-pointer"
+                                                                variant="default"
+                                                                onClick={() =>
+                                                                    setGroupsFilter(
+                                                                        g.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                {g.key}
+                                                            </Badge>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <Badge
+                                                                className="ml-1 cursor-pointer"
+                                                                variant="outline"
+                                                                onClick={() =>
+                                                                    setGroupsFilter(
+                                                                        g.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                {g.key}
+                                                            </Badge>
+                                                        )
+                                                    }
+                                                })
+                                            )}
                                     <div className="flex flex-row ml-auto space-x-2 ">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
