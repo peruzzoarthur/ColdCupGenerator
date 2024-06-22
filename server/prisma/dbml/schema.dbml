@@ -45,6 +45,7 @@ Table CategoryGroup {
   secondPlaceId String
   groupsStageFinished Boolean [not null, default: false]
   categoryFinished Boolean [not null, default: false]
+  isFinalMatchesCreated Boolean [not null, default: false]
 
   indexes {
     (eventId, categoryId) [unique]

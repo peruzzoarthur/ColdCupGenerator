@@ -154,6 +154,10 @@ export type CategoryGroup = {
     category: Category
     groups: DoublesGroup[]
     finalMatches: EventMatch[]
+    firstPlace?: Double
+    firstPlaceId?: string
+    secondPlace?: Double
+    secondPlaceId?: string
 }
 
 export enum EventMatchType {

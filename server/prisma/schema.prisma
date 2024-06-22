@@ -45,20 +45,21 @@ model Event {
 }
 
 model CategoryGroup {
-  id                   String              @id @default(uuid())
-  category             Category            @relation(fields: [categoryId], references: [id])
-  categoryId           String
-  groups               DoublesGroup[]
-  event                Event?              @relation(fields: [eventId], references: [id])
-  eventId              String?
-  finalMatches         EventMatch[]        @relation("EventFinalMatches")
-  matchesWithReference MatchesReferenced[]
-  firstPlace           Double?             @relation("FirstPlaceInCategory", fields: [firstPlaceId], references: [id])
-  firstPlaceId         String?
-  secondPlace          Double?             @relation("SecondPlaceInCategory", fields: [secondPlaceId], references: [id])
-  secondPlaceId        String?
-  groupsStageFinished  Boolean             @default(false)
-  categoryFinished     Boolean             @default(false)
+  id                    String              @id @default(uuid())
+  category              Category            @relation(fields: [categoryId], references: [id])
+  categoryId            String
+  groups                DoublesGroup[]
+  event                 Event?              @relation(fields: [eventId], references: [id])
+  eventId               String?
+  finalMatches          EventMatch[]        @relation("EventFinalMatches")
+  matchesWithReference  MatchesReferenced[]
+  firstPlace            Double?             @relation("FirstPlaceInCategory", fields: [firstPlaceId], references: [id])
+  firstPlaceId          String?
+  secondPlace           Double?             @relation("SecondPlaceInCategory", fields: [secondPlaceId], references: [id])
+  secondPlaceId         String?
+  groupsStageFinished   Boolean             @default(false)
+  categoryFinished      Boolean             @default(false)
+  isFinalMatchesCreated Boolean             @default(false)
 
   @@unique([eventId, categoryId])
 }

@@ -386,6 +386,17 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                     </div>
                 )}
                 <main className="grid items-start flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 ">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                        {eventById &&
+                            eventById.isFinished &&
+                            eventById.categoriesGroups.map((cg) => (
+                                <Card className="flex flex-col items-center justify-center w-11/12 p-6 sm:w-[480px]">
+                                    <h2 className="text-2xl font-bold">{`${cg.category.level} ${cg.category.type}`}</h2>
+                                    <p className="text-lg sm:text-xl">{`🥇${cg.firstPlace?.players[0].firstName} ${cg.firstPlace?.players[0].lastName} / ${cg.firstPlace?.players[1].firstName} ${cg.firstPlace?.players[1].lastName} `}</p>
+                                    <p className="text-lg sm:text-xl">{`🥈${cg.secondPlace?.players[0].firstName} ${cg.secondPlace?.players[0].lastName} / ${cg.secondPlace?.players[1].firstName} ${cg.secondPlace?.players[1].lastName}`}</p>
+                                </Card>
+                            ))}
+                    </div>
                     <div className="space-y-10 xl:col-span-2">
                         {/* Requests and Infocard for activating event */}
                         {role === 'ADMIN' ? (
