@@ -14,21 +14,19 @@ import {
     MatchDate,
     PadelEvent,
 } from '@/types/padel.types'
-import { Card, CardDescription, CardHeader } from '../ui/card'
+import { Card, CardDescription, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { axiosInstance } from '@/axiosInstance'
 import { useState } from 'react'
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ListFilter } from 'lucide-react'
+
+import { Label } from '../ui/label'
+import { Separator } from '../ui/separator'
+import { Checkbox } from '../ui/checkbox'
+import { CheckedState } from '@radix-ui/react-checkbox'
+import { Alert } from '../ui/alert'
+import { Ellipsis } from 'lucide-react'
 
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
@@ -77,16 +75,17 @@ export function EditScheduleCard({
     refetchEventById,
 }: AvailableMatchesSelectProps) {
     const [showMatchesWithDate, setShowMatchesWithDate] =
-        useState<boolean>(false)
+        useState<CheckedState>(false)
 
     const [showMatchesWithoutDate, setShowMatchesWithoutDate] =
-        useState<boolean>(true)
+        useState<CheckedState>(true)
 
     const [showDatesWithMatches, setShowDatesWithMatches] =
-        useState<boolean>(false)
+        useState<CheckedState>(false)
 
     const [showDatesWithoutMatches, setShowDatesWithoutMatches] =
-        useState<boolean>(true)
+        useState<CheckedState>(true)
+    const [showFilters, setShowFilters] = useState<boolean>(false)
 
     const handleUpdateMatch = async (matchId: string, matchDateId: string) => {
         try {
@@ -97,15 +96,16 @@ export function EditScheduleCard({
                 `/matches/update-match-date/${matchId}`,
                 activateEventDto
             )
-
+            await refetchMatchById()
+            await refetchEventById()
+            await refetchMatchDateById()
             await refetchEventMatchDates()
+            setMatchDateIdState('')
             return match
         } catch (error) {
             return error
         }
     }
-
-    const currentMatch = matchDateById?.match
 
     if (showMatchesWithDate && !showMatchesWithoutDate) {
         eventMatches = eventMatches?.filter((m) => m.match.matchDate !== null)
@@ -125,66 +125,84 @@ export function EditScheduleCard({
 
     return (
         <>
-            <Card className="w-[380px] p-2">
+            <Card className="w-[420px] p-4">
                 <div className="flex justify-end">
-                    <Cross2Icon
-                        className="items-end cursor-pointer"
+                    <Button
+                        variant="ghost"
                         onClick={() => setMatchAssignOn(false)}
-                    ></Cross2Icon>
+                    >
+                        <Cross2Icon className="items-end cursor-pointer" />
+                    </Button>
                 </div>
-                <div className="flex items-center justify-end gap-2 mt-2 ml-auto">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                <CardTitle className="pb-2">Edit matches and dates</CardTitle>
+
+                {showFilters ? (
+                    <>
+                        <Separator />
+                        <div className="flex justify-end">
                             <Button
-                                variant="outline"
-                                size="sm"
-                                className="gap-1 text-sm h-7"
+                                variant="ghost"
+                                onClick={() => setShowFilters(false)}
                             >
-                                <ListFilter className="h-3.5 w-3.5" />
-                                <span className="sr-only sm:not-sr-only">
-                                    Filter
-                                </span>
+                                <Cross2Icon />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Show matches</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuCheckboxItem
-                                checked={showMatchesWithDate}
-                                onCheckedChange={setShowMatchesWithDate}
-                            >
-                                With date
-                            </DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem
-                                checked={showMatchesWithoutDate}
-                                onCheckedChange={setShowMatchesWithoutDate}
-                            >
-                                Without date
-                            </DropdownMenuCheckboxItem>
+                        </div>
+                        <div className="flex flex-row items-center justify-center col-span-4 mb-4 space-x-6">
+                            <div className="flex flex-col items-center justify-end space-y-1 text-sm">
+                                <Label>Matches</Label>
+                                <div className="flex space-x-0.5">
+                                    <p>With date</p>
+                                    <Checkbox
+                                        checked={showMatchesWithDate}
+                                        onCheckedChange={setShowMatchesWithDate}
+                                    />
+                                </div>
+                                <div className="flex space-x-0.5">
+                                    <p>Without date</p>
+                                    <Checkbox
+                                        checked={showMatchesWithoutDate}
+                                        onCheckedChange={
+                                            setShowMatchesWithoutDate
+                                        }
+                                    />
+                                </div>
+                            </div>
 
-                            <DropdownMenuLabel>Show dates</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuCheckboxItem
-                                checked={showDatesWithMatches}
-                                onCheckedChange={setShowDatesWithMatches}
-                            >
-                                With match
-                            </DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem
-                                checked={showDatesWithoutMatches}
-                                onCheckedChange={setShowDatesWithoutMatches}
-                            >
-                                Without match
-                            </DropdownMenuCheckboxItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-                {currentMatch && !isFetchingMatchDateById ? (
-                    <CardHeader>
-                        {`Current match: Match #${currentMatch.eventMatch?.number} - ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}{' '}
-                    </CardHeader>
-                ) : null}
+                            <div className="flex flex-col items-center justify-end space-y-1 text-sm">
+                                <Label>Show dates</Label>
+                                <div className="flex space-x-0.5">
+                                    <p>With match</p>
+                                    <Checkbox
+                                        checked={showDatesWithMatches}
+                                        onCheckedChange={
+                                            setShowDatesWithMatches
+                                        }
+                                    />
+                                </div>
+                                <div className="flex space-x-0.5">
+                                    <p> Without match</p>
+                                    <Checkbox
+                                        checked={showDatesWithoutMatches}
+                                        onCheckedChange={
+                                            setShowDatesWithoutMatches
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
+                        <Separator className="mt-2 mb-2" />
+                    </>
+                ) : (
+                    <div className="flex justify-center">
+                        <Button
+                            variant="ghost"
+                            onClick={() => setShowFilters(true)}
+                        >
+                            <Ellipsis />
+                        </Button>
+                    </div>
+                )}
                 <CardDescription>
                     Select date:
                     <Select
@@ -237,9 +255,9 @@ export function EditScheduleCard({
                         }}
                     >
                         <SelectTrigger className="items-center justify-center ">
-                            {currentMatch ? (
+                            {matchDateById && matchDateById.match ? (
                                 <SelectValue
-                                    placeholder={`Match #${currentMatch.eventMatch?.number} ${currentMatch.doubles[0].players[0].firstName} / ${currentMatch.doubles[0].players[1].firstName} x ${currentMatch.doubles[1].players[0].firstName} / ${currentMatch.doubles[1].players[1].firstName}`}
+                                    placeholder={`Match #${matchDateById.match.eventMatch?.number} ${matchDateById.match.doubles[0].players[0].firstName} / ${matchDateById.match.doubles[0].players[1].firstName} x ${matchDateById.match.doubles[1].players[0].firstName} / ${matchDateById.match.doubles[1].players[1].firstName}`}
                                 />
                             ) : (
                                 <SelectValue placeholder={`Select match`} />
@@ -274,25 +292,24 @@ export function EditScheduleCard({
                     </Select>
                 </CardDescription>
                 <div className="flex justify-center mt-2">
-                    {matchIdState && matchDateIdState && (
-                        <Button
-                            onClick={() => {
-                                console.log(
-                                    `Calling for matchDate: ${matchDateIdState} && match: ${matchIdState}`
-                                )
-                                handleUpdateMatch(
-                                    matchIdState,
-                                    matchDateIdState
-                                )
-                                refetchMatchDateById()
-                                refetchMatchById()
-                                refetchEventById()
-                            }}
-                        >
-                            Update
-                        </Button>
-                    )}
+                    <Button
+                        onClick={async () => {
+                            handleUpdateMatch(
+                                matchIdState ?? '',
+                                matchDateIdState ?? ''
+                            )
+                        }}
+                    >
+                        Update
+                    </Button>
                 </div>
+                {isFetchingMatchDateById ? (
+                    <p>loading...</p>
+                ) : matchDateById && matchDateById.match ? (
+                    <Alert className="mt-2" variant="destructive">
+                        {`Match #${matchDateById.match.eventMatch?.number} - ${matchDateById.match.doubles[0].players[0].firstName} / ${matchDateById.match.doubles[0].players[1].firstName} x ${matchDateById.match.doubles[1].players[0].firstName} / ${matchDateById.match.doubles[1].players[1].firstName} is already assigned to this date.`}
+                    </Alert>
+                ) : null}
             </Card>
         </>
     )

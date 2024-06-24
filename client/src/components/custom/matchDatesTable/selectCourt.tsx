@@ -29,7 +29,7 @@ export function SelectCourt({ eventCourts, setCourtFilter }: SelectCourtProps) {
                     value="all"
                     className="justify-center text-lg font-bold"
                 >
-                    All court
+                    Not set
                 </SelectItem>
 
                 {eventCourts?.map((c, index) => {

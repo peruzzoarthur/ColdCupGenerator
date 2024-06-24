@@ -23,14 +23,11 @@ export function ProfileHeaderCard({
                     </div>
                     {user.profileImage ? (
                         <img
-                            className="rounded-full min-w-52 h-52"
+                            className="rounded-full w-52 h-52"
                             src={user.profileImage}
                         />
                     ) : (
-                        <img
-                            src={avatar}
-                            className="rounded-full min-w-52 h-52"
-                        />
+                        <img src={avatar} className="rounded-full w-52 h-52" />
                     )}
                     <ProfilePictureDrawerDialog refetchUser={refetchUser} />
                 </div>

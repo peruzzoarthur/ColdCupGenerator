@@ -51,6 +51,11 @@ export class MatchDatesService {
         match: {
           select: {
             category: true,
+            eventMatch: {
+              select: {
+                number: true,
+              },
+            },
             categoryId: true,
             doubles: {
               select: {

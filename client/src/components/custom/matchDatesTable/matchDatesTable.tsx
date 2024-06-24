@@ -34,28 +34,36 @@ import {
 import { EditScheduleCard } from '../editScheduleCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { Input } from '@/components/ui/input'
-import { File, ListFilter, Pencil, Search } from 'lucide-react'
+import {
+    ArrowLeftCircle,
+    ArrowRightCircle,
+    File,
+    ListFilter,
+    Pencil,
+    Search,
+} from 'lucide-react'
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuSeparator,
+    // DropdownMenuLabel,
+    // DropdownMenuRadioGroup,
+    // DropdownMenuRadioItem,
+    // DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { downloadScheduleToExcel } from '@/lib/xlsx'
 import { MatchDatesTableProps } from './columns'
-import { SelectDoubles } from './selectDoubles'
-import { SelectCourt } from './selectCourt'
-import { SelectCategory } from './selectCategory'
+// import { SelectDoubles } from './selectDoubles'
+// import { SelectCourt } from './selectCourt'
+// import { SelectCategory } from './selectCategory'
 import { useGetRole } from '@/hooks/useGetRole'
+import { ScheduleFiltersCard } from '../scheduleFiltersCard'
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TValue> {
     eventDoubles: EventDouble[] | undefined
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<MatchDatesTableProps, TValue>[]
+    data: MatchDatesTableProps[]
     matchDateIdState: string | undefined
     setMatchDateIdState: React.Dispatch<
         React.SetStateAction<string | undefined>
@@ -96,7 +104,7 @@ interface DataTableProps<TData, TValue> {
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
-export function MatchDatesTable<TData, TValue>({
+export function MatchDatesTable<TValue>({
     columns,
     data,
     matchDateIdState,
@@ -128,14 +136,37 @@ export function MatchDatesTable<TData, TValue>({
     hasMatchFilter,
     setHasMatchFilter,
     refetchEventById,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [globalFilters, setGlobalFilters] = React.useState<string>('')
     const [columnDoublesFilters, setColumnDoublesFilters] =
         React.useState<ColumnFiltersState>([])
+    const [scheduleFiltersOn, setScheduleFiltersOn] =
+        React.useState<boolean>(false)
     const { role } = useGetRole()
+
+    const changeCardMatchdate = async (
+        prevOrNext: string,
+        data: MatchDatesTableProps[],
+        matchDateId?: string
+    ) => {
+        if (matchDateId) {
+            console.log(data)
+            const id = data.findIndex((d) => d.matchDateId === matchDateId)
+            console.log(id)
+            if (prevOrNext === 'prev') {
+                setMatchDateIdState(data[id - 1].matchDateId ?? matchDateId)
+            }
+            if (prevOrNext === 'next') {
+                setMatchDateIdState(data[id + 1].matchDateId ?? matchDateId)
+            }
+        }
+        await refetchMatchById()
+        await refetchMatchDateById()
+        await refetchEventMatchDates()
+    }
 
     const table = useReactTable({
         data,
@@ -180,7 +211,21 @@ export function MatchDatesTable<TData, TValue>({
                                 Edit
                             </span>
                         </Button>
-                        <DropdownMenu>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1 h-7"
+                            onClick={() =>
+                                setScheduleFiltersOn((prevState) => !prevState)
+                            }
+                        >
+                            <ListFilter className="h-3.5 w-3.5" />
+                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                Filter
+                            </span>
+                        </Button>
+
+                        {/* <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="outline"
@@ -248,7 +293,7 @@ export function MatchDatesTable<TData, TValue>({
                                     setCategoryFilter={setCategoryFilter}
                                 />
                             </DropdownMenuContent>
-                        </DropdownMenu>
+                        </DropdownMenu> */}
                     </>
                 ) : null}
 
@@ -259,7 +304,7 @@ export function MatchDatesTable<TData, TValue>({
                         className="gap-1 h-7"
                         onClick={() =>
                             downloadScheduleToExcel(matchDatesTableData)
-                        } //!
+                        }
                     >
                         <File className="h-3.5 w-3.5" />
                         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
@@ -270,7 +315,7 @@ export function MatchDatesTable<TData, TValue>({
             </div>
 
             {/* Search && Visibility  */}
-            <div className="flex justify-end w-5/6">
+            <div className="flex justify-end w-5/6 mb-2">
                 <div className="flex flex-row items-start w-full py-1 space-y-1">
                     <div className="flex mt-3 mr-1">
                         <Search className="w-4 h-4 align-center" />
@@ -313,31 +358,76 @@ export function MatchDatesTable<TData, TValue>({
                 </div>
             </div>
 
-            {/* Edit matchDate  */}
+            <div className="flex">
+                {/* Edit matchDate  */}
+                {scheduleFiltersOn ? (
+                    <ScheduleFiltersCard
+                        setScheduleFiltersOn={setScheduleFiltersOn}
+                        categories={categories}
+                        dayFilter={dayFilter}
+                        eventCategories={eventCategories}
+                        eventCourts={eventCourts}
+                        eventDoubles={eventDoubles}
+                        hasMatchFilter={hasMatchFilter}
+                        setCategoryFilter={setCategoryFilter}
+                        setCourtFilter={setCourtFilter}
+                        setDayFilter={setDayFilter}
+                        setDoublesFilter={setDoublesFilter}
+                        setHasMatchFilter={setHasMatchFilter}
+                        uniqueValuesForDays={uniqueValuesForDays}
+                    />
+                ) : null}
+
+                {matchAssignOn ? (
+                    <div className="flex items-center justify-center w-full mt-2 mb-2">
+                        <Button
+                            onClick={async () =>
+                                changeCardMatchdate(
+                                    'prev',
+                                    data,
+                                    matchDateIdState
+                                )
+                            }
+                            variant="ghost"
+                        >
+                            <ArrowLeftCircle />
+                        </Button>
+
+                        <EditScheduleCard
+                            isFetchingMatchDateById={isFetchingMatchDateById}
+                            setMatchDateIdState={setMatchDateIdState}
+                            matchDateIdState={matchDateIdState}
+                            categories={categories}
+                            eventMatches={eventMatches}
+                            matchIdState={matchIdState}
+                            setMatchIdState={setMatchIdState}
+                            setMatchAssignOn={setMatchAssignOn}
+                            refetchEventMatchDates={refetchEventMatchDates}
+                            matchDates={matchDates}
+                            matchDateById={matchDateById}
+                            refetchMatchDateById={refetchMatchDateById}
+                            matchById={matchById}
+                            refetchMatchById={refetchMatchById}
+                            isFetchingMatchById={isFetchingMatchById}
+                            refetchEventById={refetchEventById}
+                        />
+                        <Button
+                            onClick={async () =>
+                                changeCardMatchdate(
+                                    'next',
+                                    data,
+                                    matchDateIdState
+                                )
+                            }
+                            variant="ghost"
+                        >
+                            <ArrowRightCircle />
+                        </Button>
+                    </div>
+                ) : null}
+            </div>
 
             {/* The table  */}
-            {matchAssignOn ? (
-                <div className="flex justify-center w-full mt-2 mb-2">
-                    <EditScheduleCard
-                        isFetchingMatchDateById={isFetchingMatchDateById}
-                        setMatchDateIdState={setMatchDateIdState}
-                        matchDateIdState={matchDateIdState}
-                        categories={categories}
-                        eventMatches={eventMatches}
-                        matchIdState={matchIdState}
-                        setMatchIdState={setMatchIdState}
-                        setMatchAssignOn={setMatchAssignOn}
-                        refetchEventMatchDates={refetchEventMatchDates}
-                        matchDates={matchDates}
-                        matchDateById={matchDateById}
-                        refetchMatchDateById={refetchMatchDateById}
-                        matchById={matchById}
-                        refetchMatchById={refetchMatchById}
-                        isFetchingMatchById={isFetchingMatchById}
-                        refetchEventById={refetchEventById}
-                    />
-                </div>
-            ) : null}
             <div className="flex-col w-full mt-2 border rounded-md">
                 <Table>
                     <TableHeader>

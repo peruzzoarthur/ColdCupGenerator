@@ -162,13 +162,11 @@ enum EventMatchType {
 
 model EventMatch {
   number          Int            @default(autoincrement())
-  // id              String         @id @default(uuid())
   type            EventMatchType @default(GROUP)
   event           Event          @relation(fields: [eventId], references: [id])
   eventId         String
   match           Match          @relation("Match", fields: [matchId], references: [id])
   matchId         String         @unique
-  // matchesWinnersRef Match[]       @relation("MatchesWinnerRef")
   categoryGroup   CategoryGroup? @relation("EventFinalMatches", fields: [categoryGroupId], references: [id])
   categoryGroupId String?
   doublesGroup    DoublesGroup?  @relation("EventGroupMatches", fields: [doublesGroupId], references: [id])

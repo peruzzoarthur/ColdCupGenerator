@@ -294,7 +294,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 }
             }
             return {
-                number: md.match.number,
+                number: md.match.eventMatch?.number ?? null,
                 start: startTime,
                 finish: md.finish,
                 matchId: md.matchId,
@@ -639,12 +639,10 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                 </div>
                                 <Card className="flex flex-col ">
                                     <CardHeader>
-                                        <CardTitle>
-                                            Doubles Registered
-                                        </CardTitle>
+                                        <CardTitle>Doubles in event</CardTitle>
                                         <CardDescription>
-                                            Manage doubles registered in the
-                                            events and generate games.
+                                            Check doubles, results and group
+                                            information
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent>

@@ -29,6 +29,7 @@ import { MoreHorizontal } from 'lucide-react'
 import { EventDouble, PadelEvent } from '@/types/padel.types'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { axiosInstance } from '@/axiosInstance'
+import { useGetRole } from '@/hooks/useGetRole'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -49,7 +50,6 @@ export function EventDoublesTable<TData, TValue>({
     eventId,
     refetchEventById,
     refetchEventMatchesInfoById,
-    isActive,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const table = useReactTable({
@@ -63,6 +63,8 @@ export function EventDoublesTable<TData, TValue>({
             sorting,
         },
     })
+
+    const { role } = useGetRole()
 
     const handleDeleteDoublesFromEvent = async (
         eventId: string,
@@ -130,7 +132,7 @@ export function EventDoublesTable<TData, TValue>({
                                             )}
                                         </TableCell>
                                     ))}
-                                    {isActive ? null : (
+                                    {role === 'ADMIN' ? (
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
@@ -182,7 +184,7 @@ export function EventDoublesTable<TData, TValue>({
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
-                                    )}
+                                    ) : null}
                                 </TableRow>
                             ))
                         ) : (

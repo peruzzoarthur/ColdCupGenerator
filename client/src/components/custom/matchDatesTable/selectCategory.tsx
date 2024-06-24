@@ -32,7 +32,7 @@ export function SelectCategory({
                     value="all"
                     className="justify-center text-lg font-bold"
                 >
-                    All categories
+                    Not set
                 </SelectItem>
 
                 {eventCategories?.map((c, index) => {

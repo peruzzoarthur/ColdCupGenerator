@@ -35,7 +35,7 @@ export function SelectDoubles({
                     value="all"
                     className="justify-center text-lg font-bold"
                 >
-                    All doubles
+                    Not set
                 </SelectItem>
                 {eventCategories?.map((c, index1) => {
                     return (
