@@ -1,4 +1,4 @@
-import { Card, CardContent, CardTitle } from '../ui/card'
+import { Card, CardTitle } from '../ui/card'
 import { Label } from '../ui/label'
 import {
     Select,
@@ -11,13 +11,11 @@ import { SelectDoubles } from './matchDatesTable/selectDoubles'
 import { SelectCourt } from './matchDatesTable/selectCourt'
 import { SelectCategory } from './matchDatesTable/selectCategory'
 import { Category, Court, EventDouble } from '@/types/padel.types'
-import { Switch } from '../ui/switch'
 import { Cross2Icon } from '@radix-ui/react-icons'
+import { Button } from '../ui/button'
 
 type ScheduleFiltersCardProps = {
     setScheduleFiltersOn: React.Dispatch<React.SetStateAction<boolean>>
-    hasMatchFilter: boolean
-    setHasMatchFilter: React.Dispatch<React.SetStateAction<boolean>>
     dayFilter: string
     setDayFilter: React.Dispatch<React.SetStateAction<string>>
     setDoublesFilter: React.Dispatch<React.SetStateAction<string>>
@@ -35,35 +33,27 @@ export const ScheduleFiltersCard = ({
     dayFilter,
     eventCourts,
     eventDoubles,
-    hasMatchFilter,
     setCategoryFilter,
     setCourtFilter,
     setDayFilter,
     setDoublesFilter,
-    setHasMatchFilter,
     uniqueValuesForDays,
     categories,
     eventCategories,
 }: ScheduleFiltersCardProps) => {
     return (
-        <Card className="w-[340px] flex flex-col justify-center space-y-1 p-4 ">
+        <Card className="w-[380px] flex flex-col justify-center space-y-2 p-6 ">
             <div className="flex justify-end cursor-pointer">
-                <Cross2Icon onClick={() => setScheduleFiltersOn(false)} />
+                <Button
+                    variant="ghost"
+                    onClick={() => setScheduleFiltersOn(false)}
+                >
+                    <Cross2Icon />
+                </Button>
             </div>
-            <CardTitle className="pb-4">Matches filters</CardTitle>
-            <CardContent className="w-56">
-                <div className="grid items-end grid-flow-col-dense">
-                    <Label>Only matches with defined date</Label>
-                    <Switch
-                        checked={hasMatchFilter}
-                        onCheckedChange={setHasMatchFilter}
-                    >
-                        With date defined
-                    </Switch>
-                </div>
-            </CardContent>
-            <Label>Days</Label>
+            <CardTitle className="pb-4">Filters</CardTitle>
 
+            <Label>Days</Label>
             <Select value={dayFilter} onValueChange={setDayFilter}>
                 <SelectTrigger>
                     <SelectValue placeholder="Select day to display" />
@@ -78,19 +68,17 @@ export const ScheduleFiltersCard = ({
                 </SelectContent>
             </Select>
 
-            <Label>Doubles</Label>
+            <Label>Courts</Label>
+            <SelectCourt
+                eventCourts={eventCourts}
+                setCourtFilter={setCourtFilter}
+            />
 
+            <Label>Doubles</Label>
             <SelectDoubles
                 eventCategories={categories}
                 setDoublesFilter={setDoublesFilter}
                 eventDoubles={eventDoubles}
-            />
-
-            <Label>Courts</Label>
-
-            <SelectCourt
-                eventCourts={eventCourts}
-                setCourtFilter={setCourtFilter}
             />
 
             <Label>Categories</Label>

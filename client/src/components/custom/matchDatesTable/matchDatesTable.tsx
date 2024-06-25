@@ -34,29 +34,15 @@ import {
 import { EditScheduleCard } from '../editScheduleCard'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { Input } from '@/components/ui/input'
-import {
-    ArrowLeftCircle,
-    ArrowRightCircle,
-    File,
-    ListFilter,
-    Pencil,
-    Search,
-} from 'lucide-react'
+import { File, ListFilter, Pencil, Search } from 'lucide-react'
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    // DropdownMenuLabel,
-    // DropdownMenuRadioGroup,
-    // DropdownMenuRadioItem,
-    // DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { downloadScheduleToExcel } from '@/lib/xlsx'
 import { MatchDatesTableProps } from './columns'
-// import { SelectDoubles } from './selectDoubles'
-// import { SelectCourt } from './selectCourt'
-// import { SelectCategory } from './selectCategory'
 import { useGetRole } from '@/hooks/useGetRole'
 import { ScheduleFiltersCard } from '../scheduleFiltersCard'
 
@@ -98,8 +84,8 @@ interface DataTableProps<TValue> {
 
     setCategoryFilter: React.Dispatch<React.SetStateAction<string>>
     eventCategories: Category[] | undefined
-    hasMatchFilter: boolean
-    setHasMatchFilter: React.Dispatch<React.SetStateAction<boolean>>
+    // hasMatchFilter: boolean
+    // setHasMatchFilter: React.Dispatch<React.SetStateAction<boolean>>
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
@@ -133,8 +119,8 @@ export function MatchDatesTable<TValue>({
     refetchMatchById,
     isFetchingMatchById,
     eventDoubles,
-    hasMatchFilter,
-    setHasMatchFilter,
+    // hasMatchFilter,
+    // setHasMatchFilter,
     refetchEventById,
 }: DataTableProps<TValue>) {
     const [columnVisibility, setColumnVisibility] =
@@ -146,27 +132,6 @@ export function MatchDatesTable<TValue>({
     const [scheduleFiltersOn, setScheduleFiltersOn] =
         React.useState<boolean>(false)
     const { role } = useGetRole()
-
-    const changeCardMatchdate = async (
-        prevOrNext: string,
-        data: MatchDatesTableProps[],
-        matchDateId?: string
-    ) => {
-        if (matchDateId) {
-            console.log(data)
-            const id = data.findIndex((d) => d.matchDateId === matchDateId)
-            console.log(id)
-            if (prevOrNext === 'prev') {
-                setMatchDateIdState(data[id - 1].matchDateId ?? matchDateId)
-            }
-            if (prevOrNext === 'next') {
-                setMatchDateIdState(data[id + 1].matchDateId ?? matchDateId)
-            }
-        }
-        await refetchMatchById()
-        await refetchMatchDateById()
-        await refetchEventMatchDates()
-    }
 
     const table = useReactTable({
         data,
@@ -360,6 +325,7 @@ export function MatchDatesTable<TValue>({
 
             <div className="flex">
                 {/* Edit matchDate  */}
+
                 {scheduleFiltersOn ? (
                     <ScheduleFiltersCard
                         setScheduleFiltersOn={setScheduleFiltersOn}
@@ -368,31 +334,17 @@ export function MatchDatesTable<TValue>({
                         eventCategories={eventCategories}
                         eventCourts={eventCourts}
                         eventDoubles={eventDoubles}
-                        hasMatchFilter={hasMatchFilter}
                         setCategoryFilter={setCategoryFilter}
                         setCourtFilter={setCourtFilter}
                         setDayFilter={setDayFilter}
                         setDoublesFilter={setDoublesFilter}
-                        setHasMatchFilter={setHasMatchFilter}
+                        // setHasMatchFilter={setHasMatchFilter}
                         uniqueValuesForDays={uniqueValuesForDays}
                     />
                 ) : null}
 
                 {matchAssignOn ? (
                     <div className="flex items-center justify-center w-full mt-2 mb-2">
-                        <Button
-                            onClick={async () =>
-                                changeCardMatchdate(
-                                    'prev',
-                                    data,
-                                    matchDateIdState
-                                )
-                            }
-                            variant="ghost"
-                        >
-                            <ArrowLeftCircle />
-                        </Button>
-
                         <EditScheduleCard
                             isFetchingMatchDateById={isFetchingMatchDateById}
                             setMatchDateIdState={setMatchDateIdState}
@@ -410,19 +362,8 @@ export function MatchDatesTable<TValue>({
                             refetchMatchById={refetchMatchById}
                             isFetchingMatchById={isFetchingMatchById}
                             refetchEventById={refetchEventById}
+                            tableData={data}
                         />
-                        <Button
-                            onClick={async () =>
-                                changeCardMatchdate(
-                                    'next',
-                                    data,
-                                    matchDateIdState
-                                )
-                            }
-                            variant="ghost"
-                        >
-                            <ArrowRightCircle />
-                        </Button>
                     </div>
                 ) : null}
             </div>

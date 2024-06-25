@@ -77,7 +77,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
     const [doublesFilter, setDoublesFilter] = useState<string>('all')
     const [courtFilter, setCourtFilter] = useState<string>('all')
     const [categoryFilter, setCategoryFilter] = useState<string>('all')
-    const [hasMatchFilter, setHasMatchFilter] = useState<boolean>(false)
+    // const [hasMatchFilter, setHasMatchFilter] = useState<boolean>(false)
     const [matchDateIdState, setMatchDateIdState] = useState<
         string | undefined
     >()
@@ -348,11 +348,11 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                     return md.categoryId === categoryFilter
                 }
             })
-            .filter((md) => {
-                if (hasMatchFilter) {
-                    return md.matchId !== null
-                } else return md
-            })
+    // .filter((md) => {
+    //     if (hasMatchFilter) {
+    //         return md.matchId !== null
+    //     } else return md
+    // })
 
     return (
         <div className="flex flex-col w-full min-h-screen xl:w-4/6 ">
@@ -887,8 +887,8 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                         eventCourts={eventCourts}
                                         eventCategories={eventCategories}
                                         setCategoryFilter={setCategoryFilter}
-                                        hasMatchFilter={hasMatchFilter}
-                                        setHasMatchFilter={setHasMatchFilter}
+                                        // hasMatchFilter={hasMatchFilter}
+                                        // setHasMatchFilter={setHasMatchFilter}
                                         refetchEventById={refetchEventById}
                                     />
                                 </div>

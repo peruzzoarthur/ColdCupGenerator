@@ -127,6 +127,11 @@ export class MatchesService {
         winner: true,
         winnerDoublesId: true,
         isFinished: true,
+        eventMatch: {
+          select: {
+            number: true,
+          },
+        },
         type: true,
         matchDate: true,
         sets: true,

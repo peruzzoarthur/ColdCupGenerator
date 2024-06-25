@@ -63,6 +63,7 @@ export class AuthService {
   }
 
   async refreshToken(refresh: string): Promise<{ accessToken: string }> {
+    console.log(refresh);
     const tokenPayload = await this.jwtService.verifyAsync(refresh, {
       secret: process.env.JWT_SECRET_KEY,
     });
@@ -75,7 +76,7 @@ export class AuthService {
       },
     });
     if (!user) {
-      throw new HttpException("Unauthorized", HttpStatus.UNAUTHORIZED);
+      throw new HttpException("Unauthorized1", HttpStatus.UNAUTHORIZED);
     }
     const dbHashedRt = user.hashedRt;
     const isRtTokenValid = await argon.verify(dbHashedRt, refresh);

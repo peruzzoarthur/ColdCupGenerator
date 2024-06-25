@@ -39,21 +39,19 @@ export function SelectDoubles({
                 </SelectItem>
                 {eventCategories?.map((c, index1) => {
                     return (
-                        <>
-                            <SelectGroup key={index1}>
-                                {c.level} {c.type}
-                                {eventDoubles?.map((d, index2) => {
-                                    return (
-                                        <SelectItem
-                                            key={index2}
-                                            value={d.double?.id || 'all'}
-                                        >
-                                            {`${d.double?.players[0].firstName} ${d.double?.players[0].lastName} / ${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`}
-                                        </SelectItem>
-                                    )
-                                })}
-                            </SelectGroup>
-                        </>
+                        <SelectGroup key={index1}>
+                            {c.level} {c.type}
+                            {eventDoubles?.map((d, index2) => {
+                                return (
+                                    <SelectItem
+                                        key={index2}
+                                        value={d.double?.id || 'all'}
+                                    >
+                                        {`${d.double?.players[0].firstName} ${d.double?.players[0].lastName} / ${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`}
+                                    </SelectItem>
+                                )
+                            })}
+                        </SelectGroup>
                     )
                 })}
             </SelectContent>

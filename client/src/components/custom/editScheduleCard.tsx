@@ -1,13 +1,4 @@
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
-import {
     Category,
     EventMatch,
     Match,
@@ -22,11 +13,20 @@ import { axiosInstance } from '@/axiosInstance'
 import { useState } from 'react'
 
 import { Label } from '../ui/label'
-import { Separator } from '../ui/separator'
-import { Checkbox } from '../ui/checkbox'
-import { CheckedState } from '@radix-ui/react-checkbox'
 import { Alert } from '../ui/alert'
-import { Ellipsis } from 'lucide-react'
+import { ArrowLeftCircle, ArrowRightCircle, Ellipsis } from 'lucide-react'
+import { MatchDatesTableProps } from './matchDatesTable/columns'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ScrollArea } from '../ui/scroll-area'
+import { useGetMatchById } from '@/hooks/useGetMatchById'
+import { Switch } from '../ui/switch'
 
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
@@ -57,9 +57,10 @@ type AvailableMatchesSelectProps = {
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
+    tableData: MatchDatesTableProps[]
 }
 export function EditScheduleCard({
-    matchDates,
+    // matchDates,
     categories,
     eventMatches,
     matchDateIdState,
@@ -73,19 +74,13 @@ export function EditScheduleCard({
     refetchMatchDateById,
     refetchMatchById,
     refetchEventById,
+    tableData,
 }: AvailableMatchesSelectProps) {
-    const [showMatchesWithDate, setShowMatchesWithDate] =
-        useState<CheckedState>(false)
-
-    const [showMatchesWithoutDate, setShowMatchesWithoutDate] =
-        useState<CheckedState>(true)
-
-    const [showDatesWithMatches, setShowDatesWithMatches] =
-        useState<CheckedState>(false)
-
-    const [showDatesWithoutMatches, setShowDatesWithoutMatches] =
-        useState<CheckedState>(true)
+    const [showOnlyMatchesWithoutDate, setShowOnlyMatchesWithoutDate] =
+        useState<boolean>(true)
     const [showFilters, setShowFilters] = useState<boolean>(false)
+
+    const { matchById } = useGetMatchById(matchIdState)
 
     const handleUpdateMatch = async (matchId: string, matchDateId: string) => {
         try {
@@ -100,32 +95,55 @@ export function EditScheduleCard({
             await refetchEventById()
             await refetchMatchDateById()
             await refetchEventMatchDates()
-            setMatchDateIdState('')
             return match
         } catch (error) {
             return error
         }
     }
 
-    if (showMatchesWithDate && !showMatchesWithoutDate) {
-        eventMatches = eventMatches?.filter((m) => m.match.matchDate !== null)
-    }
-
-    if (showMatchesWithoutDate && !showMatchesWithDate) {
+    if (showOnlyMatchesWithoutDate) {
         eventMatches = eventMatches?.filter((m) => m.match.matchDate === null)
     }
 
-    if (showDatesWithMatches && !showDatesWithoutMatches) {
-        matchDates = matchDates?.filter((md) => md.match !== null)
-    }
-
-    if (showDatesWithoutMatches && !showDatesWithMatches) {
-        matchDates = matchDates?.filter((md) => md.match === null)
+    const changeCardMatchdate = async (
+        prevOrNext: string,
+        data: MatchDatesTableProps[],
+        matchDateId?: string
+    ) => {
+        if (matchDateId) {
+            const id = data.findIndex((d) => d.matchDateId === matchDateId)
+            if (prevOrNext === 'prev') {
+                const d = data[id - 1]
+                if (d === undefined) {
+                    return
+                }
+                setMatchDateIdState(d.matchDateId ?? matchDateId)
+            }
+            if (prevOrNext === 'next') {
+                const d = data[id + 1]
+                if (d === undefined) {
+                    return
+                }
+                setMatchDateIdState(d.matchDateId ?? matchDateId)
+            }
+        }
+        // await refetchMatchById()
+        // await refetchMatchDateById()
+        // await refetchEventMatchDates()
     }
 
     return (
         <>
-            <Card className="w-[420px] p-4">
+            <Button
+                onClick={async () =>
+                    changeCardMatchdate('prev', tableData, matchDateIdState)
+                }
+                variant="ghost"
+                className="mr-2"
+            >
+                <ArrowLeftCircle />
+            </Button>
+            <Card className="w-[420px] h-[360px] p-4 flex flex-col">
                 <div className="flex justify-end">
                     <Button
                         variant="ghost"
@@ -134,142 +152,71 @@ export function EditScheduleCard({
                         <Cross2Icon className="items-end cursor-pointer" />
                     </Button>
                 </div>
+
                 <CardTitle className="pb-2">Edit matches and dates</CardTitle>
 
-                {showFilters ? (
-                    <>
-                        <Separator />
-                        <div className="flex justify-end">
-                            <Button
-                                variant="ghost"
-                                onClick={() => setShowFilters(false)}
-                            >
-                                <Cross2Icon />
-                            </Button>
-                        </div>
-                        <div className="flex flex-row items-center justify-center col-span-4 mb-4 space-x-6">
-                            <div className="flex flex-col items-center justify-end space-y-1 text-sm">
-                                <Label>Matches</Label>
-                                <div className="flex space-x-0.5">
-                                    <p>With date</p>
-                                    <Checkbox
-                                        checked={showMatchesWithDate}
-                                        onCheckedChange={setShowMatchesWithDate}
-                                    />
-                                </div>
-                                <div className="flex space-x-0.5">
-                                    <p>Without date</p>
-                                    <Checkbox
-                                        checked={showMatchesWithoutDate}
-                                        onCheckedChange={
-                                            setShowMatchesWithoutDate
-                                        }
-                                    />
-                                </div>
-                            </div>
+                <CardDescription>Date</CardDescription>
 
-                            <div className="flex flex-col items-center justify-end space-y-1 text-sm">
-                                <Label>Show dates</Label>
-                                <div className="flex space-x-0.5">
-                                    <p>With match</p>
-                                    <Checkbox
-                                        checked={showDatesWithMatches}
-                                        onCheckedChange={
-                                            setShowDatesWithMatches
-                                        }
-                                    />
-                                </div>
-                                <div className="flex space-x-0.5">
-                                    <p> Without match</p>
-                                    <Checkbox
-                                        checked={showDatesWithoutMatches}
-                                        onCheckedChange={
-                                            setShowDatesWithoutMatches
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <Separator className="mt-2 mb-2" />
-                    </>
-                ) : (
-                    <div className="flex justify-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() => setShowFilters(true)}
-                        >
-                            <Ellipsis />
-                        </Button>
-                    </div>
-                )}
-                <CardDescription>
-                    Select date:
-                    <Select
-                        onValueChange={(value) => {
-                            setMatchDateIdState(value ?? undefined)
-                        }}
-                    >
-                        <SelectTrigger className="items-center justify-center ">
-                            {matchDateById ? (
-                                <SelectValue
-                                    placeholder={`
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline">
+                            {matchDateById
+                                ? `
                                                     ${new Date(
                                                         matchDateById.start
                                                     ).toLocaleString()}
                                                     ${matchDateById.court.name}
-                                                    `}
-                                />
-                            ) : (
-                                <SelectValue
-                                    placeholder={`Select match date`}
-                                />
-                            )}
-                        </SelectTrigger>
-                        {matchDates && (
-                            <SelectContent>
-                                {matchDates.map((md, index) => (
-                                    <SelectGroup key={index}>
-                                        <SelectItem
-                                            className="items-start justify-start text-white bg-black text-start bg-opacity-70 hover:text-black"
-                                            value={md.id as string}
-                                        >
-                                            {new Date(
-                                                md.start
-                                            ).toLocaleString()}{' '}
-                                            {md.court.name}
-                                        </SelectItem>
-                                    </SelectGroup>
-                                ))}
-                            </SelectContent>
-                        )}
-                    </Select>
-                </CardDescription>
+                                                    `
+                                : 'Select date'}
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <ScrollArea className="w-11/12 rounded-md h-72">
+                            <DropdownMenuRadioGroup
+                                value={matchDateIdState}
+                                onValueChange={setMatchDateIdState}
+                            >
+                                {tableData.map(
+                                    (td, index) =>
+                                        td.matchDateId && (
+                                            <DropdownMenuRadioItem
+                                                value={td.matchDateId}
+                                                key={index}
+                                            >
+                                                {td.start} {td.court}
+                                            </DropdownMenuRadioItem>
+                                        )
+                                )}
+                            </DropdownMenuRadioGroup>
+                        </ScrollArea>
+                    </DropdownMenuContent>
+                </DropdownMenu>
 
-                <CardDescription>
-                    Select match
-                    <Select
-                        onValueChange={(value) => {
-                            setMatchIdState(value)
-                            refetchMatchDateById()
-                        }}
-                    >
-                        <SelectTrigger className="items-center justify-center ">
-                            {matchDateById && matchDateById.match ? (
-                                <SelectValue
-                                    placeholder={`Match #${matchDateById.match.eventMatch?.number} ${matchDateById.match.doubles[0].players[0].firstName} / ${matchDateById.match.doubles[0].players[1].firstName} x ${matchDateById.match.doubles[1].players[0].firstName} / ${matchDateById.match.doubles[1].players[1].firstName}`}
-                                />
-                            ) : (
-                                <SelectValue placeholder={`Select match`} />
-                            )}
-
-                            <SelectContent>
+                <CardDescription>Select match</CardDescription>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline">
+                            {matchById && matchById
+                                ? `Match #${matchById.eventMatch?.number} ${matchById.doubles[0].players[0].firstName} / ${matchById.doubles[0].players[1].firstName} x ${matchById.doubles[1].players[0].firstName} / ${matchById.doubles[1].players[1].firstName}`
+                                : 'Select match'}
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <ScrollArea className="w-11/12 rounded-md h-72">
+                            <DropdownMenuRadioGroup
+                                value={matchIdState}
+                                onValueChange={(value) => {
+                                    setMatchIdState(value)
+                                    refetchMatchDateById()
+                                }}
+                            >
                                 {categories?.map((c, index) => {
                                     return (
-                                        <SelectGroup key={index}>
-                                            <SelectLabel>
+                                        <div key={index}>
+                                            <Label>
                                                 {c.level} {c.type}
-                                            </SelectLabel>
+                                            </Label>
+                                            <DropdownMenuSeparator />
                                             {eventMatches
                                                 ?.filter(
                                                     (m) =>
@@ -277,20 +224,21 @@ export function EditScheduleCard({
                                                         c.id
                                                 )
                                                 .map((m, index2) => (
-                                                    <SelectItem
+                                                    <DropdownMenuRadioItem
                                                         value={m.match.id}
                                                         key={index2}
                                                     >
                                                         {`Match #${m.number} ${m.match.doubles[0].players[0].firstName} / ${m.match.doubles[0].players[1].firstName} x ${m.match.doubles[1].players[0].firstName} / ${m.match.doubles[1].players[1].firstName} `}
-                                                    </SelectItem>
+                                                    </DropdownMenuRadioItem>
                                                 ))}
-                                        </SelectGroup>
+                                        </div>
                                     )
                                 })}
-                            </SelectContent>
-                        </SelectTrigger>
-                    </Select>
-                </CardDescription>
+                            </DropdownMenuRadioGroup>
+                        </ScrollArea>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
                 <div className="flex justify-center mt-2">
                     <Button
                         onClick={async () => {
@@ -303,14 +251,54 @@ export function EditScheduleCard({
                         Update
                     </Button>
                 </div>
-                {isFetchingMatchDateById ? (
-                    <p>loading...</p>
-                ) : matchDateById && matchDateById.match ? (
+                {isFetchingMatchDateById ? null : matchDateById &&
+                  matchDateById.match ? (
                     <Alert className="mt-2" variant="destructive">
                         {`Match #${matchDateById.match.eventMatch?.number} - ${matchDateById.match.doubles[0].players[0].firstName} / ${matchDateById.match.doubles[0].players[1].firstName} x ${matchDateById.match.doubles[1].players[0].firstName} / ${matchDateById.match.doubles[1].players[1].firstName} is already assigned to this date.`}
                     </Alert>
                 ) : null}
+
+                {showFilters ? (
+                    <>
+                        <div className="flex flex-row items-center w-11/12 space-y-1 text-sm">
+                            <Label className="p-4">
+                                Only matches without date defined
+                            </Label>
+                            <Switch
+                                checked={showOnlyMatchesWithoutDate}
+                                onCheckedChange={setShowOnlyMatchesWithoutDate}
+                            />
+                            <div className="ml-auto">
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setShowFilters(false)}
+                                >
+                                    <Cross2Icon />
+                                </Button>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="flex justify-center mt-2">
+                        <Button
+                            variant="ghost"
+                            onClick={() => setShowFilters(true)}
+                        >
+                            <Ellipsis />
+                        </Button>
+                    </div>
+                )}
             </Card>
+
+            <Button
+                onClick={async () =>
+                    changeCardMatchdate('next', tableData, matchDateIdState)
+                }
+                variant="ghost"
+                className="ml-2"
+            >
+                <ArrowRightCircle />
+            </Button>
         </>
     )
 }
