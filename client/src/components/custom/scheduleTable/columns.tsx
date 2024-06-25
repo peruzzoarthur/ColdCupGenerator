@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
-export type MatchDatesTableProps = {
+export type ScheduleTableProps = {
     start: string | null
     finish: string | null
     matchId: string | null
@@ -18,7 +18,7 @@ export type MatchDatesTableProps = {
     categoryId: string | null
 }
 
-export const matchDateColumns: ColumnDef<MatchDatesTableProps>[] = [
+export const matchDateColumns: ColumnDef<ScheduleTableProps>[] = [
     {
         accessorKey: 'number',
         header: ({ column }) => {

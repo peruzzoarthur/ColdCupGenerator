@@ -111,4 +111,27 @@ export class MatchDatesService {
   remove(id: number) {
     return `This action removes a #${id} matchDate`;
   }
+
+  async removeMatch(matchDateId: string) {
+    const matchDate = await this.prismaService.matchDate.findUniqueOrThrow({
+      where: { id: matchDateId },
+    });
+
+    if (matchDate.matchId === null) {
+      return;
+    }
+
+    const remove = await this.prismaService.matchDate.update({
+      where: { id: matchDate.id },
+      data: {
+        match: {
+          disconnect: {
+            id: matchDate.matchId,
+          },
+        },
+      },
+    });
+
+    return remove;
+  }
 }

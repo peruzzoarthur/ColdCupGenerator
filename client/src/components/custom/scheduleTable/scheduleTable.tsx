@@ -42,14 +42,14 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { downloadScheduleToExcel } from '@/lib/xlsx'
-import { MatchDatesTableProps } from './columns'
+import { ScheduleTableProps } from './columns'
 import { useGetRole } from '@/hooks/useGetRole'
 import { ScheduleFiltersCard } from '../scheduleFiltersCard'
 
 interface DataTableProps<TValue> {
     eventDoubles: EventDouble[] | undefined
-    columns: ColumnDef<MatchDatesTableProps, TValue>[]
-    data: MatchDatesTableProps[]
+    columns: ColumnDef<ScheduleTableProps, TValue>[]
+    data: ScheduleTableProps[]
     matchDateIdState: string | undefined
     setMatchDateIdState: React.Dispatch<
         React.SetStateAction<string | undefined>
@@ -75,7 +75,7 @@ interface DataTableProps<TValue> {
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<Match | undefined, Error>>
     uniqueValuesForDays: number[]
-    matchDatesTableData: MatchDatesTableProps[] | undefined
+    ScheduleTableData: ScheduleTableProps[] | undefined
     dayFilter: string
     setDayFilter: React.Dispatch<React.SetStateAction<string>>
     setDoublesFilter: React.Dispatch<React.SetStateAction<string>>
@@ -84,13 +84,13 @@ interface DataTableProps<TValue> {
 
     setCategoryFilter: React.Dispatch<React.SetStateAction<string>>
     eventCategories: Category[] | undefined
-    // hasMatchFilter: boolean
-    // setHasMatchFilter: React.Dispatch<React.SetStateAction<boolean>>
+    hasMatchFilter: boolean
+    setHasMatchFilter: React.Dispatch<React.SetStateAction<boolean>>
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
 }
-export function MatchDatesTable<TValue>({
+export function ScheduleTable<TValue>({
     columns,
     data,
     matchDateIdState,
@@ -109,7 +109,7 @@ export function MatchDatesTable<TValue>({
     dayFilter,
     setDayFilter,
     uniqueValuesForDays,
-    matchDatesTableData,
+    ScheduleTableData,
     setDoublesFilter,
     setCourtFilter,
     eventCourts,
@@ -119,8 +119,8 @@ export function MatchDatesTable<TValue>({
     refetchMatchById,
     isFetchingMatchById,
     eventDoubles,
-    // hasMatchFilter,
-    // setHasMatchFilter,
+    hasMatchFilter,
+    setHasMatchFilter,
     refetchEventById,
 }: DataTableProps<TValue>) {
     const [columnVisibility, setColumnVisibility] =
@@ -154,7 +154,7 @@ export function MatchDatesTable<TValue>({
     })
 
     return (
-        <>
+        <div className="flex flex-col justify-center w-full">
             {/* Header with Filters, Export and Edit */}
             <div className="flex items-center gap-2 ml-auto">
                 {role === 'ADMIN' ? (
@@ -189,86 +189,16 @@ export function MatchDatesTable<TValue>({
                                 Filter
                             </span>
                         </Button>
-
-                        {/* <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-1 h-7"
-                                >
-                                    <ListFilter className="h-3.5 w-3.5" />
-                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                        Filter
-                                    </span>
-                                </Button>
-                            </DropdownMenuTrigger>
-
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuLabel>Matches</DropdownMenuLabel>
-                                <DropdownMenuCheckboxItem
-                                    checked={hasMatchFilter}
-                                    onCheckedChange={setHasMatchFilter}
-                                >
-                                    With date defined
-                                </DropdownMenuCheckboxItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLabel>Days</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuRadioGroup
-                                    value={dayFilter}
-                                    onValueChange={setDayFilter}
-                                >
-                                    <DropdownMenuRadioItem value="all">
-                                        All
-                                    </DropdownMenuRadioItem>
-                                    {uniqueValuesForDays.map((d, index) => (
-                                        <DropdownMenuRadioItem
-                                            key={index}
-                                            value={d.toString()}
-                                        >
-                                            {d}
-                                        </DropdownMenuRadioItem>
-                                    ))}
-                                </DropdownMenuRadioGroup>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLabel>Doubles</DropdownMenuLabel>
-
-                                <SelectDoubles
-                                    eventCategories={categories}
-                                    setDoublesFilter={setDoublesFilter}
-                                    eventDoubles={eventDoubles}
-                                />
-
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLabel>Courts</DropdownMenuLabel>
-
-                                <SelectCourt
-                                    eventCourts={eventCourts}
-                                    setCourtFilter={setCourtFilter}
-                                />
-
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLabel>
-                                    Categories
-                                </DropdownMenuLabel>
-
-                                <SelectCategory
-                                    eventCategories={eventCategories}
-                                    setCategoryFilter={setCategoryFilter}
-                                />
-                            </DropdownMenuContent>
-                        </DropdownMenu> */}
                     </>
                 ) : null}
 
-                {matchDatesTableData && (
+                {ScheduleTableData && (
                     <Button
                         size="sm"
                         variant="outline"
                         className="gap-1 h-7"
                         onClick={() =>
-                            downloadScheduleToExcel(matchDatesTableData)
+                            downloadScheduleToExcel(ScheduleTableData)
                         }
                     >
                         <File className="h-3.5 w-3.5" />
@@ -280,52 +210,47 @@ export function MatchDatesTable<TValue>({
             </div>
 
             {/* Search && Visibility  */}
-            <div className="flex justify-end w-5/6 mb-2">
-                <div className="flex flex-row items-start w-full py-1 space-y-1">
-                    <div className="flex mt-3 mr-1">
-                        <Search className="w-4 h-4 align-center" />
-                    </div>
-                    <Input
-                        type="search"
-                        placeholder="Filter by court, dates and number"
-                        value={globalFilters}
-                        onChange={(e) => {
-                            setGlobalFilters(e.target.value)
-                        }}
-                        className="mr-5"
-                    />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className="px-4 border rounded-md shadow-sm h-9 border-input bg-background hover:bg-accent hover:text-accent-foreground">
-                            Columns
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {table
-                                .getAllColumns()
-                                .filter((column) => column.getCanHide())
-                                .map((column) => {
-                                    return (
-                                        <DropdownMenuCheckboxItem
-                                            key={column.id}
-                                            className="capitalize"
-                                            checked={column.getIsVisible()}
-                                            onCheckedChange={(
-                                                value: boolean
-                                            ) => {
-                                                column.toggleVisibility(!!value)
-                                            }}
-                                        >
-                                            {column.id}
-                                        </DropdownMenuCheckboxItem>
-                                    )
-                                })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+            <div className="flex flex-row items-start w-full py-1 space-y-1">
+                <div className="flex mt-3 mr-1">
+                    <Search className="w-4 h-4 align-center" />
                 </div>
+                <Input
+                    type="search"
+                    placeholder="Filter by court, dates and number"
+                    value={globalFilters}
+                    onChange={(e) => {
+                        setGlobalFilters(e.target.value)
+                    }}
+                    className="mr-5"
+                />
+                <DropdownMenu>
+                    <DropdownMenuTrigger className="px-4 border rounded-md shadow-sm h-9 border-input bg-background hover:bg-accent hover:text-accent-foreground">
+                        Columns
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        {table
+                            .getAllColumns()
+                            .filter((column) => column.getCanHide())
+                            .map((column) => {
+                                return (
+                                    <DropdownMenuCheckboxItem
+                                        key={column.id}
+                                        className="capitalize"
+                                        checked={column.getIsVisible()}
+                                        onCheckedChange={(value: boolean) => {
+                                            column.toggleVisibility(!!value)
+                                        }}
+                                    >
+                                        {column.id}
+                                    </DropdownMenuCheckboxItem>
+                                )
+                            })}
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
 
-            <div className="flex">
+            <div className="grid gap-4 md:grid-cols-2 2xl:mr-20 xl:ml-20">
                 {/* Edit matchDate  */}
-
                 {scheduleFiltersOn ? (
                     <ScheduleFiltersCard
                         setScheduleFiltersOn={setScheduleFiltersOn}
@@ -338,33 +263,32 @@ export function MatchDatesTable<TValue>({
                         setCourtFilter={setCourtFilter}
                         setDayFilter={setDayFilter}
                         setDoublesFilter={setDoublesFilter}
-                        // setHasMatchFilter={setHasMatchFilter}
+                        setHasMatchFilter={setHasMatchFilter}
                         uniqueValuesForDays={uniqueValuesForDays}
+                        hasMatchFilter={hasMatchFilter}
                     />
                 ) : null}
 
                 {matchAssignOn ? (
-                    <div className="flex items-center justify-center w-full mt-2 mb-2">
-                        <EditScheduleCard
-                            isFetchingMatchDateById={isFetchingMatchDateById}
-                            setMatchDateIdState={setMatchDateIdState}
-                            matchDateIdState={matchDateIdState}
-                            categories={categories}
-                            eventMatches={eventMatches}
-                            matchIdState={matchIdState}
-                            setMatchIdState={setMatchIdState}
-                            setMatchAssignOn={setMatchAssignOn}
-                            refetchEventMatchDates={refetchEventMatchDates}
-                            matchDates={matchDates}
-                            matchDateById={matchDateById}
-                            refetchMatchDateById={refetchMatchDateById}
-                            matchById={matchById}
-                            refetchMatchById={refetchMatchById}
-                            isFetchingMatchById={isFetchingMatchById}
-                            refetchEventById={refetchEventById}
-                            tableData={data}
-                        />
-                    </div>
+                    <EditScheduleCard
+                        isFetchingMatchDateById={isFetchingMatchDateById}
+                        setMatchDateIdState={setMatchDateIdState}
+                        matchDateIdState={matchDateIdState}
+                        categories={categories}
+                        eventMatches={eventMatches}
+                        matchIdState={matchIdState}
+                        setMatchIdState={setMatchIdState}
+                        setMatchAssignOn={setMatchAssignOn}
+                        refetchEventMatchDates={refetchEventMatchDates}
+                        matchDates={matchDates}
+                        matchDateById={matchDateById}
+                        refetchMatchDateById={refetchMatchDateById}
+                        matchById={matchById}
+                        refetchMatchById={refetchMatchById}
+                        isFetchingMatchById={isFetchingMatchById}
+                        refetchEventById={refetchEventById}
+                        tableData={data}
+                    />
                 ) : null}
             </div>
 
@@ -467,6 +391,6 @@ export function MatchDatesTable<TValue>({
                     Next
                 </Button>
             </div>
-        </>
+        </div>
     )
 }

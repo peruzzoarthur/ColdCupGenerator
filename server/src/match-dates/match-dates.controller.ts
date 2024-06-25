@@ -95,4 +95,15 @@ export class MatchDatesController {
   remove(@Param("id") id: string) {
     return this.matchDatesService.remove(+id);
   }
+
+  @Delete("/remove-match/:id")
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
+  @Roles(["ADMIN"])
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async removeMatch(@Param("id") id: string) {
+    return this.matchDatesService.removeMatch(id);
+  }
 }

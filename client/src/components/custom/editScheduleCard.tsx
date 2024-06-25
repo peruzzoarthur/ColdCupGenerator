@@ -1,5 +1,6 @@
 import {
     Category,
+    ErrorResponse,
     EventMatch,
     Match,
     MatchDate,
@@ -15,7 +16,7 @@ import { useState } from 'react'
 import { Label } from '../ui/label'
 import { Alert } from '../ui/alert'
 import { ArrowLeftCircle, ArrowRightCircle, Ellipsis } from 'lucide-react'
-import { MatchDatesTableProps } from './matchDatesTable/columns'
+import { ScheduleTableProps } from './scheduleTable/columns'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -27,6 +28,8 @@ import {
 import { ScrollArea } from '../ui/scroll-area'
 import { useGetMatchById } from '@/hooks/useGetMatchById'
 import { Switch } from '../ui/switch'
+import { ErrorAlert } from './errorAlert'
+import axios, { AxiosError } from 'axios'
 
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
@@ -57,10 +60,9 @@ type AvailableMatchesSelectProps = {
     refetchEventById: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<PadelEvent | undefined, Error>>
-    tableData: MatchDatesTableProps[]
+    tableData: ScheduleTableProps[]
 }
 export function EditScheduleCard({
-    // matchDates,
     categories,
     eventMatches,
     matchDateIdState,
@@ -79,6 +81,8 @@ export function EditScheduleCard({
     const [showOnlyMatchesWithoutDate, setShowOnlyMatchesWithoutDate] =
         useState<boolean>(true)
     const [showFilters, setShowFilters] = useState<boolean>(false)
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
     const { matchById } = useGetMatchById(matchIdState)
 
@@ -97,7 +101,77 @@ export function EditScheduleCard({
             await refetchEventMatchDates()
             return match
         } catch (error) {
-            return error
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error updating match/date.')
+            }
+        }
+    }
+
+    const handleRemoveMatch = async (matchDateId: string) => {
+        try {
+            const { data: match }: { data: Match } = await axiosInstance.delete(
+                `/match-dates/remove-match/${matchDateId}`
+            )
+            await refetchMatchById()
+            await refetchEventById()
+            await refetchMatchDateById()
+            await refetchEventMatchDates()
+            return match
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                }
+            } else {
+                setError(true)
+                setErrorMessage('Error removing match from date.')
+            }
+        }
+    }
+
+    const changeCardMatchdate = async (
+        prevOrNext: string,
+        data: ScheduleTableProps[],
+        matchDateId?: string
+    ) => {
+        try {
+            if (matchDateId) {
+                const id = data.findIndex((d) => d.matchDateId === matchDateId)
+                if (prevOrNext === 'prev') {
+                    const d = data[id - 1]
+                    if (d === undefined) {
+                        return
+                    }
+                    setMatchDateIdState(d.matchDateId ?? matchDateId)
+                }
+                if (prevOrNext === 'next') {
+                    const d = data[id + 1]
+                    if (d === undefined) {
+                        return
+                    }
+                    setMatchDateIdState(d.matchDateId ?? matchDateId)
+                }
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<ErrorResponse>
+                if (axiosError.response) {
+                    setError(true)
+                    setErrorMessage(axiosError.response.data.message)
+                }
+            } else {
+                setError(true)
+                setErrorMessage("Sorry, can't move")
+            }
         }
     }
 
@@ -105,35 +179,8 @@ export function EditScheduleCard({
         eventMatches = eventMatches?.filter((m) => m.match.matchDate === null)
     }
 
-    const changeCardMatchdate = async (
-        prevOrNext: string,
-        data: MatchDatesTableProps[],
-        matchDateId?: string
-    ) => {
-        if (matchDateId) {
-            const id = data.findIndex((d) => d.matchDateId === matchDateId)
-            if (prevOrNext === 'prev') {
-                const d = data[id - 1]
-                if (d === undefined) {
-                    return
-                }
-                setMatchDateIdState(d.matchDateId ?? matchDateId)
-            }
-            if (prevOrNext === 'next') {
-                const d = data[id + 1]
-                if (d === undefined) {
-                    return
-                }
-                setMatchDateIdState(d.matchDateId ?? matchDateId)
-            }
-        }
-        // await refetchMatchById()
-        // await refetchMatchDateById()
-        // await refetchEventMatchDates()
-    }
-
     return (
-        <>
+        <div className="flex items-center justify-center w-full mt-2 mb-2 ">
             <Button
                 onClick={async () =>
                     changeCardMatchdate('prev', tableData, matchDateIdState)
@@ -143,7 +190,7 @@ export function EditScheduleCard({
             >
                 <ArrowLeftCircle />
             </Button>
-            <Card className="w-[420px] h-[360px] p-4 flex flex-col">
+            <Card className="w-[240px] sm:w-2/3 p-2">
                 <div className="flex justify-end">
                     <Button
                         variant="ghost"
@@ -155,91 +202,97 @@ export function EditScheduleCard({
 
                 <CardTitle className="pb-2">Edit matches and dates</CardTitle>
 
-                <CardDescription>Date</CardDescription>
-
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline">
-                            {matchDateById
-                                ? `
+                <div className="flex flex-col justify-center w-full">
+                    <CardDescription>Date</CardDescription>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline">
+                                {matchDateById
+                                    ? `
                                                     ${new Date(
                                                         matchDateById.start
                                                     ).toLocaleString()}
                                                     ${matchDateById.court.name}
                                                     `
-                                : 'Select date'}
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
-                        <ScrollArea className="w-11/12 rounded-md h-72">
-                            <DropdownMenuRadioGroup
-                                value={matchDateIdState}
-                                onValueChange={setMatchDateIdState}
+                                    : 'Select date'}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            <ScrollArea className="w-11/12 rounded-md h-72">
+                                <DropdownMenuRadioGroup
+                                    value={matchDateIdState}
+                                    onValueChange={setMatchDateIdState}
+                                >
+                                    {tableData.map(
+                                        (td, index) =>
+                                            td.matchDateId && (
+                                                <DropdownMenuRadioItem
+                                                    value={td.matchDateId}
+                                                    key={index}
+                                                >
+                                                    {td.start} {td.court}
+                                                </DropdownMenuRadioItem>
+                                            )
+                                    )}
+                                </DropdownMenuRadioGroup>
+                            </ScrollArea>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+
+                <div className="flex flex-col justify-center w-full">
+                    <CardDescription>Select match</CardDescription>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className="overflow-hidden truncate"
                             >
-                                {tableData.map(
-                                    (td, index) =>
-                                        td.matchDateId && (
-                                            <DropdownMenuRadioItem
-                                                value={td.matchDateId}
-                                                key={index}
-                                            >
-                                                {td.start} {td.court}
-                                            </DropdownMenuRadioItem>
+                                {matchById && matchById
+                                    ? `Match #${matchById.eventMatch?.number} ${matchById.doubles[0].players[0].firstName} / ${matchById.doubles[0].players[1].firstName} x ${matchById.doubles[1].players[0].firstName} / ${matchById.doubles[1].players[1].firstName}`
+                                    : 'Select match'}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            <ScrollArea className="w-11/12 rounded-md h-72">
+                                <DropdownMenuRadioGroup
+                                    value={matchIdState}
+                                    onValueChange={(value) => {
+                                        setMatchIdState(value)
+                                        refetchMatchDateById()
+                                    }}
+                                >
+                                    {categories?.map((c, index) => {
+                                        return (
+                                            <div key={index}>
+                                                <Label>
+                                                    {c.level} {c.type}
+                                                </Label>
+                                                <DropdownMenuSeparator />
+                                                {eventMatches
+                                                    ?.filter(
+                                                        (m) =>
+                                                            m.match.category
+                                                                .id === c.id
+                                                    )
+                                                    .map((m, index2) => (
+                                                        <DropdownMenuRadioItem
+                                                            value={m.match.id}
+                                                            key={index2}
+                                                        >
+                                                            {`Match #${m.number} ${m.match.doubles[0].players[0].firstName} / ${m.match.doubles[0].players[1].firstName} x ${m.match.doubles[1].players[0].firstName} / ${m.match.doubles[1].players[1].firstName} `}
+                                                        </DropdownMenuRadioItem>
+                                                    ))}
+                                            </div>
                                         )
-                                )}
-                            </DropdownMenuRadioGroup>
-                        </ScrollArea>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                                    })}
+                                </DropdownMenuRadioGroup>
+                            </ScrollArea>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
 
-                <CardDescription>Select match</CardDescription>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline">
-                            {matchById && matchById
-                                ? `Match #${matchById.eventMatch?.number} ${matchById.doubles[0].players[0].firstName} / ${matchById.doubles[0].players[1].firstName} x ${matchById.doubles[1].players[0].firstName} / ${matchById.doubles[1].players[1].firstName}`
-                                : 'Select match'}
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
-                        <ScrollArea className="w-11/12 rounded-md h-72">
-                            <DropdownMenuRadioGroup
-                                value={matchIdState}
-                                onValueChange={(value) => {
-                                    setMatchIdState(value)
-                                    refetchMatchDateById()
-                                }}
-                            >
-                                {categories?.map((c, index) => {
-                                    return (
-                                        <div key={index}>
-                                            <Label>
-                                                {c.level} {c.type}
-                                            </Label>
-                                            <DropdownMenuSeparator />
-                                            {eventMatches
-                                                ?.filter(
-                                                    (m) =>
-                                                        m.match.category.id ===
-                                                        c.id
-                                                )
-                                                .map((m, index2) => (
-                                                    <DropdownMenuRadioItem
-                                                        value={m.match.id}
-                                                        key={index2}
-                                                    >
-                                                        {`Match #${m.number} ${m.match.doubles[0].players[0].firstName} / ${m.match.doubles[0].players[1].firstName} x ${m.match.doubles[1].players[0].firstName} / ${m.match.doubles[1].players[1].firstName} `}
-                                                    </DropdownMenuRadioItem>
-                                                ))}
-                                        </div>
-                                    )
-                                })}
-                            </DropdownMenuRadioGroup>
-                        </ScrollArea>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-
-                <div className="flex justify-center mt-2">
+                <div className="flex justify-center mt-2 space-x-2">
                     <Button
                         onClick={async () => {
                             handleUpdateMatch(
@@ -250,24 +303,25 @@ export function EditScheduleCard({
                     >
                         Update
                     </Button>
+                    <Button
+                        onClick={async () => {
+                            handleRemoveMatch(matchDateIdState ?? '')
+                        }}
+                        variant="destructive"
+                    >
+                        Remove
+                    </Button>
                 </div>
                 {isFetchingMatchDateById ? null : matchDateById &&
                   matchDateById.match ? (
-                    <Alert className="mt-2" variant="destructive">
+                    <Alert className="mt-2" variant="default">
                         {`Match #${matchDateById.match.eventMatch?.number} - ${matchDateById.match.doubles[0].players[0].firstName} / ${matchDateById.match.doubles[0].players[1].firstName} x ${matchDateById.match.doubles[1].players[0].firstName} / ${matchDateById.match.doubles[1].players[1].firstName} is already assigned to this date.`}
                     </Alert>
                 ) : null}
 
                 {showFilters ? (
                     <>
-                        <div className="flex flex-row items-center w-11/12 space-y-1 text-sm">
-                            <Label className="p-4">
-                                Only matches without date defined
-                            </Label>
-                            <Switch
-                                checked={showOnlyMatchesWithoutDate}
-                                onCheckedChange={setShowOnlyMatchesWithoutDate}
-                            />
+                        <div className="flex flex-col items-center w-11/12 space-y-1 text-sm">
                             <div className="ml-auto">
                                 <Button
                                     variant="ghost"
@@ -275,6 +329,17 @@ export function EditScheduleCard({
                                 >
                                     <Cross2Icon />
                                 </Button>
+                            </div>
+                            <div>
+                                <Label className="p-4">
+                                    Allow only empty matches for input
+                                </Label>
+                                <Switch
+                                    checked={showOnlyMatchesWithoutDate}
+                                    onCheckedChange={
+                                        setShowOnlyMatchesWithoutDate
+                                    }
+                                />
                             </div>
                         </div>
                     </>
@@ -288,6 +353,11 @@ export function EditScheduleCard({
                         </Button>
                     </div>
                 )}
+                {isError && (
+                    <div onClick={() => setError(false)} className="mt-4">
+                        <ErrorAlert message={errorMessage} />
+                    </div>
+                )}
             </Card>
 
             <Button
@@ -299,6 +369,6 @@ export function EditScheduleCard({
             >
                 <ArrowRightCircle />
             </Button>
-        </>
+        </div>
     )
 }

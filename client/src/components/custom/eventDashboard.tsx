@@ -38,11 +38,8 @@ import { RegisteredDoublesTable, doublesColumns } from './eventsTable/columns'
 import { MatchesCarousel } from './matchesCarousel'
 import { useGetEventById } from '@/hooks/useGetEventById'
 import { useState } from 'react'
-import {
-    MatchDatesTableProps,
-    matchDateColumns,
-} from './matchDatesTable/columns'
-import { MatchDatesTable } from './matchDatesTable/matchDatesTable'
+import { ScheduleTableProps, matchDateColumns } from './scheduleTable/columns'
+import { ScheduleTable } from './scheduleTable/scheduleTable'
 import { getUniqueValuesForDays } from '@/util/getUniqueValuesForDays'
 import { CoolButton } from './coolButton'
 import { useGetEventMatchesInfoById } from '@/hooks/useGetEventMatchesInfoById'
@@ -77,7 +74,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
     const [doublesFilter, setDoublesFilter] = useState<string>('all')
     const [courtFilter, setCourtFilter] = useState<string>('all')
     const [categoryFilter, setCategoryFilter] = useState<string>('all')
-    // const [hasMatchFilter, setHasMatchFilter] = useState<boolean>(false)
+    const [hasMatchFilter, setHasMatchFilter] = useState<boolean>(false)
     const [matchDateIdState, setMatchDateIdState] = useState<
         string | undefined
     >()
@@ -272,7 +269,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
               })
         : null
 
-    const matchDatesTableData: MatchDatesTableProps[] | undefined =
+    const ScheduleTableData: ScheduleTableProps[] | undefined =
         eventMatchDates?.map((md) => {
             const startDate = new Date(md.start)
             const startTime = startDate.toLocaleString()
@@ -310,17 +307,16 @@ export function EventDashboard({ event }: EventDashBoardProps) {
             }
         })
 
-    const filteredMatchDatesTableData: MatchDatesTableProps[] | undefined =
-        matchDatesTableData
-            ?.filter((md) => {
-                if (dayFilter === 'all') {
-                    return md
-                }
-                if (dayFilter !== 'all' && md.start) {
-                    const mdDate = new Date(md.start)
-                    return mdDate.getDate().toString() == dayFilter
-                }
-            })
+    const filteredScheduleTableData: ScheduleTableProps[] | undefined =
+        ScheduleTableData?.filter((md) => {
+            if (dayFilter === 'all') {
+                return md
+            }
+            if (dayFilter !== 'all' && md.start) {
+                const mdDate = new Date(md.start)
+                return mdDate.getDate().toString() == dayFilter
+            }
+        })
             .filter((md) => {
                 if (doublesFilter === 'all') {
                     return md
@@ -348,14 +344,14 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                     return md.categoryId === categoryFilter
                 }
             })
-    // .filter((md) => {
-    //     if (hasMatchFilter) {
-    //         return md.matchId !== null
-    //     } else return md
-    // })
+            .filter((md) => {
+                if (hasMatchFilter) {
+                    return md.matchId !== null
+                } else return md
+            })
 
     return (
-        <div className="flex flex-col w-full min-h-screen xl:w-4/6 ">
+        <div className="flex flex-col w-full min-h-screen ">
             <div className="flex flex-col gap-2 ">
                 {eventById && (
                     <header className="static top-0 flex flex-col items-start h-auto gap-4 px-4 py-4 bg-transparent border-0">
@@ -816,83 +812,70 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                     </CoolButton>
                                 </div>
                             )}
-
                         {/* Schedule and its buttons */}
                         {eventById &&
-                        matchDatesTableData &&
-                        filteredMatchDatesTableData &&
+                        ScheduleTableData &&
+                        filteredScheduleTableData &&
                         eventById.isActive ? (
-                            <>
-                                <div className="flex flex-col items-center justify-center">
-                                    <div className="flex flex-row pt-10">
-                                        <h1 className="text-3xl font-bold ">
-                                            Schedule
-                                        </h1>
-                                        <div className="flex items-center ml-2">
-                                            <Calendar className="flex" />
-                                        </div>
+                            <div className="flex flex-col items-center justify-center">
+                                <div className="flex flex-row pt-10">
+                                    <h1 className="text-3xl font-bold ">
+                                        Schedule
+                                    </h1>
+                                    <div className="flex items-center ml-2">
+                                        <Calendar className="flex" />
                                     </div>
-
-                                    {dayFilter === 'all' ? (
-                                        <h2 className="text-muted-foreground">
-                                            Showing all days
-                                        </h2>
-                                    ) : null}
-                                    {dayFilter !== 'all' && uniqueDates ? (
-                                        <h2 className="text-muted-foreground">
-                                            {uniqueDates[0].toDateString()}
-                                        </h2>
-                                    ) : null}
-
-                                    <MatchDatesTable
-                                        eventDoubles={eventById.eventDoubles}
-                                        matchDateById={matchDateById}
-                                        isFetchingMatchDateById={
-                                            isFetchingMatchDateById
-                                        }
-                                        refetchMatchDateById={
-                                            refetchMatchDateById
-                                        }
-                                        matchById={matchById}
-                                        isFetchingMatchById={
-                                            isFetchingMatchById
-                                        }
-                                        refetchMatchById={refetchMatchById}
-                                        categories={eventById?.categories}
-                                        eventMatches={eventById?.eventMatches}
-                                        matchDateIdState={matchDateIdState}
-                                        setMatchDateIdState={
-                                            setMatchDateIdState
-                                        }
-                                        matchIdState={matchIdState}
-                                        setMatchIdState={setMatchIdState}
-                                        matchAssignOn={matchAssignOn}
-                                        setMatchAssignOn={setMatchAssignOn}
-                                        columns={matchDateColumns}
-                                        data={filteredMatchDatesTableData}
-                                        refetchEventMatchDates={
-                                            refetchEventMatchDates
-                                        }
-                                        matchDates={eventMatchDates}
-                                        dayFilter={dayFilter}
-                                        matchDatesTableData={
-                                            matchDatesTableData
-                                        }
-                                        setDayFilter={setDayFilter}
-                                        uniqueValuesForDays={
-                                            uniqueValuesForDays
-                                        }
-                                        setDoublesFilter={setDoublesFilter}
-                                        setCourtFilter={setCourtFilter}
-                                        eventCourts={eventCourts}
-                                        eventCategories={eventCategories}
-                                        setCategoryFilter={setCategoryFilter}
-                                        // hasMatchFilter={hasMatchFilter}
-                                        // setHasMatchFilter={setHasMatchFilter}
-                                        refetchEventById={refetchEventById}
-                                    />
                                 </div>
-                            </>
+
+                                {dayFilter === 'all' ? (
+                                    <h2 className="text-muted-foreground">
+                                        Showing all days
+                                    </h2>
+                                ) : null}
+                                {dayFilter !== 'all' && uniqueDates ? (
+                                    <h2 className="text-muted-foreground">
+                                        {uniqueDates[0].toDateString()}
+                                    </h2>
+                                ) : null}
+
+                                <ScheduleTable
+                                    eventDoubles={eventById.eventDoubles}
+                                    matchDateById={matchDateById}
+                                    isFetchingMatchDateById={
+                                        isFetchingMatchDateById
+                                    }
+                                    refetchMatchDateById={refetchMatchDateById}
+                                    matchById={matchById}
+                                    isFetchingMatchById={isFetchingMatchById}
+                                    refetchMatchById={refetchMatchById}
+                                    categories={eventById?.categories}
+                                    eventMatches={eventById?.eventMatches}
+                                    matchDateIdState={matchDateIdState}
+                                    setMatchDateIdState={setMatchDateIdState}
+                                    matchIdState={matchIdState}
+                                    setMatchIdState={setMatchIdState}
+                                    matchAssignOn={matchAssignOn}
+                                    setMatchAssignOn={setMatchAssignOn}
+                                    columns={matchDateColumns}
+                                    data={filteredScheduleTableData}
+                                    refetchEventMatchDates={
+                                        refetchEventMatchDates
+                                    }
+                                    matchDates={eventMatchDates}
+                                    dayFilter={dayFilter}
+                                    ScheduleTableData={ScheduleTableData}
+                                    setDayFilter={setDayFilter}
+                                    uniqueValuesForDays={uniqueValuesForDays}
+                                    setDoublesFilter={setDoublesFilter}
+                                    setCourtFilter={setCourtFilter}
+                                    eventCourts={eventCourts}
+                                    eventCategories={eventCategories}
+                                    setCategoryFilter={setCategoryFilter}
+                                    hasMatchFilter={hasMatchFilter}
+                                    setHasMatchFilter={setHasMatchFilter}
+                                    refetchEventById={refetchEventById}
+                                />
+                            </div>
                         ) : null}
                     </div>
                 </main>

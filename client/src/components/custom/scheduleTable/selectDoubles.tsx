@@ -41,16 +41,18 @@ export function SelectDoubles({
                     return (
                         <SelectGroup key={index1}>
                             {c.level} {c.type}
-                            {eventDoubles?.map((d, index2) => {
-                                return (
-                                    <SelectItem
-                                        key={index2}
-                                        value={d.double?.id || 'all'}
-                                    >
-                                        {`${d.double?.players[0].firstName} ${d.double?.players[0].lastName} / ${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`}
-                                    </SelectItem>
-                                )
-                            })}
+                            {eventDoubles
+                                ?.filter((d) => d.category?.id === c.id)
+                                .map((d, index2) => {
+                                    return (
+                                        <SelectItem
+                                            key={index2}
+                                            value={d.double?.id || 'all'}
+                                        >
+                                            {`${d.double?.players[0].firstName} ${d.double?.players[0].lastName} / ${d.double?.players[1].firstName} ${d.double?.players[1].lastName}`}
+                                        </SelectItem>
+                                    )
+                                })}
                         </SelectGroup>
                     )
                 })}
