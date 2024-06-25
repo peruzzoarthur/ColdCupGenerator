@@ -154,7 +154,7 @@ export function ScheduleTable<TValue>({
     })
 
     return (
-        <div className="flex flex-col justify-center w-full">
+        <div className="flex flex-col items-center justify-center w-full">
             {/* Header with Filters, Export and Edit */}
             <div className="flex items-center gap-2 ml-auto">
                 {role === 'ADMIN' ? (
@@ -210,46 +210,48 @@ export function ScheduleTable<TValue>({
             </div>
 
             {/* Search && Visibility  */}
-            <div className="flex flex-row items-start w-full py-1 space-y-1">
-                <div className="flex mt-3 mr-1">
-                    <Search className="w-4 h-4 align-center" />
+            <div className="flex flex-row items-center justify-center w-full py-1 space-y-1 lg:w-5/6">
+                <div className="flex items-center w-5/6 mt-3 mr-1">
+                    <Search className="h-4" />
+                    <Input
+                        type="search"
+                        placeholder="Filter by court, dates and number"
+                        value={globalFilters}
+                        onChange={(e) => {
+                            setGlobalFilters(e.target.value)
+                        }}
+                        className="mr-5"
+                    />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="px-4 border rounded-md shadow-sm h-9 border-input bg-background hover:bg-accent hover:text-accent-foreground">
+                            Columns
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            {table
+                                .getAllColumns()
+                                .filter((column) => column.getCanHide())
+                                .map((column) => {
+                                    return (
+                                        <DropdownMenuCheckboxItem
+                                            key={column.id}
+                                            className="capitalize"
+                                            checked={column.getIsVisible()}
+                                            onCheckedChange={(
+                                                value: boolean
+                                            ) => {
+                                                column.toggleVisibility(!!value)
+                                            }}
+                                        >
+                                            {column.id}
+                                        </DropdownMenuCheckboxItem>
+                                    )
+                                })}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
-                <Input
-                    type="search"
-                    placeholder="Filter by court, dates and number"
-                    value={globalFilters}
-                    onChange={(e) => {
-                        setGlobalFilters(e.target.value)
-                    }}
-                    className="mr-5"
-                />
-                <DropdownMenu>
-                    <DropdownMenuTrigger className="px-4 border rounded-md shadow-sm h-9 border-input bg-background hover:bg-accent hover:text-accent-foreground">
-                        Columns
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value: boolean) => {
-                                            column.toggleVisibility(!!value)
-                                        }}
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 2xl:mr-20 xl:ml-20">
+            <div className="grid w-full gap-4 md:grid-cols-2 2xl:pr-40 xl:pl-40">
                 {/* Edit matchDate  */}
                 {scheduleFiltersOn ? (
                     <ScheduleFiltersCard

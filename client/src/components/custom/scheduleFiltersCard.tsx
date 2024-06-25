@@ -48,7 +48,7 @@ export const ScheduleFiltersCard = ({
 }: ScheduleFiltersCardProps) => {
     return (
         <div className="flex items-center justify-center w-full mt-2 mb-2">
-            <Card className="w-2/3 p-6 space-y-2">
+            <Card className="w-11/12 lg:w-[480px]  p-6 space-y-2">
                 <div className="flex items-center justify-between">
                     <CardTitle>Filters</CardTitle>
                     <div className="cursor-pointer">

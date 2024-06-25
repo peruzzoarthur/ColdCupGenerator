@@ -190,7 +190,7 @@ export function EditScheduleCard({
             >
                 <ArrowLeftCircle />
             </Button>
-            <Card className="w-[240px] sm:w-2/3 p-2">
+            <Card className="w-11/12 lg:w-[480px] p-2">
                 <div className="flex justify-end">
                     <Button
                         variant="ghost"
