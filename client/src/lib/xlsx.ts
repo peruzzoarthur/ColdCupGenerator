@@ -1,8 +1,8 @@
 import { RegisteredDoublesTable } from '@/components/custom/eventsTable/columns'
-import { MatchDatesTableProps } from '@/components/custom/scheduleTable/columns'
+import { ScheduleTableProps } from '@/components/custom/scheduleTable/columns'
 import xlsx, { IJsonSheet } from 'json-as-xlsx'
 
-export function downloadScheduleToExcel(schedule: MatchDatesTableProps[]) {
+export function downloadScheduleToExcel(schedule: ScheduleTableProps[]) {
     const columns: IJsonSheet[] = [
         {
             sheet: 'Schedule',
