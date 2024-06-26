@@ -329,7 +329,7 @@ const EventForm: React.FC<EventFormProps> = ({
                     control={form.control}
                     name="startDate"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col items-start w-full">
+                        <FormItem className="flex flex-col items-center w-full">
                             <FormLabel>First day</FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
@@ -373,7 +373,7 @@ const EventForm: React.FC<EventFormProps> = ({
                     control={form.control}
                     name="finishDate"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col items-start w-full">
+                        <FormItem className="flex flex-col items-center w-full">
                             <FormLabel>Last day</FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
