@@ -21,7 +21,7 @@ export function MatchesCarousel({
     refetchEventById,
 }: MatchesCarouselProps) {
     return (
-        <Carousel className="w-[220px] sm:w-1/3">
+        <Carousel className="w-[220px] sm:w-2/5 md:w-2/5">
             <CarouselContent>
                 {eventMatches.map((eventMatch, index) => (
                     <CarouselItem key={index}>
@@ -29,6 +29,7 @@ export function MatchesCarousel({
                             eventMatch={eventMatch}
                             key={index}
                             refetchEventById={refetchEventById}
+                            className="sm:w-full"
                         />
                     </CarouselItem>
                 ))}

@@ -129,30 +129,32 @@ function Event() {
         <>
             {eventById && (
                 <>
-                    <div className="flex flex-col w-full">
-                        {/* Title of event */}
-                        <h1 className="flex justify-center mb-4 text-3xl font-medium">
-                            🏆 {eventById?.name} 🏆
-                        </h1>
+                    <div className="flex flex-col items-center w-full">
+                        <div className="flex flex-col w-11/12 md:w-10/12 lg:w-9/12">
+                            {/* Title of event */}
+                            <h1 className="flex justify-center mb-4 text-2xl font-medium sm:text-3xl">
+                                🏆 {eventById?.name} 🏆
+                            </h1>
 
-                        {/* Admin register form for adding doubles */}
-                        {role === 'ADMIN' &&
-                            !eventById.isActive &&
-                            !eventById.isFinished && (
-                                <RegisterDoublesForm
-                                    categoriesState={categoriesState}
-                                    eventCategories={eventById.categories}
-                                    onSubmit={registerDoubleOnSubmit}
-                                    setCategoriesState={setCategoriesState}
-                                    defaultValues={{
-                                        doublesId: '',
-                                    }}
-                                />
-                            )}
+                            {/* Admin register form for adding doubles */}
+                            {role === 'ADMIN' &&
+                                !eventById.isActive &&
+                                !eventById.isFinished && (
+                                    <RegisterDoublesForm
+                                        categoriesState={categoriesState}
+                                        eventCategories={eventById.categories}
+                                        onSubmit={registerDoubleOnSubmit}
+                                        setCategoriesState={setCategoriesState}
+                                        defaultValues={{
+                                            doublesId: '',
+                                        }}
+                                    />
+                                )}
+                        </div>
 
                         {/* Dropdown to invite player doubles to event */}
                         {!eventById.isActive && !eventById.isFinished && (
-                            <div className="flex justify-center p-6">
+                            <div className="flex justify-center mt-10">
                                 <DropdownMenu>
                                     <CoolButton as="div">
                                         <DropdownMenuTrigger>

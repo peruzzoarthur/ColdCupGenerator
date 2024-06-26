@@ -15,12 +15,13 @@ export const MatchesGrid = ({
 }: MatchesGridProps) => {
     return (
         <>
-            <div className="grid items-center w-full grid-cols-1 gap-16 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
+            <div className="grid w-full grid-cols-1 gap-16 justify-items-center sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
                 {eventMatches?.map((eventMatch, index) => (
                     <MatchCard
                         key={index}
                         eventMatch={eventMatch}
                         refetchEventById={refetchEventById}
+                        className="w-11/12"
                     />
                 ))}
             </div>

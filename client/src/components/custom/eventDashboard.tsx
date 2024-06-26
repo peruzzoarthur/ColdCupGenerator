@@ -715,41 +715,33 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                                     {!isFetchingEventById &&
                                     pendingMatches &&
                                     pendingMatches.length !== 0 ? (
-                                        <>
-                                            <div className="flex flex-col items-center justify-center">
-                                                <h1 className="py-2 text-xl font-bold">
-                                                    Pending matches
-                                                </h1>
-                                                <MatchesCarousel
-                                                    eventMatches={
-                                                        pendingMatches
-                                                    }
-                                                    refetchEventById={
-                                                        refetchEventById
-                                                    }
-                                                />
-                                            </div>
-                                        </>
+                                        <div className="flex flex-col items-center justify-center w-full">
+                                            <h1 className="py-2 text-xl font-bold">
+                                                Pending matches
+                                            </h1>
+                                            <MatchesCarousel
+                                                eventMatches={pendingMatches}
+                                                refetchEventById={
+                                                    refetchEventById
+                                                }
+                                            />
+                                        </div>
                                     ) : null}
                                     {/* Finished Matches Carousels */}
                                     {!isFetchingEventById &&
                                     finishedMatches &&
                                     finishedMatches.length !== 0 ? (
-                                        <>
-                                            <div className="flex flex-col items-center justify-center">
-                                                <h1 className="py-2 text-xl font-bold">
-                                                    Finished matches
-                                                </h1>
-                                                <MatchesCarousel
-                                                    eventMatches={
-                                                        finishedMatches
-                                                    }
-                                                    refetchEventById={
-                                                        refetchEventById
-                                                    }
-                                                />
-                                            </div>
-                                        </>
+                                        <div className="flex flex-col items-center justify-center w-full">
+                                            <h1 className="py-2 text-xl font-bold">
+                                                Finished matches
+                                            </h1>
+                                            <MatchesCarousel
+                                                eventMatches={finishedMatches}
+                                                refetchEventById={
+                                                    refetchEventById
+                                                }
+                                            />
+                                        </div>
                                     ) : null}
                                 </div>
                             ) : null}

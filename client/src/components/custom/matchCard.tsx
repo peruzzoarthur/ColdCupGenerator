@@ -115,7 +115,7 @@ export const MatchCard = ({
 
     return (
         <>
-            <Card className={cn('w-full ', className)}>
+            <Card className={cn('w-full', className)}>
                 <CardHeader>
                     <CardTitle>{`Match #${eventMatch.number}`}</CardTitle>
                     <CardDescription>
