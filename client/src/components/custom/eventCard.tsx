@@ -22,8 +22,14 @@ export function EventCard({ className, event }: EventCardProps) {
     return (
         <Card className={cn('w-[380px]', className)}>
             <CardHeader>
-                <CardTitle>Event</CardTitle>
-                <CardDescription>Add description.</CardDescription>
+                <CardTitle className="text-xl">{event.name}</CardTitle>
+                <CardDescription>
+                    {`Matchmaking [${event.eventType}]`}
+                </CardDescription>
+                <CardDescription>
+                    {' '}
+                    {`Matches [${event.matchType}]`}
+                </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
                 <div className="flex items-center p-4 space-x-4 border rounded-md ">
@@ -43,34 +49,38 @@ export function EventCard({ className, event }: EventCardProps) {
                 <div>
                     <div className="grid items-start pb-4 mb-4 last:mb-0 last:pb-0">
                         <div className="space-y-1">
-                            <p className="font-medium leading-none text-md">
-                                {event.name}
-                            </p>
-                            <p className="text-sm">Locations</p>
+                            <p className="font-bold">Locations</p>
 
                             {event.places.map((p, index) => (
-                                <p
-                                    key={index}
-                                    className="text-sm text-muted-foreground"
-                                >
-                                    {p.name}{' '}
-                                </p>
+                                <div className="flex flex-row justify-around space-x-2">
+                                    <p
+                                        key={index}
+                                        className="text-sm font-bold text-muted-foreground"
+                                    >
+                                        {p.name}{' '}
+                                    </p>
+                                    <p
+                                        key={index}
+                                        className="text-sm text-muted-foreground"
+                                    >
+                                        {p.address}{' '}
+                                    </p>
+                                </div>
                             ))}
                         </div>
                     </div>
                 </div>
             </CardContent>
-            <CardFooter>
-                <Link
-                    to={'/events/$id'}
-                    params={{ id: event.id }}
-                    className="w-full"
-                >
-                    <Button className="w-full">
-                        <CheckCircledIcon className="w-4 h-4 mr-2" /> Open event
-                    </Button>
-                </Link>
-            </CardFooter>
+            <div className="flex items-center justify-center ">
+                <CardFooter>
+                    <Link to={'/events/$id'} params={{ id: event.id }}>
+                        <Button className="w-[240px]" variant="outline">
+                            <CheckCircledIcon className="w-4 h-4 mr-2" /> Open
+                            event
+                        </Button>
+                    </Link>
+                </CardFooter>
+            </div>
         </Card>
     )
 }

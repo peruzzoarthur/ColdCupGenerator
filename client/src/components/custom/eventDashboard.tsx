@@ -379,6 +379,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 <ErrorBox errorMessage={errorMessage} setError={setError} />
             )}
             <main className="grid flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 ">
+                {/* Podium */}
                 <div className="flex flex-col items-center justify-center space-y-4">
                     {eventById &&
                         eventById.isFinished &&

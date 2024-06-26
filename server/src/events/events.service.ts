@@ -9,8 +9,7 @@ import { CreateScheduleDto } from "./dto/create-schedule.dto";
 import { ActivateEventDto } from "./dto/activate-event.dto";
 import { DeleteDoublesInEventDto } from "./dto/delete-doubles.dto";
 import { HandleDoublesRequestToEventDto } from "./dto/handle-request.dto";
-import { Double, EventDouble, EventMatchType, MatchType } from "@prisma/client";
-import { TreeLevelColumn } from "typeorm";
+import { EventMatchType, MatchType } from "@prisma/client";
 
 type Day = {
   day: number;
@@ -115,6 +114,7 @@ export class EventsService {
         name: true,
         places: true,
         courts: true,
+        matchType: true,
         startDate: true,
         finishDate: true,
         timeOfFirstMatch: true,

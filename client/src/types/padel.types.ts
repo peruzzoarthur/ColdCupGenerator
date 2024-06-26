@@ -116,6 +116,7 @@ export type PadelEvent = {
     isFinished: boolean
     categoriesGroups: CategoryGroup[]
     isGroupMatchesFinished: boolean
+    matchType: MatchType
 }
 
 export type EventMatch = {
@@ -172,6 +173,12 @@ export enum EventMatchType {
 export enum EventType {
     ALLxALL = 'ALLxALL',
     GROUPS = 'GROUPS',
+}
+
+export enum MatchType {
+    BO3 = 'BO3',
+    BO2_SUPERTIE = 'BO2_SUPERTIE',
+    SUPERSET = 'SUPERSET',
 }
 
 export type Match = {

@@ -108,34 +108,39 @@ function Events() {
         <>
             <div className="flex flex-col items-center justify-center w-full">
                 {role === 'ADMIN' && (
-                    <div className="flex flex-col w-2/3">
-                        <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
-                            Create an event
-                            <img src={ball} alt="ball" className="w-8 h-8" />
-                        </h1>
-                        <EventForm
-                            allPlaces={allPlaces}
-                            allCategories={allCategories}
-                            onSubmit={createEventOnSubmit}
-                            categoriesState={categoriesState}
-                            setCategoriesState={setCategoriesState}
-                            placesState={placesState}
-                            setPlacesState={setPlacesState}
-                            courtsState={courtsState}
-                            setCourtsState={setCourtsState}
-                            defaultValues={{
-                                eventName: '',
-                                categoriesIds: '',
-                                placesIds: '',
-                                startDate: '' as unknown as Date,
-                                finishDate: '' as unknown as Date,
-                                matchDurationInMinutes: '',
-                                timeOfFirstMatch: '',
-                                timeOfLastMatch: '',
-                                eventType: EventType.ALLxALL,
-                            }}
-                        />
-
+                    <div className="flex flex-col items-center w-full">
+                        <div className="flex flex-col w-2/3">
+                            <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+                                Create an event
+                                <img
+                                    src={ball}
+                                    alt="ball"
+                                    className="w-8 h-8"
+                                />
+                            </h1>
+                            <EventForm
+                                allPlaces={allPlaces}
+                                allCategories={allCategories}
+                                onSubmit={createEventOnSubmit}
+                                categoriesState={categoriesState}
+                                setCategoriesState={setCategoriesState}
+                                placesState={placesState}
+                                setPlacesState={setPlacesState}
+                                courtsState={courtsState}
+                                setCourtsState={setCourtsState}
+                                defaultValues={{
+                                    eventName: '',
+                                    categoriesIds: '',
+                                    placesIds: '',
+                                    startDate: '' as unknown as Date,
+                                    finishDate: '' as unknown as Date,
+                                    matchDurationInMinutes: '',
+                                    timeOfFirstMatch: '',
+                                    timeOfLastMatch: '',
+                                    eventType: EventType.ALLxALL,
+                                }}
+                            />
+                        </div>
                         {isError && (
                             <ErrorBox
                                 errorMessage={errorMessage}
@@ -166,7 +171,7 @@ function Events() {
                                     <EventCard
                                         event={event}
                                         key={index}
-                                        className="w-full"
+                                        className="w-11/12 sm:w-3/4 lg:w-[720px]"
                                     />
                                 ))}
                                 <Button onClick={allEventsOff}>Close</Button>
@@ -176,7 +181,7 @@ function Events() {
                 )}
 
                 {role === 'USER' && (
-                    <div className="flex flex-col items-center justify-center w-2/3 mt-4 space-y-2">
+                    <div className="flex flex-col items-center justify-center w-full mt-4 space-y-2">
                         <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
                             Events
                             <img src={ball} alt="ball" className="w-8 h-8" />
@@ -185,7 +190,7 @@ function Events() {
                             <EventCard
                                 event={event}
                                 key={index}
-                                className="w-full"
+                                className="w-11/12 sm:w-3/4 lg:w-[720px]"
                             />
                         ))}
                         <Button onClick={allEventsOff}>Close</Button>

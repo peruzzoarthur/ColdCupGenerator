@@ -55,7 +55,8 @@ axiosInstance.interceptors.response.use(
                     refresh: localStorage.getItem('refreshToken'),
                     email: user.email,
                     id: user.id,
-                } ?? ''
+                }
+                // ?? ''
             )
             // console.log(response.data.accessToken)
             localStorage.setItem('accessToken', '')

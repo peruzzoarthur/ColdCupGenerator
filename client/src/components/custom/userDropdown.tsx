@@ -39,7 +39,7 @@ export const UserDropdown = () => {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         size="icon"
                         className="w-12 h-12 overflow-hidden rounded-full"
                     >
@@ -47,13 +47,13 @@ export const UserDropdown = () => {
                             <img
                                 src={user.profileImage}
                                 alt="Avatar"
-                                className="overflow-hidden "
+                                className="object-cover w-full h-full"
                             />
                         ) : (
                             <img
                                 src={mari}
                                 alt="Avatar"
-                                className="overflow-hidden "
+                                className="object-cover w-full h-full"
                             />
                         )}
                     </Button>
