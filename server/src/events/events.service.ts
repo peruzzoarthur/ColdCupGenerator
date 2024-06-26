@@ -110,6 +110,7 @@ export class EventsService {
     return await this.prismaService.event.findMany({
       select: {
         id: true,
+        isFinished: true,
         eventType: true,
         name: true,
         places: true,

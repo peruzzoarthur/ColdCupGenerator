@@ -1,5 +1,4 @@
 import { CheckCircledIcon } from '@radix-ui/react-icons'
-
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,14 +14,17 @@ import { Link } from '@tanstack/react-router'
 
 type EventCardProps = React.ComponentProps<typeof Card> & {
     event: PadelEvent
-    // toggleEventOn: (event: PadelEvent) => void
 }
 
 export function EventCard({ className, event }: EventCardProps) {
     return (
         <Card className={cn('w-[380px]', className)}>
             <CardHeader>
-                <CardTitle className="text-xl">{event.name}</CardTitle>
+                <CardTitle className="text-xl">
+                    {event.name} {event.isFinished && !event.isActive && '🔴'}
+                    {!event.isFinished && event.isActive && '🟡'}
+                    {!event.isFinished && !event.isActive && '🟢'}
+                </CardTitle>
                 <CardDescription>
                     {`Matchmaking [${event.eventType}]`}
                 </CardDescription>
