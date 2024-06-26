@@ -53,12 +53,12 @@ import { MatchesGrid } from './matchesGrid'
 import UpdateEventForm from './updateEventForm'
 import { axiosInstance } from '@/axiosInstance'
 import axios, { AxiosError } from 'axios'
-import { ErrorAlert } from './errorAlert'
 import { Link } from '@tanstack/react-router'
 import { useGetRole } from '@/hooks/useGetRole'
 import { useGetEventRequestsById } from '@/hooks/useGetEventRequests'
 import { EventRequestsCard } from './eventRequestsCard'
 import { Badge } from '../ui/badge'
+import { ErrorBox } from './errorBox'
 
 type EventDashBoardProps = {
     event: PadelEvent
@@ -351,7 +351,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
             })
 
     return (
-        <div className="flex flex-col w-full min-h-screen">
+        <div className="flex flex-col w-full">
             {eventById && (
                 <header className="static top-0 flex flex-col items-start justify-start h-auto gap-4 px-4 py-4 bg-transparent border-0">
                     <Breadcrumb>
@@ -376,9 +376,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                 </header>
             )}
             {isError && (
-                <div onClick={() => setError(false)} className="mt-4">
-                    <ErrorAlert message={errorMessage} />
-                </div>
+                <ErrorBox errorMessage={errorMessage} setError={setError} />
             )}
             <main className="grid flex-1 grid-cols-1 gap-4 p-4 py-10 sm:px-6 sm:py-2 md:gap-8 ">
                 <div className="flex flex-col items-center justify-center space-y-4">
@@ -392,7 +390,7 @@ export function EventDashboard({ event }: EventDashBoardProps) {
                             </Card>
                         ))}
                 </div>
-                <div className="space-y-10 xl:col-span-2">
+                <div className="space-y-10">
                     {/* Requests and Infocard for activating event */}
                     {role === 'ADMIN' ? (
                         eventById &&

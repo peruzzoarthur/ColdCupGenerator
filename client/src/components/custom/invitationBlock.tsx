@@ -3,13 +3,13 @@ import { ErrorResponse, Invitation } from '@/types/padel.types'
 import { useState } from 'react'
 import { useToast } from '../ui/use-toast'
 import axios, { AxiosError } from 'axios'
-import { ErrorAlert } from './errorAlert'
 import { Check, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
 import { useInvitations } from '@/hooks/useInvitations'
 import { useGetPlayerById } from '@/hooks/useGetPlayerById'
 import { useGetEventById } from '@/hooks/useGetEventById'
+import { ErrorBox } from './errorBox'
 
 type InvitationBlockProps = {
     playerId: string
@@ -310,9 +310,7 @@ export const InvitationBlock = ({
                 </>
             )}
             {isError && (
-                <div onClick={() => setError(false)} className="mt-4">
-                    <ErrorAlert message={errorMessage} />
-                </div>
+                <ErrorBox errorMessage={errorMessage} setError={setError} />
             )}
         </>
     )

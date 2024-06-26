@@ -38,8 +38,8 @@ import { ErrorResponse, PadelEvent } from '@/types/padel.types'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useToast } from '../ui/use-toast'
-import { ErrorAlert } from './errorAlert'
 import { axiosInstance } from '@/axiosInstance'
+import { ErrorBox } from './errorBox'
 
 type UpdateEventFormProps = {
     defaultValues: formObject
@@ -602,9 +602,7 @@ const UpdateEventForm: React.FC<UpdateEventFormProps> = ({
                 </div>
             </Form>
             {isError && (
-                <div onClick={() => setError(false)} className="mt-4">
-                    <ErrorAlert message={errorMessage} />
-                </div>
+                <ErrorBox errorMessage={errorMessage} setError={setError} />
             )}
         </div>
     )

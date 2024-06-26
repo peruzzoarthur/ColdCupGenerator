@@ -15,7 +15,7 @@ export const MatchesGrid = ({
 }: MatchesGridProps) => {
     return (
         <>
-            <div className="grid items-center grid-cols-1 gap-16 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3">
+            <div className="grid items-center w-full grid-cols-1 gap-16 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
                 {eventMatches?.map((eventMatch, index) => (
                     <MatchCard
                         key={index}

@@ -28,8 +28,8 @@ import {
 import { ScrollArea } from '../ui/scroll-area'
 import { useGetMatchById } from '@/hooks/useGetMatchById'
 import { Switch } from '../ui/switch'
-import { ErrorAlert } from './errorAlert'
 import axios, { AxiosError } from 'axios'
+import { ErrorBox } from './errorBox'
 
 type AvailableMatchesSelectProps = {
     matchDates: MatchDate[] | undefined
@@ -354,9 +354,7 @@ export function EditScheduleCard({
                     </div>
                 )}
                 {isError && (
-                    <div onClick={() => setError(false)} className="mt-4">
-                        <ErrorAlert message={errorMessage} />
-                    </div>
+                    <ErrorBox errorMessage={errorMessage} setError={setError} />
                 )}
             </Card>
 

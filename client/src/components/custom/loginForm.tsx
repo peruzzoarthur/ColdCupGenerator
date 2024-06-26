@@ -23,9 +23,9 @@ import { useState } from 'react'
 import { useToast } from '../ui/use-toast'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { ErrorResponse, User } from '@/types/padel.types'
-import { ErrorAlert } from './errorAlert'
 import { useAuth } from '@/hooks/useAuth'
 import { useGetUserById } from '@/hooks/useGetUser'
+import { ErrorBox } from './errorBox'
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -182,9 +182,7 @@ export function LoginForm() {
                 </CardContent>
             </Card>
             {isError && (
-                <div onClick={() => setError(false)} className="mt-4">
-                    <ErrorAlert message={errorMessage} />
-                </div>
+                <ErrorBox errorMessage={errorMessage} setError={setError} />
             )}
         </div>
     )

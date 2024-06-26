@@ -6,13 +6,13 @@ import { EventCard } from '@/components/custom/eventCard'
 import { Button } from '@/components/ui/button'
 import ball from '../../../styles/png/ball.png'
 import { EventType, PadelEvent } from '@/types/padel.types'
-import { ErrorAlert } from '@/components/custom/errorAlert'
 import { useToast } from '@/components/ui/use-toast'
 import { axiosInstance } from '@/axiosInstance'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useGetCategories } from '@/hooks/useGetCategories'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useGetRole } from '@/hooks/useGetRole'
+import { ErrorBox } from '@/components/custom/errorBox'
 
 export type createEventFormObject = {
     eventName: string
@@ -106,96 +106,89 @@ function Events() {
 
     return (
         <>
-            <div className="flex flex-col justify-center w-full">
+            <div className="flex flex-col items-center justify-center w-full">
                 {role === 'ADMIN' && (
-                    <div className="flex flex-col items-center justify-center w-full">
-                        <div className="flex flex-col w-2/3">
-                            <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
-                                Create an event
-                                <img
-                                    src={ball}
-                                    alt="ball"
-                                    className="w-8 h-8"
-                                />
-                            </h1>
-                            <EventForm
-                                allPlaces={allPlaces}
-                                allCategories={allCategories}
-                                onSubmit={createEventOnSubmit}
-                                categoriesState={categoriesState}
-                                setCategoriesState={setCategoriesState}
-                                placesState={placesState}
-                                setPlacesState={setPlacesState}
-                                courtsState={courtsState}
-                                setCourtsState={setCourtsState}
-                                defaultValues={{
-                                    eventName: '',
-                                    categoriesIds: '',
-                                    placesIds: '',
-                                    startDate: '' as unknown as Date,
-                                    finishDate: '' as unknown as Date,
-                                    matchDurationInMinutes: '',
-                                    timeOfFirstMatch: '',
-                                    timeOfLastMatch: '',
-                                    eventType: EventType.ALLxALL,
-                                }}
+                    <div className="flex flex-col w-2/3">
+                        <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+                            Create an event
+                            <img src={ball} alt="ball" className="w-8 h-8" />
+                        </h1>
+                        <EventForm
+                            allPlaces={allPlaces}
+                            allCategories={allCategories}
+                            onSubmit={createEventOnSubmit}
+                            categoriesState={categoriesState}
+                            setCategoriesState={setCategoriesState}
+                            placesState={placesState}
+                            setPlacesState={setPlacesState}
+                            courtsState={courtsState}
+                            setCourtsState={setCourtsState}
+                            defaultValues={{
+                                eventName: '',
+                                categoriesIds: '',
+                                placesIds: '',
+                                startDate: '' as unknown as Date,
+                                finishDate: '' as unknown as Date,
+                                matchDurationInMinutes: '',
+                                timeOfFirstMatch: '',
+                                timeOfLastMatch: '',
+                                eventType: EventType.ALLxALL,
+                            }}
+                        />
+
+                        {isError && (
+                            <ErrorBox
+                                errorMessage={errorMessage}
+                                setError={setError}
                             />
+                        )}
 
-                            {isError && (
-                                <div
-                                    onClick={() => setError(false)}
-                                    className="mt-4"
-                                >
-                                    <ErrorAlert message={errorMessage} />
-                                </div>
-                            )}
+                        {!showAllEvents && (
+                            <Button
+                                onClick={() => allEventsOn()}
+                                className="mt-12"
+                            >
+                                Show all events
+                            </Button>
+                        )}
 
-                            {!showAllEvents && (
-                                <Button
-                                    onClick={() => allEventsOn()}
-                                    className="mt-12"
-                                >
-                                    Show all events
-                                </Button>
-                            )}
-                        </div>
                         {showAllEvents && (
-                            <div className="flex flex-col items-center justify-center">
-                                <div className="flex flex-col">
-                                    {allEvents?.map((event, index) => (
-                                        <div key={index} className="m-2 ">
-                                            <EventCard
-                                                event={event}
-                                                key={index}
-                                                className="md:w-[640px] lg:w-[720px] xl:w-[860px] 2xl:w-[1024px]"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                                <Button
-                                    onClick={allEventsOff}
-                                    className="mt-12"
-                                >
-                                    Close
-                                </Button>
+                            <div className="flex flex-col items-center justify-center w-full mt-4 space-y-2">
+                                <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+                                    Events
+                                    <img
+                                        src={ball}
+                                        alt="ball"
+                                        className="w-8 h-8"
+                                    />
+                                </h1>
+                                {allEvents?.map((event, index) => (
+                                    <EventCard
+                                        event={event}
+                                        key={index}
+                                        className="w-full"
+                                    />
+                                ))}
+                                <Button onClick={allEventsOff}>Close</Button>
                             </div>
                         )}
                     </div>
                 )}
 
                 {role === 'USER' && (
-                    <div className="flex flex-col items-center justify-center">
-                        <div className="flex flex-col">
-                            {allEvents?.map((event, index) => (
-                                <div key={index} className="m-2 ">
-                                    <EventCard
-                                        event={event}
-                                        key={index}
-                                        className="md:w-[640px] lg:w-[720px] xl:w-[860px] 2xl:w-[1024px]"
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                    <div className="flex flex-col items-center justify-center w-2/3 mt-4 space-y-2">
+                        <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+                            Events
+                            <img src={ball} alt="ball" className="w-8 h-8" />
+                        </h1>
+                        {allEvents?.map((event, index) => (
+                            <EventCard
+                                event={event}
+                                key={index}
+                                className="w-full"
+                            />
+                        ))}
+                        <Button onClick={allEventsOff}>Close</Button>
                     </div>
                 )}
             </div>

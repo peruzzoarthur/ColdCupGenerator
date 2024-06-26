@@ -19,11 +19,11 @@ import { useGetMatchDoublesWithGames } from '@/hooks/useGetMatchDoublesWithGames
 import { useState } from 'react'
 import { Pencil1Icon } from '@radix-ui/react-icons'
 import { useToast } from '../ui/use-toast'
-import { ErrorAlert } from './errorAlert'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { MatchResult } from './matchCard/styledMatchResult'
 import { axiosInstance } from '@/axiosInstance'
 import { useGetRole } from '@/hooks/useGetRole'
+import { ErrorBox } from './errorBox'
 
 type ErrorResponse = {
     message: string
@@ -115,7 +115,7 @@ export const MatchCard = ({
 
     return (
         <>
-            <Card className={cn('w-[380px] min-h-[354px]', className)}>
+            <Card className={cn('w-full ', className)}>
                 <CardHeader>
                     <CardTitle>{`Match #${eventMatch.number}`}</CardTitle>
                     <CardDescription>
@@ -190,7 +190,7 @@ export const MatchCard = ({
 
             {isError && (
                 <div onClick={() => setError(false)} className="mt-4">
-                    <ErrorAlert message={errorMessage} />
+                    <ErrorBox errorMessage={errorMessage} setError={setError} />
                 </div>
             )}
         </>

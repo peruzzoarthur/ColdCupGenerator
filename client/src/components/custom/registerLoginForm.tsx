@@ -15,14 +15,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
-// import {
-//     Select,
-//     SelectContent,
-//     SelectItem,
-//     SelectTrigger,
-//     SelectValue,
-// } from '@/components/ui/select'
-
 import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
 import { registerSchema } from '@/components/validators/register'
@@ -34,7 +26,6 @@ import { ArrowRight, CalendarIcon } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { ErrorResponse, User } from '@/types/padel.types'
-import { ErrorAlert } from './errorAlert'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { format } from 'date-fns'
 import { Calendar } from '../ui/calendar'
@@ -47,6 +38,7 @@ import {
 } from '../ui/select'
 import { Label } from '../ui/label'
 import { useNavigate } from '@tanstack/react-router'
+import { ErrorBox } from './errorBox'
 
 type RegisterInput = z.infer<typeof registerSchema>
 
@@ -436,9 +428,7 @@ export default function RegisterLoginForm() {
                 </CardContent>
             </Card>
             {isError && (
-                <div onClick={() => setError(false)} className="mt-4">
-                    <ErrorAlert message={errorMessage} />
-                </div>
+                <ErrorBox errorMessage={errorMessage} setError={setError} />
             )}
         </div>
     )

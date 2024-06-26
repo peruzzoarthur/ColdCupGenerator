@@ -27,9 +27,9 @@ import { ErrorResponse, User } from '@/types/padel.types'
 import { useToast } from '../ui/use-toast'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { axiosInstance } from '@/axiosInstance'
-import { ErrorAlert } from './errorAlert'
 import { XIcon } from 'lucide-react'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { ErrorBox } from './errorBox'
 
 type SignInAsPlayerFormProps = {
     defaultValues: sigInAsPlayerFormObject
@@ -210,12 +210,10 @@ export const SignInAsPlayerForm: React.FC<SignInAsPlayerFormProps> = ({
                                 </Button>
                             </div>
                             {isError && (
-                                <div
-                                    onClick={() => setError(false)}
-                                    className="mt-4"
-                                >
-                                    <ErrorAlert message={errorMessage} />
-                                </div>
+                                <ErrorBox
+                                    errorMessage={errorMessage}
+                                    setError={setError}
+                                />
                             )}
                         </Form>
                     </div>

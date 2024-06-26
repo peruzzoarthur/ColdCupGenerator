@@ -18,9 +18,9 @@ import { axiosInstance } from '@/axiosInstance'
 import { useToast } from '../ui/use-toast'
 import axios, { AxiosError } from 'axios'
 import { useState } from 'react'
-import { ErrorAlert } from './errorAlert'
 import { Separator } from '../ui/separator'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { ErrorBox } from './errorBox'
 
 type EventRequestsCardProps = {
     requests: EventRequest[] | undefined
@@ -156,9 +156,7 @@ export function EventRequestsCard({
                 </div>
             </CardContent>
             {isError && (
-                <div onClick={() => setError(false)} className="mt-4">
-                    <ErrorAlert message={errorMessage} />
-                </div>
+                <ErrorBox errorMessage={errorMessage} setError={setError} />
             )}
             <CardFooter className="flex flex-row items-center px-6 py-3 border-t bg-muted/50">
                 <div className="text-xs text-muted-foreground">

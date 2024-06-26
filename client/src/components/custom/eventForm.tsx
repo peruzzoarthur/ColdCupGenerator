@@ -91,8 +91,6 @@ const EventForm: React.FC<EventFormProps> = ({
 
     const { handleSubmit } = form
 
-    // ! getPlaceCourts
-
     const [selectedPlaceId, setSelectedPlaceId] = useState<string | undefined>(
         undefined
     )
@@ -100,7 +98,6 @@ const EventForm: React.FC<EventFormProps> = ({
 
     const { placeWithCourts } = useGetPlaceWithCourts(selectedPlaceId)
 
-    // !
     const addCategory = (id: string) => {
         const stringArray: string[] = categoriesState.concat(id)
         setCategoriesState(stringArray)
@@ -185,30 +182,26 @@ const EventForm: React.FC<EventFormProps> = ({
                                     Add Category
                                 </Button>
                                 <div className="flex-col justify-center w-1/3">
-                                    {[...new Set(categoriesState)].map(
-                                        (categoryId) => {
-                                            const category =
-                                                allCategories?.find(
-                                                    (cat) =>
-                                                        cat.id === categoryId
-                                                )
-                                            if (category) {
-                                                return (
-                                                    <Badge
-                                                        onClick={() =>
-                                                            removeCategory(
-                                                                category.id
-                                                            )
-                                                        }
-                                                        key={category.id}
-                                                        className="justify-center cursor-pointer w-5 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
-                                                    >{`${category.level}`}</Badge>
-                                                )
-                                            } else {
-                                                return null
-                                            }
+                                    {categoriesState.map((categoryId) => {
+                                        const category = allCategories?.find(
+                                            (cat) => cat.id === categoryId
+                                        )
+                                        if (category) {
+                                            return (
+                                                <Badge
+                                                    onClick={() =>
+                                                        removeCategory(
+                                                            category.id
+                                                        )
+                                                    }
+                                                    key={category.id}
+                                                    className="justify-center cursor-pointer w-5 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
+                                                >{`${category.level}`}</Badge>
+                                            )
+                                        } else {
+                                            return null
                                         }
-                                    )}
+                                    })}
                                 </div>
                             </div>
                         </Select>
@@ -304,29 +297,25 @@ const EventForm: React.FC<EventFormProps> = ({
                             <div className="flex justify-center w-full">
                                 <div className="flex flex-col items-center justify-center w-1/3 ">
                                     {/* <p>Places registered</p> */}
-                                    {[...new Set(placesState)].map(
-                                        (placeId) => {
-                                            const place = allPlaces?.find(
-                                                (p) => p.id === placeId
+                                    {placesState.map((placeId) => {
+                                        const place = allPlaces?.find(
+                                            (p) => p.id === placeId
+                                        )
+                                        if (place) {
+                                            return (
+                                                <Badge
+                                                    onClick={() =>
+                                                        removePlace(place.id)
+                                                    }
+                                                    key={place.id}
+                                                    className="justify-center bg-slate-400 w-32 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
+                                                >{`${place.name}`}</Badge>
                                             )
-                                            if (place) {
-                                                return (
-                                                    <Badge
-                                                        onClick={() =>
-                                                            removePlace(
-                                                                place.id
-                                                            )
-                                                        }
-                                                        key={place.id}
-                                                        className="justify-center bg-slate-400 w-32 h-5 text-center rounded-full ml-1 mt-2 mr-0.5"
-                                                    >{`${place.name}`}</Badge>
-                                                )
-                                            } else {
-                                                // Handle the case where the category is not found
-                                                return null // or you can render a default badge
-                                            }
+                                        } else {
+                                            // Handle the case where the category is not found
+                                            return null // or you can render a default badge
                                         }
-                                    )}
+                                    })}
                                 </div>
                             </div>
                         </Select>

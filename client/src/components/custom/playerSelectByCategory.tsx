@@ -27,8 +27,8 @@ import { axiosInstance } from '@/axiosInstance'
 import axios, { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useToast } from '../ui/use-toast'
-import { ErrorAlert } from './errorAlert'
 import { Button } from '../ui/button'
+import { ErrorBox } from './errorBox'
 
 type PlayerSelectByCategoryProps = {
     players: Player[] | undefined
@@ -143,9 +143,7 @@ export const PlayerSelectByCategory = ({
                 ))}
             </SelectContent>
             {isError && (
-                <div onClick={() => setError(false)} className="w-full mt-4">
-                    <ErrorAlert message={errorMessage} />
-                </div>
+                <ErrorBox errorMessage={errorMessage} setError={setError} />
             )}
         </Select>
     )
