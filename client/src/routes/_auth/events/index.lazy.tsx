@@ -127,7 +127,7 @@ function Events() {
                                         className="flex justify-center mt-2 mb-2 cursor-pointer"
                                         onClick={() => setShowEventForm(false)}
                                     >
-                                        <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+                                        <h1 className="flex flex-row mt-2 mb-2 text-xl font-bold sm:text-2xl">
                                             Create an event
                                             <img
                                                 src={ball}
@@ -170,7 +170,7 @@ function Events() {
                                     className="flex justify-center mt-2 mb-2 cursor-pointer"
                                     onClick={() => setShowEventForm(true)}
                                 >
-                                    <h1 className="flex flex-row text-2xl font-bold ">
+                                    <h1 className="flex flex-row text-xl font-bold sm:text-2xl ">
                                         Create an event
                                         <img
                                             src={ball}
@@ -186,12 +186,12 @@ function Events() {
 
                 {filteredEvents && (
                     <div className="flex flex-col items-center justify-center w-full mt-4 space-y-2">
-                        <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+                        <h1 className="flex flex-row mt-2 mb-2 text-xl font-bold sm:text-2xl">
                             Events
                             <img src={ball} alt="ball" className="w-8 h-8" />
                         </h1>
 
-                        <div className="grid grid-cols-1 justify-items-center md:grid-cols-3">
+                        <div className="grid grid-cols-1 space-y-2 justify-items-center md:grid-cols-3 md:space-y-0">
                             <EventsFiltersCard
                                 showFinishedEvents={showFinishedEvents}
                                 setShowFinishedEvents={setShowFinishedEvents}
@@ -202,35 +202,21 @@ function Events() {
                                     setShowRegisteringEvents
                                 }
                             />
-                            <ScrollArea className="h-[420px] md:col-span-2 w-full p-2">
+                            <ScrollArea className="w-full h-screen p-0.5 md:col-span-2">
                                 {filteredEvents.map((event, index) => (
-                                    <EventCard
-                                        event={event}
-                                        key={index}
-                                        className="w-11/12 md:w-[440px] lg:w-[620px] mb-1"
-                                    />
+                                    <>
+                                        <div key={index}>
+                                            <EventCard
+                                                event={event}
+                                                className="w-11/12 md:w-[440px] lg:w-[620px] mb-1"
+                                            />
+                                        </div>
+                                    </>
                                 ))}
                             </ScrollArea>
                         </div>
                     </div>
                 )}
-
-                {/* {role === 'USER' && (
-                    <div className="flex flex-col items-center justify-center w-full mt-4 space-y-2">
-                        <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
-                            Events
-                            <img src={ball} alt="ball" className="w-8 h-8" />
-                        </h1>
-                        {allEvents?.map((event, index) => (
-                            <EventCard
-                                event={event}
-                                key={index}
-                                className="w-11/12 sm:w-3/4 lg:w-[720px]"
-                            />
-                        ))}
-                        <Button onClick={allEventsOff}>Close</Button>
-                    </div>
-                )} */}
             </div>
         </>
     )
