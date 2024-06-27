@@ -43,7 +43,6 @@ function Events() {
     const [courtsState, setCourtsState] = useState<string[]>([])
     const { allCategories } = useGetCategories()
     const { allPlaces } = useGetPlaces()
-    const { allEvents, refetchEvents } = useGetEvents()
     const { toast } = useToast()
     const { role } = useGetRole()
     const [showFinishedEvents, setShowFinishedEvents] = useState<boolean>(false)
@@ -51,6 +50,13 @@ function Events() {
     const [showRegisteringEvents, setShowRegisteringEvents] =
         useState<boolean>(true)
     const [showEventForm, setShowEventForm] = useState<boolean>(false)
+    const { filteredEvents, refetchEvents } = useGetEvents({
+        showActiveEvents: showActiveEvents,
+        showFinishedEvents: showFinishedEvents,
+        showRegisteringEvents: showRegisteringEvents,
+    })
+
+    console.log(filteredEvents)
 
     const createEventToast = (event: PadelEvent) => {
         toast({
@@ -101,19 +107,19 @@ function Events() {
         }
     }
 
-    let filteredEvents = allEvents
+    // let filteredEvents = allEvents
 
-    if (!showFinishedEvents) {
-        filteredEvents = filteredEvents?.filter((e) => e.isFinished === false)
-    }
+    // if (!showFinishedEvents) {
+    //     filteredEvents = filteredEvents?.filter((e) => e.isFinished === false)
+    // }
 
-    if (!showActiveEvents) {
-        filteredEvents = filteredEvents?.filter((e) => e.isActive === false)
-    }
+    // if (!showActiveEvents) {
+    //     filteredEvents = filteredEvents?.filter((e) => e.isActive === false)
+    // }
 
-    if (!showRegisteringEvents) {
-        filteredEvents = filteredEvents?.filter((e) => e.isActive === true)
-    }
+    // if (!showRegisteringEvents) {
+    //     filteredEvents = filteredEvents?.filter((e) => e.isActive === true)
+    // }
 
     return (
         <>
@@ -203,15 +209,13 @@ function Events() {
                                 }
                             />
                             <ScrollArea className="w-full h-screen p-0.5 md:col-span-2">
-                                {filteredEvents.map((event, index) => (
-                                    <>
-                                        <div key={index}>
-                                            <EventCard
-                                                event={event}
-                                                className="w-11/12 md:w-[440px] lg:w-[620px] mb-1"
-                                            />
-                                        </div>
-                                    </>
+                                {filteredEvents.map((event) => (
+                                    <div key={event.id}>
+                                        <EventCard
+                                            event={event}
+                                            className="w-11/12 md:w-[440px] lg:w-[620px] mb-1"
+                                        />
+                                    </div>
                                 ))}
                             </ScrollArea>
                         </div>

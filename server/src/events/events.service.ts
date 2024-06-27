@@ -111,6 +111,7 @@ export class EventsService {
       select: {
         id: true,
         isFinished: true,
+        isActive: true,
         eventType: true,
         name: true,
         places: true,
@@ -156,7 +157,6 @@ export class EventsService {
             atRestId: true,
           },
         },
-        isActive: true,
         categories: {
           select: {
             id: true,
