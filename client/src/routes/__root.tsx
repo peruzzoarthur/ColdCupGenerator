@@ -1,4 +1,7 @@
-import { createRootRouteWithContext } from '@tanstack/react-router'
+import {
+    ScrollRestoration,
+    createRootRouteWithContext,
+} from '@tanstack/react-router'
 import React, { Suspense } from 'react'
 import { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -35,6 +38,8 @@ function Root() {
 
             <RootSheet />
             <div className="flex justify-center ml-14">
+                <ScrollRestoration />
+
                 <Outlet />
             </div>
             <Suspense>

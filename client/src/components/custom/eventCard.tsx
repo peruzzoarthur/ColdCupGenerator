@@ -31,7 +31,6 @@ export function EventCard({ className, event }: EventCardProps) {
                         {`Matchmaking [${event.eventType}]`}
                     </CardDescription>
                     <CardDescription>
-                        {' '}
                         {`Matches [${event.matchType}]`}
                     </CardDescription>
                 </CardHeader>
@@ -60,10 +59,10 @@ export function EventCard({ className, event }: EventCardProps) {
                                         className="flex flex-row justify-around space-x-2"
                                     >
                                         <p className="text-sm font-bold text-muted-foreground">
-                                            {place.name}{' '}
+                                            {place.name}
                                         </p>
                                         <p className="text-sm text-muted-foreground">
-                                            {place.address}{' '}
+                                            {place.address}
                                         </p>
                                     </div>
                                 ))}
@@ -75,7 +74,7 @@ export function EventCard({ className, event }: EventCardProps) {
                     <CardFooter>
                         <Link to={'/events/$id'} params={{ id: event.id }}>
                             <Button className="w-[240px]" variant="outline">
-                                <CheckCircledIcon className="w-4 h-4 mr-2" />{' '}
+                                <CheckCircledIcon className="w-4 h-4 mr-2" />
                                 Open event
                             </Button>
                         </Link>

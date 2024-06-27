@@ -56,8 +56,6 @@ function Events() {
         showRegisteringEvents: showRegisteringEvents,
     })
 
-    console.log(filteredEvents)
-
     const createEventToast = (event: PadelEvent) => {
         toast({
             title: 'Success! 🙌',
@@ -107,20 +105,6 @@ function Events() {
         }
     }
 
-    // let filteredEvents = allEvents
-
-    // if (!showFinishedEvents) {
-    //     filteredEvents = filteredEvents?.filter((e) => e.isFinished === false)
-    // }
-
-    // if (!showActiveEvents) {
-    //     filteredEvents = filteredEvents?.filter((e) => e.isActive === false)
-    // }
-
-    // if (!showRegisteringEvents) {
-    //     filteredEvents = filteredEvents?.filter((e) => e.isActive === true)
-    // }
-
     return (
         <>
             <div className="flex flex-col items-center justify-center w-full">
@@ -133,12 +117,12 @@ function Events() {
                                         className="flex justify-center mt-2 mb-2 cursor-pointer"
                                         onClick={() => setShowEventForm(false)}
                                     >
-                                        <h1 className="flex flex-row mt-2 mb-2 text-xl font-bold sm:text-2xl">
+                                        <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl 2xl:text-4xl">
                                             Create an event
                                             <img
                                                 src={ball}
                                                 alt="ball"
-                                                className="w-8 h-8"
+                                                className="w-6 h-6 ml-1 lg:w-10 lg:h-10"
                                             />
                                         </h1>
                                     </div>
@@ -176,12 +160,12 @@ function Events() {
                                     className="flex justify-center mt-2 mb-2 cursor-pointer"
                                     onClick={() => setShowEventForm(true)}
                                 >
-                                    <h1 className="flex flex-row text-xl font-bold sm:text-2xl ">
+                                    <h1 className="flex flex-row items-center text-2xl font-bold lg:text-3xl 2xl:text-4xl">
                                         Create an event
                                         <img
                                             src={ball}
                                             alt="ball"
-                                            className="w-8 h-8"
+                                            className="w-6 h-6 ml-1 lg:w-8 lg:h-8"
                                         />
                                     </h1>
                                 </div>
@@ -192,12 +176,16 @@ function Events() {
 
                 {filteredEvents && (
                     <div className="flex flex-col items-center justify-center w-full mt-4 space-y-2">
-                        <h1 className="flex flex-row mt-2 mb-2 text-xl font-bold sm:text-2xl">
+                        <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl 2xl:text-4xl">
                             Events
-                            <img src={ball} alt="ball" className="w-8 h-8" />
+                            <img
+                                src={ball}
+                                alt="ball"
+                                className="w-6 h-6 ml-1 lg:w-8 lg:h-8"
+                            />
                         </h1>
 
-                        <div className="grid grid-cols-1 space-y-2 justify-items-center md:grid-cols-3 md:space-y-0">
+                        <div className="grid grid-cols-1 space-y-2 justify-items-center md:grid-cols-3">
                             <EventsFiltersCard
                                 showFinishedEvents={showFinishedEvents}
                                 setShowFinishedEvents={setShowFinishedEvents}

@@ -21,7 +21,7 @@ export const EventsFiltersCard = ({
     setShowRegisteringEvents,
 }: EventFiltersCardProps) => {
     return (
-        <div className="flex justify-center h-full sm:w-full md:h-1/3">
+        <div className="flex justify-center h-full md:h-1/5">
             <Card className="grid grid-cols-1 p-4 space-y-1 justify-items-end">
                 <div className="flex items-center space-x-2">
                     <Label>Finished Events 🔴</Label>
