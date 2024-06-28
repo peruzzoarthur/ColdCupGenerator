@@ -200,7 +200,7 @@ export function EditScheduleCard({
                     </Button>
                 </div>
 
-                <CardTitle className="pb-2">Edit matches and dates</CardTitle>
+                <CardTitle className="pb-2">Edit event schedule</CardTitle>
 
                 <div className="flex flex-col justify-center w-full">
                     <CardDescription>Date</CardDescription>

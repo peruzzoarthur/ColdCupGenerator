@@ -9,7 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { Category } from '@/hooks/useGetCategories'
+import { Category } from '@/types/padel.types'
 
 type SelectCategoriesProps = {
     allCategories: Category[] | undefined

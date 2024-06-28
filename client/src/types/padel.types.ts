@@ -84,7 +84,7 @@ export type Court = {
 
 export type Category = {
     id: string
-    type: string
+    type: CatType
     level: number
     doubles?: Double[]
     eventDoubles?: Double[]

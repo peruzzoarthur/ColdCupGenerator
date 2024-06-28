@@ -1,17 +1,6 @@
 import { axiosInstance } from '@/axiosInstance'
+import { Category } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
-
-enum CatType {
-    ALL = 'ALL',
-    F = 'F',
-    M = 'M',
-}
-
-export type Category = {
-    id: string
-    level: number
-    type: CatType
-}
 
 export const useGetCategories = () => {
     const { data: allCategories, isFetching } = useQuery({

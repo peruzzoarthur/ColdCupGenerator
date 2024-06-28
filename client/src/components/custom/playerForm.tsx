@@ -21,7 +21,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select'
-import { Category } from '@/hooks/useGetCategories'
+import { Category } from '@/types/padel.types'
 
 type PlayerFormProps = {
     onSubmit: SubmitHandler<playerFormObject>

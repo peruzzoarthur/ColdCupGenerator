@@ -25,6 +25,7 @@ export class CategoriesService {
         level: true,
         type: true,
         players: true,
+        doubles: true,
       },
     });
   }
