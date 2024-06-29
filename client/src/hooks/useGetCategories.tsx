@@ -3,7 +3,11 @@ import { Category } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetCategories = () => {
-    const { data: allCategories, isFetching } = useQuery({
+    const {
+        data: allCategories,
+        isFetching,
+        refetch: refetchAllCategories,
+    } = useQuery({
         queryKey: ['get-all-categories'],
         queryFn: async () => {
             const { data }: { data: Category[] } =
@@ -16,5 +20,5 @@ export const useGetCategories = () => {
     })
     const categoriesIds = allCategories?.map((item) => item.id)
 
-    return { allCategories, isFetching, categoriesIds }
+    return { allCategories, isFetching, categoriesIds, refetchAllCategories }
 }

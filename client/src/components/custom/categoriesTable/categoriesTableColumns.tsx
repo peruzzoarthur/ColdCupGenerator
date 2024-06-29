@@ -1,17 +1,10 @@
 import { Button } from '@/components/ui/button'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { CatType } from '@/types/padel.types'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 
-export type CategoriesTableData = {
+export type CategoriesTableProps = {
     level: number
     type: CatType
     id: string
@@ -19,7 +12,7 @@ export type CategoriesTableData = {
     doubles: number
 }
 
-export const categoriesColumns: ColumnDef<CategoriesTableData>[] = [
+export const categoriesColumns: ColumnDef<CategoriesTableProps>[] = [
     {
         accessorKey: 'level',
         header: ({ column }) => {
@@ -118,33 +111,6 @@ export const categoriesColumns: ColumnDef<CategoriesTableData>[] = [
                 <div className="font-medium text-center">
                     {row.getValue('doubles')}
                 </div>
-            )
-        },
-    },
-
-    {
-        id: 'actions',
-        cell: ({ row }) => {
-            const categoryId = row.original.id
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="w-8 h-8 p-0">
-                            <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => {
-                                console.log(categoryId)
-                            }}
-                        >
-                            Deleting category...
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
             )
         },
     },

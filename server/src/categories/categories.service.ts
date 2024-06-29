@@ -38,8 +38,8 @@ export class CategoriesService {
     return `This action updates a #${id} category`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string) {
+    return await this.prismaService.category.delete({ where: { id: id } });
   }
 
   async getCategoryByQuery(level: number, type: CatType) {

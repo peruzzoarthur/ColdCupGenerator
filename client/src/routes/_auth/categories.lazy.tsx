@@ -1,7 +1,7 @@
 import { axiosInstance } from '@/axiosInstance'
 import { CategoriesTable } from '@/components/custom/categoriesTable/categoriesTable'
 import {
-    CategoriesTableData,
+    CategoriesTableProps,
     categoriesColumns,
 } from '@/components/custom/categoriesTable/categoriesTableColumns'
 import {
@@ -23,10 +23,8 @@ export const Route = createLazyFileRoute('/_auth/categories')({
 function Categories() {
     const [isError, setError] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
-
     const { toast } = useToast()
-
-    const { allCategories } = useGetCategories()
+    const { allCategories, refetchAllCategories } = useGetCategories()
     const toasted = (category: Category) => {
         toast({
             title: 'Success! 🙌',
@@ -46,6 +44,7 @@ function Categories() {
                 requestBody
             )
 
+            await refetchAllCategories()
             toasted(data.data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -67,7 +66,7 @@ function Categories() {
         }
     }
 
-    const categoriesTableData: CategoriesTableData[] | undefined =
+    const categoriesTableData: CategoriesTableProps[] | undefined =
         allCategories?.map((category) => {
             return {
                 id: category.id,
@@ -78,9 +77,7 @@ function Categories() {
             }
         })
 
-    console.log(categoriesTableData)
     return (
-        // <div className="flex items-center justify-center w-auto">
         <div className="grid grid-cols-1 sm:grid-cols-3 justify-items-center">
             <div className="flex flex-col items-center justify-center">
                 <CategoryForm
@@ -88,7 +85,10 @@ function Categories() {
                     defaultValues={{ level: '', type: CatType.ALL }}
                 />
                 {isError && (
-                    <div onClick={() => setError(false)} className="mt-4">
+                    <div
+                        onClick={() => setError(false)}
+                        className="flex w-2/3 mt-4"
+                    >
                         <ErrorAlert message={errorMessage} />
                     </div>
                 )}
@@ -103,6 +103,5 @@ function Categories() {
                 </div>
             )}
         </div>
-        // </div>
     )
 }

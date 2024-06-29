@@ -1,5 +1,6 @@
 import {
     ColumnDef,
+    Row,
     SortingState,
     flexRender,
     getCoreRowModel,
@@ -7,7 +8,13 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table'
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
     Table,
     TableBody,
@@ -17,18 +24,26 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import React from 'react'
+import { axiosInstance } from '@/axiosInstance'
+import { Category } from '@/types/padel.types'
+import { useGetRole } from '@/hooks/useGetRole'
+import { Button } from '@/components/ui/button'
+import { MoreHorizontal } from 'lucide-react'
+import { useGetCategories } from '@/hooks/useGetCategories'
+import { CategoriesTableProps } from './categoriesTableColumns'
 
-interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+interface DataTableProps<TValue> {
+    columns: ColumnDef<CategoriesTableProps, TValue>[]
+    data: CategoriesTableProps[]
 }
 
-export function CategoriesTable<TData, TValue>({
+export function CategoriesTable<TValue>({
     columns,
     data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
-
+    const { role } = useGetRole()
+    const { refetchAllCategories } = useGetCategories()
     const table = useReactTable({
         data,
         columns,
@@ -41,35 +56,33 @@ export function CategoriesTable<TData, TValue>({
         },
     })
 
-    // const handleDeleteDoublesFromEvent = async (
-    //     eventId: string,
-    //     doublesId: string,
-    //     categoryId: string
+    const handleDeleteCategory = async (id: string) => {
+        try {
+            const { data: removedCategory }: { data: Category } =
+                await axiosInstance.delete(`/categories/${id}`)
+            return removedCategory
+        } catch (error) {
+            return error
+        }
+    }
 
-    //     // autoPopulate: boolean
-    // ) => {
-    //     try {
-    //         const handleDeleteDoublesInEventDto = {
-    //             eventId: eventId,
-    //             doublesId: doublesId,
-    //             categoryId: categoryId,
-    //         }
-    //         const { data: doubles }: { data: EventDouble } =
-    //             await axiosInstance.post(
-    //                 '/events/delete-doubles',
-    //                 handleDeleteDoublesInEventDto
-    //             )
-    //         await refetchEventById()
-    //         await refetchEventMatchesInfoById()
-    //         return doubles
-    //     } catch (error) {
-    //         return error
-    //     }
-    // }
+    const tableActionDeleteCategory = async (
+        row: Row<CategoriesTableProps>
+    ) => {
+        const categoryId: string = row.original.id
+        {
+            if (categoryId) {
+                await handleDeleteCategory(categoryId)
+                await refetchAllCategories()
+            } else {
+                throw new Error('Error deleting category.')
+            }
+        }
+    }
 
     return (
         <>
-            <div className="flex w-full border rounded-md h-2/3">
+            <div className="flex w-full h-auto border rounded-md">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -107,6 +120,35 @@ export function CategoriesTable<TData, TValue>({
                                             )}
                                         </TableCell>
                                     ))}
+                                    {role === 'ADMIN' ? (
+                                        <TableCell>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        className="w-8 h-8 p-0"
+                                                        variant="ghost"
+                                                    >
+                                                        <MoreHorizontal className="w-4 h-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuLabel>
+                                                        Actions
+                                                    </DropdownMenuLabel>
+                                                    <DropdownMenuItem
+                                                        onClick={async () =>
+                                                            tableActionDeleteCategory(
+                                                                row
+                                                            )
+                                                        }
+                                                    >
+                                                        Delete doubles from
+                                                        event
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    ) : null}
                                 </TableRow>
                             ))
                         ) : (

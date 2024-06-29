@@ -1,5 +1,6 @@
 import {
     ColumnDef,
+    Row,
     SortingState,
     flexRender,
     getCoreRowModel,
@@ -70,8 +71,6 @@ export function EventDoublesTable<TData, TValue>({
         eventId: string,
         doublesId: string,
         categoryId: string
-
-        // autoPopulate: boolean
     ) => {
         try {
             const handleDeleteDoublesInEventDto = {
@@ -89,6 +88,23 @@ export function EventDoublesTable<TData, TValue>({
             return doubles
         } catch (error) {
             return error
+        }
+    }
+
+    const tableActionDeleteDoubles = async (row: Row<TData>) => {
+        const doublesId: string = row.getValue('id')
+
+        const categoryId: string = row.getValue('catId')
+        {
+            if (eventId && doublesId && categoryId) {
+                await handleDeleteDoublesFromEvent(
+                    eventId,
+                    doublesId,
+                    categoryId
+                )
+            } else {
+                throw new Error('Error deleting doubles from this event.')
+            }
         }
     }
 
@@ -148,35 +164,11 @@ export function EventDoublesTable<TData, TValue>({
                                                         Actions
                                                     </DropdownMenuLabel>
                                                     <DropdownMenuItem
-                                                        onClick={() => {
-                                                            const doublesId =
-                                                                row.getValue(
-                                                                    'id'
-                                                                ) as string
-
-                                                            const categoryId =
-                                                                row.getValue(
-                                                                    'catId'
-                                                                ) as string
-                                                            {
-                                                                if (
-                                                                    eventId &&
-                                                                    doublesId &&
-                                                                    categoryId
-                                                                ) {
-                                                                    handleDeleteDoublesFromEvent(
-                                                                        eventId,
-                                                                        doublesId,
-                                                                        categoryId
-                                                                    )
-                                                                } else {
-                                                                    console.log(
-                                                                        'im an error'
-                                                                    )
-                                                                    return
-                                                                }
-                                                            }
-                                                        }}
+                                                        onClick={async () =>
+                                                            tableActionDeleteDoubles(
+                                                                row
+                                                            )
+                                                        }
                                                     >
                                                         Delete doubles from
                                                         event

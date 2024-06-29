@@ -96,7 +96,7 @@ export class CategoriesController {
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @ApiBearerAuth()
-  remove(@Param("id") id: string) {
-    return this.categoriesService.remove(+id);
+  async remove(@Param("id") id: string) {
+    return await this.categoriesService.remove(id);
   }
 }
