@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button'
 import { useGetPlayers } from '@/hooks/useGetPlayers'
 import { PlayerCard } from '@/components/custom/playerCard'
 import { axiosInstance } from '@/axiosInstance'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { twMerge } from 'tailwind-merge'
 
 export const Route = createLazyFileRoute('/_auth/players')({
     component: Players,
@@ -27,7 +29,7 @@ function Players() {
     const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { allCategories } = useGetCategories()
     const [showAllPlayers, setShowAllPlayers] = useState<boolean>(false)
-    const { allPlayers } = useGetPlayers()
+    const { allPlayers, refetchAllPlayers } = useGetPlayers()
 
     const allPlayersOn = () => {
         setShowAllPlayers(true)
@@ -42,9 +44,7 @@ function Players() {
     const toasted = (player: Player) => {
         toast({
             title: 'Success! 🙌',
-
             description: `Created ${player.firstName} ${player.lastName} position: ${player.position}.`,
-            // className: 'bg-emerald-600 bg-opacity-60 text-white',
         })
     }
 
@@ -61,7 +61,7 @@ function Players() {
                 '/player/create-player',
                 requestBody
             )
-
+            refetchAllPlayers()
             toasted(data.data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -84,56 +84,68 @@ function Players() {
     }
 
     return (
-        <>
-            <div className="flex justify-center w-4/5">
-                <div className="flex flex-col w-full">
-                    <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
-                        Register Player
-                        <img src={ball} alt="ball" className="w-8 h-8" />
-                    </h1>
-                    <div className="flex flex-col">
-                        <PlayerForm
-                            allCategories={allCategories}
-                            onSubmit={onSubmit}
-                            defaultValues={{
-                                firstName: '',
-                                lastName: '',
-                                categoryId: '',
-                                position: '',
-                            }}
-                        />
-                        {!showAllPlayers && (
-                            <Button onClick={allPlayersOn} className="mt-4">
-                                Show all players
-                            </Button>
-                        )}
-                        {showAllPlayers && (
-                            <>
-                                {allPlayers?.map((p, index) => (
-                                    <PlayerCard
-                                        player={p}
-                                        key={index}
-                                        className="mt-2"
-                                        setError={setError}
-                                        setErrorMessage={setErrorMessage}
-                                    />
-                                ))}
-                                <Button
-                                    className="mt-2"
-                                    onClick={allPlayersOff}
-                                >
-                                    Close
-                                </Button>
-                            </>
-                        )}
-                    </div>
+        <div className="flex flex-col justify-center w-4/5 space-y-4 xl:w-3/5">
+            <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+                Register Player
+                <img src={ball} alt="ball" className="w-8 h-8" />
+            </h1>
+            <div className="grid md:grid-cols-2 justify-items-center">
+                <div
+                    className={twMerge(
+                        'flex flex-col w-full',
+                        showAllPlayers ? 'col-span-1' : 'col-span-2  w-2/3'
+                    )}
+                >
+                    <PlayerForm
+                        allCategories={allCategories}
+                        onSubmit={onSubmit}
+                        defaultValues={{
+                            firstName: '',
+                            lastName: '',
+                            categoryId: '',
+                            position: '',
+                        }}
+                    />
+                    {showAllPlayers ? (
+                        <Button
+                            className="mt-2"
+                            variant="secondary"
+                            onClick={allPlayersOff}
+                        >
+                            Close
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={allPlayersOn}
+                            className="mt-4"
+                            variant="secondary"
+                        >
+                            Show all players
+                        </Button>
+                    )}
                     {isError && (
                         <div onClick={() => setError(false)} className="mt-4">
                             <ErrorAlert message={errorMessage} />
                         </div>
                     )}
                 </div>
+                {showAllPlayers && (
+                    <>
+                        <ScrollArea className="h-[420px] mt-4 md:h-screen md:mt-0">
+                            {allPlayers?.map((p, index) => (
+                                <PlayerCard
+                                    player={p}
+                                    key={index}
+                                    className="mt-2"
+                                    setError={setError}
+                                    setErrorMessage={setErrorMessage}
+                                    refetchAllPlayers={refetchAllPlayers}
+                                />
+                            ))}
+                        </ScrollArea>
+                    </>
+                )}
             </div>
-        </>
+        </div>
     )
 }

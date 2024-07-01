@@ -22,6 +22,7 @@ import {
     SelectValue,
 } from '../ui/select'
 import { Category } from '@/types/padel.types'
+import { Card } from '../ui/card'
 
 type PlayerFormProps = {
     onSubmit: SubmitHandler<playerFormObject>
@@ -56,105 +57,114 @@ const PlayerForm: React.FC<PlayerFormProps> = ({
     const { handleSubmit } = form
 
     return (
-        <Form {...form}>
-            <FormField
-                name="firstName"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>First name</FormLabel>
-                        <FormControl>
-                            <Input placeholder="First name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-
-            <FormField
-                name="lastName"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Last name</FormLabel>
-                        <FormControl>
-                            <Input placeholder="Last name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="categoryId"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Category</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                        >
+        <Card className="p-8">
+            <Form {...form}>
+                <FormField
+                    name="firstName"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>First name</FormLabel>
                             <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a category" />
-                                </SelectTrigger>
+                                <Input placeholder="First name" {...field} />
                             </FormControl>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>ALL</SelectLabel>
-                                    {allCategories?.map((c, index) => (
-                                        <SelectItem value={c.id} key={index}>
-                                            {c.level}
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    name="lastName"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Last name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Last name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="categoryId"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Category</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a category" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>ALL</SelectLabel>
+                                        {allCategories?.map((c, index) => (
+                                            <SelectItem
+                                                value={c.id}
+                                                key={index}
+                                            >
+                                                {c.level}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="position"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Position</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a position" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Position</SelectLabel>
+                                        <SelectItem value="REVES">
+                                            REVES
                                         </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                                        <SelectItem value="DRIVE">
+                                            DRIVE
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
 
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <FormField
-                control={form.control}
-                name="position"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Position</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                        >
-                            <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a position" />
-                                </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Position</SelectLabel>
-                                    <SelectItem value="REVES">REVES</SelectItem>
-                                    <SelectItem value="DRIVE">DRIVE</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-
-            <div className="flex justify-center mt-2">
-                <Button
-                    className="w-[100px] sm:w-1/6 bg-opacity-65"
-                    onClick={handleSubmit(onSubmit)}
-                    type="button"
-                >
-                    Submit
-                </Button>
-            </div>
-        </Form>
+                <div className="flex justify-center mt-2">
+                    <Button
+                        className="w-[100px] mt-1"
+                        onClick={handleSubmit(onSubmit)}
+                        type="button"
+                    >
+                        Submit
+                    </Button>
+                </div>
+            </Form>
+        </Card>
     )
 }
 

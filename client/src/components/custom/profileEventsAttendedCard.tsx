@@ -29,7 +29,10 @@ export function ProfileEventsAttendedCard({
                 <div className="flex justify-start">
                     {firstPlaces
                         ? firstPlaces.map((cg) => (
-                              <div className="relative group">
+                              <div
+                                  className="relative group"
+                                  key={`1_${cg.event?.id}`}
+                              >
                                   <img
                                       src={golden_trophy}
                                       alt={`1st place at: ${cg.event?.name} [
@@ -46,7 +49,10 @@ export function ProfileEventsAttendedCard({
 
                     {secondPlaces
                         ? secondPlaces.map((cg) => (
-                              <div className="relative group">
+                              <div
+                                  className="relative group"
+                                  key={`2_${cg.event?.id}`}
+                              >
                                   <img
                                       src={silver_trophy}
                                       alt={`2nd place at: ${cg.event?.name} [

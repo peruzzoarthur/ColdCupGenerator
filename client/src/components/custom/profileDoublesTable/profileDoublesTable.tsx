@@ -1,5 +1,6 @@
 import {
     ColumnDef,
+    Row,
     SortingState,
     flexRender,
     getCoreRowModel,
@@ -7,7 +8,13 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table'
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
     Table,
     TableBody,
@@ -18,21 +25,28 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import React from 'react'
+import { ProfileDoublesTableProps } from './profileDoublesColumns'
+import { Double } from '@/types/padel.types'
+import { axiosInstance } from '@/axiosInstance'
+import { MoreHorizontal } from 'lucide-react'
+import { useGetRole } from '@/hooks/useGetRole'
 
-interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+interface DataTableProps<TValue> {
+    columns: ColumnDef<ProfileDoublesTableProps, TValue>[]
+    data: ProfileDoublesTableProps[]
 }
 
-export function ProfileDoublesTable<TData, TValue>({
+export function ProfileDoublesTable<TValue>({
     columns,
     data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [pagination, setPagination] = React.useState({
         pageIndex: 0,
         pageSize: 5,
     })
+    const { role } = useGetRole()
+
     const table = useReactTable({
         data,
         columns,
@@ -47,31 +61,30 @@ export function ProfileDoublesTable<TData, TValue>({
         },
     })
 
-    // const handleDeleteDoublesFromEvent = async (
-    //     eventId: string,
-    //     doublesId: string,
-    //     categoryId: string
-
-    //     // autoPopulate: boolean
-    // ) => {
+    // const handleRemoveDoubles = async (id: string) => {
     //     try {
-    //         const handleDeleteDoublesInEventDto = {
-    //             eventId: eventId,
-    //             doublesId: doublesId,
-    //             categoryId: categoryId,
-    //         }
-    //         const { data: doubles }: { data: EventDouble } =
-    //             await axiosInstance.post(
-    //                 '/events/delete-doubles',
-    //                 handleDeleteDoublesInEventDto
-    //             )
-    //         await refetchEventById()
-    //         await refetchEventMatchesInfoById()
-    //         return doubles
+    //         const { data: removedDoubles }: { data: Double } =
+    //             await axiosInstance.delete(`/categories/${id}`)
+    //         return removedDoubles
     //     } catch (error) {
     //         return error
     //     }
     // }
+
+    const tableActionRemoveDoubles = async (
+        row: Row<ProfileDoublesTableProps>
+    ) => {
+        console.log(row.original)
+        //  const id: string = row.original.id
+        // {
+        //     if (categoryId) {
+        //         await handleDeleteCategory(categoryId)
+        //         await refetchAllCategories()
+        //     } else {
+        //         throw new Error('Error deleting category.')
+        //     }
+        // }
+    }
 
     return (
         <>
@@ -113,6 +126,35 @@ export function ProfileDoublesTable<TData, TValue>({
                                             )}
                                         </TableCell>
                                     ))}
+                                    {role === 'ADMIN' ? (
+                                        <TableCell>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        className="w-8 h-8 p-0"
+                                                        variant="ghost"
+                                                    >
+                                                        <MoreHorizontal className="w-4 h-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuLabel>
+                                                        Actions
+                                                    </DropdownMenuLabel>
+                                                    <DropdownMenuItem
+                                                        onClick={async () =>
+                                                            tableActionRemoveDoubles(
+                                                                row
+                                                            )
+                                                        }
+                                                    >
+                                                        Delete doubles from
+                                                        event
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    ) : null}
                                 </TableRow>
                             ))
                         ) : (

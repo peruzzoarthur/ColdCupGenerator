@@ -10,7 +10,7 @@ import {
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 
-export type ProfileDoublesTableData = {
+export type ProfileDoublesTableProps = {
     id: string | null
     playerOneName: string | null
     playerTwoName: string | null
@@ -20,7 +20,7 @@ export type ProfileDoublesTableData = {
     matchesWins: number | null
 }
 
-export const profileDoublesColumns: ColumnDef<ProfileDoublesTableData>[] = [
+export const profileDoublesColumns: ColumnDef<ProfileDoublesTableProps>[] = [
     { accessorKey: 'playerOneName', header: 'P1' },
     { accessorKey: 'playerTwoName', header: 'P2' },
 

@@ -16,7 +16,7 @@ import { useInvitations } from '@/hooks/useInvitations'
 import { useGetPlayers } from '@/hooks/useGetPlayers'
 import { useGetCategories } from '@/hooks/useGetCategories'
 import { useGetPlayerById } from '@/hooks/useGetPlayerById'
-import { ProfileDoublesTableData } from './profileDoublesTable/profileDoublesColumns'
+import { ProfileDoublesTableProps } from './profileDoublesTable/profileDoublesColumns'
 import { ProfileEventsAttendedCard } from './profileEventsAttendedCard'
 import { ProfileMatchesInfoCard } from './profileMatchesInfoCard'
 import { ProfileActivityCard } from './profileActivityCard'
@@ -74,7 +74,7 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
 
     const userDoubles = playerById?.doubles
 
-    const profileDoublesTableData: ProfileDoublesTableData[] | undefined =
+    const profileDoublesTableData: ProfileDoublesTableProps[] | undefined =
         userDoubles?.map((d) => {
             return {
                 id: d.id ?? null,

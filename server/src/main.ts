@@ -14,7 +14,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle("ColdCup Padel API")
-    .setDescription("A Cold API description")
+    .setDescription("API description")
     .setVersion("0.1")
     .addBearerAuth()
     .build();
