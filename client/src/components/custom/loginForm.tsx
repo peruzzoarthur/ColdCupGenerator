@@ -73,25 +73,17 @@ export function LoginForm() {
             navigate({ to: '/' })
             refetchUser()
             toast({
-                title: 'Success',
+                title: 'Logged in',
             })
 
             return data //! remove this return?
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>
-                if (
-                    axiosError.response
-                    // &&
-                    // (axiosError.response.status === 400 || 401)
-                ) {
+                if (axiosError.response) {
                     setError(true)
                     setErrorMessage(axiosError.response.data.message)
                 }
-                // else {
-                //     setError(true)
-                //     setErrorMessage('Error creating place.')
-                // }
             } else {
                 setError(true)
                 setErrorMessage('Error at login.')
