@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useGetPlaces } from '@/hooks/useGetPlaces'
 import { useGetEvents } from '@/hooks/useGetEvents'
 import { EventCard } from '@/components/custom/eventCard'
-import ball from '../../../styles/png/ball.png'
 import { EventType, PadelEvent } from '@/types/padel.types'
 import { useToast } from '@/components/ui/use-toast'
 import { axiosInstance } from '@/axiosInstance'
@@ -14,6 +13,7 @@ import { useGetRole } from '@/hooks/useGetRole'
 import { ErrorBox } from '@/components/custom/errorBox'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { EventsFiltersCard } from '@/components/custom/eventsFiltersCard'
+import { CalendarDays } from 'lucide-react'
 
 export type createEventFormObject = {
     eventName: string
@@ -117,13 +117,9 @@ function Events() {
                                         className="flex justify-center mt-2 mb-2 cursor-pointer"
                                         onClick={() => setShowEventForm(false)}
                                     >
-                                        <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl 2xl:text-4xl">
+                                        <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl">
                                             Create an event
-                                            <img
-                                                src={ball}
-                                                alt="ball"
-                                                className="w-6 h-6 ml-1 lg:w-10 lg:h-10"
-                                            />
+                                            <CalendarDays className="w-5 h-5 ml-2" />
                                         </h1>
                                     </div>
                                     <EventForm
@@ -160,13 +156,9 @@ function Events() {
                                     className="flex justify-center mt-2 mb-2 cursor-pointer"
                                     onClick={() => setShowEventForm(true)}
                                 >
-                                    <h1 className="flex flex-row items-center text-2xl font-bold lg:text-3xl 2xl:text-4xl">
+                                    <h1 className="flex flex-row items-center text-2xl font-bold lg:text-3xl ">
                                         Create an event
-                                        <img
-                                            src={ball}
-                                            alt="ball"
-                                            className="w-6 h-6 ml-1 lg:w-8 lg:h-8"
-                                        />
+                                        <CalendarDays className="w-5 h-5 ml-2" />
                                     </h1>
                                 </div>
                             )}
@@ -176,13 +168,9 @@ function Events() {
 
                 {filteredEvents && (
                     <div className="flex flex-col items-center justify-center w-full mt-4 space-y-2">
-                        <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl 2xl:text-4xl">
+                        <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl ">
                             Events
-                            <img
-                                src={ball}
-                                alt="ball"
-                                className="w-6 h-6 ml-1 lg:w-8 lg:h-8"
-                            />
+                            <CalendarDays className="w-5 h-5 ml-2" />
                         </h1>
 
                         <div className="grid grid-cols-1 space-y-2 justify-items-center md:grid-cols-3">
