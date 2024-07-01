@@ -14,6 +14,7 @@ import { useGetCategories } from '@/hooks/useGetCategories'
 import { CatType, Category, ErrorResponse } from '@/types/padel.types'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios, { AxiosError, AxiosResponse } from 'axios'
+import { ListOrdered } from 'lucide-react'
 import { useState } from 'react'
 
 export const Route = createLazyFileRoute('/_auth/categories')({
@@ -49,19 +50,16 @@ function Categories() {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError<ErrorResponse>
-                if (
-                    axiosError.response &&
-                    (axiosError.response.status === 400 || 409)
-                ) {
+                if (axiosError.response && axiosError.response.status === 409) {
                     setError(true)
-                    setErrorMessage(axiosError.response.data.message)
+                    setErrorMessage('This category already exists')
                 } else {
                     setError(true)
-                    setErrorMessage('Error creating doubles')
+                    setErrorMessage('Error creating category')
                 }
             } else {
                 setError(true)
-                setErrorMessage('Error creating doubles')
+                setErrorMessage('Error creating category')
             }
         }
     }
@@ -78,30 +76,34 @@ function Categories() {
         })
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-3 justify-items-center">
-            <div className="flex flex-col items-center justify-center">
-                <CategoryForm
-                    onSubmit={createCategoryHandler}
-                    defaultValues={{ level: '', type: CatType.ALL }}
-                />
-                {isError && (
-                    <div
-                        onClick={() => setError(false)}
-                        className="flex w-2/3 mt-4"
-                    >
-                        <ErrorAlert message={errorMessage} />
+        <div className="flex flex-col justify-center w-4/5 space-y-2 xl:w-3/5">
+            <h1 className="flex flex-row items-center p-2 text-2xl font-bold">
+                Categories <ListOrdered className="w-5 h-5 ml-1" />
+            </h1>
+            <div className="grid grid-cols-1 space-y-2 md:grid-cols-3 md:space-y-0 justify-items-center">
+                <div className="flex flex-col items-center justify-center">
+                    <CategoryForm
+                        onSubmit={createCategoryHandler}
+                        defaultValues={{ level: '', type: CatType.ALL }}
+                    />
+                    {isError && (
+                        <div
+                            onClick={() => setError(false)}
+                            className="flex w-full mt-4"
+                        >
+                            <ErrorAlert message={errorMessage} />
+                        </div>
+                    )}
+                </div>
+                {categoriesTableData && (
+                    <div className="flex flex-col items-center w-full col-span-2 p-2">
+                        <CategoriesTable
+                            columns={categoriesColumns}
+                            data={categoriesTableData}
+                        />
                     </div>
                 )}
             </div>
-            {categoriesTableData && (
-                <div className="flex flex-col items-center w-full col-span-2">
-                    <h1 className="p-2 text-4xl">Categories</h1>
-                    <CategoriesTable
-                        columns={categoriesColumns}
-                        data={categoriesTableData}
-                    />
-                </div>
-            )}
         </div>
     )
 }

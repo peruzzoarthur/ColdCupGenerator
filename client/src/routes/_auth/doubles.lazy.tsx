@@ -1,7 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios from 'axios'
-import ball from '../../styles/png/ball.png'
 import DoublesForm, { doublesFormObject } from '@/components/custom/doublesForm'
 import { useState } from 'react'
 import { ErrorAlert } from '@/components/custom/errorAlert'
@@ -12,6 +11,9 @@ import { Button } from '@/components/ui/button'
 import { useGetDoubles } from '@/hooks/useGetDoubles'
 import { DoublesCard } from '@/components/custom/doublesCard'
 import { axiosInstance } from '@/axiosInstance'
+import { twMerge } from 'tailwind-merge'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Users2 } from 'lucide-react'
 
 export const Route = createLazyFileRoute('/_auth/doubles')({
     component: Doubles,
@@ -84,13 +86,18 @@ function Doubles() {
 
     return (
         <>
-            <div className="flex justify-center w-4/5">
-                <div className="flex flex-col w-full">
-                    <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
-                        Register Doubles
-                        <img src={ball} alt="ball" className="w-8 h-8" />
-                    </h1>
-                    <div className="flex flex-col">
+            <div className="flex flex-col justify-center w-4/5 space-y-4 xl:w-3/5">
+                <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold ">
+                    Register Doubles
+                    <Users2 className="w-5 h-5 ml-2" />
+                </h1>
+                <div className="grid md:grid-cols-2 justify-items-center">
+                    <div
+                        className={twMerge(
+                            'flex flex-col w-full',
+                            showAllDoubles ? 'col-span-1' : 'col-span-2  w-2/3'
+                        )}
+                    >
                         <DoublesForm
                             allCategories={allCategories}
                             onSubmit={onSubmit}
@@ -100,21 +107,36 @@ function Doubles() {
                                 categoryId: '',
                             }}
                         />
+                        {showAllDoubles ? (
+                            <Button
+                                className="mt-2"
+                                onClick={allDoublesOff}
+                                variant="secondary"
+                            >
+                                Close
+                            </Button>
+                        ) : (
+                            <Button
+                                onClick={allDoublesOn}
+                                className="mt-4"
+                                variant="secondary"
+                            >
+                                Show all doubles
+                            </Button>
+                        )}
+                        {isError && (
+                            <div
+                                onClick={() => setError(false)}
+                                className="mt-4"
+                            >
+                                <ErrorAlert message={errorMessage} />
+                            </div>
+                        )}
                     </div>
 
-                    {isError && (
-                        <div onClick={() => setError(false)} className="mt-4">
-                            <ErrorAlert message={errorMessage} />
-                        </div>
-                    )}
-                    {!showAllDoubles && (
-                        <Button onClick={allDoublesOn} className="mt-4">
-                            Show all doubles
-                        </Button>
-                    )}
-                    {showAllDoubles && (
-                        <>
-                            {allDoubles?.map((d, index) => (
+                    {showAllDoubles && allDoubles && (
+                        <ScrollArea className="h-[420px] mt-4 md:h-screen md:mt-0">
+                            {allDoubles.map((d, index) => (
                                 <DoublesCard
                                     doubles={d}
                                     key={index}
@@ -126,10 +148,7 @@ function Doubles() {
                                     setShowAllDoubles={setShowAllDoubles}
                                 />
                             ))}
-                            <Button className="mt-2" onClick={allDoublesOff}>
-                                Close
-                            </Button>
-                        </>
+                        </ScrollArea>
                     )}
                 </div>
             </div>

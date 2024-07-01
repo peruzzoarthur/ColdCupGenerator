@@ -3,7 +3,6 @@ import { useGetCategories } from '@/hooks/useGetCategories'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useState } from 'react'
-import ball from '../../styles/png/ball.png'
 import { Player, Position } from '@/types/padel.types'
 import { ErrorAlert } from '@/components/custom/errorAlert'
 import { useToast } from '@/components/ui/use-toast'
@@ -13,6 +12,7 @@ import { PlayerCard } from '@/components/custom/playerCard'
 import { axiosInstance } from '@/axiosInstance'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { twMerge } from 'tailwind-merge'
+import { CircleUser } from 'lucide-react'
 
 export const Route = createLazyFileRoute('/_auth/players')({
     component: Players,
@@ -85,9 +85,9 @@ function Players() {
 
     return (
         <div className="flex flex-col justify-center w-4/5 space-y-4 xl:w-3/5">
-            <h1 className="flex flex-row mt-2 mb-2 text-2xl font-bold">
+            <h1 className="flex flex-row items-center mb-4 text-2xl font-bold">
                 Register Player
-                <img src={ball} alt="ball" className="w-8 h-8" />
+                <CircleUser className="items-center w-5 h-5 ml-2" />
             </h1>
             <div className="grid md:grid-cols-2 justify-items-center">
                 <div
@@ -129,21 +129,19 @@ function Players() {
                         </div>
                     )}
                 </div>
-                {showAllPlayers && (
-                    <>
-                        <ScrollArea className="h-[420px] mt-4 md:h-screen md:mt-0">
-                            {allPlayers?.map((p, index) => (
-                                <PlayerCard
-                                    player={p}
-                                    key={index}
-                                    className="mt-2"
-                                    setError={setError}
-                                    setErrorMessage={setErrorMessage}
-                                    refetchAllPlayers={refetchAllPlayers}
-                                />
-                            ))}
-                        </ScrollArea>
-                    </>
+                {showAllPlayers && allPlayers && (
+                    <ScrollArea className="h-[420px] mt-4 md:h-screen md:mt-0">
+                        {allPlayers.map((p, index) => (
+                            <PlayerCard
+                                player={p}
+                                key={index}
+                                className="mt-2"
+                                setError={setError}
+                                setErrorMessage={setErrorMessage}
+                                refetchAllPlayers={refetchAllPlayers}
+                            />
+                        ))}
+                    </ScrollArea>
                 )}
             </div>
         </div>

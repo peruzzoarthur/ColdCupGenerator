@@ -22,6 +22,7 @@ import {
 } from '../ui/select'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
+import { Card } from '../ui/card'
 type CategoryFormProps = {
     onSubmit: SubmitHandler<categoryFormObject>
     defaultValues: categoryFormObject
@@ -50,66 +51,73 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
     const { handleSubmit } = form
     return (
-        <Form {...form}>
-            <FormField
-                control={form.control}
-                name="level"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Level</FormLabel>
-                        <FormControl>
-                            <Input
-                                className="items-end justify-end w-[54px]"
-                                type="number"
-                                placeholder="0"
-                                {...field}
-                            />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+        <Card className="flex flex-col items-center p-8 space-x-2">
+            <div className="flex">
+                <Form {...form}>
+                    <FormField
+                        control={form.control}
+                        name="level"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Level</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        className="items-end justify-end w-[54px]"
+                                        type="number"
+                                        placeholder="0"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-            <FormField
-                name="type"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Category type</FormLabel>
-                        <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                        >
-                            <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select category type" />
-                                </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Types</SelectLabel>
-                                    <SelectItem value={CatType.ALL}>
-                                        ALL
-                                    </SelectItem>
-                                    <SelectItem value={CatType.F}>F</SelectItem>
-                                    <SelectItem value={CatType.M}>M</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-
+                    <FormField
+                        name="type"
+                        control={form.control}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Category type</FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select category type" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Types</SelectLabel>
+                                            <SelectItem value={CatType.ALL}>
+                                                ALL
+                                            </SelectItem>
+                                            <SelectItem value={CatType.F}>
+                                                F
+                                            </SelectItem>
+                                            <SelectItem value={CatType.M}>
+                                                M
+                                            </SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </Form>
+            </div>
             <div className="flex justify-center mt-2">
                 <Button
-                    className="w-[100px] sm:w-full bg-opacity-65"
+                    className="w-[100px]  bg-opacity-65"
                     onClick={handleSubmit(onSubmit)}
                     type="button"
                 >
                     Submit
                 </Button>
             </div>
-        </Form>
+        </Card>
     )
 }
