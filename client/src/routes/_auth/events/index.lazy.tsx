@@ -106,98 +106,94 @@ function Events() {
     }
 
     return (
-        <>
-            <div className="flex flex-col items-center justify-center w-full">
-                {role === 'ADMIN' && (
-                    <div className="flex flex-col items-center w-full">
-                        <div className="flex flex-col w-2/3">
-                            {showEventForm ? (
-                                <>
-                                    <div
-                                        className="flex justify-center mt-2 mb-2 cursor-pointer"
-                                        onClick={() => setShowEventForm(false)}
-                                    >
-                                        <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl">
-                                            Create an event
-                                            <CalendarDays className="w-5 h-5 ml-2" />
-                                        </h1>
-                                    </div>
-                                    <EventForm
-                                        allPlaces={allPlaces}
-                                        allCategories={allCategories}
-                                        onSubmit={createEventOnSubmit}
-                                        categoriesState={categoriesState}
-                                        setCategoriesState={setCategoriesState}
-                                        placesState={placesState}
-                                        setPlacesState={setPlacesState}
-                                        courtsState={courtsState}
-                                        setCourtsState={setCourtsState}
-                                        defaultValues={{
-                                            eventName: '',
-                                            categoriesIds: '',
-                                            placesIds: '',
-                                            startDate: '' as unknown as Date,
-                                            finishDate: '' as unknown as Date,
-                                            matchDurationInMinutes: '',
-                                            timeOfFirstMatch: '',
-                                            timeOfLastMatch: '',
-                                            eventType: EventType.ALLxALL,
-                                        }}
-                                    />
-                                    {isError && (
-                                        <ErrorBox
-                                            errorMessage={errorMessage}
-                                            setError={setError}
-                                        />
-                                    )}
-                                </>
-                            ) : (
+        <div className="flex flex-col items-center justify-center w-full">
+            {role === 'ADMIN' && (
+                <div className="flex flex-col items-center w-full">
+                    <div className="flex flex-col w-2/3">
+                        {showEventForm ? (
+                            <>
                                 <div
                                     className="flex justify-center mt-2 mb-2 cursor-pointer"
-                                    onClick={() => setShowEventForm(true)}
+                                    onClick={() => setShowEventForm(false)}
                                 >
-                                    <h1 className="flex flex-row items-center text-2xl font-bold lg:text-3xl ">
+                                    <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl">
                                         Create an event
                                         <CalendarDays className="w-5 h-5 ml-2" />
                                     </h1>
                                 </div>
-                            )}
-                        </div>
+                                <EventForm
+                                    allPlaces={allPlaces}
+                                    allCategories={allCategories}
+                                    onSubmit={createEventOnSubmit}
+                                    categoriesState={categoriesState}
+                                    setCategoriesState={setCategoriesState}
+                                    placesState={placesState}
+                                    setPlacesState={setPlacesState}
+                                    courtsState={courtsState}
+                                    setCourtsState={setCourtsState}
+                                    defaultValues={{
+                                        eventName: '',
+                                        categoriesIds: '',
+                                        placesIds: '',
+                                        startDate: '' as unknown as Date,
+                                        finishDate: '' as unknown as Date,
+                                        matchDurationInMinutes: '',
+                                        timeOfFirstMatch: '',
+                                        timeOfLastMatch: '',
+                                        eventType: EventType.ALLxALL,
+                                    }}
+                                />
+                                {isError && (
+                                    <ErrorBox
+                                        errorMessage={errorMessage}
+                                        setError={setError}
+                                    />
+                                )}
+                            </>
+                        ) : (
+                            <div
+                                className="flex justify-center mt-2 mb-2 cursor-pointer"
+                                onClick={() => setShowEventForm(true)}
+                            >
+                                <h1 className="flex flex-row items-center text-2xl font-bold lg:text-3xl ">
+                                    Create an event
+                                    <CalendarDays className="w-5 h-5 ml-2" />
+                                </h1>
+                            </div>
+                        )}
                     </div>
-                )}
+                </div>
+            )}
 
-                {filteredEvents && (
-                    <div className="flex flex-col items-center justify-center w-full mt-4 space-y-2">
-                        <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl ">
-                            Events
-                            <CalendarDays className="w-5 h-5 ml-2" />
-                        </h1>
+            {filteredEvents && (
+                <div className="flex flex-col items-center justify-center w-full mt-4 space-y-2">
+                    <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold lg:text-3xl ">
+                        Events
+                        <CalendarDays className="w-5 h-5 ml-2" />
+                    </h1>
 
-                        <div className="grid grid-cols-1 space-y-2 justify-items-center md:grid-cols-3">
-                            <EventsFiltersCard
-                                showFinishedEvents={showFinishedEvents}
-                                setShowFinishedEvents={setShowFinishedEvents}
-                                showActiveEvents={showActiveEvents}
-                                setShowActiveEvents={setShowActiveEvents}
-                                showRegisteringEvents={showRegisteringEvents}
-                                setShowRegisteringEvents={
-                                    setShowRegisteringEvents
-                                }
-                            />
-                            <ScrollArea className="w-full h-screen p-0.5 md:col-span-2">
-                                {filteredEvents.map((event) => (
-                                    <div key={event.id}>
-                                        <EventCard
-                                            event={event}
-                                            className="w-11/12 md:w-[440px] lg:w-[620px] mb-1"
-                                        />
-                                    </div>
-                                ))}
-                            </ScrollArea>
-                        </div>
+                    <div className="grid grid-cols-1 space-y-2 justify-items-center md:grid-cols-3">
+                        <EventsFiltersCard
+                            showFinishedEvents={showFinishedEvents}
+                            setShowFinishedEvents={setShowFinishedEvents}
+                            showActiveEvents={showActiveEvents}
+                            setShowActiveEvents={setShowActiveEvents}
+                            showRegisteringEvents={showRegisteringEvents}
+                            setShowRegisteringEvents={setShowRegisteringEvents}
+                        />
+                        <ScrollArea className="w-full h-screen p-0.5 md:col-span-2">
+                            {filteredEvents.map((event) => (
+                                <div key={event.id}>
+                                    <EventCard
+                                        event={event}
+                                        className="w-11/12 md:w-[440px] lg:w-[620px] mb-1"
+                                    />
+                                </div>
+                            ))}
+                        </ScrollArea>
                     </div>
-                )}
-            </div>
-        </>
+                </div>
+            )}
+        </div>
     )
 }

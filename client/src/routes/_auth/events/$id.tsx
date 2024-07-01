@@ -36,9 +36,7 @@ export const Route = createFileRoute('/_auth/events/$id')({
 
 function Event() {
     const { id } = Route.useParams()
-
     const { eventById, refetchEventById } = useGetEventById(id)
-
     const { refetchEventMatchesInfoById } = useGetEventMatchesInfoById(
         eventById?.id
     )
@@ -126,97 +124,91 @@ function Event() {
     }
 
     return (
-        <>
+        <div className="flex w-full lg:w-11/12 xl:w-10/12">
             {eventById && (
-                <>
-                    <div className="flex flex-col items-center w-full">
-                        <div className="flex flex-col w-11/12 md:w-10/12 lg:w-9/12">
-                            {/* Title of event */}
-                            <h1 className="flex justify-center mb-4 text-2xl font-medium sm:text-3xl">
-                                🏆 {eventById?.name} 🏆
-                            </h1>
+                <div className="flex flex-col items-center w-full">
+                    <div className="flex flex-col w-11/12 md:w-10/12 lg:w-9/12">
+                        {/* Title of event */}
+                        <h1 className="flex justify-center mb-4 text-2xl font-medium sm:text-3xl">
+                            🏆 {eventById?.name} 🏆
+                        </h1>
 
-                            {/* Admin register form for adding doubles */}
-                            {role === 'ADMIN' &&
-                                !eventById.isActive &&
-                                !eventById.isFinished && (
-                                    <RegisterDoublesForm
-                                        categoriesState={categoriesState}
-                                        eventCategories={eventById.categories}
-                                        onSubmit={registerDoubleOnSubmit}
-                                        setCategoriesState={setCategoriesState}
-                                        defaultValues={{
-                                            doublesId: '',
-                                        }}
-                                    />
-                                )}
-                        </div>
-
-                        {/* Dropdown to invite player doubles to event */}
-                        {!eventById.isActive && !eventById.isFinished && (
-                            <div className="flex justify-center mt-10">
-                                <DropdownMenu>
-                                    <CoolButton as="div">
-                                        <DropdownMenuTrigger>
-                                            Register in event 🎾
-                                        </DropdownMenuTrigger>
-                                    </CoolButton>
-
-                                    <DropdownMenuContent>
-                                        <DropdownMenuLabel>
-                                            Invite player to play
-                                        </DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
-
-                                        {playerById?.doubles.map((d, index) => {
-                                            const otherPlayerId = d.players
-                                                .filter(
-                                                    (p) =>
-                                                        p.id !== playerById.id
-                                                )
-                                                .map((p) => p.id)[0]
-                                            return (
-                                                <DropdownMenuItem
-                                                    key={index}
-                                                    className="cursor-pointer"
-                                                    onClick={async () =>
-                                                        sendEventInvite(
-                                                            otherPlayerId,
-                                                            InviteType.EVENT
-                                                        )
-                                                    }
-                                                >
-                                                    {d.players
-                                                        .filter(
-                                                            (p) =>
-                                                                p.id !==
-                                                                playerById.id
-                                                        )
-                                                        .map(
-                                                            (p) =>
-                                                                `${p.firstName} ${p.lastName}`
-                                                        )}
-                                                </DropdownMenuItem>
-                                            )
-                                        })}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        )}
-                        {/* Errors will be shown here */}
-                        {isError && (
-                            <div
-                                onClick={() => setError(false)}
-                                className="mb-4 "
-                            >
-                                <ErrorAlert message={errorMessage} />
-                            </div>
-                        )}
-                        {/* The Dashboard */}
-                        <EventDashboard event={eventById} />
+                        {/* Admin register form for adding doubles */}
+                        {role === 'ADMIN' &&
+                            !eventById.isActive &&
+                            !eventById.isFinished && (
+                                <RegisterDoublesForm
+                                    categoriesState={categoriesState}
+                                    eventCategories={eventById.categories}
+                                    onSubmit={registerDoubleOnSubmit}
+                                    setCategoriesState={setCategoriesState}
+                                    defaultValues={{
+                                        doublesId: '',
+                                    }}
+                                />
+                            )}
                     </div>
-                </>
+
+                    {/* Dropdown to invite player doubles to event */}
+                    {!eventById.isActive && !eventById.isFinished && (
+                        <div className="flex justify-center mt-10">
+                            <DropdownMenu>
+                                <CoolButton as="div">
+                                    <DropdownMenuTrigger>
+                                        Register in event 🎾
+                                    </DropdownMenuTrigger>
+                                </CoolButton>
+
+                                <DropdownMenuContent>
+                                    <DropdownMenuLabel>
+                                        Invite player to play
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+
+                                    {playerById?.doubles.map((d, index) => {
+                                        const otherPlayerId = d.players
+                                            .filter(
+                                                (p) => p.id !== playerById.id
+                                            )
+                                            .map((p) => p.id)[0]
+                                        return (
+                                            <DropdownMenuItem
+                                                key={index}
+                                                className="cursor-pointer"
+                                                onClick={async () =>
+                                                    sendEventInvite(
+                                                        otherPlayerId,
+                                                        InviteType.EVENT
+                                                    )
+                                                }
+                                            >
+                                                {d.players
+                                                    .filter(
+                                                        (p) =>
+                                                            p.id !==
+                                                            playerById.id
+                                                    )
+                                                    .map(
+                                                        (p) =>
+                                                            `${p.firstName} ${p.lastName}`
+                                                    )}
+                                            </DropdownMenuItem>
+                                        )
+                                    })}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    )}
+                    {/* Errors will be shown here */}
+                    {isError && (
+                        <div onClick={() => setError(false)} className="mb-4 ">
+                            <ErrorAlert message={errorMessage} />
+                        </div>
+                    )}
+                    {/* The Dashboard */}
+                    <EventDashboard event={eventById} />
+                </div>
             )}
-        </>
+        </div>
     )
 }

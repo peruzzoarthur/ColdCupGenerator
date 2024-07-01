@@ -65,12 +65,10 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
     const firsPlaceInCategories = playerById?.doubles.flatMap(
         (d) => d.firstPlaceInCategory
     )
-    console.log(firsPlaceInCategories)
 
     const secondPlaceInCategories = playerById?.doubles.flatMap(
         (d) => d.secondPlaceInCategory
     )
-    console.log(secondPlaceInCategories)
 
     const userDoubles = playerById?.doubles
 

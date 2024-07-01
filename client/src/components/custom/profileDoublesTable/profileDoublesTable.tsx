@@ -62,7 +62,7 @@ export function ProfileDoublesTable<TValue>({
     // const handleRemoveDoubles = async (id: string) => {
     //     try {
     //         const { data: removedDoubles }: { data: Double } =
-    //             await axiosInstance.delete(`/categories/${id}`)
+    //             await axiosInstance.delete(`/user-doubles/${id}`)
     //         return removedDoubles
     //     } catch (error) {
     //         return error
@@ -73,15 +73,7 @@ export function ProfileDoublesTable<TValue>({
         row: Row<ProfileDoublesTableProps>
     ) => {
         console.log(row.original)
-        //  const id: string = row.original.id
-        // {
-        //     if (categoryId) {
-        //         await handleDeleteCategory(categoryId)
-        //         await refetchAllCategories()
-        //     } else {
-        //         throw new Error('Error deleting category.')
-        //     }
-        // }
+        // !! Implement function above at back end
     }
 
     return (

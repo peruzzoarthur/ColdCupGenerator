@@ -1,14 +1,6 @@
 import { Button } from '@/components/ui/button'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 
 export type ProfileDoublesTableProps = {
     id: string | null
@@ -21,8 +13,8 @@ export type ProfileDoublesTableProps = {
 }
 
 export const profileDoublesColumns: ColumnDef<ProfileDoublesTableProps>[] = [
-    { accessorKey: 'playerOneName', header: 'P1' },
-    { accessorKey: 'playerTwoName', header: 'P2' },
+    { accessorKey: 'playerOneName', header: 'Player 1' },
+    { accessorKey: 'playerTwoName', header: 'Player 2' },
 
     {
         accessorKey: 'categoryLevel',
@@ -71,47 +63,6 @@ export const profileDoublesColumns: ColumnDef<ProfileDoublesTableProps>[] = [
                 <div className="font-medium text-center">
                     {row.getValue('categoryType')}
                 </div>
-            )
-        },
-    },
-    {
-        accessorKey: 'id',
-        header: () => <></>,
-        cell: () => <></>, //!  maybe i don't need to instantiate this two columns
-        enableHiding: false,
-    },
-
-    // {
-    //     accessorKey: 'catId',
-    //     header: () => <></>,
-    //     cell: () => <></>, //!  maybe i don't need to instantiate this two columns
-    //     enableHiding: false,
-    // },
-    // { accessorKey: 'matches', header: 'Total matches' },
-    // { accessorKey: 'matchesWins', header: 'Winning matches' },
-    {
-        id: 'actions',
-        cell: ({ row }) => {
-            const doublesId = row.original.id
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="w-8 h-8 p-0">
-                            <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            className="cursor-pointer"
-                            onClick={() => {
-                                console.log(doublesId)
-                            }}
-                        >
-                            Remove doubles from your doubles list
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
             )
         },
     },
