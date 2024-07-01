@@ -139,11 +139,8 @@ function Doubles() {
                                 doubles={d}
                                 key={index}
                                 className="mt-2"
-                                setError={setError}
-                                setErrorMessage={setErrorMessage}
                                 allCategories={allCategories}
                                 refetchDoubles={refetchDoubles}
-                                setShowAllDoubles={setShowAllDoubles}
                             />
                         ))}
                     </ScrollArea>

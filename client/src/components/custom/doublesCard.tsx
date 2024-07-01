@@ -1,12 +1,12 @@
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import {
     Card,
@@ -24,33 +24,28 @@ import { useState } from 'react'
 import { Button } from '../ui/button'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { axiosInstance } from '@/axiosInstance'
+import { ErrorAlert } from './errorAlert'
 
 type DoublesCardProps = React.ComponentProps<typeof Card> & {
     doubles: Double
-    setError: React.Dispatch<React.SetStateAction<boolean>>
-    setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>
+
     allCategories: Category[] | undefined
     refetchDoubles: (
         options?: RefetchOptions | undefined
     ) => Promise<QueryObserverResult<Double[] | undefined, Error>>
-    setShowAllDoubles: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function DoublesCard({
     className,
     doubles,
-    setError,
-    setErrorMessage,
+
     allCategories,
     refetchDoubles,
-    setShowAllDoubles,
 }: DoublesCardProps) {
-    const [showCard, setShowCard] = useState(true)
     const [editOn, setEditOn] = useState(false)
-    const [newCategoryId, setNewCategoryId] = useState<string | undefined>(
-        'Edit doubles category'
-    )
-
+    const [newCategoryId, setNewCategoryId] = useState<string>('')
+    const [isError, setError] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | undefined>()
     const { toast } = useToast()
 
     const deleteDoublesToasted = (doubles: Double) => {
@@ -65,10 +60,7 @@ export function DoublesCard({
     const handleDelete = async (id: string) => {
         try {
             const data = await axiosInstance.delete(`/doubles/${id}`)
-
             deleteDoublesToasted(doubles)
-            setShowCard(false)
-
             return data
         } catch (error) {
             setError(true)
@@ -76,11 +68,7 @@ export function DoublesCard({
         }
     }
 
-    const handleRemoveDoubles = async (doubles: Double) => {
-        await handleDelete(doubles.id)
-    }
-
-    const updateDoublesToasted = (doubles: Double) => {
+    const updateDoublesToast = (doubles: Double) => {
         toast({
             title: 'Success! 🙌',
 
@@ -90,7 +78,6 @@ export function DoublesCard({
     }
 
     const handleUpdateCategory = async (id: string, categoryId: string) => {
-        console.log('Selected category ID:', newCategoryId)
         try {
             const requestBody = {
                 categoryId: categoryId,
@@ -100,180 +87,96 @@ export function DoublesCard({
                 `/doubles/${id}`,
                 requestBody
             )
-
-            updateDoublesToasted(doubles)
-            setShowCard(false)
+            await refetchDoubles()
+            updateDoublesToast(doubles)
+            setEditOn(false)
 
             return data
         } catch (error) {
             setError(true)
-            console.error(error)
             setErrorMessage('Error updating user')
         }
     }
 
-    const handleUpdateDoubles = async (
-        doubles: Double,
-        categoryId: string | undefined
-    ) => {
-        if (!categoryId) {
-            return null
-        }
-        await handleUpdateCategory(doubles.id, categoryId)
-        setShowAllDoubles(false)
-        await refetchDoubles()
-        setShowAllDoubles(true)
-    }
-
     return (
-        <>
-            {showCard && (
-                <>
-                    {!editOn && (
-                        <Card className={cn('w-[380px]', className)}>
-                            <CardHeader>
-                                <CardTitle>Doubles</CardTitle>
-                                <CardDescription>
-                                    {doubles.category?.level}{' '}
-                                    {doubles.category?.type}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="grid gap-4">
-                                <div className="flex items-center p-4 space-x-4 border rounded-md ">
-                                    <div className="flex-1 space-y-1">
-                                        <div className="text-sm text-muted-foreground">
-                                            {doubles.players?.map(
-                                                (p, index) => (
-                                                    <p
-                                                        key={index}
-                                                    >{`${p.firstName} ${p.lastName}`}</p>
-                                                )
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </CardContent>
-                            <CardFooter className="justify-end">
-                                <Pencil1Icon
-                                    onClick={() => {
-                                        setEditOn(true)
-                                    }}
-                                    className="justify-end w-4 h-4 mr-2 hover:cursor-pointer"
-                                />
-                            </CardFooter>
-                        </Card>
-                    )}
-                    {editOn && (
-                        <>
-                            <div className="flex ">
-                                <div>
-                                    <Card
-                                        className={cn('w-[380px]', className)}
-                                    >
-                                        <CardHeader>
-                                            <CardTitle>Doubles</CardTitle>
-                                            <CardDescription>
-                                                {newCategoryId}
-                                            </CardDescription>
-                                            <div className="flex">
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger
-                                                        asChild
-                                                    >
-                                                        <Button variant="outline">
-                                                            Open
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent className="w-56">
-                                                        <DropdownMenuLabel>
-                                                            Categories
-                                                        </DropdownMenuLabel>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuRadioGroup
-                                                            value={
-                                                                newCategoryId
-                                                            }
-                                                            onValueChange={
-                                                                setNewCategoryId
-                                                            }
-                                                        >
-                                                            {allCategories?.map(
-                                                                (
-                                                                    cat,
-                                                                    index
-                                                                ) => (
-                                                                    <DropdownMenuRadioItem
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        value={
-                                                                            cat.id
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            cat.level
-                                                                        }{' '}
-                                                                        {
-                                                                            cat.type
-                                                                        }
-                                                                    </DropdownMenuRadioItem>
-                                                                )
-                                                            )}
-                                                        </DropdownMenuRadioGroup>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </div>
-                                        </CardHeader>
-                                        <CardContent className="grid gap-4">
-                                            <div className="flex items-center p-4 space-x-4 border rounded-md ">
-                                                <div className="flex-1 space-y-1">
-                                                    <div className="text-sm text-muted-foreground">
-                                                        {doubles.players?.map(
-                                                            (p, index) => (
-                                                                <p
-                                                                    key={index}
-                                                                >{`${p.firstName} ${p.lastName}`}</p>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                        <CardFooter className="justify-end">
-                                            <Pencil1Icon
-                                                onClick={() => setEditOn(false)}
-                                                className="justify-end w-4 h-4 mr-2 hover:cursor-pointer"
-                                            />
-                                        </CardFooter>
-                                        <div className="flex flex-row justify-center mb-2 space-x-10">
-                                            <Button
-                                                onClick={async () =>
-                                                    await handleUpdateDoubles(
-                                                        doubles,
-                                                        newCategoryId
-                                                    )
-                                                }
-                                            >
-                                                Update
-                                            </Button>
-                                            <Button
-                                                className="bg-red-700 hover:bg-red-900"
-                                                onClick={async () =>
-                                                    await handleRemoveDoubles(
-                                                        doubles
-                                                    )
-                                                }
-                                            >
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    </Card>
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </>
+        <Card className={cn('w-[280px] sm:w-[320px] flex flex-col', className)}>
+            <CardHeader>
+                <CardTitle>Doubles</CardTitle>
+                {editOn ? (
+                    <div className="flex">
+                        {allCategories && doubles.category && (
+                            <Select
+                                onValueChange={(value) => {
+                                    setNewCategoryId(value)
+                                }}
+                            >
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue
+                                        placeholder={`${doubles.category.level} ${doubles.category.type}`}
+                                    />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Categories</SelectLabel>
+                                        {allCategories?.map((c) => (
+                                            <SelectItem
+                                                value={c.id}
+                                            >{`${c.level} ${c.type}`}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        )}
+                    </div>
+                ) : (
+                    doubles.category && (
+                        <CardDescription>{`${doubles.category.level} ${doubles.category.type}`}</CardDescription>
+                    )
+                )}
+            </CardHeader>
+            <CardContent className="grid gap-4">
+                <div className="flex p-4 space-x-4 border rounded-md ">
+                    <div className="flex-1 space-y-1 text-sm text-muted-foreground">
+                        {doubles.players?.map((p, index) => (
+                            <p key={index}>{`${p.firstName} ${p.lastName}`}</p>
+                        ))}
+                    </div>
+                </div>
+            </CardContent>
+            <CardFooter className="justify-center">
+                <Pencil1Icon
+                    onClick={() => setEditOn((prevState) => !prevState)}
+                    className="justify-end w-4 h-4 hover:cursor-pointer"
+                />
+            </CardFooter>
+            {editOn ? (
+                <div className="flex flex-row justify-center mb-4 space-x-4">
+                    <Button
+                        onClick={async () =>
+                            await handleUpdateCategory(
+                                doubles.id,
+                                newCategoryId
+                            )
+                        }
+                    >
+                        Update
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        onClick={async () => await handleDelete(doubles.id)}
+                    >
+                        Delete
+                    </Button>
+                </div>
+            ) : null}
+            {isError && (
+                <div
+                    onClick={() => setError(false)}
+                    className="grid w-full p-2"
+                >
+                    <ErrorAlert message={errorMessage} />
+                </div>
             )}
-        </>
+        </Card>
     )
 }
