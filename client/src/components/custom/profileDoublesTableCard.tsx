@@ -6,16 +6,16 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 import {
-    ProfileDoublesTableData,
+    ProfileDoublesTableProps,
     profileDoublesColumns,
 } from './profileDoublesTable/profileDoublesColumns'
 import { ProfileDoublesTable } from './profileDoublesTable/profileDoublesTable'
 
 type ProfileDoublesTableCardProps = {
-    profileDoublesTableData: ProfileDoublesTableData[] | undefined
+    profileDoublesTableProps: ProfileDoublesTableProps[] | undefined
 }
 export function ProfileDoublesTableCard({
-    profileDoublesTableData,
+    profileDoublesTableProps,
 }: ProfileDoublesTableCardProps) {
     return (
         <Card className="overflow-hidden">
@@ -24,10 +24,10 @@ export function ProfileDoublesTableCard({
                 <CardDescription>Your doubles list.</CardDescription>
             </CardHeader>
             <CardContent>
-                {profileDoublesTableData && (
+                {profileDoublesTableProps && (
                     <ProfileDoublesTable
                         columns={profileDoublesColumns}
-                        data={profileDoublesTableData}
+                        data={profileDoublesTableProps}
                     />
                 )}
             </CardContent>

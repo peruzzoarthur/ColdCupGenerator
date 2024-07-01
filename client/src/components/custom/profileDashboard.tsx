@@ -228,10 +228,13 @@ export function ProfileDashboard({ user, refetchUser }: ProfileDashboardProps) {
                                 secondPlaces={secondPlaceInCategories}
                             />
                         </div>
-
-                        <ProfileDoublesTableCard
-                            profileDoublesTableData={profileDoublesTableData}
-                        />
+                        {profileDoublesTableData && (
+                            <ProfileDoublesTableCard
+                                profileDoublesTableProps={
+                                    profileDoublesTableData
+                                }
+                            />
+                        )}
                         <ProfileMatchesTabs
                             matchesPeriod={matchesPeriod}
                             setMatchesPeriod={setMatchesPeriod}

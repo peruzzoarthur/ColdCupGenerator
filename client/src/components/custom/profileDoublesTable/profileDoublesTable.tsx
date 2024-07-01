@@ -26,8 +26,6 @@ import {
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { ProfileDoublesTableProps } from './profileDoublesColumns'
-import { Double } from '@/types/padel.types'
-import { axiosInstance } from '@/axiosInstance'
 import { MoreHorizontal } from 'lucide-react'
 import { useGetRole } from '@/hooks/useGetRole'
 
