@@ -10,6 +10,6 @@ export class CreatePlaceDto {
   address: string;
 
   @IsString()
-  @IsNotEmpty({ message: "Please insert address. " })
+  @IsNotEmpty({ message: "Please insert at least one court. " })
   courts: string;
 }

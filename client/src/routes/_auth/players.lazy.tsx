@@ -84,16 +84,18 @@ function Players() {
     }
 
     return (
-        <div className="flex flex-col justify-center w-4/5 space-y-4 xl:w-3/5">
+        <div className="flex flex-col justify-center w-11/12 space-y-4 xl:w-3/5">
             <h1 className="flex flex-row items-center mb-4 text-2xl font-bold">
                 Register Player
-                <CircleUser className="items-center w-5 h-5 ml-2" />
+                <CircleUser className="w-5 h-5 ml-2" />
             </h1>
             <div className="grid md:grid-cols-2 justify-items-center">
                 <div
                     className={twMerge(
-                        'flex flex-col w-full',
-                        showAllPlayers ? 'col-span-1' : 'col-span-2  w-2/3'
+                        'flex flex-col',
+                        showAllPlayers
+                            ? 'col-span-1 w-full'
+                            : 'col-span-2 w-full sm:w-2/3'
                     )}
                 >
                     <PlayerForm

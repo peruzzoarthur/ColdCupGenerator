@@ -3,7 +3,11 @@ import { Place } from '@/types/padel.types'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetPlaces = () => {
-    const { data: allPlaces, isFetching } = useQuery({
+    const {
+        data: allPlaces,
+        isFetching,
+        refetch: refetchAllPlaces,
+    } = useQuery({
         queryKey: ['get-all-places'],
         queryFn: async () => {
             const { data }: { data: Place[] } =
@@ -16,5 +20,5 @@ export const useGetPlaces = () => {
     })
     const placesIds = allPlaces?.map((item) => item.id)
 
-    return { allPlaces, isFetching, placesIds }
+    return { allPlaces, isFetching, placesIds, refetchAllPlaces }
 }

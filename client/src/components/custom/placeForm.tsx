@@ -13,15 +13,16 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Badge } from '../ui/badge'
+import { Card } from '../ui/card'
 
-type PlaceFormProps = {
-    onSubmit: SubmitHandler<placeFormObject>
-    defaultValues: placeFormObject
+type PlacesFormProps = {
+    onSubmit: SubmitHandler<placesFormObject>
+    defaultValues: placesFormObject
     courtsState: string[]
     setCourtsState: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-export type placeFormObject = {
+export type placesFormObject = {
     name: string
     address: string
     courts: string
@@ -33,7 +34,7 @@ const formSchema = z.object({
     courts: z.string(),
 })
 
-const PlaceForm: React.FC<PlaceFormProps> = ({
+const PlacesForm: React.FC<PlacesFormProps> = ({
     onSubmit,
     defaultValues,
     courtsState,
@@ -59,85 +60,89 @@ const PlaceForm: React.FC<PlaceFormProps> = ({
     const { handleSubmit } = form
 
     return (
-        <Form {...form}>
-            <FormField
-                name="name"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Place name</FormLabel>
-                        <FormControl>
-                            <Input placeholder="Place name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+        <Card className="p-8">
+            <Form {...form}>
+                <FormField
+                    name="name"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Place name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Place name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <FormField
-                name="address"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Address</FormLabel>
-                        <FormControl>
-                            <Input placeholder="Address" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+                <FormField
+                    name="address"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Address</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Address" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <FormField
-                name="courts"
-                control={form.control}
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Courts</FormLabel>
-                        <FormControl>
-                            <>
-                                <div className="flex flex-row">
-                                    <Input
-                                        placeholder="Court name"
-                                        {...field}
-                                    />
-                                    <Button
-                                        className="rounded-tl-sm rounded-bl-sm"
-                                        onClick={() => addCourt(field.value)}
-                                    >
-                                        Add
-                                    </Button>
+                <FormField
+                    name="courts"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Courts</FormLabel>
+                            <FormControl>
+                                <>
+                                    <div className="flex flex-row">
+                                        <Input
+                                            placeholder="Court name"
+                                            {...field}
+                                        />
+                                        <Button
+                                            className="rounded-tl-sm rounded-bl-sm"
+                                            onClick={() =>
+                                                addCourt(field.value)
+                                            }
+                                        >
+                                            Add
+                                        </Button>
+                                    </div>
+                                </>
+                            </FormControl>
+                            <FormMessage />
+                            {courtsState && (
+                                <div className="flex flex-row justify-center space-x-2">
+                                    {courtsState.map((name) => (
+                                        <Badge
+                                            className="cursor-pointer "
+                                            onClick={() => removeCourt(name)}
+                                        >
+                                            {name}
+                                        </Badge>
+                                    ))}
                                 </div>
-                            </>
-                        </FormControl>
-                        <FormMessage />
-                        {courtsState && (
-                            <div className="flex flex-row justify-center space-x-2">
-                                {courtsState.map((name) => (
-                                    <Badge
-                                        className="cursor-pointer "
-                                        onClick={() => removeCourt(name)}
-                                    >
-                                        {name}
-                                    </Badge>
-                                ))}
-                            </div>
-                        )}
-                    </FormItem>
-                )}
-            />
+                            )}
+                        </FormItem>
+                    )}
+                />
 
-            <div className="flex justify-center mt-2">
-                <Button
-                    className="w-[100px] sm:w-1/6 bg-opacity-65"
-                    onClick={handleSubmit(onSubmit)}
-                    type="button"
-                >
-                    Submit
-                </Button>
-            </div>
-        </Form>
+                <div className="flex justify-center mt-2">
+                    <Button
+                        className="w-[100px]"
+                        onClick={handleSubmit(onSubmit)}
+                        type="button"
+                    >
+                        Submit
+                    </Button>
+                </div>
+            </Form>
+        </Card>
     )
 }
 
-export default PlaceForm
+export default PlacesForm

@@ -111,7 +111,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
             </div>
             <div className="flex justify-center mt-2">
                 <Button
-                    className="w-[100px]  bg-opacity-65"
+                    className="w-[100px]"
                     onClick={handleSubmit(onSubmit)}
                     type="button"
                 >

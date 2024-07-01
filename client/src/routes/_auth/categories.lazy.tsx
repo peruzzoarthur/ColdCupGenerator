@@ -76,7 +76,7 @@ function Categories() {
         })
 
     return (
-        <div className="flex flex-col justify-center w-4/5 space-y-2 xl:w-3/5">
+        <div className="flex flex-col justify-center w-11/12 space-y-2 lg:w-10/12 xl:w-9/12">
             <h1 className="flex flex-row items-center p-2 text-2xl font-bold">
                 Categories <ListOrdered className="w-5 h-5 ml-1" />
             </h1>

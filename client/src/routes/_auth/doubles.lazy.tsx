@@ -85,73 +85,70 @@ function Doubles() {
     }
 
     return (
-        <>
-            <div className="flex flex-col justify-center w-4/5 space-y-4 xl:w-3/5">
-                <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold ">
-                    Register Doubles
-                    <Users2 className="w-5 h-5 ml-2" />
-                </h1>
-                <div className="grid md:grid-cols-2 justify-items-center">
-                    <div
-                        className={twMerge(
-                            'flex flex-col w-full',
-                            showAllDoubles ? 'col-span-1' : 'col-span-2  w-2/3'
-                        )}
-                    >
-                        <DoublesForm
-                            allCategories={allCategories}
-                            onSubmit={onSubmit}
-                            defaultValues={{
-                                playerOneId: '',
-                                playerTwoId: '',
-                                categoryId: '',
-                            }}
-                        />
-                        {showAllDoubles ? (
-                            <Button
-                                className="mt-2"
-                                onClick={allDoublesOff}
-                                variant="secondary"
-                            >
-                                Close
-                            </Button>
-                        ) : (
-                            <Button
-                                onClick={allDoublesOn}
-                                className="mt-4"
-                                variant="secondary"
-                            >
-                                Show all doubles
-                            </Button>
-                        )}
-                        {isError && (
-                            <div
-                                onClick={() => setError(false)}
-                                className="mt-4"
-                            >
-                                <ErrorAlert message={errorMessage} />
-                            </div>
-                        )}
-                    </div>
-
-                    {showAllDoubles && allDoubles && (
-                        <ScrollArea className="h-[420px] mt-4 md:h-screen md:mt-0">
-                            {allDoubles.map((d, index) => (
-                                <DoublesCard
-                                    doubles={d}
-                                    key={index}
-                                    className="mt-2"
-                                    setError={setError}
-                                    setErrorMessage={setErrorMessage}
-                                    allCategories={allCategories}
-                                    refetchDoubles={refetchDoubles}
-                                    setShowAllDoubles={setShowAllDoubles}
-                                />
-                            ))}
-                        </ScrollArea>
+        <div className="flex flex-col justify-center w-11/12 space-y-4 xl:w-3/5">
+            <h1 className="flex flex-row items-center mt-2 mb-2 text-2xl font-bold ">
+                Register Doubles
+                <Users2 className="w-5 h-5 ml-2" />
+            </h1>
+            <div className="grid md:grid-cols-2 justify-items-center">
+                <div
+                    className={twMerge(
+                        'flex flex-col',
+                        showAllDoubles
+                            ? 'col-span-1 w-full md:w-10/12'
+                            : 'col-span-2 w-full sm:w-2/3 lg:w-3/5'
+                    )}
+                >
+                    <DoublesForm
+                        allCategories={allCategories}
+                        onSubmit={onSubmit}
+                        defaultValues={{
+                            playerOneId: '',
+                            playerTwoId: '',
+                            categoryId: '',
+                        }}
+                    />
+                    {showAllDoubles ? (
+                        <Button
+                            className="mt-2"
+                            onClick={allDoublesOff}
+                            variant="secondary"
+                        >
+                            Close
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={allDoublesOn}
+                            className="mt-4"
+                            variant="secondary"
+                        >
+                            Show all doubles
+                        </Button>
+                    )}
+                    {isError && (
+                        <div onClick={() => setError(false)} className="mt-4">
+                            <ErrorAlert message={errorMessage} />
+                        </div>
                     )}
                 </div>
+
+                {showAllDoubles && allDoubles && (
+                    <ScrollArea className="h-[420px] mt-4 md:h-screen md:mt-0">
+                        {allDoubles.map((d, index) => (
+                            <DoublesCard
+                                doubles={d}
+                                key={index}
+                                className="mt-2"
+                                setError={setError}
+                                setErrorMessage={setErrorMessage}
+                                allCategories={allCategories}
+                                refetchDoubles={refetchDoubles}
+                                setShowAllDoubles={setShowAllDoubles}
+                            />
+                        ))}
+                    </ScrollArea>
+                )}
             </div>
-        </>
+        </div>
     )
 }
